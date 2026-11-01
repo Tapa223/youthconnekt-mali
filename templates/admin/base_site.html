@@ -1,0 +1,52 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | Administration YouthConnekt Mali{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap">
+<style>
+  /* Couleurs de la charte YouthConnekt appliquées à l'administration Django */
+  :root, html[data-theme="light"] {
+    --primary: #035E4D;
+    --secondary: #035E4D;
+    --accent: #F1592A;
+    --primary-fg: #ffffff;
+    --header-color: #ffffff;
+    --header-branding-color: #ffffff;
+    --header-bg: #035E4D;
+    --header-link-color: #ffffff;
+    --breadcrumbs-bg: #024a3d;
+    --breadcrumbs-link-fg: #ffffff;
+    --link-fg: #0358D9;
+    --link-hover-color: #035E4D;
+    --link-selected-fg: #035E4D;
+    --button-bg: #035E4D;
+    --button-hover-bg: #024a3d;
+    --default-button-bg: #F1592A;
+    --default-button-hover-bg: #d8481c;
+    --selected-row: #e6f4f1;
+    --message-success-bg: #e6f4f1;
+    --delete-button-bg: #7C0D02;
+    --delete-button-hover-bg: #5e0a01;
+    --font-family-primary: "Ubuntu", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  #branding h1, #branding h1 a:link, #branding h1 a:visited {
+    font-weight: 700;
+    letter-spacing: .01em;
+  }
+  .module h2, .module caption, .inline-group h2 {
+    background: #035E4D;
+  }
+</style>
+{% endblock %}
+
+{% block branding %}
+<div id="site-name"><a href="{% url 'admin:index' %}">Administration YouthConnekt Mali</a></div>
+{% if user.is_anonymous %}
+  {% include "admin/color_theme_toggle.html" %}
+{% endif %}
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
