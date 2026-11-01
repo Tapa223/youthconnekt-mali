@@ -1,0 +1,12 @@
+{% comment %}
+  Affiche une image envoyée depuis l'administration, ou un bloc de remplacement
+  aux couleurs de la charte. La mention entre crochets n'est visible que des administrateurs.
+  Paramètres : image, alt, classes, eager (chargement prioritaire), mention
+{% endcomment %}
+{% if image %}
+<img src="{{ image.url }}" alt="{{ alt|default:'' }}" class="{{ classes|default:'h-full w-full object-cover' }}" {% if eager %}fetchpriority="high"{% else %}loading="lazy"{% endif %} decoding="async">
+{% else %}
+<div class="photo-absente {{ classes|default:'' }}" role="presentation">
+  {% if user.is_staff %}<span class="m-3 rounded bg-black/55 px-2 py-1 text-[11px] font-medium text-white">[{{ mention|default:"Photo à fournir" }}]</span>{% endif %}
+</div>
+{% endif %}

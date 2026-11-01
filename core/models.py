@@ -38,6 +38,18 @@ class ParametresSite(ModeleUnique):
         blank=True,
         validators=[valider_image],
     )
+    photo_presentation_1 = models.ImageField(
+        "photo de présentation 1 (grande)", upload_to="site/", blank=True, validators=[valider_image]
+    )
+    photo_presentation_2 = models.ImageField(
+        "photo de présentation 2", upload_to="site/", blank=True, validators=[valider_image]
+    )
+    photo_presentation_3 = models.ImageField(
+        "photo de présentation 3", upload_to="site/", blank=True, validators=[valider_image]
+    )
+    image_invitation = models.ImageField(
+        "photo du bandeau « Let's Connekt »", upload_to="site/", blank=True, validators=[valider_image]
+    )
     adresse = models.CharField("adresse", max_length=255, blank=True)
     telephone = models.CharField("téléphone", max_length=40, blank=True)
     email_contact = models.EmailField("e-mail de contact", blank=True)

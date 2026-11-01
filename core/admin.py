@@ -13,7 +13,14 @@ admin.site.index_title = "Gestion du site"
 @admin.register(ParametresSite)
 class ParametresSiteAdmin(admin.ModelAdmin):
     fieldsets = (
-        ("Accueil", {"fields": ("accroche_accueil", "presentation_accueil", "image_accueil")}),
+        ("Accueil : premier écran", {"fields": ("accroche_accueil", "presentation_accueil", "image_accueil")}),
+        (
+            "Accueil : photos",
+            {
+                "description": "Photos de la section « Le chapitre » et du bandeau d'invitation. JPG, PNG ou WebP, 3 Mo maximum.",
+                "fields": ("photo_presentation_1", "photo_presentation_2", "photo_presentation_3", "image_invitation"),
+            },
+        ),
         ("Coordonnées", {"fields": ("adresse", "telephone", "email_contact")}),
         (
             "Réseaux sociaux officiels",

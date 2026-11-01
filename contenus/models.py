@@ -79,6 +79,9 @@ class AxeAction(models.Model):
     nom = models.CharField("nom", max_length=120, unique=True)
     slug = models.SlugField("adresse (URL)", max_length=140, unique=True)
     description = models.TextField("description", blank=True)
+    image = models.ImageField(
+        "image", upload_to="axes/", blank=True, validators=[valider_image]
+    )
     ordre = models.PositiveSmallIntegerField("ordre d'affichage", default=0)
 
     class Meta:
@@ -187,6 +190,29 @@ class Opportunite(Publiable):
     @property
     def est_expiree(self):
         return bool(self.date_limite and self.date_limite < timezone.localdate())
+
+    @property
+    def jours_restants(self):
+        if not self.date_limite:
+            return None
+        return (self.date_limite - timezone.localdate()).days
+
+    # Couleur associée à chaque type (classes Tailwind de la charte)
+    COULEURS = {
+        "formation": ("bg-turquoise text-encre", "bg-turquoise"),
+        "appel": ("bg-orange text-white", "bg-orange"),
+        "evenement": ("bg-vert text-white", "bg-vert"),
+        "offre": ("bg-bleu text-white", "bg-bleu"),
+        "autre": ("bg-rouge text-white", "bg-rouge"),
+    }
+
+    @property
+    def classe_etiquette(self):
+        return self.COULEURS.get(self.type, self.COULEURS["autre"])[0]
+
+    @property
+    def classe_bandeau(self):
+        return self.COULEURS.get(self.type, self.COULEURS["autre"])[1]
 
 
 # --------------------------------------------------------------------------

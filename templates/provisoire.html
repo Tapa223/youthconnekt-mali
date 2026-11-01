@@ -1,15 +1,14 @@
-<!doctype html>
-<html lang="fr">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ titre }} | YouthConnekt Mali</title>
-</head>
-<body style="font-family: system-ui, sans-serif; margin: 0; padding: 48px 16px; color: #1f2a28;">
-  <main style="max-width: 640px; margin: 0 auto;">
-    <p style="color: #035E4D; font-weight: 600; margin: 0 0 8px;">YouthConnekt Mali</p>
-    <h1 style="margin: 0 0 16px;">{{ titre }}</h1>
-    <p>Cette page sera intégrée à partir des maquettes validées.</p>
-  </main>
-</body>
-</html>
+{% extends "base.html" %}
+{% block titre %}{{ titre }} | YouthConnekt Mali{% endblock %}
+{% block contenu %}
+<section class="bg-vert py-16 text-white sm:py-20">
+  <div class="conteneur">
+    <p class="surtitre text-white/80 surtitre-trait">YouthConnekt Mali</p>
+    <h1 class="titre-section text-white">{{ titre }}</h1>
+  </div>
+</section>
+<div class="conteneur py-16">
+  <p class="max-w-xl text-lg">Cette page est en cours d'intégration à partir des maquettes validées.</p>
+  <a href="{% url 'core:accueil' %}" class="btn btn-vert mt-6">Retour à l'accueil</a>
+</div>
+{% endblock %}

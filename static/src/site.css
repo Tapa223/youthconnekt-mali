@@ -1,0 +1,111 @@
+/*
+  Feuille de style source de YouthConnekt Mali (Tailwind CSS v4).
+  Le fichier compilé static/css/site.css est généré à partir de celui-ci.
+  Commande : tailwindcss -i static/src/site.css -o static/css/site.css --minify
+*/
+@import "tailwindcss";
+
+@source "../../templates";
+@source "../js";
+@source "../../contenus/*.py";
+
+/* Charte graphique YouthConnekt */
+@theme {
+  --font-sans: "Ubuntu", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --color-vert: #035E4D;
+  --color-vert-fonce: #024a3d;
+  --color-vert-clair: #e6f2ef;
+  --color-orange: #F1592A;
+  --color-orange-fonce: #d8481c;
+  --color-turquoise: #04B2B1;
+  --color-bleu: #0358D9;
+  --color-rouge: #7C0D02;
+
+  --color-encre: #17211f;
+  --color-texte: #3c4a47;
+  --color-gris: #f3f5f4;
+  --color-ligne: #dfe5e3;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-white font-sans text-texte antialiased;
+  }
+  h1, h2, h3, h4 {
+    @apply text-vert;
+    text-wrap: balance;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-orange);
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .conteneur {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Surtitre de section, avec le trait orange de la maquette */
+  .surtitre {
+    @apply inline-flex items-center gap-3 text-xs font-medium tracking-[0.16em] text-vert uppercase;
+  }
+  .surtitre-trait::before {
+    content: "";
+    @apply block h-[3px] w-10 rounded-full bg-orange;
+  }
+  .titre-section {
+    @apply mt-3 text-3xl leading-tight font-bold sm:text-4xl lg:text-[2.75rem];
+  }
+
+  /* Boutons : hauteur minimale de 44 px pour le tactile */
+  .btn {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-lg px-5 py-2.5 text-sm font-bold transition-colors duration-150 sm:text-base;
+  }
+  .btn-vert { @apply bg-vert text-white hover:bg-vert-fonce; }
+  .btn-orange { @apply bg-orange text-white hover:bg-orange-fonce; }
+  .btn-contour { @apply border-[1.5px] border-vert bg-white text-vert hover:bg-vert-clair; }
+  .btn-blanc { @apply bg-white text-vert hover:bg-vert-clair; }
+  .btn-contour-blanc { @apply border-2 border-white bg-vert/60 text-white backdrop-blur-sm hover:bg-vert; }
+
+  .carte {
+    @apply overflow-hidden rounded-2xl border border-ligne bg-white;
+  }
+
+  /* Étiquettes de type (formation, appel...) */
+  .etiquette {
+    @apply inline-block rounded-md px-2.5 py-1 text-xs font-bold;
+  }
+
+  .lien-fleche {
+    @apply inline-flex items-center gap-1.5 text-sm font-bold text-vert underline-offset-4 hover:underline;
+  }
+
+  /* Bloc de remplacement quand une photo n'a pas encore été fournie */
+  .photo-absente {
+    @apply relative flex h-full w-full items-end bg-vert;
+    background-image:
+      radial-gradient(circle at 18% 28%, rgb(4 178 177 / .55) 0 5px, transparent 6px),
+      radial-gradient(circle at 72% 22%, rgb(241 89 42 / .7) 0 6px, transparent 7px),
+      radial-gradient(circle at 58% 70%, rgb(255 255 255 / .35) 0 4px, transparent 5px),
+      radial-gradient(circle at 30% 78%, rgb(3 88 217 / .55) 0 5px, transparent 6px),
+      linear-gradient(135deg, #035E4D 0%, #024a3d 100%);
+  }
+}
+
+@utility masquer-defilement {
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}

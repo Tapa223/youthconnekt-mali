@@ -1,0 +1,79 @@
+<header class="sticky top-0 z-40 border-b border-transparent bg-white/95 backdrop-blur transition-[border-color,box-shadow] duration-200 data-[defile]:border-ligne data-[defile]:shadow-sm" data-entete>
+  <div class="conteneur flex h-16 items-center justify-between gap-4 xl:h-[76px] xl:max-w-7xl">
+    <a href="{% url 'core:accueil' %}" class="shrink-0 rounded-md" aria-label="YouthConnekt Mali, retour à l'accueil">
+      {% include "partials/logo.html" with classes="h-10 w-auto xl:h-12" %}
+    </a>
+
+    {# Menu principal : ordinateur #}
+    <nav class="hidden xl:block" aria-label="Menu principal">
+      <ul class="flex items-center gap-1 xl:gap-2">
+        {% for lien in navigation %}
+        <li>
+          <a href="{% url lien.url %}"
+             class="relative flex h-[76px] items-center whitespace-nowrap px-2.5 text-[15px] font-medium transition-colors xl:px-3 {% if lien.actif %}text-vert after:absolute after:inset-x-2.5 after:bottom-0 after:h-[3px] after:rounded-t after:bg-orange{% else %}text-encre hover:text-vert{% endif %}"
+             {% if lien.actif %}aria-current="page"{% endif %}>{{ lien.libelle }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </nav>
+
+    {# Actions liées au compte : ordinateur #}
+    <div class="hidden items-center gap-2.5 xl:flex">
+      {% if user.is_authenticated %}
+        <a href="{% url 'comptes:espace_membre' %}" class="btn btn-vert">
+          <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>
+          Mon compte
+        </a>
+      {% else %}
+        <a href="{% url 'comptes:connexion' %}" class="btn btn-contour">Se connecter</a>
+        <a href="{% url 'comptes:inscription' %}" class="btn btn-vert">S'inscrire</a>
+      {% endif %}
+    </div>
+
+    {# Bouton du menu : téléphone et tablette #}
+    <button type="button"
+            class="-mr-2 grid size-12 place-items-center rounded-lg text-vert hover:bg-vert-clair xl:hidden"
+            aria-controls="menu-mobile" aria-expanded="false" data-ouvrir-menu>
+      <span class="sr-only">Ouvrir le menu</span>
+      <svg class="size-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
+</header>
+
+{# Menu mobile plein écran #}
+<div id="menu-mobile" class="fixed inset-0 z-50 hidden xl:hidden" role="dialog" aria-modal="true" aria-label="Menu" data-menu-mobile>
+  <div class="absolute inset-0 bg-encre/40" data-fermer-menu></div>
+  <div class="absolute inset-y-0 right-0 flex w-full max-w-sm flex-col bg-white shadow-2xl" data-panneau-menu>
+    <div class="flex h-16 items-center justify-between border-b border-ligne px-4">
+      {% include "partials/logo.html" with classes="h-10 w-auto" %}
+      <button type="button" class="-mr-2 grid size-12 place-items-center rounded-lg text-vert hover:bg-vert-clair" data-fermer-menu>
+        <span class="sr-only">Fermer le menu</span>
+        <svg class="size-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+
+    <nav class="flex-1 overflow-y-auto px-4 py-4" aria-label="Menu principal">
+      <ul class="space-y-1">
+        {% for lien in navigation %}
+        <li>
+          <a href="{% url lien.url %}"
+             class="flex min-h-12 items-center justify-between rounded-xl px-4 text-lg font-medium {% if lien.actif %}bg-vert-clair text-vert{% else %}text-encre hover:bg-gris{% endif %}"
+             {% if lien.actif %}aria-current="page"{% endif %}>
+            {{ lien.libelle }}
+            {% if lien.actif %}<span class="size-2 rounded-full bg-orange" aria-hidden="true"></span>{% endif %}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </nav>
+
+    <div class="space-y-3 border-t border-ligne p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+      {% if user.is_authenticated %}
+        <a href="{% url 'comptes:espace_membre' %}" class="btn btn-vert w-full">Mon compte</a>
+      {% else %}
+        <a href="{% url 'comptes:inscription' %}" class="btn btn-vert w-full">S'inscrire</a>
+        <a href="{% url 'comptes:connexion' %}" class="btn btn-contour w-full">Se connecter</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
