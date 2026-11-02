@@ -11,8 +11,8 @@
       <span class="etiquette rounded-full {% if a.categorie == 'evenement' %}bg-vert text-white{% else %}bg-turquoise text-encre{% endif %}">{{ a.get_categorie_display }}</span>
       <time datetime="{{ a.date_affichee|date:'Y-m-d' }}">{{ a.date_affichee|date:"j F Y" }}</time>{% if a.lieu %} · {{ a.lieu }}{% endif %} · {{ a.minutes_lecture }} min de lecture
     </p>
-    <h1 class="mt-3 text-3xl leading-tight font-bold sm:text-5xl">{{ a.titre }}</h1>
-    <p class="mt-4 text-lg leading-relaxed sm:text-xl">{{ a.chapeau }}</p>
+    <h1 class="mt-3 text-[1.75rem] leading-[1.1] font-bold sm:text-5xl">{{ a.titre }}</h1>
+    <p class="mt-4 text-[17px] leading-relaxed sm:text-xl">{{ a.chapeau }}</p>
     <div class="mt-5 flex items-center gap-3">
       <span class="grid size-10 place-items-center rounded-full bg-vert text-xs font-bold text-white" aria-hidden="true">YC</span>
       <p class="text-sm leading-tight"><strong class="block text-encre">L'équipe YouthConnekt Mali</strong>Communication du chapitre</p>
@@ -20,15 +20,15 @@
   </header>
 
   {% if a.image %}
-  <div class="conteneur mt-8">
-    <div class="aspect-[16/9] overflow-hidden rounded-3xl lg:aspect-[16/7]">
+  <div class="mx-auto mt-7 w-full max-w-6xl sm:mt-8 sm:px-6 lg:px-8">
+    <div class="aspect-[16/10] overflow-hidden sm:aspect-[16/9] sm:rounded-3xl lg:aspect-[16/7]">
       <img src="{{ a.image.url }}" alt="" class="h-full w-full object-cover" fetchpriority="high">
     </div>
   </div>
   {% endif %}
 
-  <div class="conteneur mt-10 grid gap-8 pb-14 lg:grid-cols-[180px_minmax(0,1fr)] lg:gap-12">
-    <aside class="order-2 lg:order-1">
+  <div class="conteneur mt-8 grid gap-8 pb-14 sm:mt-10 lg:grid-cols-[180px_minmax(0,1fr)] lg:gap-12">
+    <aside class="order-2 border-t border-ligne pt-6 lg:order-1 lg:border-0 lg:pt-0">
       <div class="lg:sticky lg:top-24">
         <p class="text-xs font-bold tracking-[0.14em] text-vert uppercase">Partager</p>
         <ul class="mt-3 flex flex-wrap gap-2 lg:flex-col">
@@ -56,11 +56,12 @@
   <div class="conteneur">
     <div class="flex flex-wrap items-end justify-between gap-4">
       <h2 id="titre-autres" class="titre-section">À lire aussi.</h2>
-      <a href="{% url 'contenus:actualites' %}" class="btn btn-contour">Toutes les actualités</a>
+      <a href="{% url 'contenus:actualites' %}" class="btn btn-contour hidden sm:inline-flex">Toutes les actualités</a>
     </div>
-    <ul class="mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {% for a in autres %}<li>{% include "cartes/actualite.html" with mode="lire" %}</li>{% endfor %}
+    <ul class="masquer-defilement -mx-4 mt-7 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 lg:grid-cols-3">
+      {% for a in autres %}<li class="w-[75%] max-w-72 shrink-0 snap-start sm:w-auto sm:max-w-none">{% include "cartes/actualite.html" with mode="lire" %}</li>{% endfor %}
     </ul>
+    <a href="{% url 'contenus:actualites' %}" class="btn btn-contour mt-6 w-full sm:hidden">Toutes les actualités</a>
   </div>
 </section>
 {% endif %}

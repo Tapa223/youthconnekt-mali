@@ -11,17 +11,23 @@
     {% if o.est_expiree %}<span class="etiquette rounded-full bg-gris text-rouge">Candidatures closes</span>
     {% elif o.jours_restants is not None %}<span class="etiquette rounded-full bg-orange text-white">{{ o.jours_restants|jours_label }}</span>{% endif %}
   </div>
-  <h1 class="mt-3 text-3xl leading-tight font-bold sm:text-5xl">{{ o.titre }}</h1>
+  <h1 class="mt-3 text-[1.875rem] leading-[1.08] font-bold sm:text-5xl">{{ o.titre }}</h1>
   <p class="mt-2 text-sm">{% if o.organisme %}Proposée par <strong class="text-encre">{{ o.organisme }}</strong> · {% endif %}Publiée le {{ o.publie_le|date:"j F Y" }}</p>
 
   <div class="mt-7 grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-10">
     <div class="min-w-0">
-      <div class="devoile relative aspect-[16/8] overflow-hidden rounded-2xl border-b-4 {{ o.couleur|bordure }}">
+      <div class="devoile relative aspect-[16/9] overflow-hidden rounded-2xl border-b-[5px] sm:aspect-[16/8] lg:border-b-8 {{ o.couleur|bordure }}">
         {% include "partials/photo.html" with image=o.image alt="" eager=True %}
       </div>
 
-      {# Encadré de candidature : sous la photo sur téléphone #}
-      <div class="mt-6 lg:hidden">{% include "contenus/encadre_candidature.html" %}</div>
+      {# Téléphone : informations clés dans un encadré gris, comme la maquette #}
+      <dl class="mt-5 grid grid-cols-2 gap-x-4 gap-y-3 rounded-2xl bg-gris p-4 text-sm lg:hidden">
+        <div class="col-span-2"><dt class="text-xs">Date limite</dt><dd class="font-bold text-rouge">{% if o.date_limite %}{{ o.date_limite|date:"j F Y" }}{% else %}Aucune{% endif %}</dd></div>
+        {% if o.lieu %}<div><dt class="text-xs">Lieu</dt><dd class="font-bold text-encre">{{ o.lieu }}</dd></div>{% endif %}
+        {% if o.duree %}<div><dt class="text-xs">Durée</dt><dd class="font-bold text-encre">{{ o.duree }}</dd></div>{% endif %}
+        {% if o.public %}<div><dt class="text-xs">Public</dt><dd class="font-bold text-encre">{{ o.public }}</dd></div>{% endif %}
+        {% if o.cout %}<div><dt class="text-xs">Coût</dt><dd class="font-bold text-vert">{{ o.cout }}</dd></div>{% endif %}
+      </dl>
 
       <div class="prose-ycm mt-8">
         <h2>Présentation</h2>
@@ -46,6 +52,12 @@
         {% endfor %}
       </ol>
       {% endif %}
+
+      {# Téléphone : partage en bas de page #}
+      <div class="mt-9 grid grid-cols-2 gap-2 border-t border-ligne pt-6 lg:hidden">
+        <button type="button" class="btn btn-contour px-2 text-sm" data-partager data-titre="{{ o.titre }}">Partager</button>
+        <button type="button" class="btn btn-contour px-2 text-sm" data-copier-lien>Copier le lien</button>
+      </div>
     </div>
 
     <aside class="hidden lg:block">
@@ -54,16 +66,29 @@
   </div>
 </div>
 
+{# Téléphone : barre de candidature collée en bas de l'écran (s'arrête avant le pied de page) #}
+<div class="sticky bottom-0 z-30 border-t border-ligne bg-white/95 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-6px_20px_rgba(0,0,0,0.06)] backdrop-blur lg:hidden">
+  <div class="mx-auto flex max-w-xl items-center justify-between gap-4">
+    <p class="text-xs leading-tight">{% if o.est_expiree %}Statut<br><strong class="text-sm text-rouge">Candidatures closes</strong>{% else %}Date limite<br><strong class="text-sm text-rouge">{% if o.date_limite %}{{ o.date_limite|date:"j M Y" }}{% else %}Aucune{% endif %}</strong>{% endif %}</p>
+    {% if not o.est_expiree and o.lien_candidature %}
+    <a href="{{ o.lien_candidature }}" target="_blank" rel="noopener" class="btn btn-orange min-h-12 px-8 text-base">Postuler</a>
+    {% elif not o.est_expiree %}
+    <span class="text-right text-xs">Lien de candidature<br>bientôt disponible</span>
+    {% endif %}
+  </div>
+</div>
+
 {% if similaires %}
 <section class="bg-gris py-14 sm:py-16" aria-labelledby="titre-similaires">
   <div class="conteneur">
     <div class="flex flex-wrap items-end justify-between gap-4">
       <h2 id="titre-similaires" class="titre-section">Vous aimerez aussi.</h2>
-      <a href="{% url 'contenus:opportunites' %}" class="btn btn-contour">Toutes les opportunités</a>
+      <a href="{% url 'contenus:opportunites' %}" class="btn btn-contour hidden sm:inline-flex">Toutes les opportunités</a>
     </div>
-    <ul class="mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {% for o in similaires %}<li>{% include "cartes/opportunite.html" with compacte=True %}</li>{% endfor %}
+    <ul class="masquer-defilement -mx-4 mt-7 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 lg:grid-cols-3">
+      {% for o in similaires %}<li class="w-[75%] max-w-72 shrink-0 snap-start sm:w-auto sm:max-w-none">{% include "cartes/opportunite.html" with compacte=True %}</li>{% endfor %}
     </ul>
+    <a href="{% url 'contenus:opportunites' %}" class="btn btn-contour mt-6 w-full sm:hidden">Toutes les opportunités</a>
   </div>
 </section>
 {% endif %}

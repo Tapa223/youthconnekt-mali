@@ -46,7 +46,7 @@
           {% for a in activites_recentes %}
           <li><a href="{{ a.get_absolute_url }}" class="survol-ligne group -mx-2 flex items-center gap-4 rounded-xl px-2 py-3">
             <span class="block size-14 shrink-0 overflow-hidden rounded-xl">{% include "partials/photo.html" with image=a.image alt="" %}</span>
-            <span><span class="block font-bold text-encre group-hover:text-vert">{{ a.titre }}</span><span class="text-xs">{{ a.date_affichee|date:"j M Y" }}</span></span>
+            <span><span class="block font-bold text-encre group-hover:text-orange">{{ a.titre }}</span><span class="text-xs">{{ a.date_affichee|date:"j M Y" }}</span></span>
           </a></li>
           {% endfor %}
         </ul>

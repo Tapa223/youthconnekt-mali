@@ -10,7 +10,7 @@
         {% for lien in navigation %}
         <li>
           <a href="{% url lien.url %}"
-             class="relative flex h-[76px] items-center whitespace-nowrap px-2.5 text-[15px] font-medium transition-colors xl:px-3 {% if lien.actif %}text-vert after:absolute after:inset-x-2.5 after:bottom-0 after:h-[3px] after:rounded-t after:bg-orange{% else %}text-encre hover:text-vert{% endif %}"
+             class="relative flex h-[76px] items-center whitespace-nowrap px-2.5 text-[15px] font-medium transition-colors xl:px-3 {% if lien.actif %}text-vert after:absolute after:inset-x-2.5 after:bottom-0 after:h-[3px] after:rounded-t after:bg-orange{% else %}text-encre hover:text-orange{% endif %}"
              {% if lien.actif %}aria-current="page"{% endif %}>{{ lien.libelle }}</a>
         </li>
         {% endfor %}

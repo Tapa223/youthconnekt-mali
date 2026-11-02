@@ -80,7 +80,7 @@
       {% for e in evenements %}
       <li><a href="{{ e.get_absolute_url }}" class="group flex items-center gap-4">
         <time datetime="{{ e.date_evenement|date:'Y-m-d' }}" class="grid min-w-13 rounded-xl bg-vert px-2 py-2 text-center leading-none text-white"><span class="text-xl font-bold">{{ e.date_evenement|date:"j" }}</span><span class="mt-0.5 text-[10px] font-bold uppercase">{{ e.date_evenement|date:"M" }}</span></time>
-        <span><span class="block font-bold text-encre group-hover:text-vert">{{ e.titre }}</span>{% if e.lieu %}<span class="text-xs">{{ e.lieu }}</span>{% endif %}</span>
+        <span><span class="block font-bold text-encre group-hover:text-orange">{{ e.titre }}</span>{% if e.lieu %}<span class="text-xs">{{ e.lieu }}</span>{% endif %}</span>
       </a></li>
       {% endfor %}
     </ul>

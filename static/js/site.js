@@ -186,3 +186,24 @@ document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
     obs.observe(el);
   });
 })();
+
+/* Apparition des blocs quand ils entrent à l'écran (une seule fois) */
+(function () {
+  "use strict";
+  var blocs = document.querySelectorAll(".apparition, .devoile, .devoile-2, main > section:not(:first-child) > .conteneur");
+  if (!("IntersectionObserver" in window)) { blocs.forEach(function (b) { b.classList.add("visible"); }); return; }
+  // Un bloc masqué par « clip-path » n'est pas vu par l'observateur : on observe alors son parent.
+  var cibles = new Map();
+  var obs = new IntersectionObserver(function (entrees) {
+    entrees.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      (cibles.get(e.target) || []).forEach(function (b) { b.classList.add("visible"); });
+      obs.unobserve(e.target);
+    });
+  }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+  blocs.forEach(function (b) {
+    var cible = (b.classList.contains("devoile") || b.classList.contains("devoile-2")) ? (b.parentElement || b) : b;
+    if (!cibles.has(cible)) { cibles.set(cible, []); obs.observe(cible); }
+    cibles.get(cible).push(b);
+  });
+})();

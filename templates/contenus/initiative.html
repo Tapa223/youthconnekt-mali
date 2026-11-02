@@ -11,7 +11,7 @@
       {% if i.axe %}<span class="etiquette rounded-full {{ i.axe.couleur|fond }}">{{ i.axe.nom }}</span>{% endif %}
       <span class="etiquette rounded-full bg-gris text-vert">{{ i.get_etat_display }}</span>
     </div>
-    <h1 class="mt-3 text-4xl leading-[1.05] font-bold sm:text-5xl lg:text-6xl">{{ i.titre }}</h1>
+    <h1 class="mt-3 text-[1.875rem] leading-[1.08] font-bold sm:text-5xl xl:text-[3.5rem]">{{ i.titre }}</h1>
     <p class="mt-4 text-base leading-relaxed sm:text-lg">{{ i.resume }}</p>
     {% if i.date_libelle or i.lieu or i.participants or i.format %}
     <dl class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -23,7 +23,7 @@
     {% endif %}
   </div>
 
-  <div class="relative mx-auto w-full max-w-xl pr-6 pb-10">
+  <div class="relative mx-auto w-full max-w-xl pr-4 pb-8 sm:pr-6 sm:pb-10">
     <div class="absolute top-6 right-0 bottom-10 left-1/3 rounded-3xl bg-orange" aria-hidden="true"></div>
     <div class="devoile survol-zoom relative aspect-[4/3] overflow-hidden rounded-3xl shadow-xl">
       {% include "partials/photo.html" with image=i.image alt="" eager=True %}
@@ -38,34 +38,34 @@
 
 <section class="bg-gris py-14 sm:py-16">
   <div class="conteneur grid gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-14">
-    <div>
+    <div class="order-2 lg:order-1">
       <h2 class="text-2xl font-bold sm:text-3xl">L'initiative</h2>
       <div class="mt-4 space-y-4 text-base leading-relaxed text-encre">{{ i.contenu|paragraphes }}</div>
       {% if i.liste_objectifs %}
       <h3 class="mt-9 text-xl font-bold">Objectifs</h3>
-      <ul class="mt-4 grid gap-3 sm:grid-cols-2">
+      <ul class="mt-4 grid grid-cols-2 gap-2.5 sm:gap-3">
         {% for objectif in i.liste_objectifs %}
-        <li class="flex gap-3 rounded-xl bg-white p-4 text-sm text-encre">
-          <svg class="mt-0.5 size-5 shrink-0 text-vert" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.5 12.5 3 3 6-6" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <li class="flex flex-col gap-2 rounded-xl bg-white p-3.5 text-[13px] leading-snug text-encre sm:flex-row sm:gap-3 sm:p-4 sm:text-sm">
+          <svg class="size-5 shrink-0 text-vert" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.5 12.5 3 3 6-6" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           {{ objectif }}
         </li>
         {% endfor %}
       </ul>
       {% endif %}
     </div>
-    <aside>
+    <aside class="order-1 lg:order-2">
       {% if i.liste_chiffres %}
-      <h2 class="text-xl font-bold">En chiffres</h2>
-      <ul class="mt-4 space-y-3">
+      <h2 class="sr-only text-xl font-bold lg:not-sr-only">En chiffres</h2>
+      <ul class="grid grid-cols-3 gap-2.5 lg:mt-4 lg:grid-cols-1 lg:gap-3">
         {% for valeur, libelle in i.liste_chiffres %}
-        <li class="flex items-center gap-5 rounded-xl border-l-4 bg-white px-5 py-4 {% cycle 'border-orange' 'border-turquoise' 'border-bleu' %}">
-          <span class="text-3xl font-bold text-vert">{{ valeur }}</span><span class="text-sm text-encre">{{ libelle }}</span>
+        <li class="flex flex-col gap-1 rounded-xl border-t-4 bg-white px-3 py-3 lg:flex-row lg:items-center lg:gap-5 lg:border-t-0 lg:border-l-4 lg:px-5 lg:py-4 {% cycle 'border-orange' 'border-turquoise' 'border-bleu' %}">
+          <span class="text-2xl font-bold text-vert lg:text-4xl">{{ valeur }}</span><span class="text-xs leading-snug text-encre lg:text-sm">{{ libelle }}</span>
         </li>
         {% endfor %}
       </ul>
       {% endif %}
       {% if i.citation %}
-      <figure class="mt-5 rounded-2xl bg-vert p-6 text-white">
+      <figure class="mt-5 hidden rounded-2xl lg:block bg-vert p-6 text-white">
         <blockquote class="text-[15px] leading-relaxed">« {{ i.citation }} »</blockquote>
         {% if i.citation_auteur %}<figcaption class="mt-3 text-xs text-white/80">{{ i.citation_auteur }}</figcaption>{% endif %}
       </figure>
@@ -77,14 +77,14 @@
 {% if i.liste_programme %}
 <section class="conteneur py-14 sm:py-16" aria-labelledby="titre-programme">
   <h2 id="titre-programme" class="titre-section">Le programme.</h2>
-  <ol class="mt-8 grid gap-8 md:grid-cols-3">
+  <ol class="mt-8 grid gap-6 md:grid-cols-3 md:gap-8">
     {% for etiquette, titre, texte in i.liste_programme %}
-    <li class="relative">
-      <div class="flex items-center gap-3">
+    <li class="relative grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 md:block">
+      <div class="row-span-3 flex items-center gap-3 md:row-span-1">
         <span class="grid size-11 shrink-0 place-items-center rounded-full font-bold text-white {% cycle 'bg-orange' 'bg-turquoise' 'bg-bleu' %}">{{ forloop.counter }}</span>
         {% if not forloop.last %}<span class="hidden h-px flex-1 border-t-2 border-dashed border-ligne md:block" aria-hidden="true"></span>{% endif %}
       </div>
-      {% if etiquette %}<p class="mt-4 text-xs font-bold tracking-[0.14em] uppercase">{{ etiquette }}</p>{% endif %}
+      {% if etiquette %}<p class="mt-1 text-xs md:mt-4 font-bold tracking-[0.14em] uppercase">{{ etiquette }}</p>{% endif %}
       <h3 class="mt-1 text-lg font-bold">{{ titre }}</h3>
       {% if texte %}<p class="mt-2 text-sm leading-relaxed">{{ texte }}</p>{% endif %}
     </li>
@@ -115,11 +115,12 @@
   <div class="conteneur">
     <div class="flex flex-wrap items-end justify-between gap-4">
       <h2 id="titre-autres" class="titre-section">Autres initiatives.</h2>
-      <a href="{% url 'contenus:initiatives' %}" class="btn btn-contour">Toutes les initiatives</a>
+      <a href="{% url 'contenus:initiatives' %}" class="btn btn-contour hidden sm:inline-flex">Toutes les initiatives</a>
     </div>
-    <ul class="mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {% for i in autres %}<li>{% include "cartes/initiative.html" with simple=True %}</li>{% endfor %}
+    <ul class="masquer-defilement -mx-4 mt-7 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 lg:grid-cols-3">
+      {% for i in autres %}<li class="w-[75%] max-w-72 shrink-0 snap-start sm:w-auto sm:max-w-none">{% include "cartes/initiative.html" with simple=True %}</li>{% endfor %}
     </ul>
+    <a href="{% url 'contenus:initiatives' %}" class="btn btn-contour mt-6 w-full sm:hidden">Toutes les initiatives</a>
   </div>
 </section>
 {% endif %}

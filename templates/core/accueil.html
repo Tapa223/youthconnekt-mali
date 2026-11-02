@@ -18,39 +18,44 @@
   </div>
   <div class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(3_94_77/.95)_0%,rgb(3_94_77/.88)_34%,rgb(3_94_77/.72)_60%,rgb(3_94_77/.86)_100%)]" aria-hidden="true"></div>
 
-  {# Anneau de points qui tourne lentement autour du grand cercle (ordinateur) #}
-  <svg class="pointer-events-none absolute top-0 left-1/2 -z-10 hidden h-full w-[1440px] -translate-x-1/2 overflow-visible lg:block" viewBox="0 0 1440 820" preserveAspectRatio="xMidYMin meet" fill="none" aria-hidden="true">
-    <circle cx="720" cy="710" r="450" stroke="#fff" stroke-opacity=".3" stroke-width="1.5" stroke-dasharray="6 8"/>
-    <circle cx="720" cy="710" r="490" stroke="#fff" stroke-opacity=".1"/>
-    <g class="anim-orbite" style="transform-origin: 720px 710px">
-      <circle class="anim-point" cx="1170" cy="710" r="9" fill="#F1592A" stroke="#035E4D" stroke-width="3" style="animation-delay:.6s"/>
-      <circle class="anim-point" cx="1110" cy="485" r="7" fill="#04B2B1" stroke="#035E4D" stroke-width="3" style="animation-delay:.85s"/>
-      <circle class="anim-point" cx="945" cy="320" r="7" fill="#fff" stroke="#035E4D" stroke-width="3" style="animation-delay:1.1s"/>
-      <circle class="anim-point" cx="720" cy="260" r="9" fill="#0358D9" stroke="#035E4D" stroke-width="3" style="animation-delay:1.35s"/>
-      <circle class="anim-point" cx="495" cy="320" r="7" fill="#F1592A" stroke="#035E4D" stroke-width="3" style="animation-delay:1.6s"/>
-      <circle class="anim-point" cx="330" cy="485" r="7" fill="#04B2B1" stroke="#035E4D" stroke-width="3" style="animation-delay:1.85s"/>
-      <circle class="anim-point" cx="270" cy="710" r="9" fill="#fff" stroke="#035E4D" stroke-width="3" style="animation-delay:2.1s"/>
-      <circle class="anim-point" cx="330" cy="935" r="7" fill="#0358D9" stroke="#035E4D" stroke-width="3" style="animation-delay:2.35s"/>
-      <circle class="anim-point" cx="495" cy="1100" r="7" fill="#F1592A" stroke="#035E4D" stroke-width="3" style="animation-delay:2.6s"/>
-      <circle class="anim-point" cx="720" cy="1160" r="9" fill="#04B2B1" stroke="#035E4D" stroke-width="3" style="animation-delay:2.85s"/>
-      <circle class="anim-point" cx="945" cy="1100" r="7" fill="#fff" stroke="#035E4D" stroke-width="3" style="animation-delay:3.1s"/>
-      <circle class="anim-point" cx="1110" cy="935" r="7" fill="#0358D9" stroke="#035E4D" stroke-width="3" style="animation-delay:3.35s"/>
-    </g>
-  </svg>
-
-  {# Bulles photo qui flottent de part et d'autre (ordinateur) #}
-  <div class="pointer-events-none absolute inset-y-0 left-1/2 hidden w-[1440px] -translate-x-1/2 lg:block" aria-hidden="true">
-    <svg class="absolute inset-0 h-full w-full" viewBox="0 0 1440 820" preserveAspectRatio="none" fill="none">
+  {# Cadre de la maquette (1440 × 820) mis à l'échelle de l'écran : anneau, grand cercle et bulles s'y alignent #}
+  <div class="pointer-events-none absolute inset-y-0 left-1/2 hidden aspect-[1440/820] -translate-x-1/2 lg:block" aria-hidden="true">
+    <svg class="absolute inset-0 h-full w-full overflow-visible" viewBox="0 0 1440 820" fill="none">
+      <circle cx="720" cy="710" r="450" stroke="#fff" stroke-opacity=".3" stroke-width="1.5" stroke-dasharray="6 8"/>
+      <circle cx="720" cy="710" r="490" stroke="#fff" stroke-opacity=".1"/>
+      <g class="anim-orbite" style="transform-origin: 720px 710px">
+        <circle class="anim-point" cx="1170" cy="710" r="9" fill="#F1592A" stroke="#035E4D" stroke-width="3" style="animation-delay:.6s"/>
+        <circle class="anim-point" cx="1110" cy="485" r="7" fill="#04B2B1" stroke="#035E4D" stroke-width="3" style="animation-delay:.85s"/>
+        <circle class="anim-point" cx="945" cy="320" r="7" fill="#fff" stroke="#035E4D" stroke-width="3" style="animation-delay:1.1s"/>
+        <circle class="anim-point" cx="720" cy="260" r="9" fill="#0358D9" stroke="#035E4D" stroke-width="3" style="animation-delay:1.35s"/>
+        <circle class="anim-point" cx="495" cy="320" r="7" fill="#F1592A" stroke="#035E4D" stroke-width="3" style="animation-delay:1.6s"/>
+        <circle class="anim-point" cx="330" cy="485" r="7" fill="#04B2B1" stroke="#035E4D" stroke-width="3" style="animation-delay:1.85s"/>
+        <circle class="anim-point" cx="270" cy="710" r="9" fill="#fff" stroke="#035E4D" stroke-width="3" style="animation-delay:2.1s"/>
+        <circle class="anim-point" cx="330" cy="935" r="7" fill="#0358D9" stroke="#035E4D" stroke-width="3" style="animation-delay:2.35s"/>
+        <circle class="anim-point" cx="495" cy="1100" r="7" fill="#F1592A" stroke="#035E4D" stroke-width="3" style="animation-delay:2.6s"/>
+        <circle class="anim-point" cx="720" cy="1160" r="9" fill="#04B2B1" stroke="#035E4D" stroke-width="3" style="animation-delay:2.85s"/>
+        <circle class="anim-point" cx="945" cy="1100" r="7" fill="#fff" stroke="#035E4D" stroke-width="3" style="animation-delay:3.1s"/>
+        <circle class="anim-point" cx="1110" cy="935" r="7" fill="#0358D9" stroke="#035E4D" stroke-width="3" style="animation-delay:3.35s"/>
+      </g>
       <g stroke="#fff" stroke-opacity=".35" stroke-width="1.5" stroke-dasharray="4 6"><path d="M195 360 L346 460"/><path d="M289 536 L303 541"/><path d="M1243 334 L1085 447"/><path d="M1143 517 L1129 523"/></g>
       <circle cx="346" cy="460" r="4" fill="#F1592A"/><circle cx="303" cy="541" r="4" fill="#04B2B1"/><circle cx="1085" cy="447" r="4" fill="#04B2B1"/><circle cx="1129" cy="523" r="4" fill="#F1592A"/>
     </svg>
-    <span class="anim-flotte-2 absolute top-[34.4%] left-[102px] size-24 overflow-hidden rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)]"><img src="{% static 'img/accueil/bulle-1.jpg' %}" alt="" class="h-full w-full object-cover"></span>
-    <span class="anim-flotte absolute top-[59%] left-[214px] size-[72px] overflow-hidden rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)]"><img src="{% static 'img/accueil/bulle-2.jpg' %}" alt="" class="h-full w-full object-cover"></span>
-    <span class="anim-flotte-2 absolute top-[30.2%] left-[1238px] size-[104px] overflow-hidden rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)]"><img src="{% static 'img/accueil/bulle-3.jpg' %}" alt="" class="h-full w-full object-cover"></span>
-    <span class="anim-flotte absolute top-[56.7%] left-[1145px] size-[70px] overflow-hidden rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)]"><img src="{% static 'img/accueil/bulle-4.jpg' %}" alt="" class="h-full w-full object-cover"></span>
+    {# Bulles photo qui flottent (positions et tailles en proportion du cadre) #}
+    <span class="anim-flotte-2 absolute top-[34.4%] left-[7.1%] aspect-square w-[6.7%] overflow-hidden rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)]"><img src="{% static 'img/accueil/bulle-1.jpg' %}" alt=""></span>
+    <span class="anim-flotte absolute top-[59%] left-[14.9%] aspect-square w-[5%] overflow-hidden rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)]"><img src="{% static 'img/accueil/bulle-2.jpg' %}" alt=""></span>
+    <span class="anim-flotte-2 absolute top-[30.2%] left-[86%] aspect-square w-[7.2%] overflow-hidden rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)]"><img src="{% static 'img/accueil/bulle-3.jpg' %}" alt=""></span>
+    <span class="anim-flotte absolute top-[56.7%] left-[79.5%] aspect-square w-[4.9%] overflow-hidden rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)]"><img src="{% static 'img/accueil/bulle-4.jpg' %}" alt=""></span>
+    {# Grand cercle photo : son haut est à 36,6 % de la hauteur, comme sur la maquette ; les photos changent toutes les 5 s #}
+    <div class="anim-soleil absolute top-[36.6%] left-[21.5%] aspect-square w-[57%]">
+      <div class="absolute inset-0 overflow-hidden rounded-full bg-vert shadow-[0_0_0_8px_rgb(255_255_255/.14)]" data-diapo="accueil" data-diapo-zoom>
+        <img data-diapo-image src="{% static 'img/accueil/premier-ecran.jpg' %}" alt="" class="absolute inset-0 h-full w-full object-cover object-[62%_30%]" fetchpriority="high">
+        <img data-diapo-image src="{% static 'img/accueil/premier-ecran-2.jpg' %}" alt="" class="absolute inset-0 h-full w-full object-cover object-[50%_20%]" loading="lazy">
+        <img data-diapo-image src="{% static 'img/accueil/premier-ecran-3.jpg' %}" alt="" class="absolute inset-0 h-full w-full object-cover" loading="lazy">
+      </div>
+    </div>
   </div>
 
-  <div class="conteneur relative flex flex-col items-center pt-7 pb-9 text-center sm:pt-10 lg:h-full lg:pt-[5vh] lg:pb-0">
+  <div class="conteneur relative z-[2] flex flex-col items-center pt-7 pb-9 text-center sm:pt-10 lg:h-full lg:pt-[5vh] lg:pb-0">
     <div class="anim-entree order-2 flex flex-col items-center lg:order-1">
       <h1 id="titre-accueil" class="mt-7 max-w-4xl text-[2.1rem] leading-[1.05] font-bold text-white [text-shadow:0_4px_28px_rgb(0_0_0/.45)] sm:text-5xl lg:mt-0 lg:text-[clamp(2.75rem,8vh,4.75rem)]">
         {{ p.accroche_accueil|default:"La jeunesse malienne se connecte ici." }}
@@ -66,15 +71,13 @@
       <a href="#rejoindre" class="btn btn-orange px-2 text-[13px] sm:text-base">Let's Connekt</a>
     </div>
 
-    {# Grand cercle photo : les trois photos se succèdent toutes les 5 secondes #}
-    <div class="relative order-1 w-[66vw] max-w-[290px] sm:max-w-[340px] lg:order-3 lg:mt-[4vh] lg:w-full lg:max-w-none lg:flex-1 lg:min-h-[200px]">
-      <div class="anim-soleil relative aspect-square lg:absolute lg:top-0 lg:left-1/2 lg:aspect-auto lg:h-[min(820px,200%)] lg:w-auto lg:-translate-x-1/2">
-        <div class="absolute -inset-3 rounded-full border-2 border-dashed border-white/35 lg:hidden" aria-hidden="true"></div>
-        <div class="relative h-full overflow-hidden rounded-full bg-vert shadow-[0_0_0_8px_rgb(255_255_255/.14)] lg:aspect-square" data-diapo="accueil" data-diapo-zoom>
-          <img data-diapo-image src="{% static 'img/accueil/premier-ecran.jpg' %}" alt="Jeunes réunis lors d'un événement YouthConnekt" class="absolute inset-0 h-full w-full object-cover object-[62%_30%]" fetchpriority="high">
-          <img data-diapo-image src="{% static 'img/accueil/premier-ecran-2.jpg' %}" alt="Intervenantes lors d'un événement YouthConnekt" class="absolute inset-0 h-full w-full object-cover object-[50%_20%]" loading="lazy">
-          <img data-diapo-image src="{% static 'img/accueil/premier-ecran-3.jpg' %}" alt="Grande salle d'un événement YouthConnekt" class="absolute inset-0 h-full w-full object-cover" loading="lazy">
-        </div>
+    {# Téléphone et tablette : cercle photo au-dessus du titre ; les photos changent toutes les 5 s #}
+    <div class="anim-soleil relative order-1 aspect-square w-[66vw] max-w-[290px] sm:max-w-[340px] lg:hidden">
+      <div class="absolute -inset-3 rounded-full border-2 border-dashed border-white/35" aria-hidden="true"></div>
+      <div class="absolute inset-0 overflow-hidden rounded-full bg-vert shadow-[0_0_0_6px_rgb(255_255_255/.14)]" data-diapo="accueil" data-diapo-zoom>
+        <img data-diapo-image src="{% static 'img/accueil/premier-ecran.jpg' %}" alt="Jeunes réunis lors d'un événement YouthConnekt" class="absolute inset-0 h-full w-full object-cover object-[62%_30%]">
+        <img data-diapo-image src="{% static 'img/accueil/premier-ecran-2.jpg' %}" alt="" class="absolute inset-0 h-full w-full object-cover" loading="lazy">
+        <img data-diapo-image src="{% static 'img/accueil/premier-ecran-3.jpg' %}" alt="" class="absolute inset-0 h-full w-full object-cover" loading="lazy">
       </div>
     </div>
 
@@ -300,7 +303,7 @@
           </div>
           <div class="flex flex-1 flex-col p-4 sm:p-6">
             <span class="etiquette self-start {{ o.couleur|fond }}">{{ o.get_type_display }}</span>
-            <h3 class="mt-3 text-base leading-snug font-bold text-encre group-hover:text-vert sm:text-xl">{{ o.titre }}</h3>
+            <h3 class="mt-3 text-base leading-snug font-bold text-encre group-hover:text-orange sm:text-xl">{{ o.titre }}</h3>
             <div class="mt-auto flex items-end justify-between gap-3 pt-4 md:mt-5 md:border-t md:border-ligne">
               <p class="text-xs sm:text-sm">
                 {% if o.date_limite %}<span class="block text-texte">Date limite</span><span class="mt-0.5 block font-bold text-rouge">{{ o.date_limite|date:"j F Y" }}</span>
@@ -362,7 +365,7 @@
             </div>
             <div class="min-w-0">
               <p class="text-[11px] font-bold tracking-[0.12em] text-vert uppercase sm:text-xs">{{ actu.get_categorie_display }} · <time datetime="{{ actu.publie_le|date:'c' }}">{{ actu.publie_le|date:"j M Y" }}</time></p>
-              <h3 class="mt-1.5 line-clamp-2 text-[15px] leading-snug font-bold text-encre group-hover:text-vert sm:text-base">{{ actu.titre }}</h3>
+              <h3 class="mt-1.5 line-clamp-2 text-[15px] leading-snug font-bold text-encre group-hover:text-orange sm:text-base">{{ actu.titre }}</h3>
             </div>
           </a>
         </li>
@@ -445,13 +448,13 @@
           {% if p.email_contact or user.is_staff %}
           <li class="flex items-center gap-3">
             <span class="grid size-10 shrink-0 place-items-center rounded-full bg-gris text-vert" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>
-            {% if p.email_contact %}<a href="mailto:{{ p.email_contact }}" class="break-all hover:text-vert hover:underline">{{ p.email_contact }}</a>{% else %}[Adresse e-mail officielle]{% endif %}
+            {% if p.email_contact %}<a href="mailto:{{ p.email_contact }}" class="break-all hover:text-orange hover:underline">{{ p.email_contact }}</a>{% else %}[Adresse e-mail officielle]{% endif %}
           </li>
           {% endif %}
           {% if p.telephone or user.is_staff %}
           <li class="flex items-center gap-3">
             <span class="grid size-10 shrink-0 place-items-center rounded-full bg-gris text-vert" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></span>
-            {% if p.telephone %}<a href="tel:{{ p.telephone|cut:' ' }}" class="hover:text-vert hover:underline">{{ p.telephone }}</a>{% else %}[Téléphone officiel]{% endif %}
+            {% if p.telephone %}<a href="tel:{{ p.telephone|cut:' ' }}" class="hover:text-orange hover:underline">{{ p.telephone }}</a>{% else %}[Téléphone officiel]{% endif %}
           </li>
           {% endif %}
           {% if p.adresse or user.is_staff %}

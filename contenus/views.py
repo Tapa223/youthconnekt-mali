@@ -49,8 +49,10 @@ def opportunites(request):
 
 def opportunite(request, slug):
     objet = get_object_or_404(Opportunite.objects.publies(), slug=slug)
-    similaires = Opportunite.objects.ouvertes().exclude(pk=objet.pk)
-    similaires = list(similaires.filter(type=objet.type)[:3]) or list(similaires[:3])
+    ouvertes = Opportunite.objects.ouvertes().exclude(pk=objet.pk)
+    similaires = list(ouvertes.filter(type=objet.type)[:3])
+    if len(similaires) < 3:  # compléter avec les autres opportunités ouvertes
+        similaires += list(ouvertes.exclude(pk__in=[o.pk for o in similaires])[: 3 - len(similaires)])
     return render(request, "contenus/opportunite.html", {"o": objet, "similaires": similaires})
 
 

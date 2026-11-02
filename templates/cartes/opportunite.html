@@ -13,7 +13,7 @@
   <div class="flex flex-1 flex-col p-3.5 sm:p-5">
     {% if via %}<span class="etiquette self-start bg-vert-clair text-[11px] text-vert">Via {{ via }}</span>{% endif %}
     <p class="text-[11px] font-bold tracking-[0.12em] uppercase {{ o.couleur|texte_couleur }} {% if via %}mt-2{% endif %} {% if not compacte %}sm:hidden{% endif %}">{{ o.get_type_display }}</p>
-    <h3 class="mt-1 {% if not compacte %}sm:mt-0{% endif %} text-[15px] sm:leading-snug font-bold text-encre group-hover:text-vert sm:text-lg">{{ o.titre }}</h3>
+    <h3 class="mt-1 {% if not compacte %}sm:mt-0{% endif %} text-[15px] sm:leading-snug font-bold text-encre group-hover:text-orange sm:text-lg">{{ o.titre }}</h3>
     {% if not compacte and o.organisme or not compacte and o.lieu %}<p class="mt-1 hidden text-xs text-texte sm:block">{{ o.organisme }}{% if o.organisme and o.lieu %} · {% endif %}{{ o.lieu }}</p>{% endif %}
     {% if compacte %}
       <p class="mt-auto pt-2 text-xs text-texte">{% if o.date_limite %}Date limite <strong class="text-rouge">{{ o.date_limite|date:"j F Y" }}</strong>{% else %}Sans date limite{% endif %}</p>
