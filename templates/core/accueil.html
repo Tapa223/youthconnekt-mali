@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static ycm %}
 
 {% block titre %}YouthConnekt Mali | La jeunesse malienne se connecte ici{% endblock %}
 
@@ -8,55 +9,57 @@
 {# ===================================================================== #}
 {# 1. Premier écran                                                       #}
 {# ===================================================================== #}
-<section class="relative isolate overflow-hidden bg-vert text-white" aria-labelledby="titre-accueil">
-  {# Photo de fond, teintée en vert #}
+<section class="relative isolate overflow-hidden bg-vert text-white lg:h-[calc(100svh-4rem)] lg:max-h-[940px] lg:min-h-[620px] xl:h-[calc(100svh-76px)]" aria-labelledby="titre-accueil">
+  {# Photo de fond floutée et teintée en vert #}
   <div class="absolute inset-0 -z-10">
-    {% if p.image_accueil %}
-      <img src="{{ p.image_accueil.url }}" alt="" class="h-full w-full scale-110 object-cover opacity-25 blur-[3px]" fetchpriority="high">
-    {% endif %}
+    <img src="{% static 'img/accueil/premier-ecran.jpg' %}" alt="" class="h-full w-full scale-110 object-cover opacity-20 blur-[3px]">
     <div class="absolute inset-0 bg-gradient-to-b from-vert/80 via-vert/85 to-vert"></div>
   </div>
 
-  {# Décor : fils et points de connexion #}
-  <svg class="pointer-events-none absolute inset-0 -z-10 hidden h-full w-full lg:block" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-    <g fill="none" stroke="rgb(255 255 255 / .22)" stroke-width="1.5" stroke-dasharray="4 7">
-      <path d="M150 430 L345 552"/><path d="M1290 395 L1085 540"/><path d="M255 615 L330 578"/><path d="M1185 597 L1110 578"/>
+  {# Décor : cercles, fils et points de connexion (ordinateur) #}
+  <svg class="pointer-events-none absolute inset-0 -z-10 hidden h-full w-full lg:block" viewBox="0 0 1440 820" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g fill="none" stroke="rgb(255 255 255 / .25)" stroke-width="1.5" stroke-dasharray="4 7">
+      <path d="M150 380 L345 500"/><path d="M1290 345 L1085 490"/><path d="M255 560 L330 525"/><path d="M1185 545 L1110 525"/>
     </g>
-    <circle cx="150" cy="430" r="52" fill="none" stroke="#F1592A" stroke-width="5"/>
-    <circle cx="1290" cy="395" r="55" fill="none" stroke="#04B2B1" stroke-width="5"/>
-    <circle cx="255" cy="615" r="38" fill="none" stroke="#04B2B1" stroke-width="4"/>
-    <circle cx="1185" cy="597" r="36" fill="none" stroke="#F1592A" stroke-width="4"/>
-    <circle cx="345" cy="552" r="5" fill="#F1592A"/><circle cx="330" cy="578" r="5" fill="#04B2B1"/>
-    <circle cx="1085" cy="540" r="5" fill="#04B2B1"/><circle cx="1110" cy="578" r="5" fill="#04B2B1"/>
+    <circle cx="150" cy="380" r="50" fill="none" stroke="#F1592A" stroke-width="5"/>
+    <circle cx="1290" cy="345" r="52" fill="none" stroke="#04B2B1" stroke-width="5"/>
+    <circle cx="255" cy="560" r="36" fill="none" stroke="#04B2B1" stroke-width="4"/>
+    <circle cx="1185" cy="545" r="34" fill="none" stroke="#F1592A" stroke-width="4"/>
+    <circle cx="345" cy="500" r="5" fill="#F1592A"/><circle cx="330" cy="525" r="5" fill="#04B2B1"/>
+    <circle cx="1085" cy="490" r="5" fill="#04B2B1"/><circle cx="1110" cy="525" r="5" fill="#04B2B1"/>
   </svg>
 
-  <div class="conteneur relative flex flex-col items-center pt-8 pb-10 text-center sm:pt-12 lg:pt-16 lg:pb-0">
-    {# Sur téléphone, la photo vient en premier, comme sur la maquette #}
-    <h1 id="titre-accueil" class="order-2 mt-8 max-w-4xl text-[2.15rem] leading-[1.08] font-bold text-white sm:text-5xl lg:order-1 lg:mt-0 lg:text-[4.5rem]">
+  <div class="conteneur relative flex flex-col items-center pt-7 pb-9 text-center sm:pt-10 lg:h-full lg:pt-[5vh] lg:pb-0">
+    {# Titre : sur téléphone, il vient sous la photo, comme sur la maquette #}
+    <h1 id="titre-accueil" class="order-2 mt-7 max-w-4xl text-[2.1rem] leading-[1.08] font-bold text-white sm:text-5xl lg:order-1 lg:mt-0 lg:text-[clamp(2.75rem,8vh,4.75rem)]">
       {{ p.accroche_accueil|default:"La jeunesse malienne se connecte ici." }}
     </h1>
 
-    <p class="order-3 mt-5 max-w-2xl rounded-2xl border border-white/20 bg-white/10 px-5 py-4 text-base leading-relaxed text-white/95 backdrop-blur-sm sm:text-lg lg:order-2 lg:mt-7">
+    <p class="order-3 mt-5 hidden max-w-2xl rounded-2xl border border-white/20 bg-white/10 px-5 py-3.5 text-base leading-relaxed text-white/95 backdrop-blur-sm sm:block lg:order-2 lg:mt-[2.5vh] lg:text-[clamp(0.95rem,2.1vh,1.125rem)]">
       {{ p.presentation_accueil|default:"Chapitre national de YouthConnekt Africa, YouthConnekt Mali rassemble les jeunes et les organisations qui font avancer le pays : formations, opportunités, rencontres et initiatives pour une jeunesse qui agit." }}
     </p>
 
-    <div class="order-4 mt-7 grid w-full max-w-md grid-cols-2 gap-3 lg:hidden">
-      <a href="{% url 'core:a_propos' %}" class="btn btn-contour-blanc px-3">Découvrir le chapitre</a>
-      <a href="{% url 'comptes:inscription' %}" class="btn btn-orange px-3">Let's Connekt</a>
+    {# Boutons sur téléphone et tablette #}
+    <div class="order-4 mt-6 grid w-full max-w-md grid-cols-2 gap-3 lg:hidden">
+      <a href="{% url 'core:a_propos' %}" class="btn btn-contour-blanc px-2 text-[13px] sm:text-base">Découvrir le chapitre</a>
+      <a href="{% url 'comptes:inscription' %}" class="btn btn-orange px-2 text-[13px] sm:text-base">Let's Connekt</a>
     </div>
 
-    {# Grande photo circulaire #}
-    <div class="relative order-1 w-[78%] max-w-[300px] sm:max-w-[360px] lg:order-3 lg:mt-10 lg:w-full lg:max-w-[820px]">
-      <div class="absolute -inset-4 rounded-full border-2 border-dashed border-white/30 lg:-inset-6 lg:rounded-t-full lg:rounded-b-none lg:border-b-0" aria-hidden="true"></div>
-      <div class="relative aspect-square overflow-hidden rounded-full ring-4 ring-turquoise/60 lg:aspect-[2/1] lg:rounded-t-full lg:rounded-b-none">
-        {% include "partials/photo.html" with image=p.image_accueil alt="Jeunes réunis lors d'un événement YouthConnekt" eager=True mention="Photo principale de l'accueil à fournir" %}
+    {# Photo : cercle sur téléphone, demi-cercle qui remplit le bas de l'écran sur ordinateur #}
+    <div class="relative order-1 w-[66vw] max-w-[290px] sm:max-w-[340px] lg:order-3 lg:mt-[4vh] lg:w-full lg:max-w-none lg:flex-1 lg:min-h-[200px]">
+      <div class="relative aspect-square lg:absolute lg:bottom-0 lg:left-1/2 lg:aspect-[2/1] lg:h-full lg:max-w-full lg:-translate-x-1/2">
+        <div class="absolute -inset-3 rounded-full border-2 border-dashed border-white/30 lg:-inset-5 lg:rounded-t-full lg:rounded-b-none lg:border-b-0" aria-hidden="true"></div>
+        <div class="relative h-full w-full overflow-hidden rounded-full ring-4 ring-turquoise/60 lg:rounded-t-full lg:rounded-b-none">
+          <img src="{% static 'img/accueil/premier-ecran.jpg' %}" alt="Jeunes réunis lors d'un événement YouthConnekt" class="h-full w-full object-cover" fetchpriority="high">
+        </div>
       </div>
-
-      {# Boutons posés de part et d'autre de la photo, sur ordinateur #}
-      <a href="{% url 'core:a_propos' %}" class="btn btn-contour-blanc absolute bottom-[22%] -left-24 hidden min-h-14 px-7 text-lg lg:inline-flex xl:-left-36">Découvrir le chapitre</a>
-      <a href="{% url 'comptes:inscription' %}" class="btn btn-orange absolute -right-24 bottom-[22%] hidden min-h-14 px-7 text-lg shadow-lg shadow-orange/30 lg:inline-flex xl:-right-36">Let's Connekt</a>
     </div>
+
+    {# Boutons posés de part et d'autre de la photo, sur ordinateur #}
+    <a href="{% url 'core:a_propos' %}" class="btn btn-contour-blanc absolute bottom-[15%] left-4 hidden min-h-14 px-7 text-lg lg:inline-flex xl:-left-4">Découvrir le chapitre</a>
+    <a href="{% url 'comptes:inscription' %}" class="btn btn-orange absolute right-4 bottom-[15%] hidden min-h-14 px-7 text-lg shadow-lg shadow-orange/30 lg:inline-flex xl:-right-4">Let's Connekt</a>
   </div>
+  {% include "partials/mention_photo.html" with texte="Photos provisoires · Sommet YouthConnekt Africa, hors Mali" %}
 </section>
 
 {# ===================================================================== #}
@@ -92,15 +95,16 @@
       <div class="absolute top-8 bottom-0 left-0 w-[52%] rounded-3xl bg-orange"></div>
       <div class="absolute right-2 bottom-0 h-[48%] w-[34%] rounded-3xl bg-turquoise"></div>
       <div class="relative grid grid-cols-[1.25fr_1fr] gap-4 pt-0 pr-4 pl-6">
-        <div class="aspect-[3/4] overflow-hidden rounded-3xl shadow-xl">
-          {% include "partials/photo.html" with image=p.photo_presentation_1 mention="Photo de présentation 1 à fournir" %}
+        <div class="relative aspect-[3/4] overflow-hidden rounded-3xl shadow-xl">
+          {% include "partials/mention_photo.html" with texte="Photos provisoires · hors Mali" position="left-3 bottom-3" %}
+          <img src="{% static 'img/accueil/chapitre-1.jpg' %}" alt="" class="h-full w-full object-cover" loading="lazy">
         </div>
         <div class="flex flex-col gap-4 pt-6">
           <div class="aspect-[4/3.4] overflow-hidden rounded-2xl border-4 border-white shadow-xl rotate-2">
-            {% include "partials/photo.html" with image=p.photo_presentation_2 mention="Photo 2" %}
+            <img src="{% static 'img/accueil/chapitre-2.jpg' %}" alt="" class="h-full w-full object-cover" loading="lazy">
           </div>
           <div class="-ml-10 aspect-[4/3.4] overflow-hidden rounded-2xl border-4 border-white shadow-xl">
-            {% include "partials/photo.html" with image=p.photo_presentation_3 mention="Photo 3" %}
+            <img src="{% static 'img/accueil/chapitre-3.jpg' %}" alt="" class="h-full w-full object-cover" loading="lazy">
           </div>
         </div>
       </div>
@@ -115,8 +119,8 @@
     <ul class="masquer-defilement -mx-4 mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-5 sm:overflow-visible sm:px-0">
       {% for axe in axes %}
       <li class="carte flex w-[78%] shrink-0 snap-start flex-col sm:w-auto">
-        <div class="relative aspect-[16/8.5] border-b-4 {% cycle 'border-orange' 'border-turquoise' 'border-bleu' %}">
-          {% include "partials/photo.html" with image=axe.image alt="" mention="Photo de l'axe" %}
+        <div class="relative aspect-[16/8.5] border-b-4 {{ axe.couleur|bordure }}">
+          {% include "partials/image_axe.html" %}
           <span class="absolute top-3 left-3 grid size-9 place-items-center rounded-full bg-white/90 text-xs font-bold text-vert">{{ forloop.counter|stringformat:"02d" }}</span>
         </div>
         <div class="flex flex-1 flex-col p-5 sm:p-6">
@@ -343,9 +347,8 @@
 {# 8. Let's Connekt                                                       #}
 {# ===================================================================== #}
 <section class="relative isolate overflow-hidden bg-vert py-20 text-center text-white sm:py-28" aria-labelledby="titre-invitation">
-  {% if p.image_invitation %}
-  <img src="{{ p.image_invitation.url }}" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover" loading="lazy">
-  {% endif %}
+  <img src="{% static 'img/bandeaux/lets-connekt.jpg' %}" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover" loading="lazy">
+  {% include "partials/mention_photo.html" %}
   <div class="absolute inset-0 -z-10 bg-vert/85"></div>
   <div class="conteneur">
     <h2 id="titre-invitation" class="text-5xl leading-none font-bold text-white sm:text-7xl lg:text-[8.5rem]">Let's Connekt</h2>

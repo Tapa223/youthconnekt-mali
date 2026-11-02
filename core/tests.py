@@ -12,7 +12,7 @@ class AccueilTests(TestCase):
         self.assertEqual(reponse.status_code, 200)
         self.assertContains(reponse, "La jeunesse malienne se connecte ici.")
         # Les mentions « à fournir » sont réservées aux administrateurs.
-        self.assertNotContains(reponse, "[Photo")
+        self.assertNotContains(reponse, "[Chiffres")
         self.assertNotContains(reponse, "Aucune initiative publiée")
 
     def test_administrateur_voit_les_emplacements_a_remplir(self):
@@ -20,13 +20,13 @@ class AccueilTests(TestCase):
         self.client.force_login(admin)
         reponse = self.client.get(reverse("core:accueil"))
         self.assertContains(reponse, "Aucune initiative publiée")
-        self.assertContains(reponse, "[Photo principale de l'accueil à fournir]")
+        self.assertContains(reponse, "Aucune opportunité ouverte")
 
-    def test_mon_compte_remplace_connexion_une_fois_connecte(self):
+    def test_mon_espace_remplace_connexion_une_fois_connecte(self):
         membre = Utilisateur.objects.create_user("m@test.ml", "x")
         self.client.force_login(membre)
         reponse = self.client.get(reverse("core:accueil"))
-        self.assertContains(reponse, "Mon compte")
+        self.assertContains(reponse, "Mon espace")
         self.assertNotContains(reponse, "Se connecter")
 
 
@@ -51,3 +51,19 @@ class NewsletterTests(TestCase):
 
     def test_get_refuse(self):
         self.assertEqual(self.client.get(reverse("core:newsletter")).status_code, 405)
+
+
+class PagesTests(TestCase):
+    def test_pages_publiques(self):
+        for nom in ["core:a_propos", "core:contact", "contenus:initiatives", "contenus:opportunites",
+                    "contenus:actualites", "communautes:liste", "comptes:connexion", "comptes:inscription"]:
+            self.assertEqual(self.client.get(reverse(nom)).status_code, 200, nom)
+
+    def test_formulaire_contact(self):
+        from .models import MessageContact
+        r = self.client.post(reverse("core:contact"), {"nom": "Awa", "email": "a@b.ml", "profil": "jeune", "sujet": "partenariat",
+                                                      "message": "Bonjour, je souhaite en savoir plus.", "consentement": "on"})
+        self.assertRedirects(r, reverse("core:contact"))
+        self.assertEqual(MessageContact.objects.get().objet, "Partenariat")
+        r = self.client.post(reverse("core:contact"), {"nom": "Awa", "email": "a@b.ml", "profil": "jeune", "sujet": "partenariat", "message": "Bonjour à tous"})
+        self.assertContains(r, "Cochez cette case")

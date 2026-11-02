@@ -157,6 +157,11 @@ COMMUNAUTES_ACCEPTATION_AUTOMATIQUE = env_bool(
 )
 
 
+# Photos de mise en page provisoires (tirées des maquettes, prises hors du Mali).
+# Passer à False une fois les vraies photos du chapitre placées dans static/img/.
+PHOTOS_PROVISOIRES = env_bool("PHOTOS_PROVISOIRES", True)
+
+
 # --------------------------------------------------------------------------
 # Langue et fuseau horaire
 # --------------------------------------------------------------------------

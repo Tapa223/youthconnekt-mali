@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static %}
+{% block titre %}Communauté | YouthConnekt Mali{% endblock %}
+
+{% block contenu %}
+<section class="relative isolate overflow-hidden bg-vert text-white">
+  {% include "partials/reseau_deco.html" %}
+  <div class="conteneur relative grid items-center gap-10 py-12 sm:py-16 lg:grid-cols-2">
+    <div>
+      <p class="surtitre surtitre-trait text-white/85">Communauté</p>
+      <h1 class="mt-3 text-5xl leading-none font-bold text-white sm:text-7xl">La communauté.</h1>
+      <p class="mt-5 max-w-md text-base text-white/90 sm:text-lg">Chaque membre rejoint les communautés qui lui ressemblent : on s'y retrouve entre passionnés, on y partage, on y avance ensemble.</p>
+      {% if not user.is_authenticated %}
+      <div class="mt-7 flex flex-wrap gap-3">
+        <a href="{% url 'comptes:inscription' %}" class="btn btn-orange">Rejoindre la communauté</a>
+        <a href="{% url 'comptes:connexion' %}" class="btn btn-blanc">Se connecter</a>
+      </div>
+      {% endif %}
+    </div>
+    <div class="relative mx-auto aspect-[5/4] w-full max-w-md" aria-hidden="true">
+      <svg class="absolute inset-0 h-full w-full" viewBox="0 0 500 400"><g stroke="rgb(255 255 255 / .35)" stroke-width="1.3" fill="none"><path d="M90 80 L250 185 L430 70"/><path d="M90 80 L80 290 L250 185 L450 160"/><path d="M250 185 L260 370 L410 290"/><path d="M430 70 L450 160 L410 290"/></g></svg>
+      <div class="absolute top-[46%] left-1/2 w-[30%] aspect-square -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full border-4 border-orange shadow-2xl"><img src="{% static 'img/communaute/cercle-centre.jpg' %}" alt="" class="h-full w-full object-cover"></div>
+      <div class="absolute top-[8%] left-[10%] w-[17%] aspect-square overflow-hidden rounded-full border-4 border-turquoise"><img src="{% static 'img/communaute/cercle-1.jpg' %}" alt="" class="h-full w-full object-cover"></div>
+      <div class="absolute top-[5%] right-[6%] w-[17%] aspect-square overflow-hidden rounded-full border-4 border-white"><img src="{% static 'img/communaute/cercle-2.jpg' %}" alt="" class="h-full w-full object-cover"></div>
+      <div class="absolute top-[32%] right-[2%] w-[11%] aspect-square overflow-hidden rounded-full border-4 border-bleu"><img src="{% static 'img/communaute/cercle-3.jpg' %}" alt="" class="h-full w-full object-cover"></div>
+      <div class="absolute bottom-[18%] left-[8%] w-[16%] aspect-square overflow-hidden rounded-full border-4 border-white"><img src="{% static 'img/communaute/cercle-4.jpg' %}" alt="" class="h-full w-full object-cover"></div>
+      <div class="absolute right-[10%] bottom-[16%] w-[17%] aspect-square overflow-hidden rounded-full border-4 border-turquoise"><img src="{% static 'img/communaute/cercle-5.jpg' %}" alt="" class="h-full w-full object-cover"></div>
+      <div class="absolute bottom-[2%] left-[44%] w-[12%] aspect-square overflow-hidden rounded-full border-4 border-orange"><img src="{% static 'img/communaute/cercle-6.jpg' %}" alt="" class="h-full w-full object-cover"></div>
+    </div>
+  </div>
+  {% include "partials/mention_photo.html" with texte="Photos provisoires · hors Mali" %}
+</section>
+
+<section class="conteneur py-14 sm:py-20" aria-labelledby="titre-communautes">
+  <p class="surtitre surtitre-trait">Les communautés</p>
+  <h2 id="titre-communautes" class="titre-section">Trouvez vos semblables.</h2>
+  {% if communautes %}
+  <ul class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    {% for c in communautes %}
+    <li class="carte flex flex-col">
+      <a href="{{ c.get_absolute_url }}" class="group block">
+        <div class="relative aspect-[16/8]">
+          {% if c.image %}<img src="{{ c.image.url }}" alt="" class="h-full w-full object-cover" loading="lazy">
+          {% else %}<img src="{% static 'img/communaute/carte-' %}{% cycle '1' '2' '3' '4' '5' '6' %}.jpg" alt="" class="h-full w-full object-cover" loading="lazy">{% endif %}
+          <div class="absolute inset-0 bg-gradient-to-t from-vert/85 via-vert/20 to-transparent"></div>
+          {% if c.nb_membres %}<p class="absolute bottom-3 left-4 text-white"><span class="text-3xl font-bold">{{ c.nb_membres }}</span> <span class="text-sm">membre{{ c.nb_membres|pluralize }}</span></p>
+          {% else %}<p class="absolute bottom-3 left-4 text-sm font-bold text-white">Nouvelle communauté</p>{% endif %}
+          {% if c.statut_membre == "acceptee" %}<span class="etiquette absolute top-3 left-3 rounded-full bg-white text-vert">Vous êtes membre</span>
+          {% elif c.statut_membre == "en_attente" %}<span class="etiquette absolute top-3 left-3 rounded-full bg-orange text-white">Demande en cours</span>{% endif %}
+        </div>
+        <div class="p-5 pb-3">
+          <h3 class="text-xl font-bold group-hover:underline">{{ c.nom }}</h3>
+          <p class="mt-1.5 text-sm">{{ c.public_vise }}</p>
+        </div>
+      </a>
+      <div class="mt-auto px-5 pb-5">
+        {% if user.is_authenticated %}{% include "communautes/bouton_adhesion.html" with statut=c.statut_membre %}
+        {% else %}<a href="{{ c.get_absolute_url }}" class="text-sm font-bold text-vert underline underline-offset-4">Se connecter pour découvrir</a>{% endif %}
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  {% include "partials/vide.html" with message="Les communautés seront bientôt ouvertes." lien_admin="admin:communautes_communaute_add" %}
+  {% endif %}
+</section>
+
+{% include "partials/bandeau_lets_connekt.html" %}
+{% endblock %}

@@ -1,0 +1,4 @@
+<div class="mt-6 rounded-2xl border border-dashed border-vert/30 bg-gris p-8 text-center">
+  <p class="text-base text-encre">{{ message }}</p>
+  {% if user.is_staff and lien_admin %}<a href="{% url lien_admin %}" class="btn btn-vert mt-4">Ajouter depuis l'administration</a>{% endif %}
+</div>

@@ -1,0 +1,35 @@
+{% extends "comptes/espace/base_espace.html" %}
+{% load ycm %}
+{% block titre %}Mon profil | YouthConnekt Mali{% endblock %}
+{% block espace %}
+<section class="bloc">
+  <div class="flex flex-wrap items-baseline justify-between gap-3">
+    <h1 class="text-2xl font-bold sm:text-3xl">Mon profil</h1>
+    {% if profil %}<a href="{% url 'comptes:profil_public' user.pk %}" class="text-sm font-bold text-vert underline underline-offset-4">Voir mon profil public</a>{% endif %}
+  </div>
+  <p class="mt-1 text-sm">Les informations marquées « privé » ne sont jamais affichées sur le site. Votre adresse e-mail de connexion reste privée.</p>
+  <form method="post" enctype="multipart/form-data" class="mt-6 grid gap-5 sm:grid-cols-2" novalidate>
+    {% csrf_token %}
+    {% if form.errors %}<p class="rounded-xl border border-rouge/30 bg-rouge/5 px-4 py-3 text-sm text-rouge sm:col-span-2" role="alert">Certaines informations sont à corriger.</p>{% endif %}
+    {% for champ in form %}
+      {% if champ.name == "visible" %}
+        {% include "partials/case.html" with classes_bloc="sm:col-span-2" %}
+      {% elif champ.name == "presentation" %}
+        {% include "partials/champ.html" with classes_bloc="sm:col-span-2" %}
+      {% elif champ.name == "photo" or champ.name == "logo" %}
+        <div class="sm:col-span-2">
+          <p class="libelle">{{ champ.label|capfirst }}</p>
+          <div class="flex flex-wrap items-center gap-4">
+            {% if champ.value %}<img src="{{ champ.value.url }}" alt="" class="size-16 rounded-full object-cover">{% else %}<span class="grid size-16 place-items-center rounded-full bg-orange text-lg font-bold text-white" aria-hidden="true">{{ user.initiales }}</span>{% endif %}
+            <div class="text-sm">{{ champ }}<p class="aide">JPG, PNG ou WebP, 3 Mo maximum.</p></div>
+          </div>
+          {% if champ.errors %}<p class="erreur">{{ champ.errors.0 }}</p>{% endif %}
+        </div>
+      {% else %}
+        {% include "partials/champ.html" %}
+      {% endif %}
+    {% endfor %}
+    <div class="sm:col-span-2"><button type="submit" class="btn btn-vert min-h-12 px-8">Enregistrer</button></div>
+  </form>
+</section>
+{% endblock %}

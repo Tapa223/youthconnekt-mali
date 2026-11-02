@@ -1,0 +1,32 @@
+{% extends "comptes/espace/base_espace.html" %}
+{% block titre %}Paramètres | YouthConnekt Mali{% endblock %}
+{% block espace %}
+<section class="bloc">
+  <h1 class="text-2xl font-bold sm:text-3xl">Paramètres</h1>
+  <dl class="mt-5 grid gap-3 text-sm sm:grid-cols-2">
+    <div class="rounded-xl bg-gris p-4"><dt>Adresse e-mail de connexion</dt><dd class="mt-0.5 font-bold break-all text-encre">{{ user.email }}</dd></div>
+    <div class="rounded-xl bg-gris p-4"><dt>Type de compte</dt><dd class="mt-0.5 font-bold text-encre">{{ user.get_type_compte_display }}</dd></div>
+  </dl>
+</section>
+
+<section class="bloc" aria-labelledby="titre-mdp">
+  <h2 id="titre-mdp" class="text-xl font-bold">Changer de mot de passe</h2>
+  <form method="post" class="mt-5 grid max-w-lg gap-4" novalidate>
+    {% csrf_token %}<input type="hidden" name="action" value="mdp">
+    {% include "partials/champ.html" with champ=form_mdp.old_password mdp=True %}
+    {% include "partials/champ.html" with champ=form_mdp.new_password1 %}
+    {% include "partials/champ.html" with champ=form_mdp.new_password2 %}
+    <div><button type="submit" class="btn btn-vert">Enregistrer le mot de passe</button></div>
+  </form>
+</section>
+
+<section class="bloc border border-rouge/20" aria-labelledby="titre-suppr">
+  <h2 id="titre-suppr" class="text-xl font-bold text-rouge">Supprimer mon compte</h2>
+  <p class="mt-2 text-sm">Votre compte, votre profil et vos demandes d'adhésion seront définitivement supprimés. Cette action est irréversible.</p>
+  <form method="post" class="mt-5 grid max-w-lg gap-4" novalidate data-confirmer="Supprimer définitivement votre compte ?">
+    {% csrf_token %}<input type="hidden" name="action" value="supprimer">
+    {% include "partials/champ.html" with champ=form_suppr.mot_de_passe %}
+    <div><button type="submit" class="btn bg-rouge text-white hover:bg-rouge/90">Supprimer mon compte</button></div>
+  </form>
+</section>
+{% endblock %}

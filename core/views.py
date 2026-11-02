@@ -15,7 +15,8 @@ from contenus.models import (
     Temoignage,
 )
 
-from .forms import NewsletterForm
+from .forms import ContactForm, NewsletterForm
+from .models import MessageContact
 
 
 def accueil(request):
@@ -64,6 +65,60 @@ def newsletter_inscription(request):
     if not url_has_allowed_host_and_scheme(retour, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
         retour = "/"
     return redirect(f"{retour.split('#')[0]}#newsletter")
+
+
+OBSTACLES = [
+    ("L'information est dispersée",
+     "Formations, bourses et appels à candidatures existent, mais les jeunes ne savent pas toujours où les trouver."),
+    ("Les réseaux sont difficiles d'accès",
+     "Rencontrer un mentor, un partenaire ou un décideur reste rare pour beaucoup de jeunes."),
+    ("Les talents restent invisibles",
+     "De nombreux projets portés par des jeunes avancent sans que personne ne les connaisse."),
+]
+PUBLICS = [
+    ("Pour les jeunes",
+     "Trouver une formation, une bourse ou un stage, rencontrer des mentors, faire connaître son projet et prendre part aux décisions qui les concernent."),
+    ("Pour les organisations",
+     "Toucher des jeunes motivés partout dans le pays, partager leurs opportunités et monter des initiatives avec le chapitre."),
+    ("Avec les institutions",
+     "Faire remonter la voix des jeunes, contribuer aux politiques jeunesse et relier les programmes publics aux jeunes qui en ont besoin."),
+]
+APPROCHE = [
+    ("Repérer", "Nous recherchons formations, bourses, stages et appels utiles aux jeunes."),
+    ("Partager", "Nous les relayons sur la plateforme, par e-mail et dans les communautés."),
+    ("Accompagner", "Ateliers, mentorat et événements pour aider chacun à saisir sa chance."),
+    ("Mettre en lumière", "Nous faisons connaître les réussites et les projets des jeunes."),
+]
+PARCOURS = [
+    ("2024", "Lancement du chapitre", "Naissance de YouthConnekt Mali comme chapitre national."),
+    ("2025", "Premières formations", "Premiers ateliers et programmes d'accompagnement."),
+    ("2026", "La plateforme en ligne", "Un espace pour relier jeunes, organisations et opportunités."),
+    ("Demain", "Toutes les régions", "Aller à la rencontre des jeunes partout au Mali."),
+]
+
+
+def a_propos(request):
+    mot = MotDuMinistre.charger()
+    return render(request, "core/a_propos.html", {
+        "obstacles": OBSTACLES, "publics": PUBLICS, "approche": APPROCHE, "parcours": PARCOURS,
+        "axes": AxeAction.objects.all(),
+        "mot_ministre": mot if mot.publie and mot.message else None,
+        "temoignages": Temoignage.objects.filter(publie=True)[:3],
+    })
+
+
+def contact(request):
+    if request.method == "POST":
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            if not form.cleaned_data.get("site_web"):
+                form.save()
+            messages.success(request, "Merci, votre message a bien été envoyé. L'équipe vous répondra par e-mail.")
+            return redirect("core:contact")
+    else:
+        sujet = request.GET.get("sujet")
+        form = ContactForm(initial={"sujet": sujet} if sujet in dict(MessageContact.Sujet.choices) else None)
+    return render(request, "core/contact.html", {"form": form})
 
 
 def page_provisoire(request, *args, titre="Page", **kwargs):

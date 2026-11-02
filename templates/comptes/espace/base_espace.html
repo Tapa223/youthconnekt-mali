@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block titre %}Mon espace | YouthConnekt Mali{% endblock %}
+{% block contenu %}
+<div class="bg-gris py-6 sm:py-10">
+  <div class="conteneur grid gap-5 lg:grid-cols-[250px_minmax(0,1fr)] lg:gap-6 xl:max-w-7xl">
+    <aside class="min-w-0 space-y-4">
+      <div class="flex items-center gap-4 rounded-2xl bg-white p-4 lg:flex-col lg:p-6 lg:text-center">
+        {% if profil.photo %}<img src="{{ profil.photo.url }}" alt="" class="size-14 rounded-full object-cover lg:size-18">
+        {% elif profil.logo %}<img src="{{ profil.logo.url }}" alt="" class="size-14 rounded-full bg-white object-contain lg:size-18">
+        {% else %}<span class="grid size-14 shrink-0 place-items-center rounded-full bg-orange text-lg font-bold text-white lg:size-18 lg:text-2xl" aria-hidden="true">{{ user.initiales }}</span>{% endif %}
+        <div class="min-w-0 flex-1">
+          <p class="truncate text-lg font-bold text-encre">{{ user.nom_affiche }}</p>
+          <p class="text-xs">{{ user.get_type_compte_display }}{% if profil.get_categorie_display %} · {{ profil.get_categorie_display }}{% elif profil.get_type_structure_display %} · {{ profil.get_type_structure_display }}{% endif %}{% if profil.get_region_display %} · {{ profil.get_region_display }}{% endif %}</p>
+          <a href="{% url 'comptes:mon_profil' %}" class="btn btn-contour mt-3 hidden min-h-9 px-4 text-sm lg:inline-flex">Modifier mon profil</a>
+        </div>
+      </div>
+      <nav class="masquer-defilement -mx-4 flex gap-2 overflow-x-auto px-4 lg:mx-0 lg:block lg:space-y-1 lg:rounded-2xl lg:bg-white lg:p-3" aria-label="Mon espace">
+        <a href="{% url 'comptes:espace_membre' %}" class="lien-espace {% if rubrique == 'tableau' %}actif{% endif %}" {% if rubrique == 'tableau' %}aria-current="page"{% endif %}>Tableau de bord</a>
+        <a href="{% url 'comptes:mes_communautes' %}" class="lien-espace {% if rubrique == 'communautes' %}actif{% endif %}" {% if rubrique == 'communautes' %}aria-current="page"{% endif %}>Mes communautés</a>
+        <a href="{% url 'comptes:mes_opportunites' %}" class="lien-espace {% if rubrique == 'opportunites' %}actif{% endif %}" {% if rubrique == 'opportunites' %}aria-current="page"{% endif %}>Opportunités pour moi</a>
+        <a href="{% url 'comptes:mon_profil' %}" class="lien-espace {% if rubrique == 'profil' %}actif{% endif %}" {% if rubrique == 'profil' %}aria-current="page"{% endif %}>Mon profil</a>
+        <a href="{% url 'comptes:parametres' %}" class="lien-espace {% if rubrique == 'parametres' %}actif{% endif %}" {% if rubrique == 'parametres' %}aria-current="page"{% endif %}>Paramètres</a>
+        {% if user.is_staff %}<a href="{% url 'admin:index' %}" class="lien-espace">Administration</a>{% endif %}
+        <form method="post" action="{% url 'comptes:deconnexion' %}" class="shrink-0">{% csrf_token %}<button type="submit" class="lien-espace text-rouge">Se déconnecter</button></form>
+      </nav>
+    </aside>
+    <div class="min-w-0 space-y-5">{% block espace %}{% endblock %}</div>
+  </div>
+</div>
+{% endblock %}

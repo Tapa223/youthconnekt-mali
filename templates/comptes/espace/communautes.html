@@ -1,0 +1,31 @@
+{% extends "comptes/espace/base_espace.html" %}
+{% block titre %}Mes communautés | YouthConnekt Mali{% endblock %}
+{% block espace %}
+<section class="bloc">
+  <div class="flex flex-wrap items-baseline justify-between gap-3">
+    <h1 class="text-2xl font-bold sm:text-3xl">Mes communautés</h1>
+    <a href="{% url 'communautes:liste' %}" class="btn btn-vert">Découvrir les communautés</a>
+  </div>
+  {% if demandes %}
+  <ul class="mt-6 space-y-3">
+    {% for d in demandes %}
+    <li class="flex flex-wrap items-center gap-4 rounded-xl border border-ligne p-4">
+      <div class="min-w-0 flex-1">
+        <a href="{{ d.communaute.get_absolute_url }}" class="text-lg font-bold text-vert hover:underline">{{ d.communaute.nom }}</a>
+        <p class="text-xs">Demande du {{ d.demandee_le|date:"j F Y" }}</p>
+      </div>
+      {% if d.statut == "acceptee" %}<span class="rounded-full bg-vert-clair px-3 py-1 text-xs font-bold text-vert">Membre</span>
+      {% elif d.statut == "en_attente" %}<span class="rounded-full bg-orange/15 px-3 py-1 text-xs font-bold text-orange-fonce">En attente</span>
+      {% else %}<span class="rounded-full bg-rouge/10 px-3 py-1 text-xs font-bold text-rouge">Non retenue</span>{% endif %}
+      {% if d.statut != "refusee" %}
+      <form method="post" action="{% url 'communautes:quitter' d.communaute.slug %}" {% if d.statut == 'acceptee' %}data-confirmer="Quitter la communauté {{ d.communaute.nom }} ?"{% endif %}>{% csrf_token %}<input type="hidden" name="suivant" value="{{ request.get_full_path }}">
+        <button type="submit" class="text-sm font-bold text-vert underline underline-offset-4">{% if d.statut == "acceptee" %}Quitter{% else %}Annuler la demande{% endif %}</button></form>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="mt-5 rounded-xl bg-gris p-5">Vous n'avez encore rejoint aucune communauté. Choisissez celles qui vous ressemblent pour recevoir les opportunités qui vous concernent.</p>
+  {% endif %}
+</section>
+{% endblock %}

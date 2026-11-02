@@ -1,10 +1,12 @@
 from django.urls import path
 
-from core.views import page_provisoire
+from . import views
 
 app_name = "communautes"
 
 urlpatterns = [
-    path("", page_provisoire, {"titre": "Communauté"}, name="liste"),
-    path("<slug:slug>/", page_provisoire, {"titre": "Communauté thématique"}, name="detail"),
+    path("", views.liste, name="liste"),
+    path("<slug:slug>/", views.detail, name="detail"),
+    path("<slug:slug>/rejoindre/", views.rejoindre, name="rejoindre"),
+    path("<slug:slug>/quitter/", views.quitter, name="quitter"),
 ]

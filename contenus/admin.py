@@ -9,6 +9,7 @@ from .models import (
     MotDuMinistre,
     Opportunite,
     Partenaire,
+    PhotoActualite,
     PhotoInitiative,
     Statut,
     Temoignage,
@@ -62,7 +63,7 @@ class PubliableAdmin(admin.ModelAdmin):
 
 @admin.register(AxeAction)
 class AxeActionAdmin(admin.ModelAdmin):
-    list_display = ("nom", "ordre")
+    list_display = ("nom", "couleur", "ordre")
     list_editable = ("ordre",)
     prepopulated_fields = {"slug": ("nom",)}
     search_fields = ("nom",)
@@ -76,13 +77,15 @@ class PhotoInitiativeInline(admin.TabularInline):
 
 @admin.register(Initiative)
 class InitiativeAdmin(PubliableAdmin):
-    list_display = ("apercu_image", "titre", "axe", "statut", "mis_en_avant", "publie_le")
+    list_display = ("apercu_image", "titre", "axe", "etat", "statut", "mis_en_avant", "publie_le")
     list_display_links = ("apercu_image", "titre")
-    list_filter = ("statut", "mis_en_avant", "axe")
+    list_filter = ("statut", "etat", "mis_en_avant", "axe")
     search_fields = ("titre", "resume")
     inlines = [PhotoInitiativeInline]
     fieldsets = (
-        (None, {"fields": ("titre", "axe", "resume", "contenu", "image")}),
+        (None, {"fields": ("titre", "axe", "etat", "resume", "contenu", "image")}),
+        ("Informations pratiques", {"fields": ("date_libelle", "lieu", "participants", "format")}),
+        ("Détails", {"fields": ("objectifs", "programme", "chiffres", "citation", "citation_auteur")}),
         ("Publication", {"fields": ("statut", "publie_le", "mis_en_avant", "slug")}),
     )
 
@@ -95,7 +98,9 @@ class OpportuniteAdmin(PubliableAdmin):
     filter_horizontal = ("communautes",)
     date_hierarchy = "date_limite"
     fieldsets = (
-        (None, {"fields": ("titre", "type", "organisme", "resume", "description", "criteres", "image")}),
+        (None, {"fields": ("titre", "type", "organisme", "resume", "description", "image")}),
+        ("Informations pratiques", {"fields": ("lieu", "duree", "public", "cout")}),
+        ("Détails", {"fields": ("avantages", "criteres", "etapes")}),
         ("Candidature", {"fields": ("date_limite", "lien_candidature")}),
         ("Ciblage", {"fields": ("communautes",)}),
         ("Publication", {"fields": ("statut", "publie_le", "mis_en_avant", "slug")}),
@@ -108,14 +113,24 @@ class OpportuniteAdmin(PubliableAdmin):
         return format_html('<span style="color:#035E4D;font-weight:600">{}</span>', "Ouverte")
 
 
+class PhotoActualiteInline(admin.TabularInline):
+    model = PhotoActualite
+    extra = 1
+    fields = ("image", "legende", "ordre")
+
+
 @admin.register(Actualite)
 class ActualiteAdmin(PubliableAdmin):
     list_display = ("apercu_image", "titre", "categorie", "statut", "mis_en_avant", "publie_le")
     list_display_links = ("apercu_image", "titre")
     list_filter = ("statut", "categorie", "mis_en_avant")
     search_fields = ("titre", "chapeau", "contenu")
+    filter_horizontal = ("communautes",)
+    inlines = [PhotoActualiteInline]
     fieldsets = (
         (None, {"fields": ("titre", "categorie", "chapeau", "contenu", "image")}),
+        ("Événement", {"fields": ("date_evenement", "lieu")}),
+        ("Ciblage", {"fields": ("communautes",)}),
         ("Publication", {"fields": ("statut", "publie_le", "mis_en_avant", "slug")}),
     )
 

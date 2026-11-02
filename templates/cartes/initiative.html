@@ -1,0 +1,16 @@
+{% load ycm %}
+{# Carte d'initiative. Paramètres : i, simple (sans résumé) #}
+<a href="{{ i.get_absolute_url }}" class="carte group flex h-full flex-col transition-shadow hover:shadow-lg">
+  <div class="relative aspect-[16/9] border-b-4 {{ i.axe.couleur|default:'vert'|bordure }}">
+    {% include "partials/photo.html" with image=i.image alt="" %}
+    {% if i.axe %}<span class="etiquette absolute top-3 left-3 rounded-full {{ i.axe.couleur|fond }}">{{ i.axe.nom }}</span>{% endif %}
+  </div>
+  <div class="flex flex-1 flex-col p-5">
+    {% if i.date_libelle or i.lieu %}<p class="text-xs text-texte">{{ i.date_libelle }}{% if i.date_libelle and i.lieu %} · {% endif %}{{ i.lieu }}</p>{% endif %}
+    <h3 class="mt-1 text-lg leading-snug font-bold text-vert">{{ i.titre }}</h3>
+    {% if not simple %}
+    <p class="mt-2 flex-1 text-sm leading-relaxed">{{ i.resume }}</p>
+    <span class="mt-4 text-sm font-bold text-vert group-hover:underline">Voir l'initiative</span>
+    {% endif %}
+  </div>
+</a>

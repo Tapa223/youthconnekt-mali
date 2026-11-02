@@ -32,25 +32,8 @@ class ParametresSite(ModeleUnique):
     presentation_accueil = models.TextField(
         "présentation sur l'accueil", max_length=1200, blank=True
     )
-    image_accueil = models.ImageField(
-        "photo principale de l'accueil",
-        upload_to="site/",
-        blank=True,
-        validators=[valider_image],
-    )
-    photo_presentation_1 = models.ImageField(
-        "photo de présentation 1 (grande)", upload_to="site/", blank=True, validators=[valider_image]
-    )
-    photo_presentation_2 = models.ImageField(
-        "photo de présentation 2", upload_to="site/", blank=True, validators=[valider_image]
-    )
-    photo_presentation_3 = models.ImageField(
-        "photo de présentation 3", upload_to="site/", blank=True, validators=[valider_image]
-    )
-    image_invitation = models.ImageField(
-        "photo du bandeau « Let's Connekt »", upload_to="site/", blank=True, validators=[valider_image]
-    )
     adresse = models.CharField("adresse", max_length=255, blank=True)
+    horaires = models.CharField("jours et heures d'ouverture", max_length=200, blank=True)
     telephone = models.CharField("téléphone", max_length=40, blank=True)
     email_contact = models.EmailField("e-mail de contact", blank=True)
     lien_facebook = models.URLField("Facebook", blank=True)
@@ -89,7 +72,23 @@ class SectionAPropos(models.Model):
 
 
 class MessageContact(models.Model):
+    class Profil(models.TextChoices):
+        JEUNE = "jeune", "Un jeune"
+        ORGANISATION = "organisation", "Une organisation ou une entreprise"
+        PARTENAIRE = "partenaire", "Un partenaire ou une institution"
+        MEDIA = "media", "Un média"
+        AUTRE = "autre", "Autre"
+
+    class Sujet(models.TextChoices):
+        QUESTION = "question", "Question générale"
+        PARTENARIAT = "partenariat", "Partenariat"
+        OPPORTUNITE = "opportunite", "Proposer une opportunité"
+        INITIATIVE = "initiative", "Faire connaître une initiative"
+        COMPTE = "compte", "Mon compte"
+        PRESSE = "presse", "Presse"
+
     nom = models.CharField("nom", max_length=120)
+    profil = models.CharField("vous êtes", max_length=20, choices=Profil.choices, default=Profil.JEUNE)
     email = models.EmailField("e-mail")
     objet = models.CharField("objet", max_length=200)
     message = models.TextField("message", max_length=5000)

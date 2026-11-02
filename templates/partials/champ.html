@@ -1,0 +1,14 @@
+{% load ycm %}
+<div class="{{ classes_bloc|default:'' }}">
+  <label for="{{ champ.id_for_label }}" class="libelle">{{ champ.label }}{% if not champ.field.required %} <span class="font-normal text-texte">(facultatif)</span>{% endif %}</label>
+  {% if mdp %}
+  <div class="relative">
+    {{ champ|champ_html:"champ pr-24" }}
+    <button type="button" class="absolute top-1.5 right-1.5 min-h-9 rounded-md bg-gris px-3 text-sm font-bold text-vert hover:bg-vert-clair" data-afficher-mdp aria-controls="{{ champ.id_for_label }}" aria-pressed="false">Afficher</button>
+  </div>
+  {% else %}
+  {{ champ|champ_html }}
+  {% endif %}
+  {% if champ.errors %}<p id="{{ champ.id_for_label }}-erreur" class="erreur">{{ champ.errors.0 }}</p>
+  {% elif champ.help_text %}<p id="{{ champ.id_for_label }}-aide" class="aide">{{ champ.help_text }}</p>{% endif %}
+</div>

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+{% block titre %}{{ c.nom }} | Communauté | YouthConnekt Mali{% endblock %}
+
+{% block contenu %}
+<section class="relative isolate overflow-hidden text-white">
+  {% if c.image %}<img src="{{ c.image.url }}" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover">
+  {% else %}<img src="{% static 'img/communaute/bandeau-detail.jpg' %}" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover">{% endif %}
+  <div class="absolute inset-0 -z-10 bg-gradient-to-t from-vert via-vert/75 to-vert/30"></div>
+  {% if not c.image %}{% include "partials/mention_photo.html" with texte="Photo provisoire" position="right-3 top-3" %}{% endif %}
+  <div class="conteneur flex flex-col gap-6 pt-24 pb-10 sm:pt-32 md:flex-row md:items-end md:justify-between">
+    <div>
+      <nav aria-label="Fil d'Ariane"><a href="{% url 'communautes:liste' %}" class="text-sm font-bold underline underline-offset-4">Communautés</a></nav>
+      {% if demande.statut == "acceptee" %}<span class="etiquette mt-3 inline-block rounded-full bg-white text-vert">Vous êtes membre</span>{% endif %}
+      <h1 class="mt-2 text-4xl leading-tight font-bold text-white sm:text-6xl">{{ c.nom }}</h1>
+      <p class="mt-2 text-white/90">{% if c.nb_membres %}{{ c.nb_membres }} membre{{ c.nb_membres|pluralize }}{% else %}Nouvelle communauté{% endif %}</p>
+    </div>
+    <div class="shrink-0">{% include "communautes/bouton_adhesion.html" with statut=demande.statut style="clair" %}</div>
+  </div>
+</section>
+
+<section class="bg-gris py-10 sm:py-14">
+  <div class="conteneur grid gap-5 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+    <div class="h-fit rounded-3xl bg-white p-6 sm:p-7">
+      <h2 class="text-xl font-bold">La communauté</h2>
+      <p class="mt-3 text-base leading-relaxed">{{ c.description|default:c.public_vise }}</p>
+      {% if c.liste_activites %}
+      <h3 class="mt-6 font-bold text-encre">Ce qu'on y fait</h3>
+      <ul class="mt-3 space-y-2">{% for a in c.liste_activites %}<li class="flex items-start gap-3 text-[15px]"><span class="mt-2 size-2 shrink-0 rounded-full bg-orange" aria-hidden="true"></span>{{ a }}</li>{% endfor %}</ul>
+      {% endif %}
+    </div>
+    <div class="space-y-5">
+      <div class="rounded-3xl bg-white p-5 sm:p-6">
+        <div class="flex items-baseline justify-between gap-3">
+          <h2 class="text-xl font-bold">Opportunités de la communauté</h2>
+          <a href="{% url 'contenus:opportunites' %}" class="text-sm font-bold text-vert underline underline-offset-4">Toutes</a>
+        </div>
+        {% if opportunites %}
+        <ul class="mt-4 grid gap-4 sm:grid-cols-2">{% for o in opportunites %}<li>{% include "cartes/opportunite.html" with compacte=True via=c.nom %}</li>{% endfor %}</ul>
+        {% else %}<p class="mt-3 text-sm">Aucune opportunité ouverte pour cette communauté en ce moment.</p>{% endif %}
+      </div>
+      <div class="rounded-3xl bg-white p-5 sm:p-6">
+        <h2 class="text-xl font-bold">Activités récentes</h2>
+        {% if activites_recentes %}
+        <ul class="mt-3 divide-y divide-ligne">
+          {% for a in activites_recentes %}
+          <li><a href="{{ a.get_absolute_url }}" class="group flex items-center gap-4 py-3">
+            <span class="block size-14 shrink-0 overflow-hidden rounded-xl">{% include "partials/photo.html" with image=a.image alt="" %}</span>
+            <span><span class="block font-bold text-encre group-hover:text-vert">{{ a.titre }}</span><span class="text-xs">{{ a.date_affichee|date:"j M Y" }}</span></span>
+          </a></li>
+          {% endfor %}
+        </ul>
+        {% else %}<p class="mt-3 text-sm">Les prochaines activités de la communauté apparaîtront ici.</p>{% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,3 +1,5 @@
+from django.conf import settings
+
 from .forms import NewsletterForm
 from .models import ParametresSite
 
@@ -23,4 +25,5 @@ def site(request):
         "parametres_site": ParametresSite.charger(),
         "navigation": navigation,
         "newsletter_form": NewsletterForm(),
+        "photos_provisoires": settings.PHOTOS_PROVISOIRES,
     }

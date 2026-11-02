@@ -1,0 +1,14 @@
+{# Bouton d'adhésion selon l'état du membre. Paramètres : c (communauté), statut, style ("clair" sur fond vert) #}
+{% if not user.is_authenticated %}
+  <a href="{% url 'comptes:connexion' %}?next={{ c.get_absolute_url|urlencode }}" class="btn {% if style == 'clair' %}btn-blanc{% else %}btn-contour{% endif %}">Se connecter pour rejoindre</a>
+{% elif statut == "acceptee" %}
+  <form method="post" action="{% url 'communautes:quitter' c.slug %}" data-confirmer="Quitter la communauté {{ c.nom }} ?">{% csrf_token %}<input type="hidden" name="suivant" value="{{ request.get_full_path }}">
+    <button type="submit" class="btn {% if style == 'clair' %}btn-blanc{% else %}btn-contour{% endif %}">Quitter la communauté</button></form>
+{% elif statut == "en_attente" %}
+  <form method="post" action="{% url 'communautes:quitter' c.slug %}">{% csrf_token %}<input type="hidden" name="suivant" value="{{ request.get_full_path }}">
+    <span class="inline-flex items-center gap-2 rounded-full bg-orange/15 px-3 py-1 text-sm font-bold text-orange-fonce">Demande en cours</span>
+    <button type="submit" class="ml-2 text-sm font-bold underline underline-offset-4 {% if style == 'clair' %}text-white{% else %}text-vert{% endif %}">Annuler</button></form>
+{% else %}
+  <form method="post" action="{% url 'communautes:rejoindre' c.slug %}">{% csrf_token %}<input type="hidden" name="suivant" value="{{ request.get_full_path }}">
+    <button type="submit" class="btn btn-orange">Rejoindre</button></form>
+{% endif %}

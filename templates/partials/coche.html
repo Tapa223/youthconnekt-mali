@@ -1,0 +1,1 @@
+<svg class="mt-0.5 size-4 shrink-0 text-vert" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.5 12.5 3 3 6-6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>

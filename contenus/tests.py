@@ -40,3 +40,14 @@ class PublicationTests(TestCase):
         MotDuMinistre(nom="B").save()
         self.assertEqual(MotDuMinistre.objects.count(), 1)
         self.assertEqual(MotDuMinistre.charger().nom, "B")
+
+
+class CorpsArticleTests(TestCase):
+    def test_mise_en_forme_et_echappement(self):
+        from core.templatetags.ycm import corps_article
+        html = corps_article("L'équipe <script>x</script>\n\n## Titre\n- point\n> citation\n— auteur")
+        self.assertIn("<p>L&#x27;équipe &lt;script&gt;x&lt;/script&gt;</p>", html)
+        self.assertNotIn("&amp;#x27;", html)
+        self.assertIn("<h2>Titre</h2>", html)
+        self.assertIn("<li>point</li>", html)
+        self.assertIn("<footer>auteur</footer>", html)

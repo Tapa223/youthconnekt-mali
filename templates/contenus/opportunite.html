@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load ycm %}
+{% block titre %}{{ o.titre }} | Opportunités | YouthConnekt Mali{% endblock %}
+{% block description %}{{ o.resume }}{% endblock %}
+
+{% block contenu %}
+<div class="conteneur py-10 sm:py-12">
+  <nav aria-label="Fil d'Ariane" class="mb-4 text-sm"><a href="{% url 'contenus:opportunites' %}" class="font-medium text-vert underline underline-offset-4">Opportunités</a></nav>
+  <div class="flex flex-wrap gap-2">
+    <span class="etiquette rounded-full {{ o.couleur|fond }}">{{ o.get_type_display }}</span>
+    {% if o.est_expiree %}<span class="etiquette rounded-full bg-gris text-rouge">Candidatures closes</span>
+    {% elif o.jours_restants is not None %}<span class="etiquette rounded-full bg-orange text-white">{{ o.jours_restants|jours_label }}</span>{% endif %}
+  </div>
+  <h1 class="mt-3 text-3xl leading-tight font-bold sm:text-5xl">{{ o.titre }}</h1>
+  <p class="mt-2 text-sm">{% if o.organisme %}Proposée par <strong class="text-encre">{{ o.organisme }}</strong> · {% endif %}Publiée le {{ o.publie_le|date:"j F Y" }}</p>
+
+  <div class="mt-7 grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-10">
+    <div class="min-w-0">
+      <div class="relative aspect-[16/8] overflow-hidden rounded-2xl border-b-4 {{ o.couleur|bordure }}">
+        {% include "partials/photo.html" with image=o.image alt="" eager=True %}
+      </div>
+
+      {# Encadré de candidature : sous la photo sur téléphone #}
+      <div class="mt-6 lg:hidden">{% include "contenus/encadre_candidature.html" %}</div>
+
+      <div class="prose-ycm mt-8">
+        <h2>Présentation</h2>
+        {{ o.description|paragraphes }}
+
+        {% if o.liste_avantages %}
+        <h2>Ce que vous gagnez</h2>
+        <ul>{% for e in o.liste_avantages %}<li>{{ e }}</li>{% endfor %}</ul>
+        {% endif %}
+
+        {% if o.liste_criteres %}
+        <h2>Qui peut postuler</h2>
+        <ul>{% for e in o.liste_criteres %}<li>{{ e }}</li>{% endfor %}</ul>
+        {% endif %}
+      </div>
+
+      {% if o.liste_etapes %}
+      <h2 class="mt-9 text-2xl font-bold">Comment postuler</h2>
+      <ol class="mt-4 space-y-3">
+        {% for e in o.liste_etapes %}
+        <li class="flex items-center gap-3 text-encre"><span class="grid size-8 shrink-0 place-items-center rounded-full bg-vert text-sm font-bold text-white">{{ forloop.counter }}</span>{{ e }}</li>
+        {% endfor %}
+      </ol>
+      {% endif %}
+    </div>
+
+    <aside class="hidden lg:block">
+      <div class="sticky top-24">{% include "contenus/encadre_candidature.html" %}</div>
+    </aside>
+  </div>
+</div>
+
+{% if similaires %}
+<section class="bg-gris py-14 sm:py-16" aria-labelledby="titre-similaires">
+  <div class="conteneur">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <h2 id="titre-similaires" class="titre-section">Vous aimerez aussi.</h2>
+      <a href="{% url 'contenus:opportunites' %}" class="btn btn-contour">Toutes les opportunités</a>
+    </div>
+    <ul class="mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {% for o in similaires %}<li>{% include "cartes/opportunite.html" with compacte=True %}</li>{% endfor %}
+    </ul>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,7 @@
+<div class="{{ classes_bloc|default:'' }}">
+  <label class="flex cursor-pointer items-start gap-3 text-sm text-encre">
+    <input type="checkbox" name="{{ champ.html_name }}" id="{{ champ.id_for_label }}" {% if champ.value %}checked{% endif %} class="mt-0.5 size-5 shrink-0 rounded border-ligne accent-vert" {% if champ.errors %}aria-invalid="true" aria-describedby="{{ champ.id_for_label }}-erreur"{% endif %}>
+    <span>{{ champ.label }}</span>
+  </label>
+  {% if champ.errors %}<p id="{{ champ.id_for_label }}-erreur" class="erreur ml-8">{{ champ.errors.0 }}</p>{% endif %}
+</div>

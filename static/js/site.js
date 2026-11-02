@@ -63,3 +63,54 @@
     setTimeout(function () { zoneMessages.remove(); }, 7000);
   }
 })();
+
+/* Partage et copie du lien de la page */
+(function () {
+  "use strict";
+  var annoncer = function (bouton, texte) {
+    var initial = bouton.textContent;
+    bouton.textContent = texte;
+    setTimeout(function () { bouton.textContent = initial; }, 2000);
+  };
+  var copier = function (bouton) {
+    var url = window.location.href.split("#")[0];
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(url).then(function () { annoncer(bouton, "Lien copié"); });
+    } else {
+      var champ = document.createElement("textarea");
+      champ.value = url; document.body.appendChild(champ); champ.select();
+      try { document.execCommand("copy"); annoncer(bouton, "Lien copié"); } catch (e) {}
+      champ.remove();
+    }
+  };
+  document.querySelectorAll("[data-copier-lien]").forEach(function (b) {
+    b.addEventListener("click", function () { copier(b); });
+  });
+  document.querySelectorAll("[data-partager]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      if (navigator.share) {
+        navigator.share({ title: b.dataset.titre || document.title, url: window.location.href.split("#")[0] }).catch(function () {});
+      } else {
+        copier(b);
+      }
+    });
+  });
+  // Afficher ou masquer un mot de passe
+  document.querySelectorAll("[data-afficher-mdp]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var champ = document.getElementById(b.getAttribute("aria-controls"));
+      if (!champ) return;
+      var visible = champ.type === "text";
+      champ.type = visible ? "password" : "text";
+      b.textContent = visible ? "Afficher" : "Masquer";
+      b.setAttribute("aria-pressed", String(!visible));
+    });
+  });
+})();
+
+/* Confirmation avant une action sensible (quitter une communauté, supprimer son compte) */
+document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
+  form.addEventListener("submit", function (e) {
+    if (!window.confirm(form.getAttribute("data-confirmer"))) e.preventDefault();
+  });
+});

@@ -1,0 +1,22 @@
+{# Carte d'actualité ou d'événement. Paramètres : a, mode ("evenement" ou "actualite" ou "lire") #}
+<a href="{{ a.get_absolute_url }}" class="carte group flex h-full flex-col transition-shadow hover:shadow-lg">
+  <div class="relative aspect-[16/8] {% if mode == 'actualite' %}border-b-4 border-turquoise{% endif %}">
+    {% include "partials/photo.html" with image=a.image alt="" %}
+    {% if mode == "evenement" %}
+    <time datetime="{{ a.date_affichee|date:'Y-m-d' }}" class="absolute top-0 left-0 grid min-w-13 rounded-br-xl px-2.5 py-2 text-center leading-none {% if a.est_a_venir %}bg-orange text-white{% else %}bg-white text-vert{% endif %}">
+      <span class="text-xl font-bold">{{ a.date_affichee|date:"j" }}</span><span class="mt-1 text-[10px] font-bold uppercase">{{ a.date_affichee|date:"M" }}</span>
+    </time>
+    {% endif %}
+  </div>
+  <div class="flex flex-1 flex-col p-5">
+    {% if mode == "evenement" %}
+      <p class="text-[11px] font-bold tracking-[0.12em] uppercase {% if a.est_a_venir %}text-orange{% else %}text-texte{% endif %}">{% if a.est_a_venir %}À venir{% else %}Passé{% endif %}{% if a.lieu %} · {{ a.lieu }}{% endif %}</p>
+    {% elif mode == "lire" %}
+      <p class="text-[11px] font-bold tracking-[0.12em] text-vert uppercase">{{ a.get_categorie_display }}{% if a.categorie == 'evenement' %}s{% else %}s{% endif %} · {{ a.date_affichee|date:"j M Y" }}</p>
+    {% else %}
+      <p class="text-xs text-texte"><time datetime="{{ a.date_affichee|date:'Y-m-d' }}">{{ a.date_affichee|date:"j M Y" }}</time></p>
+    {% endif %}
+    <h3 class="mt-1.5 text-base leading-snug font-bold sm:text-lg {% if mode == 'lire' %}text-encre{% else %}text-vert{% endif %} group-hover:underline">{{ a.titre }}</h3>
+    {% if mode == "actualite" %}<p class="mt-2 line-clamp-2 text-sm">{{ a.chapeau }}</p>{% endif %}
+  </div>
+</a>

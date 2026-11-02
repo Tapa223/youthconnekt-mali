@@ -16,6 +16,7 @@ class Communaute(models.Model):
     slug = models.SlugField("adresse (URL)", max_length=140, unique=True)
     public_vise = models.CharField("public visé", max_length=255)
     description = models.TextField("description", blank=True)
+    activites = models.TextField("ce qu'on y fait", blank=True, help_text="Une activité par ligne.")
     image = models.ImageField(
         "image", upload_to="communautes/", blank=True, validators=[valider_image]
     )
@@ -38,6 +39,10 @@ class Communaute(models.Model):
 
     def get_absolute_url(self):
         return reverse("communautes:detail", args=[self.slug])
+
+    @property
+    def liste_activites(self):
+        return [l.strip().lstrip("-•").strip() for l in self.activites.splitlines() if l.strip()]
 
     def nombre_membres(self):
         return self.demandes.filter(statut=DemandeAdhesion.Statut.ACCEPTEE).count()

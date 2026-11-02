@@ -80,14 +80,52 @@ class Utilisateur(AbstractUser):
         return getattr(self, nom, None)
 
     @property
+    def initiales(self):
+        profil = self.profil
+        return profil.initiales if profil else self.email[:1].upper()
+
+    @property
+    def prenom_affiche(self):
+        profil = self.profil
+        if profil is None:
+            return ""
+        return profil.prenom if hasattr(profil, "prenom") else profil.nom_structure
+
+    @property
     def nom_affiche(self):
         profil = self.profil
         return str(profil) if profil else self.email
 
 
+REGIONS = [
+    ("bamako", "District de Bamako"),
+    ("bandiagara", "Bandiagara"),
+    ("bougouni", "Bougouni"),
+    ("dioila", "Dioïla"),
+    ("douentza", "Douentza"),
+    ("gao", "Gao"),
+    ("kayes", "Kayes"),
+    ("kidal", "Kidal"),
+    ("kita", "Kita"),
+    ("koulikoro", "Koulikoro"),
+    ("koutiala", "Koutiala"),
+    ("menaka", "Ménaka"),
+    ("mopti", "Mopti"),
+    ("nara", "Nara"),
+    ("nioro", "Nioro du Sahel"),
+    ("san", "San"),
+    ("segou", "Ségou"),
+    ("sikasso", "Sikasso"),
+    ("taoudenit", "Taoudénit"),
+    ("tombouctou", "Tombouctou"),
+    ("hors_mali", "Hors du Mali"),
+]
+
+
 class ProfilBase(models.Model):
     """Champs communs aux deux types de profils publics."""
 
+    region = models.CharField("région", max_length=30, choices=REGIONS, default="bamako")
     ville = models.CharField("ville", max_length=100, blank=True)
     presentation = models.TextField("présentation", max_length=1500, blank=True)
     site_web = models.URLField("site web", blank=True)
@@ -127,6 +165,9 @@ class ProfilIndividuel(ProfilBase):
     )
     categorie = models.CharField("profil", max_length=30, choices=Categorie.choices)
     domaine = models.CharField("domaine d'activité ou d'études", max_length=150, blank=True)
+    telephone = models.CharField(
+        "téléphone", max_length=30, blank=True, help_text="Privé : jamais affiché sur le site."
+    )
 
     class Meta:
         verbose_name = "profil individuel"
@@ -135,6 +176,16 @@ class ProfilIndividuel(ProfilBase):
 
     def __str__(self):
         return f"{self.prenom} {self.nom}"
+
+    @property
+    def initiales(self):
+        return f"{self.prenom[:1]}{self.nom[:1]}".upper()
+
+    @property
+    def taux_completion(self):
+        champs = [self.prenom, self.nom, self.photo, self.categorie, self.region, self.ville,
+                  self.domaine, self.presentation, self.lien_linkedin, self.telephone]
+        return round(100 * sum(1 for c in champs if c) / len(champs))
 
     def get_absolute_url(self):
         return reverse("comptes:profil_public", args=[self.utilisateur_id])
@@ -162,6 +213,9 @@ class ProfilOrganisation(ProfilBase):
         "type de structure", max_length=20, choices=TypeStructure.choices
     )
     secteur = models.CharField("secteur d'activité", max_length=150, blank=True)
+    personne_contact = models.CharField(
+        "personne de contact", max_length=120, blank=True, help_text="Privé : jamais affiché sur le site."
+    )
     email_contact_public = models.EmailField(
         "e-mail de contact public",
         blank=True,
@@ -175,6 +229,18 @@ class ProfilOrganisation(ProfilBase):
 
     def __str__(self):
         return self.nom_structure
+
+    @property
+    def initiales(self):
+        mots = self.nom_structure.split()
+        return "".join(m[:1] for m in mots[:2]).upper() or "?"
+
+    @property
+    def taux_completion(self):
+        champs = [self.nom_structure, self.logo, self.type_structure, self.region, self.ville,
+                  self.secteur, self.presentation, self.site_web, self.personne_contact,
+                  self.email_contact_public]
+        return round(100 * sum(1 for c in champs if c) / len(champs))
 
     def get_absolute_url(self):
         return reverse("comptes:profil_public", args=[self.utilisateur_id])

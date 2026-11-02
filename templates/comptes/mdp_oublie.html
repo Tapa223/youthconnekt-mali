@@ -1,0 +1,11 @@
+{% extends "comptes/base_auth.html" %}
+{% block titre %}Mot de passe oublié | YouthConnekt Mali{% endblock %}
+{% block contenu %}
+<h1 class="text-3xl font-bold">Mot de passe oublié</h1>
+<p class="mt-2">Indiquez l'adresse e-mail de votre compte : nous vous enverrons un lien pour choisir un nouveau mot de passe.</p>
+<form method="post" class="mt-6 space-y-4" novalidate>{% csrf_token %}
+  {% include "partials/champ.html" with champ=form.email %}
+  <button type="submit" class="btn btn-vert min-h-13 w-full text-base">Envoyer le lien</button>
+</form>
+<p class="mt-5 text-center"><a href="{% url 'comptes:connexion' %}" class="text-sm font-bold text-vert underline underline-offset-4">Retour à la connexion</a></p>
+{% endblock %}

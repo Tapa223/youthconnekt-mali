@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load ycm %}
+{% block titre %}{{ a.titre }} | YouthConnekt Mali{% endblock %}
+{% block description %}{{ a.chapeau }}{% endblock %}
+
+{% block contenu %}
+<article>
+  <header class="mx-auto max-w-3xl px-4 pt-10 sm:px-6 sm:pt-12">
+    <nav aria-label="Fil d'Ariane" class="mb-4 text-sm"><a href="{% url 'contenus:actualites' %}" class="font-medium text-vert underline underline-offset-4">Actualités</a></nav>
+    <p class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+      <span class="etiquette rounded-full {% if a.categorie == 'evenement' %}bg-vert text-white{% else %}bg-turquoise text-encre{% endif %}">{{ a.get_categorie_display }}</span>
+      <time datetime="{{ a.date_affichee|date:'Y-m-d' }}">{{ a.date_affichee|date:"j F Y" }}</time>{% if a.lieu %} · {{ a.lieu }}{% endif %} · {{ a.minutes_lecture }} min de lecture
+    </p>
+    <h1 class="mt-3 text-3xl leading-tight font-bold sm:text-5xl">{{ a.titre }}</h1>
+    <p class="mt-4 text-lg leading-relaxed sm:text-xl">{{ a.chapeau }}</p>
+    <div class="mt-5 flex items-center gap-3">
+      <span class="grid size-10 place-items-center rounded-full bg-vert text-xs font-bold text-white" aria-hidden="true">YC</span>
+      <p class="text-sm leading-tight"><strong class="block text-encre">L'équipe YouthConnekt Mali</strong>Communication du chapitre</p>
+    </div>
+  </header>
+
+  {% if a.image %}
+  <div class="conteneur mt-8">
+    <div class="aspect-[16/9] overflow-hidden rounded-3xl lg:aspect-[16/7]">
+      <img src="{{ a.image.url }}" alt="" class="h-full w-full object-cover" fetchpriority="high">
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="conteneur mt-10 grid gap-8 pb-14 lg:grid-cols-[180px_minmax(0,1fr)] lg:gap-12">
+    <aside class="order-2 lg:order-1">
+      <div class="lg:sticky lg:top-24">
+        <p class="text-xs font-bold tracking-[0.14em] text-vert uppercase">Partager</p>
+        <ul class="mt-3 flex flex-wrap gap-2 lg:flex-col">
+          <li><a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode }}" target="_blank" rel="noopener" class="inline-flex min-h-10 w-full items-center justify-center rounded-full border-[1.5px] border-vert px-4 text-sm font-bold text-vert hover:bg-vert-clair">Facebook</a></li>
+          <li><a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri|urlencode }}" target="_blank" rel="noopener" class="inline-flex min-h-10 w-full items-center justify-center rounded-full border-[1.5px] border-vert px-4 text-sm font-bold text-vert hover:bg-vert-clair">LinkedIn</a></li>
+          <li><a href="https://wa.me/?text={{ a.titre|urlencode }}%20{{ request.build_absolute_uri|urlencode }}" target="_blank" rel="noopener" class="inline-flex min-h-10 w-full items-center justify-center rounded-full border-[1.5px] border-vert px-4 text-sm font-bold text-vert hover:bg-vert-clair">WhatsApp</a></li>
+          <li><button type="button" data-copier-lien class="inline-flex min-h-10 w-full items-center justify-center rounded-full border-[1.5px] border-vert px-4 text-sm font-bold text-vert hover:bg-vert-clair">Copier le lien</button></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="prose-ycm order-1 max-w-3xl lg:order-2">
+      {% if photos %}
+        {% capture_galerie photos as galerie %}
+        {% corps_article a.contenu galerie %}
+      {% else %}
+        {% corps_article a.contenu %}
+      {% endif %}
+    </div>
+  </div>
+</article>
+
+{% if autres %}
+<section class="bg-gris py-14 sm:py-16" aria-labelledby="titre-autres">
+  <div class="conteneur">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <h2 id="titre-autres" class="titre-section">À lire aussi.</h2>
+      <a href="{% url 'contenus:actualites' %}" class="btn btn-contour">Toutes les actualités</a>
+    </div>
+    <ul class="mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {% for a in autres %}<li>{% include "cartes/actualite.html" with mode="lire" %}</li>{% endfor %}
+    </ul>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

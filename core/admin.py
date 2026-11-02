@@ -13,15 +13,8 @@ admin.site.index_title = "Gestion du site"
 @admin.register(ParametresSite)
 class ParametresSiteAdmin(admin.ModelAdmin):
     fieldsets = (
-        ("Accueil : premier écran", {"fields": ("accroche_accueil", "presentation_accueil", "image_accueil")}),
-        (
-            "Accueil : photos",
-            {
-                "description": "Photos de la section « Le chapitre » et du bandeau d'invitation. JPG, PNG ou WebP, 3 Mo maximum.",
-                "fields": ("photo_presentation_1", "photo_presentation_2", "photo_presentation_3", "image_invitation"),
-            },
-        ),
-        ("Coordonnées", {"fields": ("adresse", "telephone", "email_contact")}),
+        ("Accueil", {"fields": ("accroche_accueil", "presentation_accueil")}),
+        ("Coordonnées", {"fields": ("adresse", "telephone", "email_contact", "horaires")}),
         (
             "Réseaux sociaux officiels",
             {
@@ -53,10 +46,10 @@ class SectionAProposAdmin(admin.ModelAdmin):
 
 @admin.register(MessageContact)
 class MessageContactAdmin(admin.ModelAdmin):
-    list_display = ("objet", "nom", "email", "recu_le", "traite")
-    list_filter = ("traite", "recu_le")
+    list_display = ("objet", "nom", "profil", "email", "recu_le", "traite")
+    list_filter = ("traite", "profil", "recu_le")
     search_fields = ("nom", "email", "objet", "message")
-    readonly_fields = ("nom", "email", "objet", "message", "recu_le")
+    readonly_fields = ("nom", "profil", "email", "objet", "message", "recu_le")
     actions = ["marquer_traites"]
 
     def has_add_permission(self, request):
