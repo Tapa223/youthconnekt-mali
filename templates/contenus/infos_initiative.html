@@ -1,0 +1,7 @@
+{# Infos clés d'une initiative. Paramètres : i, classes #}
+<dl class="{{ classes }} grid-cols-2 gap-3 sm:grid-cols-4">
+      {% if i.date_libelle %}<div class="rounded-xl bg-gris px-3.5 py-3"><dt class="text-xs">Date</dt><dd class="mt-0.5 text-sm font-bold text-vert">{{ i.date_libelle }}</dd></div>{% endif %}
+      {% if i.lieu %}<div class="rounded-xl bg-gris px-3.5 py-3"><dt class="text-xs">Lieu</dt><dd class="mt-0.5 text-sm font-bold text-vert">{{ i.lieu }}</dd></div>{% endif %}
+      {% if i.participants %}<div class="rounded-xl bg-gris px-3.5 py-3"><dt class="text-xs">Participants</dt><dd class="mt-0.5 text-sm font-bold text-vert">{{ i.participants }}</dd></div>{% endif %}
+      {% if i.format %}<div class="rounded-xl bg-gris px-3.5 py-3"><dt class="text-xs">Format</dt><dd class="mt-0.5 text-sm font-bold text-vert">{{ i.format }}</dd></div>{% endif %}
+    </dl>

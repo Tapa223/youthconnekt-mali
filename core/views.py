@@ -46,6 +46,8 @@ def accueil(request):
         "actualite_une": actualites[0] if actualites else None,
         "actualites": actualites[1:4],
         "partenaires": Partenaire.objects.filter(actif=True),
+        # Cases de la maquette, tant qu'aucun logo n'est saisi dans l'administration
+        "partenaires_maquette": ["PNUD", "Ministère de la Jeunesse et des Sports"] + ["[Logo partenaire]"] * 6,
         "temoignages": Temoignage.objects.filter(publie=True)[:3],
     }
     return render(request, "core/accueil.html", contexte)

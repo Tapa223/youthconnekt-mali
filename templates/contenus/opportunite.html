@@ -5,7 +5,7 @@
 
 {% block contenu %}
 <div class="conteneur py-10 sm:py-12">
-  <nav aria-label="Fil d'Ariane" class="mb-4 text-sm"><a href="{% url 'contenus:opportunites' %}" class="font-medium text-vert underline underline-offset-4">Opportunités</a></nav>
+  {% url 'contenus:opportunites' as url_retour %}{% include "partials/retour.html" with url=url_retour libelle="Retour aux opportunités" %}
   <div class="flex flex-wrap gap-2">
     <span class="etiquette rounded-full {{ o.couleur|fond }}">{{ o.get_type_display }}</span>
     {% if o.est_expiree %}<span class="etiquette rounded-full bg-gris text-rouge">Candidatures closes</span>

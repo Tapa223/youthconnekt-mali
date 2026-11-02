@@ -7,5 +7,5 @@
   {% include "partials/champ.html" with champ=form.email %}
   <button type="submit" class="btn btn-vert min-h-13 w-full text-base">Envoyer le lien</button>
 </form>
-<p class="mt-5 text-center"><a href="{% url 'comptes:connexion' %}" class="text-sm font-bold text-vert underline underline-offset-4">Retour à la connexion</a></p>
+<p class="mt-5 text-center"><a href="{% url 'comptes:connexion' %}" class="btn btn-contour min-h-11 w-full sm:w-auto">Retour à la connexion</a></p>
 {% endblock %}

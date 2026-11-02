@@ -6,10 +6,10 @@
 {% block contenu %}
 <article>
   <header class="mx-auto max-w-3xl px-4 pt-10 sm:px-6 sm:pt-12">
-    <nav aria-label="Fil d'Ariane" class="mb-4 text-sm"><a href="{% url 'contenus:actualites' %}" class="font-medium text-vert underline underline-offset-4">Actualités</a></nav>
+    {% url 'contenus:actualites' as url_retour %}{% include "partials/retour.html" with url=url_retour libelle="Retour aux actualités" %}
     <p class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
       <span class="etiquette rounded-full {% if a.categorie == 'evenement' %}bg-vert text-white{% else %}bg-turquoise text-encre{% endif %}">{{ a.get_categorie_display }}</span>
-      <time datetime="{{ a.date_affichee|date:'Y-m-d' }}">{{ a.date_affichee|date:"j F Y" }}</time>{% if a.lieu %} · {{ a.lieu }}{% endif %} · {{ a.minutes_lecture }} min de lecture
+      <span><time datetime="{{ a.date_affichee|date:'Y-m-d' }}">{{ a.date_affichee|date:"j F Y" }}</time>{% if a.lieu %} · {{ a.lieu }}{% endif %} · {{ a.minutes_lecture }} min de lecture</span>
     </p>
     <h1 class="mt-3 text-[1.75rem] leading-[1.1] font-bold sm:text-5xl">{{ a.titre }}</h1>
     <p class="mt-4 text-[17px] leading-relaxed sm:text-xl">{{ a.chapeau }}</p>

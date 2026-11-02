@@ -31,31 +31,31 @@
   {% include "partials/mention_photo.html" with texte="Photos provisoires · hors Mali" %}
 </section>
 
-<section class="conteneur py-14 sm:py-20" aria-labelledby="titre-communautes">
+<section class="conteneur py-8 sm:py-20" aria-labelledby="titre-communautes">
   <p class="surtitre surtitre-trait">Les communautés</p>
   <h2 id="titre-communautes" class="titre-section">Trouvez vos semblables.</h2>
+  <p class="mt-3 text-[15px] sm:text-base">Chaque communauté s'adresse à un public précis. Un membre peut en intégrer plusieurs.</p>
   {% if communautes %}
-  <ul class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+  <ul class="mt-6 grid gap-2.5 sm:mt-8 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
     {% for c in communautes %}
-    <li class="carte survol-leve survol-zoom flex flex-col">
-      <a href="{{ c.get_absolute_url }}" class="group block">
-        <div class="relative aspect-[16/8]">
-          {% if c.image %}<img src="{{ c.image.url }}" alt="" class="h-full w-full object-cover" loading="lazy">
-          {% else %}<img src="{% static 'img/communaute/carte-' %}{% cycle '1' '2' '3' '4' '5' '6' %}.jpg" alt="" class="h-full w-full object-cover" loading="lazy">{% endif %}
-          <div class="absolute inset-0 bg-gradient-to-t from-vert/85 via-vert/20 to-transparent"></div>
-          {% if c.nb_membres %}<p class="absolute bottom-3 left-4 text-white"><span class="text-3xl font-bold">{{ c.nb_membres }}</span> <span class="text-sm">membre{{ c.nb_membres|pluralize }}</span></p>
-          {% else %}<p class="absolute bottom-3 left-4 text-sm font-bold text-white">Nouvelle communauté</p>{% endif %}
-          {% if c.statut_membre == "acceptee" %}<span class="etiquette absolute top-3 left-3 rounded-full bg-white text-vert">Vous êtes membre</span>
-          {% elif c.statut_membre == "en_attente" %}<span class="etiquette absolute top-3 left-3 rounded-full bg-orange text-white">Demande en cours</span>{% endif %}
-        </div>
-        <div class="p-5 pb-3">
-          <h3 class="text-xl font-bold group-hover:underline">{{ c.nom }}</h3>
-          <p class="mt-1.5 text-sm">{{ c.public_vise }}</p>
-        </div>
+    <li class="carte survol-leve survol-zoom flex sm:flex-col">
+      <a href="{{ c.get_absolute_url }}" class="relative block w-[104px] shrink-0 sm:aspect-[16/8] sm:w-auto" tabindex="-1" aria-hidden="true">
+        {% if c.image %}<img src="{{ c.image.url }}" alt="" class="absolute inset-0 h-full w-full object-cover" loading="lazy">
+        {% else %}<img src="{% static 'img/communaute/carte-' %}{% cycle '1' '2' '3' '4' '5' '6' %}.jpg" alt="" class="absolute inset-0 h-full w-full object-cover" loading="lazy">{% endif %}
+        <span class="absolute inset-0 bg-gradient-to-t from-vert/85 via-vert/20 to-transparent"></span>
+        {% if c.nb_membres %}<span class="absolute bottom-2 left-2 leading-none text-white sm:bottom-3 sm:left-4"><span class="block text-[17px] font-bold sm:inline sm:text-3xl">{{ c.nb_membres }}</span> <span class="text-[10px] sm:text-sm">membre{{ c.nb_membres|pluralize }}</span></span>
+        {% else %}<span class="absolute bottom-2 left-2 text-[11px] leading-tight font-bold text-white sm:bottom-3 sm:left-4 sm:text-sm">Nouvelle communauté</span>{% endif %}
+        {% if c.statut_membre == "acceptee" %}<span class="etiquette absolute top-2 left-2 rounded-full bg-white text-[10px] text-vert sm:top-3 sm:left-3 sm:text-xs">Membre</span>
+        {% elif c.statut_membre == "en_attente" %}<span class="etiquette absolute top-2 left-2 rounded-full bg-orange text-[10px] text-white sm:top-3 sm:left-3 sm:text-xs">Demande en cours</span>{% endif %}
       </a>
-      <div class="mt-auto px-5 pb-5">
-        {% if user.is_authenticated %}{% include "communautes/bouton_adhesion.html" with statut=c.statut_membre %}
-        {% else %}<a href="{{ c.get_absolute_url }}" class="text-sm font-bold text-vert underline underline-offset-4">Se connecter pour découvrir</a>{% endif %}
+      <div class="flex min-w-0 flex-1 flex-col p-3 sm:p-5">
+        <h3 class="text-base leading-tight font-bold sm:text-xl"><a href="{{ c.get_absolute_url }}" class="transition-colors hover:text-orange">{{ c.nom }}</a></h3>
+        <p class="mt-1.5 text-xs leading-snug text-encre sm:text-sm"><strong>Pour :</strong> {{ c.public_vise }}</p>
+        {% if c.description %}<p class="mt-1 line-clamp-2 text-xs leading-snug text-texte sm:text-sm">{{ c.description }}</p>{% endif %}
+        <div class="mt-3 sm:mt-auto sm:pt-4 [&_.btn]:min-h-10 [&_.btn]:px-3.5 [&_.btn]:text-[13px] sm:[&_.btn]:min-h-11 sm:[&_.btn]:text-sm">
+          {% if user.is_authenticated %}{% include "communautes/bouton_adhesion.html" with statut=c.statut_membre %}
+          {% else %}<a href="{% url 'comptes:connexion' %}?next={{ c.get_absolute_url|urlencode }}" class="btn btn-orange">Demander à intégrer</a>{% endif %}
+        </div>
       </div>
     </li>
     {% endfor %}
@@ -63,6 +63,39 @@
   {% else %}
   {% include "partials/vide.html" with message="Les communautés seront bientôt ouvertes." lien_admin="admin:communautes_communaute_add" %}
   {% endif %}
+</section>
+
+{# Mode d'emploi, comme la maquette #}
+<section class="bg-gris py-14 sm:py-20" aria-labelledby="titre-mode-emploi">
+  <div class="conteneur">
+    <div class="flex flex-wrap items-end justify-between gap-5">
+      <div>
+        <p class="surtitre surtitre-trait">Mode d'emploi</p>
+        <h2 id="titre-mode-emploi" class="titre-section">Comment intégrer une communauté ?</h2>
+      </div>
+      {% if not user.is_authenticated %}<a href="{% url 'comptes:inscription' %}" class="btn btn-vert hidden sm:inline-flex">Rejoindre le chapitre</a>{% endif %}
+    </div>
+    <ol class="mt-8 grid gap-3.5 sm:grid-cols-2 sm:gap-[18px] lg:grid-cols-4">
+      <li class="flex gap-4 rounded-2xl border-t-[5px] border-orange bg-white p-5 sm:flex-col sm:gap-2.5 sm:p-6">
+        <span class="grid size-10 shrink-0 place-items-center rounded-full bg-orange text-lg font-bold text-white sm:size-[46px] sm:text-xl" aria-hidden="true">1</span>
+        <span class="flex flex-col gap-1.5"><strong class="text-[17px] leading-snug text-vert sm:text-[19px]">Rejoignez le chapitre</strong><span class="text-sm leading-relaxed text-texte sm:text-[15px]">Créez votre compte : vous devenez membre du chapitre YouthConnekt Mali.</span></span>
+      </li>
+      <li class="flex gap-4 rounded-2xl border-t-[5px] border-turquoise bg-white p-5 sm:flex-col sm:gap-2.5 sm:p-6">
+        <span class="grid size-10 shrink-0 place-items-center rounded-full bg-turquoise text-lg font-bold text-encre sm:size-[46px] sm:text-xl" aria-hidden="true">2</span>
+        <span class="flex flex-col gap-1.5"><strong class="text-[17px] leading-snug text-vert sm:text-[19px]">Choisissez une communauté</strong><span class="text-sm leading-relaxed text-texte sm:text-[15px]">Parcourez les communautés et repérez celles qui vous ressemblent.</span></span>
+      </li>
+      <li class="flex gap-4 rounded-2xl border-t-[5px] border-bleu bg-white p-5 sm:flex-col sm:gap-2.5 sm:p-6">
+        <span class="grid size-10 shrink-0 place-items-center rounded-full bg-bleu text-lg font-bold text-white sm:size-[46px] sm:text-xl" aria-hidden="true">3</span>
+        <span class="flex flex-col gap-1.5"><strong class="text-[17px] leading-snug text-vert sm:text-[19px]">Demandez à l'intégrer</strong><span class="text-sm leading-relaxed text-texte sm:text-[15px]">Depuis votre compte, envoyez votre demande en un clic.</span></span>
+      </li>
+      <li class="flex gap-4 rounded-2xl border-t-[5px] border-vert bg-white p-5 sm:flex-col sm:gap-2.5 sm:p-6">
+        <span class="grid size-10 shrink-0 place-items-center rounded-full bg-vert text-lg font-bold text-white sm:size-[46px] sm:text-xl" aria-hidden="true">4</span>
+        <span class="flex flex-col gap-1.5"><strong class="text-[17px] leading-snug text-vert sm:text-[19px]">Suivez votre demande</strong><span class="text-sm leading-relaxed text-texte sm:text-[15px]">Retrouvez vos communautés et vos demandes dans votre espace membre.</span></span>
+      </li>
+    </ol>
+    <p class="mt-6 text-[15px] text-texte"><strong class="text-encre">Créer son compte, c'est rejoindre le chapitre.</strong> L'intégration à une communauté se demande ensuite, communauté par communauté.</p>
+    {% if not user.is_authenticated %}<a href="{% url 'comptes:inscription' %}" class="btn btn-vert mt-6 w-full sm:hidden">Rejoindre le chapitre</a>{% endif %}
+  </div>
 </section>
 
 {% include "partials/bandeau_lets_connekt.html" %}

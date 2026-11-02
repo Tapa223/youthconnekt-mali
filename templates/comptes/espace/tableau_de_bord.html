@@ -24,7 +24,7 @@
 <section class="bloc" aria-labelledby="titre-opp">
   <div class="flex items-baseline justify-between gap-3">
     <h2 id="titre-opp" class="text-xl font-bold">Opportunités pour vous</h2>
-    <a href="{% url 'comptes:mes_opportunites' %}" class="text-sm font-bold text-vert underline underline-offset-4">Toutes</a>
+    <a href="{% url 'comptes:mes_opportunites' %}" class="inline-flex min-h-10 shrink-0 items-center rounded-full border-2 border-vert px-4 text-sm font-bold text-vert transition-colors hover:border-orange hover:bg-orange hover:text-white">Toutes</a>
   </div>
   <p class="text-sm">Sélectionnées selon vos communautés.</p>
   {% if opportunites %}
@@ -38,7 +38,7 @@
   <section class="bloc" aria-labelledby="titre-com">
     <div class="flex items-baseline justify-between gap-3">
       <h2 id="titre-com" class="text-xl font-bold">Mes communautés</h2>
-      <a href="{% url 'communautes:liste' %}" class="text-sm font-bold text-vert underline underline-offset-4">Toutes les communautés</a>
+      <a href="{% url 'communautes:liste' %}" class="inline-flex min-h-10 shrink-0 items-center rounded-full border-2 border-vert px-4 text-sm font-bold text-vert transition-colors hover:border-orange hover:bg-orange hover:text-white">Toutes les communautés</a>
     </div>
     {% if mes_communautes %}
     <ul class="mt-4 space-y-3">
@@ -73,7 +73,7 @@
   <section class="bloc h-fit" aria-labelledby="titre-evt">
     <div class="flex items-baseline justify-between gap-3">
       <h2 id="titre-evt" class="text-xl font-bold">Prochains événements</h2>
-      <a href="{% url 'contenus:actualites' %}?filtre=evenements" class="text-sm font-bold text-vert underline underline-offset-4">Agenda</a>
+      <a href="{% url 'contenus:actualites' %}?filtre=evenements" class="inline-flex min-h-10 shrink-0 items-center rounded-full border-2 border-vert px-4 text-sm font-bold text-vert transition-colors hover:border-orange hover:bg-orange hover:text-white">Agenda</a>
     </div>
     {% if evenements %}
     <ul class="mt-4 space-y-4">

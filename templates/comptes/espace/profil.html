@@ -5,7 +5,7 @@
 <section class="bloc">
   <div class="flex flex-wrap items-baseline justify-between gap-3">
     <h1 class="text-2xl font-bold sm:text-3xl">Mon profil</h1>
-    {% if profil %}<a href="{% url 'comptes:profil_public' user.pk %}" class="text-sm font-bold text-vert underline underline-offset-4">Voir mon profil public</a>{% endif %}
+    {% if profil %}<a href="{% url 'comptes:profil_public' user.pk %}" class="inline-flex min-h-10 shrink-0 items-center rounded-full border-2 border-vert px-4 text-sm font-bold text-vert transition-colors hover:border-orange hover:bg-orange hover:text-white">Voir mon profil public</a>{% endif %}
   </div>
   <p class="mt-1 text-sm">Les informations marquées « privé » ne sont jamais affichées sur le site. Votre adresse e-mail de connexion reste privée.</p>
   <form method="post" enctype="multipart/form-data" class="mt-6 grid gap-5 sm:grid-cols-2" novalidate>

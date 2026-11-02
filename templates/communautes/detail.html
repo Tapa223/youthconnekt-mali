@@ -10,7 +10,7 @@
   {% if not c.image %}{% include "partials/mention_photo.html" with texte="Photo provisoire" position="right-3 top-3" %}{% endif %}
   <div class="conteneur flex flex-col gap-6 pt-24 pb-10 sm:pt-32 md:flex-row md:items-end md:justify-between">
     <div>
-      <nav aria-label="Fil d'Ariane"><a href="{% url 'communautes:liste' %}" class="text-sm font-bold underline underline-offset-4">Communautés</a></nav>
+      {% url 'communautes:liste' as url_retour %}{% include "partials/retour.html" with url=url_retour libelle="Retour aux communautés" clair=True %}
       {% if demande.statut == "acceptee" %}<span class="etiquette mt-3 inline-block rounded-full bg-white text-vert">Vous êtes membre</span>{% endif %}
       <h1 class="mt-2 text-4xl leading-tight font-bold text-white sm:text-6xl">{{ c.nom }}</h1>
       <p class="mt-2 text-white/90">{% if c.nb_membres %}{{ c.nb_membres }} membre{{ c.nb_membres|pluralize }}{% else %}Nouvelle communauté{% endif %}</p>
@@ -33,7 +33,7 @@
       <div class="rounded-3xl bg-white p-5 sm:p-6">
         <div class="flex items-baseline justify-between gap-3">
           <h2 class="text-xl font-bold">Opportunités de la communauté</h2>
-          <a href="{% url 'contenus:opportunites' %}" class="text-sm font-bold text-vert underline underline-offset-4">Toutes</a>
+          <a href="{% url 'contenus:opportunites' %}" class="inline-flex min-h-10 shrink-0 items-center rounded-full border-2 border-vert px-4 text-sm font-bold text-vert transition-colors hover:border-orange hover:bg-orange hover:text-white">Toutes</a>
         </div>
         {% if opportunites %}
         <ul class="mt-4 grid gap-4 sm:grid-cols-2">{% for o in opportunites %}<li>{% include "cartes/opportunite.html" with compacte=True via=c.nom %}</li>{% endfor %}</ul>
