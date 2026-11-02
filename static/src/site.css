@@ -83,6 +83,8 @@
   .btn-contour { @apply border-vert bg-white text-vert hover:border-orange hover:bg-orange hover:text-white; }
   .btn-blanc { @apply border-white bg-white text-vert hover:border-orange hover:bg-orange hover:text-white; }
   .btn-contour-blanc { @apply border-white bg-vert text-white hover:bg-white hover:text-vert; }
+  /* Petit bouton « Tout voir » à côté des titres de section, sur téléphone */
+  .btn-tout-voir { @apply inline-flex min-h-10 shrink-0 items-center rounded-full bg-turquoise-clair px-4 text-sm font-bold whitespace-nowrap text-vert transition-colors hover:bg-orange hover:text-white; }
 
   .carte {
     @apply overflow-hidden rounded-2xl border border-ligne bg-white;

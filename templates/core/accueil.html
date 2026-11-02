@@ -93,15 +93,15 @@
 {# ===================================================================== #}
 <section id="chapitre" class="relative scroll-mt-20 overflow-hidden py-16 sm:py-20 lg:py-24" aria-labelledby="titre-chapitre">
   <div class="absolute -top-24 -right-24 hidden size-80 rounded-full bg-turquoise/10 md:block" aria-hidden="true"></div>
-  <div class="conteneur relative grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-    <div>
-      <p class="surtitre surtitre-trait">Le chapitre</p>
-      <h2 id="titre-chapitre" class="titre-section">Le lieu où la jeunesse malienne se rencontre et avance.</h2>
-      <p class="mt-5 text-base leading-relaxed sm:text-lg">YouthConnekt Mali accompagne les jeunes dans leurs projets, les implique dans la vie citoyenne et met en lumière celles et ceux qui font bouger le pays. Étudiants, jeunes professionnels, entrepreneurs et organisations s'y retrouvent pour apprendre, se rencontrer et agir ensemble.</p>
-      <a href="{% url 'core:a_propos' %}" class="btn btn-vert survol-leve mt-7">Découvrir le chapitre</a>
+  <div class="conteneur relative flex flex-col gap-5 sm:gap-8 lg:grid lg:grid-cols-2 lg:items-center lg:gap-16">
+    <div class="contents lg:block">
+      <div class="order-1"><p class="surtitre surtitre-trait">Le chapitre</p>
+      <h2 id="titre-chapitre" class="titre-section">Le lieu où la jeunesse malienne se rencontre et avance.</h2></div>
+      <p class="order-4 text-base leading-relaxed sm:text-lg lg:mt-5">YouthConnekt Mali accompagne les jeunes dans leurs projets, les implique dans la vie citoyenne et met en lumière celles et ceux qui font bouger le pays. Étudiants, jeunes professionnels, entrepreneurs et organisations s'y retrouvent pour apprendre, se rencontrer et agir ensemble.</p>
+      <a href="{% url 'core:a_propos' %}" class="btn btn-vert survol-leve order-5 w-full sm:w-auto sm:self-start lg:mt-7">Découvrir le chapitre</a>
 
       {% if chiffres %}
-      <dl class="mt-9 grid grid-cols-3 divide-x divide-ligne border-y border-ligne py-5">
+      <dl class="order-2 grid grid-cols-3 divide-x divide-ligne border-y border-ligne py-3.5 sm:py-5 lg:mt-9">
         {% for chiffre in chiffres %}
         <div class="{% if not forloop.first %}pl-4 sm:pl-6{% endif %} pr-2">
           <dt class="sr-only">{{ chiffre.libelle }}</dt>
@@ -112,21 +112,21 @@
         {% endfor %}
       </dl>
       {% elif user.is_staff %}
-      <p class="mt-8 rounded-lg border border-dashed border-ligne p-3 text-sm">[Chiffres clés à saisir et vérifier dans l'administration avant publication]</p>
+      <p class="order-2 rounded-lg border border-dashed border-ligne p-3 text-sm lg:mt-8">[Chiffres clés à saisir et vérifier dans l'administration avant publication]</p>
       {% endif %}
     </div>
 
     {# Composition de trois photos qui se dévoilent au défilement #}
-    <div class="relative mx-auto h-[min(520px,calc(100vh-200px))] min-h-[360px] w-full max-w-xl sm:min-h-[420px] lg:max-w-none" aria-hidden="true">
-      <span class="absolute top-[30px] left-0 h-[88%] w-[54%] rounded-[22px] bg-orange"></span>
+    <div class="relative order-3 mx-auto h-[250px] w-full max-w-xl sm:h-[min(520px,calc(100vh-200px))] sm:min-h-[420px] lg:max-w-none" aria-hidden="true">
+      <span class="absolute top-4 left-0 h-[88%] w-[56%] rounded-2xl bg-orange sm:top-[30px] sm:w-[54%] sm:rounded-[22px]"></span>
       <span class="absolute right-[2%] bottom-0 h-[34%] w-[34%] rounded-[22px] bg-turquoise"></span>
-      <div class="devoile survol-zoom absolute top-0 left-6 h-[88%] w-[52%] overflow-hidden rounded-[22px] shadow-[0_20px_40px_rgb(20_32_29/.2)]">
+      <div class="devoile survol-zoom absolute top-0 left-3 h-[88%] w-[54%] overflow-hidden rounded-2xl sm:left-6 sm:w-[52%] sm:rounded-[22px] shadow-[0_20px_40px_rgb(20_32_29/.2)]">
         <img src="{% static 'img/accueil/chapitre-1.jpg' %}" alt="" class="derive -mt-[10%] block h-[120%] w-full object-cover" loading="lazy">
       </div>
-      <div class="devoile-2 survol-penche absolute top-[4%] right-[4%] h-[44%] w-[38%] rotate-[4deg] overflow-hidden rounded-[20px] border-[6px] border-white shadow-[0_18px_36px_rgb(20_32_29/.22)]">
+      <div class="devoile-2 survol-penche absolute top-[4%] right-[4%] h-[44%] w-[38%] rotate-[4deg] overflow-hidden rounded-[20px] border-4 border-white shadow-[0_18px_36px_rgb(20_32_29/.22)] sm:border-[6px]">
         <img src="{% static 'img/accueil/chapitre-2.jpg' %}" alt="" class="h-full w-full object-cover" loading="lazy">
       </div>
-      <div class="devoile-2 survol-penche absolute right-[6%] bottom-[4%] h-[45%] w-[40%] -rotate-3 overflow-hidden rounded-[20px] border-[6px] border-white shadow-[0_18px_36px_rgb(20_32_29/.22)]">
+      <div class="devoile-2 survol-penche absolute right-[6%] bottom-[4%] h-[45%] w-[40%] -rotate-3 overflow-hidden rounded-[20px] border-4 border-white shadow-[0_18px_36px_rgb(20_32_29/.22)] sm:border-[6px]">
         <img src="{% static 'img/accueil/chapitre-3.jpg' %}" alt="" class="h-full w-full object-cover" loading="lazy">
       </div>
       {% include "partials/mention_photo.html" with texte="Photos provisoires · hors Mali" position="left-9 bottom-[16%]" %}
@@ -135,20 +135,20 @@
 
   {# Axes d'action #}
   {% if axes %}
-  <div class="conteneur relative mt-20 lg:mt-28">
+  <div class="conteneur relative mt-14 sm:mt-20 lg:mt-28">
     <p class="surtitre">Nos axes d'action</p>
     <h2 class="titre-section">Ce que fait le chapitre.</h2>
-    <ul class="masquer-defilement -mx-4 mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-5 sm:overflow-visible sm:px-0">
+    <ul class="mt-4 grid grid-cols-3 gap-2 sm:mt-8 sm:gap-5">
       {% for axe in axes %}
-      <li class="carte survol-leve survol-zoom survol-orange relative flex w-[78%] shrink-0 snap-start flex-col border-2 sm:w-auto">
-        <div class="relative aspect-[16/8.5] border-b-4 {{ axe.couleur|bordure }}">
+      <li class="carte survol-leve survol-zoom survol-orange relative flex flex-col rounded-[14px] border-[1.5px] sm:rounded-2xl sm:border-2">
+        <div class="relative h-24 border-b-4 sm:aspect-[16/8.5] sm:h-auto {{ axe.couleur|bordure }}">
           {% include "partials/image_axe.html" %}
-          <span class="absolute top-3 left-3 grid size-9 place-items-center rounded-full bg-white/90 text-xs font-bold text-vert">{{ forloop.counter|stringformat:"02d" }}</span>
+          <span class="absolute top-1.5 left-1.5 grid size-[22px] place-items-center rounded-full bg-white/90 text-[10px] font-bold text-vert sm:top-3 sm:left-3 sm:size-9 sm:text-xs">{{ forloop.counter|stringformat:"02d" }}</span>
         </div>
-        <div class="flex flex-1 flex-col p-5 sm:p-6">
-          <h3 class="text-xl font-bold sm:text-2xl">{{ axe.nom }}</h3>
-          <p class="mt-2 flex-1 text-[15px] leading-relaxed text-encre">{{ axe.description }}</p>
-          <a href="{% url 'core:a_propos' %}#axes" class="lien-fleche mt-4 after:absolute after:inset-0">En savoir plus<span class="sr-only"> sur l'axe {{ axe.nom }}</span></a>
+        <div class="flex flex-1 flex-col px-2.5 pt-2.5 pb-3 sm:p-6">
+          <h3 class="text-sm font-bold sm:text-2xl">{{ axe.nom }}</h3>
+          <p class="mt-1 line-clamp-4 flex-1 text-xs leading-snug text-encre sm:mt-2 sm:line-clamp-none sm:text-[15px] sm:leading-relaxed">{{ axe.description }}</p>
+          <a href="{% url 'core:a_propos' %}#axes" class="mt-2.5 self-start rounded-full bg-turquoise-clair px-2.5 py-1 text-xs font-bold text-vert after:absolute after:inset-0 sm:mt-4 sm:bg-transparent sm:p-0 sm:text-sm sm:hover:text-orange sm:hover:underline sm:underline-offset-4"><span class="sm:hidden">Lire</span><span class="hidden sm:inline">En savoir plus</span><span class="sr-only"> sur l'axe {{ axe.nom }}</span></a>
         </div>
       </li>
       {% endfor %}
@@ -163,16 +163,17 @@
 {% if initiatives or user.is_staff %}
 <section class="bg-gris py-16 sm:py-20" aria-labelledby="titre-initiatives">
   <div class="conteneur">
-    <div class="flex flex-wrap items-end justify-between gap-4">
+    <div class="flex items-end justify-between gap-4">
       <div>
         <p class="surtitre">Sur le terrain</p>
         <h2 id="titre-initiatives" class="titre-section">Nos initiatives.</h2>
       </div>
-      <a href="{% url 'contenus:initiatives' %}" class="btn btn-vert survol-leve">Toutes les initiatives</a>
+      <a href="{% url 'contenus:initiatives' %}" class="hidden sm:inline-flex btn btn-vert survol-leve">Toutes les initiatives</a>
+      <a href="{% url 'contenus:initiatives' %}" class="btn-tout-voir sm:hidden">Tout voir</a>
     </div>
 
     {% if initiatives %}
-    <ul class="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-5">
+    <ul class="mt-5 grid grid-cols-2 gap-2 sm:mt-8 sm:gap-4 lg:grid-cols-3 lg:gap-5">
       {% for initiative in initiatives %}
       <li class="{% if forloop.first %}col-span-2 lg:col-span-1{% endif %}">
         <a href="{{ initiative.get_absolute_url }}" class="survol-leve group relative block aspect-[4/3] overflow-hidden rounded-2xl lg:aspect-[3/3.15] {% if not forloop.first %}aspect-square{% endif %}">
@@ -200,9 +201,9 @@
 {# 4. Mot du ministre                                                     #}
 {# ===================================================================== #}
 {% with m=mot_ministre|default:mot_ministre_brouillon %}
-<section class="py-16 sm:py-20 lg:py-24" aria-labelledby="titre-ministre">
+<section class="py-10 sm:py-20 lg:py-24" aria-labelledby="titre-ministre">
   <div class="conteneur grid items-center gap-8 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
-    <div class="mx-auto w-full max-w-[220px] md:max-w-sm">
+    <div class="mx-auto hidden w-full md:block md:max-w-sm">
       <div class="apparition aspect-[4/5] overflow-hidden rounded-2xl border-t-[6px] border-orange bg-white shadow-xl shadow-vert/10">
         {% include "partials/photo.html" with image=m.photo alt=m.nom mention="Photo officielle du ministre à fournir, format portrait" %}
       </div>
@@ -210,7 +211,17 @@
     <div>
       {% if not mot_ministre and user.is_staff %}<p class="mb-4 inline-block rounded-md bg-orange/10 px-3 py-1 text-xs font-bold text-orange-fonce">Non publié dans l'administration : le texte proposé par la maquette est affiché</p>{% endif %}
       <p class="surtitre surtitre-trait" id="titre-ministre">Le mot du ministre</p>
-      <blockquote class="mt-5 space-y-4 text-lg leading-relaxed text-vert sm:text-xl">
+      {# Téléphone : petite photo et identité en tête, comme la maquette #}
+      <div class="mt-4 flex items-center gap-3.5 md:hidden">
+        <div class="h-[132px] w-[104px] shrink-0 overflow-hidden rounded-xl bg-gris">
+          {% include "partials/photo.html" with image=m.photo alt=m.nom mention="Photo officielle" %}
+        </div>
+        <p class="border-l-[3px] border-orange pl-3 leading-snug">
+          <span class="block text-[15px] font-bold text-encre">{% if mot_ministre and m.nom %}{{ m.nom }}{% else %}M. Abdoul Kassim Ibrahim Fomba{% endif %}</span>
+          <span class="mt-1 block text-xs text-texte">{% if mot_ministre and m.titre_officiel %}{{ m.titre_officiel }}{% else %}Ministre de la Jeunesse et des Sports, chargé de l'Instruction civique et de la Construction citoyenne{% endif %}</span>
+        </p>
+      </div>
+      <blockquote class="mt-5 space-y-2.5 text-base leading-relaxed text-vert sm:space-y-4 sm:text-xl">
         {% if mot_ministre and m.message %}{{ m.message|paragraphes }}
         {% elif mot_ministre and m.extrait %}<p>« {{ m.extrait }} »</p>
         {% else %}
@@ -220,7 +231,7 @@
         <p>J'invite chaque jeune, chaque association et chaque entreprise à rejoindre le chapitre. Ensemble, faisons de cette plateforme un lieu d'échanges, de solidarité et de réussite pour le Mali. »</p>
         {% endif %}
       </blockquote>
-      <p class="mt-6 border-l-[3px] border-orange pl-4">
+      <p class="mt-6 hidden border-l-[3px] border-orange pl-4 md:block">
         <span class="block font-bold text-encre">{% if mot_ministre and m.nom %}{{ m.nom }}{% else %}M. Abdoul Kassim Ibrahim Fomba{% endif %}</span>
         <span class="mt-1 block text-sm text-texte">{% if mot_ministre and m.titre_officiel %}{{ m.titre_officiel }}{% else %}Ministre de la Jeunesse et des Sports, chargé de l'Instruction civique et de la Construction citoyenne{% endif %}</span>
       </p>
@@ -288,31 +299,33 @@
 {% if opportunites or user.is_staff %}
 <section class="py-16 sm:py-20" aria-labelledby="titre-opportunites">
   <div class="conteneur">
-    <div class="flex flex-wrap items-end justify-between gap-4">
+    <div class="flex items-end justify-between gap-4">
       <div>
         <p class="surtitre">À saisir maintenant</p>
         <h2 id="titre-opportunites" class="titre-section">Opportunités.</h2>
       </div>
-      <a href="{% url 'contenus:opportunites' %}" class="btn btn-contour survol-leve">Toutes les opportunités</a>
+      <a href="{% url 'contenus:opportunites' %}" class="hidden sm:inline-flex btn btn-contour survol-leve">Toutes les opportunités</a>
+      <a href="{% url 'contenus:opportunites' %}" class="btn-tout-voir sm:hidden">Tout voir</a>
     </div>
 
     {% if opportunites %}
-    <ul class="mt-8 grid gap-4 md:grid-cols-3 md:gap-5">
+    <ul class="mt-5 grid gap-2.5 sm:mt-8 md:grid-cols-3 md:gap-5">
       {% for o in opportunites %}
       <li>
         <a href="{{ o.get_absolute_url }}" class="carte group flex h-full md:flex-col">
-          <div class="relative w-[34%] shrink-0 overflow-hidden border-r-4 md:aspect-[16/7] md:w-auto md:border-r-0 md:border-b-4 {{ o.couleur|bordure }}">
+          <div class="relative w-[108px] shrink-0 overflow-hidden border-r-4 md:aspect-[16/7] md:w-auto md:border-r-0 md:border-b-4 {{ o.couleur|bordure }}">
             {% include "partials/photo.html" with image=o.image alt="" %}
             {% if o.jours_restants is not None and o.jours_restants <= 30 %}
             <span class="absolute top-2 right-2 hidden rounded-lg bg-orange px-2 py-1 text-center text-xs leading-tight font-bold text-white md:block">J-{{ o.jours_restants }}</span>
             {% endif %}
           </div>
-          <div class="flex flex-1 flex-col p-4 sm:p-6">
-            <span class="etiquette self-start {{ o.couleur|fond }}">{{ o.get_type_display }}</span>
-            <h3 class="mt-3 text-base leading-snug font-bold text-encre group-hover:text-orange sm:text-xl">{{ o.titre }}</h3>
-            <div class="mt-auto flex items-end justify-between gap-3 pt-4 md:mt-5 md:border-t md:border-ligne">
+          <div class="flex flex-1 flex-col p-3.5 sm:p-6">
+            <span class="text-[11px] font-bold tracking-[0.1em] uppercase md:hidden {{ o.couleur|texte_couleur }}">{{ o.get_type_display }}</span>
+            <span class="etiquette hidden self-start md:inline-block {{ o.couleur|fond }}">{{ o.get_type_display }}</span>
+            <h3 class="mt-1.5 text-[17px] md:mt-3 md:text-base leading-snug font-bold text-encre group-hover:text-orange sm:text-xl">{{ o.titre }}</h3>
+            <div class="mt-auto flex items-end justify-between gap-3 pt-2 md:mt-5 md:pt-4 md:border-t md:border-ligne">
               <p class="text-xs sm:text-sm">
-                {% if o.date_limite %}<span class="block text-texte">Date limite</span><span class="mt-0.5 block font-bold text-rouge">{{ o.date_limite|date:"j F Y" }}</span>
+                {% if o.date_limite %}<span class="md:hidden">Avant le <strong class="text-rouge">{{ o.date_limite|date:"j F Y" }}</strong></span><span class="hidden text-texte md:block">Date limite</span><span class="mt-0.5 hidden font-bold text-rouge md:block">{{ o.date_limite|date:"j F Y" }}</span>
                 {% else %}<span class="font-medium text-texte">Sans date limite</span>{% endif %}
               </p>
               <span class="hidden text-sm font-bold text-vert md:inline" aria-hidden="true">Voir</span>
@@ -333,19 +346,20 @@
 {# 7. Actualités                                                          #}
 {# ===================================================================== #}
 {% if actualite_une or user.is_staff %}
-<section class="bg-gris py-16 sm:py-20" aria-labelledby="titre-actualites">
+<section class="bg-vert py-10 sm:bg-gris sm:py-20" aria-labelledby="titre-actualites">
   <div class="conteneur">
-    <div class="flex flex-wrap items-end justify-between gap-4">
+    <div class="flex items-end justify-between gap-4">
       <div>
-        <p class="surtitre">La vie du chapitre</p>
-        <h2 id="titre-actualites" class="titre-section">Événements et actualités.</h2>
+        <p class="surtitre max-sm:text-white/85">La vie du chapitre</p>
+        <h2 id="titre-actualites" class="titre-section max-sm:text-white">Événements et actualités.</h2>
       </div>
-      <a href="{% url 'contenus:actualites' %}" class="btn btn-contour survol-leve">Toutes les actualités</a>
+      <a href="{% url 'contenus:actualites' %}" class="hidden sm:inline-flex btn btn-contour survol-leve">Toutes les actualités</a>
+      <a href="{% url 'contenus:actualites' %}" class="btn-tout-voir bg-white sm:hidden">Tout voir</a>
     </div>
 
     {% if actualite_une %}
-    <div class="mt-8 grid gap-4 lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)] lg:gap-5">
-      <a href="{{ actualite_une.get_absolute_url }}" class="survol-leve group relative block aspect-[4/3.3] overflow-hidden rounded-2xl sm:aspect-[16/10] lg:aspect-auto lg:min-h-[440px]">
+    <div class="mt-5 grid gap-2.5 sm:mt-8 sm:gap-4 lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)] lg:gap-5">
+      <a href="{{ actualite_une.get_absolute_url }}" class="survol-leve group relative block h-[230px] overflow-hidden rounded-[18px] border-[3px] border-white sm:aspect-[16/10] sm:h-auto sm:rounded-2xl sm:border-0 sm:aspect-[16/10] lg:aspect-auto lg:min-h-[440px]">
         <div class="absolute inset-0 transition-transform duration-500 group-hover:scale-105">
           {% include "partials/photo.html" with image=actualite_une.image alt="" %}
         </div>
@@ -354,19 +368,19 @@
           <span class="text-2xl font-bold">{{ actualite_une.publie_le|date:"j" }}</span>
           <span class="mt-1 text-[11px] font-bold uppercase">{{ actualite_une.publie_le|date:"M" }}</span>
         </time>
-        <div class="absolute inset-x-0 bottom-0 p-5 sm:p-7">
+        <div class="absolute inset-x-0 bottom-0 p-4 sm:p-7">
           <span class="etiquette bg-orange tracking-wide text-white uppercase">À la une · {{ actualite_une.get_categorie_display }}</span>
           <h3 class="mt-3 text-xl leading-tight font-bold text-white sm:text-3xl">{{ actualite_une.titre }}</h3>
-          <p class="mt-2 line-clamp-2 text-sm text-white/90 sm:text-base">{{ actualite_une.chapeau }}</p>
+          <p class="mt-2 line-clamp-2 hidden text-sm text-white/90 sm:block sm:text-base">{{ actualite_une.chapeau }}</p>
         </div>
       </a>
 
       {% if actualites %}
-      <ul class="grid gap-3 sm:gap-4">
+      <ul class="grid gap-2.5 sm:gap-4">
         {% for actu in actualites %}
         <li>
-          <a href="{{ actu.get_absolute_url }}" class="survol-leve survol-zoom group flex h-full items-center gap-4 rounded-2xl bg-white p-3 sm:p-4">
-            <div class="size-20 shrink-0 overflow-hidden rounded-xl sm:size-24">
+          <a href="{{ actu.get_absolute_url }}" class="survol-leve survol-zoom group flex h-full items-center gap-3 rounded-[14px] bg-white p-2 sm:gap-4 sm:rounded-2xl sm:p-4">
+            <div class="size-16 shrink-0 overflow-hidden rounded-xl sm:size-24">
               {% include "partials/photo.html" with image=actu.image alt="" %}
             </div>
             <div class="min-w-0">
@@ -443,46 +457,39 @@
 {# ===================================================================== #}
 {# 11. Contact                                                            #}
 {# ===================================================================== #}
-<section class="py-16 sm:py-20" aria-labelledby="titre-contact">
+<section class="py-9 sm:py-20" aria-labelledby="titre-contact">
   <div class="conteneur">
     <div class="grid overflow-hidden rounded-3xl shadow-2xl shadow-vert/10 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
-      <div class="relative bg-vert p-7 text-white sm:p-10">
+      <div class="relative bg-vert px-5 py-6 text-white sm:p-10">
         <p class="text-xs font-medium tracking-[0.16em] text-white/80 uppercase">Contact</p>
-        <h2 id="titre-contact" class="mt-3 text-3xl leading-tight font-bold text-white sm:text-4xl">Une question ?<br>Écrivez-nous.</h2>
-        <a href="{% url 'core:contact' %}" class="btn btn-blanc survol-leve mt-7">Nous contacter</a>
+        <h2 id="titre-contact" class="mt-2 text-2xl leading-tight font-bold text-white sm:mt-3 sm:text-4xl">Une question ?<br>Écrivez-nous.</h2>
+        <a href="{% url 'core:contact' %}" class="btn btn-blanc survol-leve mt-5 sm:mt-7">Nous contacter</a>
         <svg class="pointer-events-none absolute right-0 bottom-0 hidden h-40 w-48 md:block" viewBox="0 0 200 160" aria-hidden="true">
           <g stroke="rgb(255 255 255 / .35)" stroke-width="1.2" fill="none"><path d="M20 150 L95 55 L170 15"/><path d="M95 55 L200 115"/></g>
           <circle cx="20" cy="150" r="6" fill="#F1592A"/><circle cx="95" cy="55" r="8" fill="#04B2B1"/><circle cx="170" cy="15" r="6" fill="#F1592A"/>
         </svg>
       </div>
-      <div class="flex flex-col justify-center bg-white p-7 sm:p-10">
-        <ul class="grid gap-4 text-[15px] text-encre sm:grid-cols-2">
-          {% if p.email_contact or user.is_staff %}
+      <div class="flex flex-col justify-center border-[1.5px] border-t-0 border-ligne bg-white p-5 sm:border-0 sm:p-10">
+        <ul class="grid gap-2.5 text-sm text-encre sm:gap-4 sm:grid-cols-2 sm:text-[15px]">
+          
           <li class="flex items-center gap-3">
-            <span class="grid size-10 shrink-0 place-items-center rounded-full bg-gris text-vert" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>
+            <span class="grid size-9 shrink-0 place-items-center rounded-full bg-gris text-vert sm:size-10" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>
             {% if p.email_contact %}<a href="mailto:{{ p.email_contact }}" class="break-all hover:text-orange hover:underline">{{ p.email_contact }}</a>{% else %}[Adresse e-mail officielle]{% endif %}
           </li>
-          {% endif %}
-          {% if p.telephone or user.is_staff %}
+          
           <li class="flex items-center gap-3">
-            <span class="grid size-10 shrink-0 place-items-center rounded-full bg-gris text-vert" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></span>
+            <span class="grid size-9 shrink-0 place-items-center rounded-full bg-gris text-vert sm:size-10" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></span>
             {% if p.telephone %}<a href="tel:{{ p.telephone|cut:' ' }}" class="hover:text-orange hover:underline">{{ p.telephone }}</a>{% else %}[Téléphone officiel]{% endif %}
           </li>
-          {% endif %}
-          {% if p.adresse or user.is_staff %}
+          
           <li class="flex items-center gap-3 sm:col-span-2">
-            <span class="grid size-10 shrink-0 place-items-center rounded-full bg-gris text-vert" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span>
+            <span class="grid size-9 shrink-0 place-items-center rounded-full bg-gris text-vert sm:size-10" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span>
             {{ p.adresse|default:"[Adresse du chapitre], Bamako" }}
           </li>
-          {% endif %}
         </ul>
-        {% if not p.email_contact and not p.telephone and not p.adresse and not user.is_staff %}
-        <p class="text-base leading-relaxed text-encre">Pour toute question sur le chapitre, ses initiatives ou ses opportunités, écrivez-nous depuis le formulaire de contact : l'équipe vous répond par e-mail.</p>
-        {% endif %}
-        {% if p.lien_facebook or p.lien_instagram or p.lien_linkedin or p.lien_x or p.lien_youtube or p.lien_tiktok or user.is_staff %}
-        <p class="mt-7 text-xs font-bold tracking-[0.14em] text-vert uppercase">Suivez le chapitre</p>
-        {% include "partials/reseaux.html" %}
-        {% endif %}
+        <p class="mt-6 text-xs font-bold tracking-[0.14em] text-vert uppercase sm:mt-7">Suivez le chapitre</p>
+        {% if p.lien_facebook or p.lien_instagram or p.lien_linkedin or p.lien_x or p.lien_youtube or p.lien_tiktok %}{% include "partials/reseaux.html" %}
+        {% else %}<p class="mt-2.5 text-sm text-texte">[Réseaux sociaux officiels]</p>{% endif %}
       </div>
     </div>
   </div>

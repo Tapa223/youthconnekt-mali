@@ -54,14 +54,14 @@
 {% if autres %}
 <section class="bg-gris py-14 sm:py-16" aria-labelledby="titre-autres">
   <div class="conteneur">
-    <div class="flex flex-wrap items-end justify-between gap-4">
+    <div class="flex items-end justify-between gap-4">
       <h2 id="titre-autres" class="titre-section">À lire aussi.</h2>
       <a href="{% url 'contenus:actualites' %}" class="btn btn-contour hidden sm:inline-flex">Toutes les actualités</a>
+      <a href="{% url 'contenus:actualites' %}" class="btn-tout-voir sm:hidden">Tout voir</a>
     </div>
     <ul class="masquer-defilement -mx-4 mt-7 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 lg:grid-cols-3">
       {% for a in autres %}<li class="w-[75%] max-w-72 shrink-0 snap-start sm:w-auto sm:max-w-none">{% include "cartes/actualite.html" with mode="lire" %}</li>{% endfor %}
     </ul>
-    <a href="{% url 'contenus:actualites' %}" class="btn btn-contour mt-6 w-full sm:hidden">Toutes les actualités</a>
   </div>
 </section>
 {% endif %}

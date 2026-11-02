@@ -66,10 +66,24 @@
   </div>
 </div>
 
+{% if similaires %}
+<section class="bg-gris py-14 sm:py-16" aria-labelledby="titre-similaires">
+  <div class="conteneur">
+    <div class="flex items-end justify-between gap-4">
+      <h2 id="titre-similaires" class="titre-section">Vous aimerez aussi.</h2>
+      <a href="{% url 'contenus:opportunites' %}" class="btn btn-contour hidden sm:inline-flex">Toutes les opportunités</a>
+      <a href="{% url 'contenus:opportunites' %}" class="btn-tout-voir sm:hidden">Tout voir</a>
+    </div>
+    <ul class="masquer-defilement -mx-4 mt-7 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 lg:grid-cols-3">
+      {% for o in similaires %}<li class="w-[75%] max-w-72 shrink-0 snap-start sm:w-auto sm:max-w-none">{% include "cartes/opportunite.html" with compacte=True %}</li>{% endfor %}
+    </ul>
+  </div>
+</section>
+{% endif %}
 {# Téléphone : barre de candidature collée en bas de l'écran (s'arrête avant le pied de page) #}
 <div class="sticky bottom-0 z-30 border-t border-ligne bg-white/95 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-6px_20px_rgba(0,0,0,0.06)] backdrop-blur lg:hidden">
   <div class="mx-auto flex max-w-xl items-center justify-between gap-4">
-    <p class="text-xs leading-tight">{% if o.est_expiree %}Statut<br><strong class="text-sm text-rouge">Candidatures closes</strong>{% else %}Date limite<br><strong class="text-sm text-rouge">{% if o.date_limite %}{{ o.date_limite|date:"j M Y" }}{% else %}Aucune{% endif %}</strong>{% endif %}</p>
+    <p class="text-xs leading-tight">{% if o.est_expiree %}Statut<br><strong class="text-sm text-rouge">Candidatures closes</strong>{% else %}Date limite<br><strong class="text-sm text-rouge">{% if o.date_limite %}{{ o.date_limite|date:"j F Y" }}{% else %}Aucune{% endif %}</strong>{% endif %}</p>
     {% if not o.est_expiree and o.lien_candidature %}
     <a href="{{ o.lien_candidature }}" target="_blank" rel="noopener" class="btn btn-orange min-h-12 px-8 text-base">Postuler</a>
     {% elif not o.est_expiree %}
@@ -77,19 +91,4 @@
     {% endif %}
   </div>
 </div>
-
-{% if similaires %}
-<section class="bg-gris py-14 sm:py-16" aria-labelledby="titre-similaires">
-  <div class="conteneur">
-    <div class="flex flex-wrap items-end justify-between gap-4">
-      <h2 id="titre-similaires" class="titre-section">Vous aimerez aussi.</h2>
-      <a href="{% url 'contenus:opportunites' %}" class="btn btn-contour hidden sm:inline-flex">Toutes les opportunités</a>
-    </div>
-    <ul class="masquer-defilement -mx-4 mt-7 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 lg:grid-cols-3">
-      {% for o in similaires %}<li class="w-[75%] max-w-72 shrink-0 snap-start sm:w-auto sm:max-w-none">{% include "cartes/opportunite.html" with compacte=True %}</li>{% endfor %}
-    </ul>
-    <a href="{% url 'contenus:opportunites' %}" class="btn btn-contour mt-6 w-full sm:hidden">Toutes les opportunités</a>
-  </div>
-</section>
-{% endif %}
 {% endblock %}
