@@ -6,7 +6,7 @@ $chiffres_i = lignes_colonnes($i['chiffres'], 2);
 ?>
 <section class="conteneur grid items-center gap-10 py-10 sm:py-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14">
   <div>
-    <?php partiel('partials/retour', ['url' => url('/initiatives'), 'libelle' => 'Retour aux initiatives']) ?>
+    <?php partiel('partials/retour', ['url' => url('/initiatives')]) ?>
     <div class="flex flex-wrap gap-2">
       <?php if ($i['axe_nom']): ?><span class="etiquette rounded-full <?= fond($i['axe_couleur']) ?>"><?= e($i['axe_nom']) ?></span><?php endif ?>
       <span class="etiquette rounded-full bg-gris text-vert"><?= e(ETATS_INITIATIVE[$i['etat']] ?? '') ?></span>

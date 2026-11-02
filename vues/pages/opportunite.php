@@ -4,7 +4,7 @@ $criteres = lignes_texte($o['criteres']);
 $etapes = lignes_texte($o['etapes']);
 ?>
 <div class="conteneur py-10 sm:py-12">
-  <?php partiel('partials/retour', ['url' => url('/opportunites'), 'libelle' => 'Retour aux opportunités']) ?>
+  <?php partiel('partials/retour', ['url' => url('/opportunites')]) ?>
   <div class="flex flex-wrap gap-2">
     <span class="etiquette rounded-full <?= fond($o['couleur']) ?>"><?= e($o['type_libelle']) ?></span>
     <?php if ($o['est_expiree']): ?><span class="etiquette rounded-full bg-gris text-rouge">Candidatures closes</span>

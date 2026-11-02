@@ -43,8 +43,8 @@ function tableau_de_bord(): void
     if ($voit_membres) {
         $cartes[] = [
             'libelle' => 'Membres inscrits', 'couleur' => 'vert', 'icone' => ICONES['personne'], 'url' => url('/gestion/membres'),
-            'valeur' => (int) valeur('SELECT COUNT(*) FROM utilisateurs WHERE role_admin IS NULL'),
-            'detail' => '+' . (int) valeur('SELECT COUNT(*) FROM utilisateurs WHERE role_admin IS NULL AND inscrit_le >= ?', [$debut_mois]) . ' ce mois-ci',
+            'valeur' => (int) valeur('SELECT COUNT(*) FROM utilisateurs WHERE type_compte <> \'administration\''),
+            'detail' => '+' . (int) valeur('SELECT COUNT(*) FROM utilisateurs WHERE type_compte <> \'administration\' AND inscrit_le >= ?', [$debut_mois]) . ' ce mois-ci',
         ];
     }
     if (peut('opportunites')) {
@@ -73,7 +73,7 @@ function tableau_de_bord(): void
 
     $inscriptions = [];
     if ($voit_membres) {
-        foreach (lignes('SELECT * FROM utilisateurs WHERE role_admin IS NULL ORDER BY inscrit_le DESC LIMIT 5') as $m) {
+        foreach (lignes('SELECT * FROM utilisateurs WHERE type_compte <> \'administration\' ORDER BY inscrit_le DESC LIMIT 5') as $m) {
             $m = completer_utilisateur($m);
             $p = $m['profil'];
             $organisation = $m['type_compte'] === 'organisation';
@@ -548,7 +548,7 @@ function formulaire(string $slug, ?int $id = null): void
         'url_voir' => ($ligne && $r['url_voir'] && (!isset($ligne['statut']) || $ligne['statut'] === 'publie')) ? ($r['url_voir'])($ligne) : null,
     ];
     if ($slug === 'parametres') {
-        $donnees_vue['equipe'] = lignes("SELECT * FROM utilisateurs WHERE role_admin IS NOT NULL AND actif = 1 ORDER BY role_admin = 'super' DESC, email");
+        $donnees_vue['equipe'] = lignes("SELECT * FROM utilisateurs WHERE type_compte = 'administration' AND actif = 1 ORDER BY role_admin = 'super' DESC, email");
         require_once RACINE . '/app/exemples.php';
         $donnees_vue['nb_exemples'] = nombre_exemples();
     }
@@ -719,4 +719,54 @@ function supprimer(string $slug, int $id): void
     }
     flash('succes', 'Élément supprimé.');
     rediriger(url('/gestion/' . $slug));
+}
+
+// ---------------------------------------------------------------------------
+// Mon compte (compte d'administration) : nom affiché et mot de passe
+// ---------------------------------------------------------------------------
+
+function mon_compte(): void
+{
+    $u = exiger_admin();
+    $valeurs = ['prenom_admin' => (string) $u['prenom_admin'], 'nom_admin' => (string) $u['nom_admin']];
+    $erreurs = [];
+    if (est_post()) {
+        $action = post('action');
+        if ($action === 'identite') {
+            $valeurs = ['prenom_admin' => post('prenom_admin'), 'nom_admin' => post('nom_admin')];
+            foreach ($valeurs as $k => $v) {
+                if (mb_strlen($v) > 80) {
+                    $erreurs[$k] = '80 caractères au maximum.';
+                }
+            }
+            if (!$erreurs) {
+                mettre_a_jour('utilisateurs', $valeurs, (int) $u['id']);
+                flash('succes', 'Vos informations ont bien été enregistrées.');
+                rediriger(url('/gestion/mon-compte'));
+            }
+        } elseif ($action === 'mdp') {
+            $mdp1 = (string) ($_POST['password1'] ?? '');
+            if (!password_verify((string) ($_POST['mot_de_passe_actuel'] ?? ''), $u['mot_de_passe'])) {
+                $erreurs['mot_de_passe_actuel'] = 'Mot de passe actuel incorrect.';
+            } elseif (($msg = verifier_mot_de_passe($mdp1, $u['email'])) !== '') {
+                $erreurs['password1'] = $msg;
+            } elseif ($mdp1 !== (string) ($_POST['password2'] ?? '')) {
+                $erreurs['password2'] = 'Les deux mots de passe ne correspondent pas.';
+            } else {
+                $hash = password_hash($mdp1, PASSWORD_DEFAULT);
+                requete('UPDATE utilisateurs SET mot_de_passe = ? WHERE id = ?', [$hash, $u['id']]);
+                $u['mot_de_passe'] = $hash;
+                connecter($u);
+                flash('succes', 'Votre mot de passe a bien été modifié.');
+                rediriger(url('/gestion/mon-compte'));
+            }
+        }
+    }
+    vue_admin('admin/mon_compte', [
+        'titre_page' => 'Mon compte',
+        'ariane' => [['Mon compte', null]],
+        'moi' => $u,
+        'valeurs' => $valeurs,
+        'erreurs' => $erreurs,
+    ]);
 }

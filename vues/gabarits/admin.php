@@ -44,6 +44,26 @@ $ariane = $ariane ?? [];
       </ul>
     <?php endforeach ?>
   </nav>
+  <script>
+    /* Le menu garde sa position : on la note avant de quitter la page et on la remet tout de suite,
+       avant l'affichage, pour que le menu ne remonte jamais en haut. */
+    (function () {
+      var menu = document.getElementById("menu-admin");
+      try {
+        var y = parseInt(sessionStorage.getItem("ycm-menu-defilement") || "", 10);
+        if (!isNaN(y)) menu.scrollTop = y;
+      } catch (e) {}
+      // Si la rubrique ouverte n'est pas visible (première visite, lien direct), on l'amène au centre
+      var actif = menu.querySelector("a.actif");
+      if (actif) {
+        var haut = actif.offsetTop, bas = haut + actif.offsetHeight;
+        if (haut < menu.scrollTop || bas > menu.scrollTop + menu.clientHeight) menu.scrollTop = haut - menu.clientHeight / 2;
+      }
+      function noter() { try { sessionStorage.setItem("ycm-menu-defilement", String(menu.scrollTop)); } catch (e) {} }
+      menu.addEventListener("scroll", noter, { passive: true });
+      window.addEventListener("pagehide", noter);
+    })();
+  </script>
   <div class="ycm-voile" data-fermer-menu-admin hidden></div>
 
   <div class="ycm-page">
@@ -80,8 +100,7 @@ $ariane = $ariane ?? [];
             <span class="ycm-compte-texte"><strong><?= e($admin['nom_affiche']) ?></strong><small><?= e(ROLES_ADMIN[$admin['role_admin']] ?? '') ?></small></span>
           </summary>
           <div class="ycm-compte-menu">
-            <a href="<?= url('/compte/mon-espace/parametres') ?>">Changer mon mot de passe</a>
-            <a href="<?= url('/compte/mon-espace') ?>">Mon espace membre</a>
+            <a href="<?= url('/gestion/mon-compte') ?>">Mon compte et mot de passe</a>
             <form method="post" action="<?= url('/compte/deconnexion') ?>"><?= csrf() ?><button type="submit">Se déconnecter</button></form>
           </div>
         </details>

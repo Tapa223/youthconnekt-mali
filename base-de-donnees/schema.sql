@@ -12,7 +12,8 @@ CREATE TABLE IF NOT EXISTS utilisateurs (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   email VARCHAR(190) NOT NULL,
   mot_de_passe VARCHAR(255) NOT NULL,
-  type_compte ENUM('individuel','organisation') NOT NULL DEFAULT 'individuel',
+  -- « administration » : compte de l'équipe, distinct des comptes membres
+  type_compte ENUM('individuel','organisation','administration') NOT NULL DEFAULT 'individuel',
   email_confirme TINYINT(1) NOT NULL DEFAULT 0,
   actif TINYINT(1) NOT NULL DEFAULT 1,
   -- Accès à l'administration : NULL = membre, sinon super / editeur / moderation / membres
@@ -116,6 +117,8 @@ CREATE TABLE IF NOT EXISTS demandes_adhesion (
   utilisateur_id INT UNSIGNED NOT NULL,
   communaute_id INT UNSIGNED NOT NULL,
   statut ENUM('en_attente','acceptee','refusee') NOT NULL DEFAULT 'en_attente',
+  motivation TEXT NULL,
+  apport TEXT NULL,
   demandee_le DATETIME NOT NULL,
   traitee_le DATETIME NULL,
   traitee_par INT UNSIGNED NULL,

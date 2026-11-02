@@ -50,6 +50,7 @@ const TYPES_STRUCTURE = [
 const TYPES_COMPTE = [
     'individuel' => 'Membre individuel',
     'organisation' => 'Organisation ou entreprise',
+    'administration' => "Compte d'administration",
 ];
 
 const TYPES_OPPORTUNITE = [

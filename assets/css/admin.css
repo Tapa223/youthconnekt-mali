@@ -646,3 +646,10 @@ input[type=file]::file-selector-button {
 .ycm-tableau tbody tr:has(input:checked) td { background: var(--ycm-orange-clair); }
 .ycm-cases label:has(input:checked) { border-color: var(--ycm-orange); background: var(--ycm-orange-clair); }
 .ycm-cases input, .ycm-case-ligne input, .ycm-tableau input[type=checkbox] { accent-color: var(--ycm-orange); }
+
+/* Menu latéral plus compact : toutes les rubriques tiennent mieux à l'écran */
+.ycm-menu { padding: 18px 12px 28px; overscroll-behavior: contain; }
+.ycm-menu-tete { margin-bottom: 10px; }
+.ycm-menu-rubrique { margin: 16px 14px 6px; }
+.ycm-menu li { margin: 1px 0; }
+.ycm-menu a { min-height: 38px; font-size: 14.5px; }

@@ -221,7 +221,7 @@ function connexion(): void
                 $erreur = 'Adresse e-mail ou mot de passe incorrect.';
             } elseif (!$u['actif']) {
                 $erreur = 'Ce compte a été désactivé. Contactez le chapitre pour en savoir plus.';
-            } elseif (!$u['email_confirme'] && empty($u['role_admin'])) {
+            } elseif (!$u['email_confirme'] && $u['type_compte'] !== 'administration') {
                 $erreur = "Confirmez d'abord votre adresse e-mail grâce au lien reçu par e-mail.";
                 $non_confirme = true;
                 $_SESSION['inscription_utilisateur'] = (int) $u['id'];
@@ -232,7 +232,7 @@ function connexion(): void
                     requete('UPDATE utilisateurs SET mot_de_passe = ? WHERE id = ?', [$u['mot_de_passe'], $u['id']]);
                 }
                 connecter($u, !empty($_POST['se_souvenir']));
-                $defaut = !empty($u['role_admin']) ? url('/gestion') : url('/compte/mon-espace');
+                $defaut = $u['type_compte'] === 'administration' ? url('/gestion') : url('/compte/mon-espace');
                 rediriger($suivant ?: $defaut);
             }
         }

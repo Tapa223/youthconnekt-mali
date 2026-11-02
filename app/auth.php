@@ -68,6 +68,9 @@ function initiales_organisation(string $nom): string
 
 function profil_de(array $u): ?array
 {
+    if ($u['type_compte'] === 'administration') {
+        return null;
+    }
     if ($u['type_compte'] === 'organisation') {
         return ligne('SELECT * FROM profils_organisations WHERE utilisateur_id = ?', [$u['id']]);
     }
@@ -123,10 +126,28 @@ function exiger_connexion(): array
 // Équipe d'administration
 // ---------------------------------------------------------------------------
 
+/** Compte membre (individuel ou organisation), par opposition à un compte d'administration. */
+function est_membre(?array $u = null): bool
+{
+    $u = $u ?? utilisateur();
+    return $u !== null && $u['type_compte'] !== 'administration';
+}
+
+/** Exige un compte membre : un compte d'administration est renvoyé vers l'administration. */
+function exiger_membre(): array
+{
+    $u = exiger_connexion();
+    if (!est_membre($u)) {
+        flash('erreur', "Vous êtes connecté avec un compte d'administration. L'espace membre et les communautés sont réservés aux comptes membres.");
+        rediriger(url('/gestion'));
+    }
+    return $u;
+}
+
 function est_admin(?array $u = null): bool
 {
     $u = $u ?? utilisateur();
-    return $u !== null && !empty($u['role_admin']) && isset(ROLES_ADMIN[$u['role_admin']]);
+    return $u !== null && $u['type_compte'] === 'administration' && !empty($u['role_admin']) && isset(ROLES_ADMIN[$u['role_admin']]);
 }
 
 /**

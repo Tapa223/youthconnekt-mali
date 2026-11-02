@@ -26,7 +26,6 @@ $detail = array_filter([TYPES_COMPTE[$u['type_compte']] ?? '', libelle_profil($p
         <?php foreach ($liens as $cle => [$lien, $libelle]): ?>
         <a href="<?= url($lien) ?>" class="lien-espace <?= $rubrique === $cle ? 'actif' : '' ?>" <?= $rubrique === $cle ? 'aria-current="page"' : '' ?>><?= e($libelle) ?></a>
         <?php endforeach ?>
-        <?php if (est_admin($u)): ?><a href="<?= url('/gestion') ?>" class="lien-espace">Administration</a><?php endif ?>
         <form method="post" action="<?= url('/compte/deconnexion') ?>" class="shrink-0"><?= csrf() ?><button type="submit" class="lien-espace text-rouge">Se déconnecter</button></form>
       </nav>
     </aside>

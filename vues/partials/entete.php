@@ -31,9 +31,9 @@ $navigation = [
 
     <div class="hidden items-center gap-2.5 xl:flex">
       <?php if ($u): ?>
-        <a href="<?= url('/compte/mon-espace') ?>" class="inline-flex min-h-11 items-center gap-2.5 rounded-full bg-vert py-1.5 pr-5 pl-1.5 text-[15px] font-bold text-white hover:bg-vert-fonce">
+        <a href="<?= url(est_membre($u) ? '/compte/mon-espace' : '/gestion') ?>" class="inline-flex min-h-11 items-center gap-2.5 rounded-full bg-vert py-1.5 pr-5 pl-1.5 text-[15px] font-bold text-white hover:bg-vert-fonce">
           <span class="grid size-8 place-items-center rounded-full bg-orange text-xs" aria-hidden="true"><?= e($u['initiales']) ?></span>
-          Mon espace
+          <?= est_membre($u) ? 'Mon espace' : 'Administration' ?>
         </a>
       <?php else: ?>
         <a href="<?= url('/compte/connexion') ?>" class="btn btn-contour">Se connecter</a>
@@ -72,7 +72,7 @@ $navigation = [
     </nav>
     <div class="space-y-3 border-t border-ligne p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
       <?php if ($u): ?>
-        <a href="<?= url('/compte/mon-espace') ?>" class="btn btn-vert w-full"><span class="grid size-7 place-items-center rounded-full bg-orange text-xs" aria-hidden="true"><?= e($u['initiales']) ?></span> Mon espace</a>
+        <a href="<?= url(est_membre($u) ? '/compte/mon-espace' : '/gestion') ?>" class="btn btn-vert w-full"><span class="grid size-7 place-items-center rounded-full bg-orange text-xs" aria-hidden="true"><?= e($u['initiales']) ?></span> <?= est_membre($u) ? 'Mon espace' : 'Administration' ?></a>
         <form method="post" action="<?= url('/compte/deconnexion') ?>"><?= csrf() ?><button type="submit" class="btn btn-contour w-full">Se déconnecter</button></form>
       <?php else: ?>
         <a href="<?= url('/compte/inscription') ?>" class="btn btn-vert w-full">S'inscrire</a>

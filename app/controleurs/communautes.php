@@ -1,6 +1,7 @@
 <?php
 /*
- * Communautés thématiques : liste, présentation détaillée, demandes pour les rejoindre.
+ * Communautés thématiques : liste, présentation détaillée, formulaire d'intégration.
+ * Parcours : liste > « Voir la communauté » > « Intégrer la communauté » > formulaire > demande envoyée.
  */
 
 declare(strict_types=1);
@@ -30,55 +31,97 @@ function trouver_communaute(string $slug, bool $actives_seulement = true): array
     return communaute_preparer($c);
 }
 
+function exiger_connexion_communaute(array $c): array
+{
+    $u = utilisateur();
+    if (!$u) {
+        // La présentation détaillée est réservée aux membres connectés (cahier des charges, 6.6)
+        rediriger(url('/compte/connexion', ['suivant' => $c['url']]));
+    }
+    return $u;
+}
+
 function detail(string $slug): void
 {
     $c = trouver_communaute($slug);
-    $u = utilisateur();
-    if (!$u) {
-        // La présentation détaillée est réservée aux membres connectés (maquette)
-        flash('succes', 'Connectez-vous pour découvrir la communauté « ' . $c['nom'] . ' » et demander à l\'intégrer.');
-        rediriger(url('/compte/connexion', ['suivant' => $c['url']]));
-    }
-    $demande = ligne('SELECT * FROM demandes_adhesion WHERE utilisateur_id = ? AND communaute_id = ?', [$u['id'], $c['id']]);
+    $u = exiger_connexion_communaute($c);
+    $demande = est_membre($u) ? ligne('SELECT * FROM demandes_adhesion WHERE utilisateur_id = ? AND communaute_id = ?', [$u['id'], $c['id']]) : null;
 
     afficher(vue('pages/communaute', [
         'titre' => $c['nom'] . ' | Communauté | YouthConnekt Mali',
         'c' => $c,
         'statut' => $demande['statut'] ?? null,
+        'compte_admin' => !est_membre($u),
         'opportunites' => opportunites_ouvertes('AND id IN (SELECT opportunite_id FROM opportunite_communaute WHERE communaute_id = ?) ORDER BY date_limite IS NULL, date_limite LIMIT 4', [$c['id']]),
         'activites_recentes' => actualites_publiees('AND id IN (SELECT actualite_id FROM actualite_communaute WHERE communaute_id = ?) ORDER BY publie_le DESC LIMIT 4', [$c['id']]),
     ]));
 }
 
-function rejoindre(string $slug): void
+/** Formulaire « Intégrer la communauté » : motivation, apport, accord. */
+function integrer(string $slug): void
 {
-    $u = exiger_connexion();
     $c = trouver_communaute($slug);
-    $automatique = (bool) parametres()['acceptation_automatique'];
-    $statut = $automatique ? 'acceptee' : 'en_attente';
+    exiger_connexion_communaute($c);
+    $u = exiger_membre();
     $demande = ligne('SELECT * FROM demandes_adhesion WHERE utilisateur_id = ? AND communaute_id = ?', [$u['id'], $c['id']]);
-    if (!$demande) {
-        inserer('demandes_adhesion', [
-            'utilisateur_id' => $u['id'], 'communaute_id' => $c['id'], 'statut' => $statut, 'demandee_le' => maintenant(),
-            'traitee_le' => $automatique ? maintenant() : null,
-        ]);
-    } elseif ($demande['statut'] === 'refusee') {
-        // Une demande non retenue peut être renouvelée
-        requete('UPDATE demandes_adhesion SET statut = ?, demandee_le = ?, traitee_le = NULL, traitee_par = NULL WHERE id = ?', [$statut, maintenant(), $demande['id']]);
-    } else {
-        $statut = $demande['statut'];
+    if ($demande && $demande['statut'] !== 'refusee') {
+        flash('succes', $demande['statut'] === 'acceptee' ? 'Vous faites déjà partie de cette communauté.' : 'Votre demande est déjà en cours de traitement.');
+        rediriger($c['url']);
     }
-    if ($statut === 'acceptee') {
-        flash('succes', 'Bienvenue dans la communauté ' . $c['nom'] . '.');
-    } else {
-        flash('succes', 'Votre demande pour intégrer ' . $c['nom'] . ' a bien été envoyée. Vous la suivez dans votre espace.');
+
+    $valeurs = ['motivation' => '', 'apport' => '', 'accord' => ''];
+    $erreurs = [];
+    if (est_post()) {
+        foreach (array_keys($valeurs) as $k) {
+            $valeurs[$k] = post($k);
+        }
+        if (mb_strlen($valeurs['motivation']) < 20) {
+            $erreurs['motivation'] = $valeurs['motivation'] === '' ? 'Dites en quelques mots pourquoi vous souhaitez intégrer cette communauté.' : 'Développez un peu plus (20 caractères au minimum).';
+        } elseif (mb_strlen($valeurs['motivation']) > 1000) {
+            $erreurs['motivation'] = '1 000 caractères au maximum.';
+        }
+        if (mb_strlen($valeurs['apport']) > 1000) {
+            $erreurs['apport'] = '1 000 caractères au maximum.';
+        }
+        if ($valeurs['accord'] === '') {
+            $erreurs['accord'] = 'Cochez cette case pour envoyer votre demande.';
+        }
+        if (!$erreurs) {
+            $automatique = (bool) parametres()['acceptation_automatique'];
+            $donnees = [
+                'statut' => $automatique ? 'acceptee' : 'en_attente',
+                'motivation' => $valeurs['motivation'],
+                'apport' => $valeurs['apport'],
+                'demandee_le' => maintenant(),
+                'traitee_le' => $automatique ? maintenant() : null,
+                'traitee_par' => null,
+            ];
+            if ($demande) {
+                mettre_a_jour('demandes_adhesion', $donnees, (int) $demande['id']);
+            } else {
+                inserer('demandes_adhesion', $donnees + ['utilisateur_id' => $u['id'], 'communaute_id' => $c['id']]);
+            }
+            flash('succes', $automatique
+                ? 'Bienvenue dans la communauté ' . $c['nom'] . '.'
+                : 'Votre demande pour intégrer ' . $c['nom'] . ' a bien été envoyée. Vous la suivez dans votre espace.');
+            rediriger($c['url']);
+        }
     }
-    rediriger(adresse_retour($c['url']));
+
+    afficher(vue('pages/integrer', [
+        'titre' => 'Intégrer ' . $c['nom'] . ' | YouthConnekt Mali',
+        'noindex' => true,
+        'c' => $c,
+        'u' => $u,
+        'valeurs' => $valeurs,
+        'erreurs' => $erreurs,
+        'refusee' => $demande !== null,
+    ]));
 }
 
 function quitter(string $slug): void
 {
-    $u = exiger_connexion();
+    $u = exiger_membre();
     $c = trouver_communaute($slug, false);
     $statut = valeur('SELECT statut FROM demandes_adhesion WHERE utilisateur_id = ? AND communaute_id = ?', [$u['id'], $c['id']]);
     if ($statut === 'acceptee' || $statut === 'en_attente') {

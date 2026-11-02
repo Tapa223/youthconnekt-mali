@@ -6,11 +6,11 @@
   <?php if (!$c['image']) partiel('partials/mention_photo', ['texte' => 'Photo provisoire', 'position' => 'right-3 top-3']) ?>
   <div class="conteneur flex flex-col gap-6 pt-24 pb-10 sm:pt-32 md:flex-row md:items-end md:justify-between">
     <div>
-      <?php partiel('partials/retour', ['url' => url('/communaute'), 'libelle' => 'Retour aux communautés', 'clair' => true]) ?>
+      <?php partiel('partials/retour', ['url' => url('/communaute'), 'clair' => true]) ?>
       <h1 class="mt-2 text-4xl leading-tight font-bold text-white sm:text-6xl"><?= e($c['nom']) ?></h1>
       <p class="mt-2 text-white/90"><?= $c['nb_membres'] ? $c['nb_membres'] . ' membre' . pluriel($c['nb_membres']) : 'Nouvelle communauté' ?></p>
     </div>
-    <div class="shrink-0"><?php partiel('partials/bouton_adhesion', ['c' => $c, 'statut' => $statut, 'style' => 'clair']) ?></div>
+    <div class="shrink-0"><?php partiel('partials/bouton_adhesion', ['c' => $c, 'statut' => $statut, 'contexte' => 'detail', 'compte_admin' => $compte_admin]) ?></div>
   </div>
 </section>
 

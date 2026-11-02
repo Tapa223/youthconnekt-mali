@@ -22,7 +22,7 @@ const ROUTES = [
     ['GET', '/actualites/{slug}', 'contenus', 'actualite'],
     ['GET', '/communaute', 'communautes', 'liste'],
     ['GET', '/communaute/{slug}', 'communautes', 'detail'],
-    ['POST', '/communaute/{slug}/rejoindre', 'communautes', 'rejoindre'],
+    ['GET|POST', '/communaute/{slug}/integrer', 'communautes', 'integrer'],
     ['POST', '/communaute/{slug}/quitter', 'communautes', 'quitter'],
 
     // Comptes
@@ -49,6 +49,7 @@ const ROUTES = [
     ['GET', '/gestion/recherche', 'admin', 'recherche'],
     ['POST', '/gestion/chiffres-rapides', 'admin', 'chiffres_rapides'],
     ['POST', '/gestion/exemples', 'admin', 'exemples'],
+    ['GET|POST', '/gestion/mon-compte', 'admin', 'mon_compte'],
     ['POST', '/gestion/messages/{id}/traiter', 'admin', 'message_traiter'],
     ['POST', '/gestion/newsletter/{id}/basculer', 'admin', 'abonne_basculer'],
     ['POST', '/gestion/chiffres/enregistrer', 'admin', 'chiffres_enregistrer'],

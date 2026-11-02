@@ -43,7 +43,7 @@ function vue_espace(string $nom, string $rubrique, string $titre, array $donnees
 
 function tableau_de_bord(): void
 {
-    $u = exiger_connexion();
+    $u = exiger_membre();
     [$demandes, $ids, $opportunites] = donnees_membre($u);
 
     $mes_communautes = [];
@@ -77,21 +77,21 @@ function tableau_de_bord(): void
 
 function mes_communautes(): void
 {
-    $u = exiger_connexion();
+    $u = exiger_membre();
     [$demandes] = donnees_membre($u);
     vue_espace('communautes', 'communautes', 'Mes communautés', ['demandes' => $demandes], $u);
 }
 
 function mes_opportunites(): void
 {
-    $u = exiger_connexion();
+    $u = exiger_membre();
     [, $ids, $opportunites] = donnees_membre($u);
     vue_espace('opportunites', 'opportunites', 'Opportunités pour moi', ['opportunites' => $opportunites, 'a_des_communautes' => (bool) $ids], $u);
 }
 
 function mon_profil(): void
 {
-    $u = exiger_connexion();
+    $u = exiger_membre();
     $organisation = $u['type_compte'] === 'organisation';
     $table = $organisation ? 'profils_organisations' : 'profils_individuels';
     $champ_image = $organisation ? 'logo' : 'photo';
@@ -183,7 +183,7 @@ function mon_profil(): void
 
 function parametres_compte(): void
 {
-    $u = exiger_connexion();
+    $u = exiger_membre();
     $erreurs = [];
     if (est_post()) {
         $action = post('action');

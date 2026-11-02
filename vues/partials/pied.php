@@ -50,7 +50,7 @@
         <li><a href="<?= url('/opportunites') ?>" class="lien-pied">Opportunités</a></li>
         <li><a href="<?= url('/communaute') ?>" class="lien-pied">Communautés</a></li>
         <?php if ($u): ?>
-        <li><a href="<?= url('/compte/mon-espace') ?>" class="lien-pied">Mon espace</a></li>
+        <li><a href="<?= url(est_membre($u) ? '/compte/mon-espace' : '/gestion') ?>" class="lien-pied"><?= est_membre($u) ? 'Mon espace' : 'Administration' ?></a></li>
         <?php else: ?>
         <li><a href="<?= url('/compte/inscription') ?>" class="lien-pied">Rejoindre le chapitre</a></li>
         <li><a href="<?= url('/compte/connexion') ?>" class="lien-pied">Se connecter</a></li>

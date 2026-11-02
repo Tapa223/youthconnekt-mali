@@ -15,43 +15,46 @@ $partages = [
 ];
 ?>
 <article>
-  <header class="mx-auto max-w-3xl px-4 pt-10 sm:px-6 sm:pt-12">
-    <?php partiel('partials/retour', ['url' => url('/actualites'), 'libelle' => 'Retour aux actualités']) ?>
-    <p class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
-      <span class="etiquette rounded-full <?= $a['categorie'] === 'evenement' ? 'bg-vert text-white' : 'bg-turquoise text-encre' ?>"><?= e($a['categorie_libelle']) ?></span>
-      <span><time datetime="<?= e(date_iso($a['date_affichee'])) ?>"><?= e(date_longue($a['date_affichee'])) ?></time><?= $a['lieu'] ? ' · ' . e($a['lieu']) : '' ?> · <?= $a['minutes_lecture'] ?> min de lecture</span>
-    </p>
-    <h1 class="mt-3 text-[1.75rem] leading-[1.1] font-bold sm:text-5xl"><?= e($a['titre']) ?></h1>
-    <p class="mt-4 text-[17px] leading-relaxed sm:text-xl"><?= e($a['chapeau']) ?></p>
-    <div class="mt-5 flex items-center gap-3">
-      <span class="grid size-10 place-items-center rounded-full bg-vert text-xs font-bold text-white" aria-hidden="true">YC</span>
-      <p class="text-sm leading-tight"><strong class="block text-encre">L'équipe YouthConnekt Mali</strong>Communication du chapitre</p>
+  <header class="bg-gris">
+    <div class="conteneur pt-6 pb-10 sm:pt-8 sm:pb-14">
+      <?php partiel('partials/retour', ['url' => url('/actualites')]) ?>
+      <div class="grid items-center gap-8 <?= $a['image'] ? 'lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-12' : '' ?>">
+        <div class="<?= $a['image'] ? '' : 'max-w-3xl' ?>">
+          <p class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+            <span class="etiquette rounded-full <?= $a['categorie'] === 'evenement' ? 'bg-vert text-white' : 'bg-turquoise text-encre' ?>"><?= e($a['categorie_libelle']) ?></span>
+            <span><time datetime="<?= e(date_iso($a['date_affichee'])) ?>"><?= e(date_longue($a['date_affichee'])) ?></time><?= $a['lieu'] ? ' · ' . e($a['lieu']) : '' ?> · <?= $a['minutes_lecture'] ?> min de lecture</span>
+          </p>
+          <h1 class="mt-4 text-[2rem] leading-[1.08] font-bold sm:text-5xl lg:text-[3.4rem]"><?= e($a['titre']) ?></h1>
+          <?php if ($a['chapeau']): ?><p class="mt-5 text-lg leading-relaxed text-encre sm:text-[21px]"><?= e($a['chapeau']) ?></p><?php endif ?>
+          <div class="mt-6 flex items-center gap-3">
+            <span class="grid size-11 place-items-center rounded-full bg-vert text-xs font-bold text-white" aria-hidden="true">YC</span>
+            <p class="text-sm leading-tight"><strong class="block text-[15px] text-encre">L'équipe YouthConnekt Mali</strong>Communication du chapitre</p>
+          </div>
+        </div>
+        <?php if ($a['image']): ?>
+        <div class="aspect-[4/3] overflow-hidden rounded-3xl bg-white">
+          <img src="<?= e(media($a['image'])) ?>" alt="" class="h-full w-full object-cover" fetchpriority="high">
+        </div>
+        <?php endif ?>
+      </div>
     </div>
   </header>
 
-  <?php if ($a['image']): ?>
-  <div class="mx-auto mt-7 w-full max-w-6xl sm:mt-8 sm:px-6 lg:px-8">
-    <div class="aspect-[16/10] overflow-hidden sm:aspect-[16/9] sm:rounded-3xl lg:aspect-[16/7]">
-      <img src="<?= e(media($a['image'])) ?>" alt="" class="h-full w-full object-cover" fetchpriority="high">
+  <div class="conteneur grid gap-10 py-10 sm:py-14 lg:grid-cols-[minmax(0,1fr)_200px] lg:gap-14">
+    <div class="prose-ycm prose-article mx-auto w-full max-w-[46rem] lg:mx-0 lg:justify-self-center">
+      <?= corps_article($a['contenu'], $galerie) ?>
     </div>
-  </div>
-  <?php endif ?>
-
-  <div class="conteneur mt-8 grid gap-8 pb-14 sm:mt-10 lg:grid-cols-[180px_minmax(0,1fr)] lg:gap-12">
-    <aside class="order-2 border-t border-ligne pt-6 lg:order-1 lg:border-0 lg:pt-0">
-      <div class="lg:sticky lg:top-24">
+    <aside class="border-t border-ligne pt-6 lg:border-0 lg:pt-1">
+      <div class="lg:sticky lg:top-28">
         <p class="text-xs font-bold tracking-[0.14em] text-vert uppercase">Partager</p>
         <ul class="mt-3 flex flex-wrap gap-2 lg:flex-col">
           <?php foreach ($partages as $nom => $lien): ?>
-          <li><a href="<?= e($lien) ?>" target="_blank" rel="noopener" class="inline-flex min-h-10 w-full items-center justify-center rounded-full border-[1.5px] border-vert px-4 text-sm font-bold text-vert hover:bg-vert-clair"><?= $nom ?></a></li>
+          <li><a href="<?= e($lien) ?>" target="_blank" rel="noopener" class="inline-flex min-h-10 w-full items-center justify-center rounded-full border-[1.5px] border-vert px-4 text-sm font-bold text-vert hover:bg-vert hover:text-white"><?= $nom ?></a></li>
           <?php endforeach ?>
-          <li><button type="button" data-copier-lien class="inline-flex min-h-10 w-full items-center justify-center rounded-full border-[1.5px] border-vert px-4 text-sm font-bold text-vert hover:bg-vert-clair">Copier le lien</button></li>
+          <li><button type="button" data-copier-lien class="inline-flex min-h-10 w-full items-center justify-center rounded-full border-[1.5px] border-vert px-4 text-sm font-bold text-vert hover:bg-vert hover:text-white">Copier le lien</button></li>
         </ul>
       </div>
     </aside>
-    <div class="prose-ycm order-1 max-w-3xl lg:order-2">
-      <?= corps_article($a['contenu'], $galerie) ?>
-    </div>
   </div>
 </article>
 

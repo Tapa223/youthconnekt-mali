@@ -62,7 +62,7 @@
       <?php foreach ($suggestions as $c): ?>
       <li class="flex items-center gap-3 rounded-xl bg-gris p-3">
         <span class="min-w-0 flex-1"><a href="<?= e($c['url']) ?>" class="block font-bold text-vert hover:text-orange"><?= e($c['nom']) ?></a><span class="text-xs"><?= $c['nb_membres'] ? $c['nb_membres'] . ' membre' . pluriel($c['nb_membres']) : 'Soyez parmi les premiers' ?></span></span>
-        <form method="post" action="<?= url('/communaute/' . $c['slug'] . '/rejoindre') ?>"><?= csrf() ?><input type="hidden" name="suivant" value="<?= e(adresse_actuelle()) ?>"><button type="submit" class="btn btn-contour min-h-9 rounded-full px-4 text-sm">Demander à intégrer</button></form>
+        <a href="<?= e($c['url']) ?>" class="btn-lien">Voir la communauté</a>
       </li>
       <?php endforeach ?>
     </ul>

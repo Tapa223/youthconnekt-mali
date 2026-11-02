@@ -57,6 +57,7 @@ function installer(): void
                 'email_confirme' => 1,
                 'actif' => 1,
                 'role_admin' => 'super',
+                'type_compte' => 'administration',
                 'prenom_admin' => $valeurs['prenom'],
                 'nom_admin' => $valeurs['nom'],
             ];
@@ -64,7 +65,7 @@ function installer(): void
                 mettre_a_jour('utilisateurs', $donnees, (int) $existant['id']);
                 $id = (int) $existant['id'];
             } else {
-                $id = inserer('utilisateurs', $donnees + ['email' => $valeurs['email'], 'type_compte' => 'individuel', 'inscrit_le' => maintenant()]);
+                $id = inserer('utilisateurs', $donnees + ['email' => $valeurs['email'], 'type_compte' => 'administration', 'inscrit_le' => maintenant()]);
             }
             if (!empty($_POST['exemples'])) {
                 require_once RACINE . '/app/exemples.php';

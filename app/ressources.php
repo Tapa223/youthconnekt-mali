@@ -607,14 +607,14 @@ function ressources(): array
         // ------------------------------------------------------------------
         'comptes' => [
             'table' => 'utilisateurs', 'titre' => 'Comptes et connexions',
-            'description' => "Tous les comptes : membres, organisations et équipe d'administration.",
+            'description' => "Les comptes des membres et des organisations, et à part les comptes de l'équipe d'administration.",
             'libelle_ajout' => "Créer un compte d'administration",
             'champs_select' => "t.*, COALESCE(CONCAT(pi.prenom, ' ', pi.nom), po.nom_structure, NULLIF(TRIM(CONCAT(t.prenom_admin, ' ', t.nom_admin)), ''), t.email) AS nom_affiche",
             'depuis' => 'FROM utilisateurs t LEFT JOIN profils_individuels pi ON pi.utilisateur_id = t.id LEFT JOIN profils_organisations po ON po.utilisateur_id = t.id',
             'ordre' => 't.inscrit_le DESC', 'par_page' => 50,
             'onglets' => [
-                ['Membres', 't.role_admin IS NULL'],
-                ["Équipe d'administration", 't.role_admin IS NOT NULL'],
+                ['Membres et organisations', "t.type_compte <> 'administration'"],
+                ["Équipe d'administration", "t.type_compte = 'administration'"],
                 ['E-mail à confirmer', 't.email_confirme = 0'],
                 ['Désactivés', 't.actif = 0'],
             ],
@@ -627,7 +627,7 @@ function ressources(): array
                 ['E-mail', fn ($l) => $l['email_confirme'] ? badge('Confirmé', 'vert') : badge('À confirmer', 'orange')],
                 ['Compte', function ($l) {
                     if (!$l['actif']) return badge('Désactivé', 'rouge');
-                    if ($l['role_admin']) return badge(ROLES_ADMIN[$l['role_admin']] ?? 'Administrateur', 'vert');
+                    if ($l['type_compte'] === 'administration') return badge(ROLES_ADMIN[$l['role_admin']] ?? 'Administrateur', 'vert');
                     return badge('Membre', 'gris');
                 }],
                 ['Inscription', fn ($l) => e(date_chiffres($l['inscrit_le']))],
@@ -662,25 +662,24 @@ function groupes_compte(?array $ligne): array
 {
     $super = (utilisateur()['role_admin'] ?? '') === 'super';
     $ajout = $ligne === null;
+    // Un compte membre n'a jamais de rôle : les comptes d'administration sont des comptes à part.
+    $compte_admin = $ajout || $ligne['type_compte'] === 'administration';
     $acces = [
-        'role_admin' => ['type' => 'select', 'libelle' => 'Rôle dans l\'administration', 'options' => ['' => 'Aucun (membre du site)'] + ROLES_ADMIN, 'requis' => $ajout, 'nul' => true,
+        'role_admin' => ['type' => 'select', 'libelle' => 'Rôle dans l\'administration', 'options' => ROLES_ADMIN, 'requis' => true,
             'aide' => implode(' ', array_map(fn ($k, $v) => ROLES_ADMIN[$k] . ' : ' . mb_strtolower(mb_substr($v, 0, 1)) . mb_substr($v, 1), array_keys(DESCRIPTIONS_ROLES), DESCRIPTIONS_ROLES)),
             'lecture_seule' => !$super],
         'prenom_admin' => ['type' => 'texte', 'libelle' => 'Prénom', 'requis' => false, 'max' => 80, 'largeur' => 'demi', 'aide' => "Affiché dans l'administration."],
         'nom_admin' => ['type' => 'texte', 'libelle' => 'Nom', 'requis' => false, 'max' => 80, 'largeur' => 'demi'],
     ];
-    if ($ajout) {
-        unset($acces['role_admin']['options']['']);
-    }
     $groupes = [
         [null, 'champs' => [
             'email' => ['type' => 'email', 'libelle' => 'Adresse e-mail', 'lecture_seule' => !$ajout && !$super],
-            'type_compte' => ['type' => $ajout ? 'cache' : 'lecture', 'libelle' => 'Type de compte', 'defaut' => 'individuel',
-                'html' => fn ($l) => e(TYPES_COMPTE[$l['type_compte']] ?? '') . (!empty($l['role_admin']) ? '' : ' · <a class="ycm-lien" href="' . url('/gestion/' . ($l['type_compte'] === 'organisation' ? 'organisations' : 'membres')) . '?q=' . rawurlencode($l['email']) . '">Voir le profil</a>')],
+            'type_compte' => ['type' => $ajout ? 'cache' : 'lecture', 'libelle' => 'Type de compte', 'defaut' => 'administration',
+                'html' => fn ($l) => e(TYPES_COMPTE[$l['type_compte']] ?? '') . ($l['type_compte'] === 'administration' ? '' : ' · <a class="ycm-lien" href="' . url('/gestion/' . ($l['type_compte'] === 'organisation' ? 'organisations' : 'membres')) . '?q=' . rawurlencode($l['email']) . '">Voir le profil</a>')],
             'nouveau_mot_de_passe' => ['type' => 'motdepasse', 'libelle' => $ajout ? 'Mot de passe' : 'Nouveau mot de passe', 'requis' => $ajout, 'virtuel' => true,
-                'aide' => $ajout ? '8 caractères au minimum. Transmettez-le à la personne, qui pourra le changer depuis son espace.' : 'Laisser vide pour garder le mot de passe actuel.'],
+                'aide' => $ajout ? '8 caractères au minimum. Transmettez-le à la personne, qui pourra le changer depuis « Mon compte » dans l\'administration.' : 'Laisser vide pour garder le mot de passe actuel.'],
         ]],
-        ["Accès à l'administration", 'description' => $super ? "Un compte avec un rôle accède à l'administration selon ce rôle. Réservez « Administrateur principal » aux responsables du site." : "Seul un administrateur principal peut modifier les rôles.", 'champs' => $acces],
+        ...($compte_admin ? [["Accès à l'administration", 'description' => $super ? "Ce compte sert uniquement à l'administration : il n'a ni espace membre ni communautés. Réservez « Administrateur principal » aux responsables du site." : "Seul un administrateur principal peut modifier les rôles.", 'champs' => $acces]] : []),
         ['État du compte', 'cote' => true, 'champs' => [
             'actif' => ['type' => 'case', 'libelle' => 'Compte actif', 'defaut' => 1],
             'email_confirme' => ['type' => 'case', 'libelle' => 'E-mail confirmé', 'defaut' => 1],
@@ -709,6 +708,12 @@ function avant_compte(array &$d, ?array $ancien): void
         $d['mot_de_passe'] = password_hash($mdp, PASSWORD_DEFAULT);
     }
     $moi = utilisateur();
+    if ($ancien && $ancien['type_compte'] !== 'administration') {
+        // Un compte membre ne reçoit jamais de rôle d'administration
+        unset($d['role_admin'], $d['prenom_admin'], $d['nom_admin']);
+    } elseif (array_key_exists('role_admin', $d) && !isset(ROLES_ADMIN[(string) $d['role_admin']])) {
+        throw new InvalidArgumentException("role_admin|Choisissez le rôle de ce compte d'administration.");
+    }
     if ($ancien && (int) $ancien['id'] === (int) $moi['id']) {
         // On ne se retire pas à soi-même l'accès ou le rôle par erreur
         $d['actif'] = 1;
@@ -723,7 +728,7 @@ function avant_compte(array &$d, ?array $ancien): void
     }
     if (!$ancien) {
         $d['inscrit_le'] = maintenant();
-        $d['type_compte'] = 'individuel';
+        $d['type_compte'] = 'administration';
     }
 }
 

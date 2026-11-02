@@ -49,7 +49,7 @@
         <p class="mt-1.5 text-xs leading-snug text-encre sm:text-sm"><strong>Pour :</strong> <?= e($c['public_vise']) ?></p>
         <?php if ($c['description']): ?><p class="mt-1 line-clamp-2 text-xs leading-snug text-texte sm:text-sm"><?= e($c['description']) ?></p><?php endif ?>
         <div class="mt-3 sm:mt-auto sm:pt-4 [&_.btn]:min-h-10 [&_.btn]:px-3.5 [&_.btn]:text-[13px] sm:[&_.btn]:min-h-11 sm:[&_.btn]:text-sm">
-          <?php partiel('partials/bouton_adhesion', ['c' => $c, 'statut' => $c['statut_membre']]) ?>
+          <?php partiel('partials/bouton_adhesion', ['c' => $c, 'contexte' => 'liste']) ?>
         </div>
       </div>
     </li>
