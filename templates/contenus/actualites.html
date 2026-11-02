@@ -2,22 +2,22 @@
 {% block titre %}Actualités | YouthConnekt Mali{% endblock %}
 
 {% block contenu %}
-<section class="conteneur pt-10 sm:pt-14">
+<section class="conteneur anim-entree pt-10 sm:pt-14">
   <div class="flex flex-wrap items-end justify-between gap-5">
     <div>
       <p class="surtitre surtitre-trait">La vie du chapitre</p>
       <h1 class="mt-3 text-5xl leading-none font-bold sm:text-7xl">Actualités.</h1>
     </div>
     <nav class="flex gap-2" aria-label="Filtrer">
-      <a href="?" class="inline-flex min-h-10 items-center rounded-full border-[1.5px] border-vert px-4 text-sm font-bold {% if not filtre %}bg-vert text-white{% else %}text-vert hover:bg-vert-clair{% endif %}">Tout</a>
-      <a href="?filtre=evenements" class="inline-flex min-h-10 items-center rounded-full border-[1.5px] border-vert px-4 text-sm font-bold {% if filtre == 'evenements' %}bg-vert text-white{% else %}text-vert hover:bg-vert-clair{% endif %}">Événements</a>
-      <a href="?filtre=actualites" class="inline-flex min-h-10 items-center rounded-full border-[1.5px] border-vert px-4 text-sm font-bold {% if filtre == 'actualites' %}bg-vert text-white{% else %}text-vert hover:bg-vert-clair{% endif %}">Actualités</a>
+      <a href="?" class="survol-orange inline-flex min-h-10 items-center rounded-full transition-colors border-[1.5px] border-vert px-4 text-sm font-bold {% if not filtre %}bg-vert text-white{% else %}text-vert hover:bg-vert-clair{% endif %}">Tout</a>
+      <a href="?filtre=evenements" class="survol-orange inline-flex min-h-10 items-center rounded-full transition-colors border-[1.5px] border-vert px-4 text-sm font-bold {% if filtre == 'evenements' %}bg-vert text-white{% else %}text-vert hover:bg-vert-clair{% endif %}">Événements</a>
+      <a href="?filtre=actualites" class="survol-orange inline-flex min-h-10 items-center rounded-full transition-colors border-[1.5px] border-vert px-4 text-sm font-bold {% if filtre == 'actualites' %}bg-vert text-white{% else %}text-vert hover:bg-vert-clair{% endif %}">Actualités</a>
     </nav>
   </div>
 
   {% if une %}
   <div class="mt-7 grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-    <a href="{{ une.get_absolute_url }}" class="group relative block aspect-[4/3.3] overflow-hidden rounded-3xl sm:aspect-[16/10] lg:aspect-auto lg:min-h-[420px]">
+    <a href="{{ une.get_absolute_url }}" class="survol-leve group relative block aspect-[4/3.3] overflow-hidden rounded-3xl sm:aspect-[16/10] lg:aspect-auto lg:min-h-[420px]">
       <div class="absolute inset-0 transition-transform duration-500 group-hover:scale-105">{% include "partials/photo.html" with image=une.image alt="" eager=True %}</div>
       <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent"></div>
       <time datetime="{{ une.date_affichee|date:'Y-m-d' }}" class="absolute top-0 left-0 grid min-w-15 rounded-br-2xl bg-orange px-3 py-2.5 text-center leading-none text-white"><span class="text-3xl font-bold">{{ une.date_affichee|date:"j" }}</span><span class="mt-1 text-xs font-bold uppercase">{{ une.date_affichee|date:"M" }}</span></time>
@@ -34,7 +34,7 @@
       <ul class="mt-4 space-y-3">
         {% for e in agenda %}
         <li>
-          <a href="{{ e.get_absolute_url }}" class="flex items-center gap-3 rounded-xl border border-white/15 bg-white/10 p-3 hover:bg-white/15">
+          <a href="{{ e.get_absolute_url }}" class="flex items-center gap-3 rounded-xl border border-white/15 bg-white/10 p-3 transition-colors hover:bg-white/20">
             <time datetime="{{ e.date_evenement|date:'Y-m-d' }}" class="grid min-w-12 rounded-lg bg-white px-2 py-1.5 text-center leading-none text-vert"><span class="text-lg font-bold">{{ e.date_evenement|date:"j" }}</span><span class="mt-0.5 text-[10px] font-bold uppercase">{{ e.date_evenement|date:"M" }}</span></time>
             <span class="min-w-0"><span class="block text-sm leading-snug font-bold">{{ e.titre }}</span>{% if e.lieu %}<span class="block text-xs text-white/75">{{ e.lieu }}</span>{% endif %}</span>
           </a>

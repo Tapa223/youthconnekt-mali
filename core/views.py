@@ -41,6 +41,7 @@ def accueil(request):
         "mot_ministre": mot if mot.publie else None,
         "mot_ministre_brouillon": mot,
         "communautes": Communaute.objects.actives()[:6],
+        "nb_communautes": Communaute.objects.actives().count(),
         "opportunites": opportunites_accueil,
         "actualite_une": actualites[0] if actualites else None,
         "actualites": actualites[1:4],

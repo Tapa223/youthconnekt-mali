@@ -5,7 +5,7 @@
 {% block contenu %}
 {% with p=parametres_site %}
 <section class="bg-gris py-10 sm:py-14">
-  <div class="conteneur grid gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-7">
+  <div class="conteneur anim-entree grid gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-7">
     <div class="relative isolate overflow-hidden rounded-3xl bg-vert p-7 text-white sm:p-10">
       <img src="{% static 'img/bandeaux/lets-connekt.jpg' %}" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover opacity-15">
       {% include "partials/reseau_deco.html" with opacite="opacity-50" %}

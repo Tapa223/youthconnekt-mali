@@ -1,12 +1,12 @@
 {% with p=parametres_site %}
 {% if p.lien_facebook or p.lien_instagram or p.lien_linkedin or p.lien_x or p.lien_youtube or p.lien_tiktok %}
 <ul class="mt-4 flex flex-wrap gap-2" aria-label="Réseaux sociaux officiels">
-  {% if p.lien_facebook %}<li><a href="{{ p.lien_facebook }}" target="_blank" rel="noopener" class="inline-flex min-h-9 items-center rounded-full border border-vert px-3.5 text-sm font-bold text-vert hover:bg-vert hover:text-white">Facebook</a></li>{% endif %}
-  {% if p.lien_instagram %}<li><a href="{{ p.lien_instagram }}" target="_blank" rel="noopener" class="inline-flex min-h-9 items-center rounded-full border border-vert px-3.5 text-sm font-bold text-vert hover:bg-vert hover:text-white">Instagram</a></li>{% endif %}
-  {% if p.lien_linkedin %}<li><a href="{{ p.lien_linkedin }}" target="_blank" rel="noopener" class="inline-flex min-h-9 items-center rounded-full border border-vert px-3.5 text-sm font-bold text-vert hover:bg-vert hover:text-white">LinkedIn</a></li>{% endif %}
-  {% if p.lien_x %}<li><a href="{{ p.lien_x }}" target="_blank" rel="noopener" class="inline-flex min-h-9 items-center rounded-full border border-vert px-3.5 text-sm font-bold text-vert hover:bg-vert hover:text-white">X</a></li>{% endif %}
-  {% if p.lien_youtube %}<li><a href="{{ p.lien_youtube }}" target="_blank" rel="noopener" class="inline-flex min-h-9 items-center rounded-full border border-vert px-3.5 text-sm font-bold text-vert hover:bg-vert hover:text-white">YouTube</a></li>{% endif %}
-  {% if p.lien_tiktok %}<li><a href="{{ p.lien_tiktok }}" target="_blank" rel="noopener" class="inline-flex min-h-9 items-center rounded-full border border-vert px-3.5 text-sm font-bold text-vert hover:bg-vert hover:text-white">TikTok</a></li>{% endif %}
+  {% if p.lien_facebook %}<li><a href="{{ p.lien_facebook }}" target="_blank" rel="noopener" class="inline-flex min-h-9 items-center rounded-full border border-vert px-3.5 text-sm font-bold text-vert hover:border-orange hover:bg-orange hover:text-white">Facebook</a></li>{% endif %}
+  {% if p.lien_instagram %}<li><a href="{{ p.lien_instagram }}" target="_blank" rel="noopener" class="inline-flex min-h-9 items-center rounded-full border border-vert px-3.5 text-sm font-bold text-vert hover:border-orange hover:bg-orange hover:text-white">Instagram</a></li>{% endif %}
+  {% if p.lien_linkedin %}<li><a href="{{ p.lien_linkedin }}" target="_blank" rel="noopener" class="inline-flex min-h-9 items-center rounded-full border border-vert px-3.5 text-sm font-bold text-vert hover:border-orange hover:bg-orange hover:text-white">LinkedIn</a></li>{% endif %}
+  {% if p.lien_x %}<li><a href="{{ p.lien_x }}" target="_blank" rel="noopener" class="inline-flex min-h-9 items-center rounded-full border border-vert px-3.5 text-sm font-bold text-vert hover:border-orange hover:bg-orange hover:text-white">X</a></li>{% endif %}
+  {% if p.lien_youtube %}<li><a href="{{ p.lien_youtube }}" target="_blank" rel="noopener" class="inline-flex min-h-9 items-center rounded-full border border-vert px-3.5 text-sm font-bold text-vert hover:border-orange hover:bg-orange hover:text-white">YouTube</a></li>{% endif %}
+  {% if p.lien_tiktok %}<li><a href="{{ p.lien_tiktok }}" target="_blank" rel="noopener" class="inline-flex min-h-9 items-center rounded-full border border-vert px-3.5 text-sm font-bold text-vert hover:border-orange hover:bg-orange hover:text-white">TikTok</a></li>{% endif %}
 </ul>
 {% elif user.is_staff %}
 <p class="mt-4 text-sm text-encre">[Réseaux sociaux officiels]</p>

@@ -76,7 +76,9 @@ DETAIL_MARKETING = dict(
 
 # (slug, titre, catégorie, décalage en jours de la date d'événement, lieu, photo, chapeau)
 ACTUALITES = [
-    ("lancement-officiel-de-la-plateforme", "Lancement officiel de la plateforme YouthConnekt Mali", "evenement", 40, "Bamako", "ceremonie",
+    ("participation-youthconnekt-sahel", "Participation du Mali au YouthConnekt Sahel", "evenement", 40, "[Lieu à confirmer]", "ceremonie",
+     "Une délégation de jeunes Maliens au forum régional de la jeunesse sahélienne."),
+    ("lancement-officiel-de-la-plateforme", "Lancement officiel de la plateforme YouthConnekt Mali", "actualite", None, "", "ceremonie",
      "Une nouvelle porte d'entrée pour les jeunes et les organisations du pays."),
     ("atelier-monter-son-projet-segou", "Atelier « Monter son projet »", "evenement", 46, "Ségou", "salle-bleue", "Un atelier pratique pour structurer son projet."),
     ("forum-national-emploi", "Forum national de l'emploi des jeunes", "evenement", 69, "Bamako", "arena", "Rencontrer des recruteurs et découvrir des offres."),
@@ -164,7 +166,7 @@ class Command(BaseCommand):
         for ordre, (slug, titre, categorie, decalage, lieu, image, chapeau) in enumerate(ACTUALITES):
             defauts = dict(
                 titre=titre, categorie=categorie, chapeau=chapeau, lieu=lieu, statut="publie",
-                contenu=CORPS_LANCEMENT if ordre == 0 else f"{chapeau}\n\nContenu d'exemple, à remplacer.",
+                contenu=CORPS_LANCEMENT if slug == "lancement-officiel-de-la-plateforme" else f"{chapeau}\n\nContenu d'exemple, à remplacer.",
                 date_evenement=(aujourd_hui + timedelta(days=decalage)) if decalage is not None else None,
                 mis_en_avant=ordre == 0, publie_le=maintenant - timedelta(days=ordre * 3),
             )
@@ -172,7 +174,7 @@ class Command(BaseCommand):
             if cree:
                 objet.image = photo(image)
                 objet.save()
-                if ordre == 0:
+                if slug == "lancement-officiel-de-la-plateforme":
                     for o, nom in enumerate(["intervenant", "salle-bleue"]):
                         PhotoActualite.objects.create(actualite=objet, image=photo(nom), ordre=o)
             if slug == "cinq-jeunes-agriculture" and "agriculture-et-environnement" in communautes:

@@ -16,9 +16,9 @@
 </section>
 
 <ul class="grid grid-cols-3 gap-2 sm:gap-4">
-  <li class="min-w-0 rounded-2xl border-t-4 border-vert bg-white p-3 sm:p-4"><span class="text-3xl font-bold text-vert">{{ mes_communautes|length }}</span> <span class="block text-xs sm:inline sm:text-sm">communauté{{ mes_communautes|length|pluralize }} suivie{{ mes_communautes|length|pluralize }}</span></li>
-  <li class="min-w-0 rounded-2xl border-t-4 border-orange bg-white p-3 sm:p-4"><span class="text-3xl font-bold text-vert">{{ nb_opportunites }}</span> <span class="block text-xs sm:inline sm:text-sm">opportunité{{ nb_opportunites|pluralize }} pour vous</span></li>
-  <li class="min-w-0 rounded-2xl border-t-4 border-turquoise bg-white p-3 sm:p-4"><span class="text-3xl font-bold text-vert">{{ nb_evenements }}</span> <span class="block text-xs sm:inline sm:text-sm">événement{{ nb_evenements|pluralize }} à venir</span></li>
+  <li class="survol-leve min-w-0 rounded-2xl border-t-4 border-vert bg-white p-3 sm:p-4"><span class="text-3xl font-bold text-vert">{{ mes_communautes|length }}</span> <span class="block text-xs sm:inline sm:text-sm">communauté{{ mes_communautes|length|pluralize }} suivie{{ mes_communautes|length|pluralize }}</span></li>
+  <li class="survol-leve min-w-0 rounded-2xl border-t-4 border-orange bg-white p-3 sm:p-4"><span class="text-3xl font-bold text-vert">{{ nb_opportunites }}</span> <span class="block text-xs sm:inline sm:text-sm">opportunité{{ nb_opportunites|pluralize }} pour vous</span></li>
+  <li class="survol-leve min-w-0 rounded-2xl border-t-4 border-turquoise bg-white p-3 sm:p-4"><span class="text-3xl font-bold text-vert">{{ nb_evenements }}</span> <span class="block text-xs sm:inline sm:text-sm">événement{{ nb_evenements|pluralize }} à venir</span></li>
 </ul>
 
 <section class="bloc" aria-labelledby="titre-opp">
@@ -43,7 +43,7 @@
     {% if mes_communautes %}
     <ul class="mt-4 space-y-3">
       {% for c in mes_communautes %}
-      <li><a href="{{ c.get_absolute_url }}" class="flex items-center gap-4 rounded-xl border border-ligne border-l-4 p-3 hover:bg-gris {% cycle 'border-l-vert' 'border-l-orange' 'border-l-bleu' %}">
+      <li><a href="{{ c.get_absolute_url }}" class="survol-ligne flex items-center gap-4 rounded-xl border border-ligne border-l-4 p-3 {% cycle 'border-l-vert' 'border-l-orange' 'border-l-bleu' %}">
         <span class="grid size-12 shrink-0 place-items-center rounded-xl bg-vert-clair text-sm font-bold text-vert" aria-hidden="true">{{ c.nom|slice:":2"|upper }}</span>
         <span class="min-w-0 flex-1"><span class="block font-bold text-vert">{{ c.nom }}</span><span class="text-xs">{{ c.nb_membres }} membre{{ c.nb_membres|pluralize }} · {{ c.nb_opportunites }} opportunité{{ c.nb_opportunites|pluralize }} ouverte{{ c.nb_opportunites|pluralize }}</span></span>
         <span class="text-sm font-bold text-vert">Voir</span>

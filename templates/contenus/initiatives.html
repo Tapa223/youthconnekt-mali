@@ -8,14 +8,14 @@
     <g stroke="#04B2B1" stroke-opacity=".35" stroke-width="1.5" fill="none"><path d="M300 210 L420 70 L560 150"/><path d="M420 70 L520 0"/><path d="M560 150 L600 20"/></g>
     <circle cx="300" cy="210" r="9" fill="#F1592A"/><circle cx="420" cy="70" r="12" fill="#04B2B1"/><circle cx="560" cy="150" r="8" fill="#0358D9"/>
   </svg>
-  <div class="conteneur relative py-14 sm:py-16">
+  <div class="conteneur anim-entree relative py-14 sm:py-16">
     <p class="surtitre surtitre-trait">Sur le terrain</p>
     <h1 class="mt-3 text-5xl leading-none font-bold sm:text-7xl">Nos initiatives.</h1>
     <p class="mt-5 max-w-xl text-base sm:text-lg">Formations, rencontres, prix : ce que le chapitre organise avec et pour les jeunes, partout au Mali.</p>
     <nav class="mt-7 flex flex-wrap gap-2" aria-label="Filtrer par axe d'action">
-      <a href="?" class="inline-flex min-h-10 items-center rounded-full border-2 px-4 text-sm font-bold {% if not axe_actif %}border-vert bg-vert text-white{% else %}border-vert bg-white text-vert hover:bg-vert-clair{% endif %}" {% if not axe_actif %}aria-current="true"{% endif %}>Toutes</a>
+      <a href="?" class="survol-orange inline-flex min-h-10 items-center rounded-full transition-colors border-2 px-4 text-sm font-bold {% if not axe_actif %}border-vert bg-vert text-white{% else %}border-vert bg-white text-vert hover:bg-vert-clair{% endif %}" {% if not axe_actif %}aria-current="true"{% endif %}>Toutes</a>
       {% for axe in axes %}
-      <a href="?axe={{ axe.slug }}" class="inline-flex min-h-10 items-center rounded-full border-2 px-4 text-sm font-bold {{ axe.couleur|bordure }} {% if axe_actif == axe.slug %}{{ axe.couleur|fond }}{% else %}bg-white text-vert hover:bg-gris{% endif %}" {% if axe_actif == axe.slug %}aria-current="true"{% endif %}>{{ axe.nom }}</a>
+      <a href="?axe={{ axe.slug }}" class="survol-orange inline-flex min-h-10 items-center rounded-full transition-colors border-2 px-4 text-sm font-bold {{ axe.couleur|bordure }} {% if axe_actif == axe.slug %}{{ axe.couleur|fond }}{% else %}bg-white text-vert hover:bg-gris{% endif %}" {% if axe_actif == axe.slug %}aria-current="true"{% endif %}>{{ axe.nom }}</a>
       {% endfor %}
     </nav>
   </div>
@@ -23,7 +23,7 @@
 
 {% if une and page.number == 1 %}
 <section class="conteneur pt-10 sm:pt-12" aria-label="Initiative à la une">
-  <article class="grid overflow-hidden rounded-3xl bg-vert text-white lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
+  <article class="survol-zoom grid overflow-hidden rounded-3xl bg-vert text-white lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
     <div class="relative aspect-[16/10] lg:aspect-auto lg:min-h-[380px]">
       {% include "partials/photo.html" with image=une.image alt="" %}
       <span class="etiquette absolute top-4 left-4 rounded-full bg-orange text-white">À la une</span>

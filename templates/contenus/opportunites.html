@@ -5,7 +5,7 @@
 {% block contenu %}
 <section class="relative isolate overflow-hidden bg-vert text-white">
   {% include "partials/reseau_deco.html" %}
-  <div class="conteneur relative py-12 sm:py-16">
+  <div class="conteneur anim-entree relative py-12 sm:py-16">
     <p class="surtitre surtitre-trait text-white/85">À saisir maintenant</p>
     <h1 class="mt-3 text-5xl leading-none font-bold text-white sm:text-7xl">Opportunités.</h1>
     <p class="mt-5 hidden max-w-lg text-base text-white/90 sm:block sm:text-lg">Formations, appels à candidatures, bourses, stages et événements relayés par le chapitre.</p>
@@ -22,9 +22,9 @@
     </form>
 
     <nav class="masquer-defilement -mx-4 mt-5 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0" aria-label="Filtrer par type">
-      <a href="?{% if recherche %}q={{ recherche|urlencode }}{% endif %}" class="inline-flex min-h-10 shrink-0 items-center rounded-full border-2 border-white px-4 text-sm font-bold {% if not type_actif %}bg-vert text-white{% else %}bg-white text-vert{% endif %}">Toutes</a>
+      <a href="?{% if recherche %}q={{ recherche|urlencode }}{% endif %}" class="survol-orange inline-flex min-h-10 shrink-0 items-center rounded-full transition-colors border-2 border-white px-4 text-sm font-bold {% if not type_actif %}bg-vert text-white{% else %}bg-white text-vert{% endif %}">Toutes</a>
       {% for valeur, libelle in types %}
-      <a href="?type={{ valeur }}{% if recherche %}&q={{ recherche|urlencode }}{% endif %}" class="inline-flex min-h-10 shrink-0 items-center rounded-full border-2 border-white px-4 text-sm font-bold {% if type_actif == valeur %}bg-vert text-white{% else %}bg-white text-vert hover:bg-vert-clair{% endif %}" {% if type_actif == valeur %}aria-current="true"{% endif %}>{{ libelle }}</a>
+      <a href="?type={{ valeur }}{% if recherche %}&q={{ recherche|urlencode }}{% endif %}" class="survol-orange inline-flex min-h-10 shrink-0 items-center rounded-full transition-colors border-2 border-white px-4 text-sm font-bold {% if type_actif == valeur %}bg-vert text-white{% else %}bg-white text-vert hover:bg-vert-clair{% endif %}" {% if type_actif == valeur %}aria-current="true"{% endif %}>{{ libelle }}</a>
       {% endfor %}
     </nav>
   </div>

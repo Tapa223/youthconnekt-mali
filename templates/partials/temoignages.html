@@ -1,24 +1,26 @@
 {% load static %}
 {% if temoignages %}
-<section class="relative isolate overflow-hidden bg-vert py-16 sm:py-20" aria-labelledby="titre-temoignages">
-  <img src="{% static 'img/bandeaux/temoignages.jpg' %}" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover" loading="lazy">
-  <div class="absolute inset-0 -z-10 bg-vert/90"></div>
+<section class="relative isolate overflow-hidden bg-vert py-16 sm:py-20 lg:pb-28" aria-labelledby="titre-temoignages">
+  <img src="{% static 'img/bandeaux/temoignages.jpg' %}" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover opacity-[.12]" loading="lazy">
   {% include "partials/reseau_deco.html" %}
   <div class="conteneur relative">
-    <p class="surtitre text-white/80 sm:flex sm:justify-center">Témoignages</p>
+    <p class="surtitre text-white/85 sm:flex sm:justify-center">Témoignages</p>
     <h2 id="titre-temoignages" class="titre-section text-white sm:text-center">Ils en parlent mieux que nous.</h2>
-    <ul class="mt-10 grid gap-4 md:grid-cols-3 md:gap-5">
+    {# Trois cartes superposées qui flottent ; celle survolée passe devant #}
+    <ul class="mt-10 grid gap-5 md:mt-14 md:grid-cols-3 md:gap-0 md:px-5">
       {% for t in temoignages %}
-      <li class="rounded-2xl border-t-[5px] bg-white p-6 shadow-xl {% cycle 'border-orange md:-rotate-2 md:mt-8' 'border-turquoise' 'border-orange md:rotate-2 md:mt-8' %}">
-        <figure>
-          <svg class="h-6 w-8 text-orange" viewBox="0 0 32 24" fill="currentColor" aria-hidden="true"><path d="M16 0 6 12l10 12H9L-1 12 9 0zm16 0L22 12l10 12h-7L15 12 25 0z"/></svg>
-          <blockquote class="mt-3 text-[15px] leading-relaxed text-encre">{{ t.texte }}</blockquote>
-          <figcaption class="mt-5 flex items-center gap-3">
-            {% if t.photo %}<img src="{{ t.photo.url }}" alt="" class="size-11 rounded-full object-cover" loading="lazy">
-            {% else %}<span class="grid size-11 place-items-center rounded-full {% cycle 'bg-vert' 'bg-turquoise' 'bg-bleu' as fondt %} text-sm font-bold text-white" aria-hidden="true">{{ t.nom|slice:":1"|upper }}</span>{% endif %}
-            <span><span class="block text-sm font-bold text-vert">{{ t.nom }}</span>{% if t.role %}<span class="block text-xs">{{ t.role }}</span>{% endif %}</span>
-          </figcaption>
-        </figure>
+      <li class="relative {% cycle 'md:z-[1] md:translate-x-[30px] md:translate-y-10 md:-rotate-[4deg]' 'md:z-[2] md:rotate-1' 'md:z-[1] md:-translate-x-[30px] md:translate-y-14 md:rotate-[4deg]' %}">
+        <div class="{% cycle 'anim-flotte' 'anim-flotte-2' 'anim-flotte' %} h-full">
+          <figure class="survol-carte flex h-full flex-col gap-4 rounded-[22px] border-t-[6px] bg-white p-6 shadow-[0_22px_48px_rgb(0_0_0/.25)] sm:p-7 {% cycle 'border-orange' 'border-turquoise' 'border-orange' %}">
+            <span class="h-7 text-6xl leading-[.6] font-bold text-orange" aria-hidden="true">«</span>
+            <blockquote class="text-base leading-relaxed text-encre sm:text-[17px]">{{ t.texte }}</blockquote>
+            <figcaption class="mt-auto flex items-center gap-3">
+              {% if t.photo %}<img src="{{ t.photo.url }}" alt="" class="size-11 rounded-full object-cover" loading="lazy">
+              {% else %}<span class="grid size-11 shrink-0 place-items-center rounded-full text-sm font-bold text-white {% cycle 'bg-vert' 'bg-turquoise' 'bg-bleu' %}" aria-hidden="true">{{ t.nom|slice:":1"|upper }}</span>{% endif %}
+              <span><span class="block font-bold text-vert">{{ t.nom }}</span>{% if t.role %}<span class="block text-sm text-encre">{{ t.role }}</span>{% endif %}</span>
+            </figcaption>
+          </figure>
+        </div>
       </li>
       {% endfor %}
     </ul>

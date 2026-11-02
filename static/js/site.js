@@ -114,3 +114,75 @@ document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
     if (!window.confirm(form.getAttribute("data-confirmer"))) e.preventDefault();
   });
 });
+
+/* ------------------------------------------------------------------------
+   Animations de la maquette : diaporamas et compteurs
+   ------------------------------------------------------------------------ */
+(function () {
+  "use strict";
+  var calme = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Diaporamas : toutes les images d'un même groupe changent ensemble toutes les 5 s
+  var groupes = {};
+  document.querySelectorAll("[data-diapo]").forEach(function (bloc) {
+    var nom = bloc.getAttribute("data-diapo") || "defaut";
+    (groupes[nom] = groupes[nom] || []).push(bloc);
+  });
+  Object.keys(groupes).forEach(function (nom) {
+    var blocs = groupes[nom];
+    var total = blocs[0].querySelectorAll("[data-diapo-image]").length;
+    if (total < 2) return;
+    var index = 0, minuteur = null;
+    var afficher = function (i) {
+      blocs.forEach(function (bloc) {
+        bloc.querySelectorAll("[data-diapo-image]").forEach(function (img, k) {
+          img.classList.toggle("active", k === i);
+        });
+      });
+    };
+    var demarrer = function () {
+      if (calme) return;
+      clearInterval(minuteur);
+      minuteur = setInterval(function () { index = (index + 1) % total; afficher(index); }, 5000);
+    };
+    afficher(0);
+    demarrer();
+    blocs.forEach(function (bloc) {
+      var zone = bloc.closest("[data-diapo-pause]") || bloc;
+      zone.addEventListener("mouseenter", function () { clearInterval(minuteur); });
+      zone.addEventListener("mouseleave", demarrer);
+    });
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) clearInterval(minuteur); else demarrer();
+    });
+  });
+
+  // Compteurs : le nombre monte de 0 à sa valeur quand il apparaît à l'écran.
+  // La valeur saisie peut contenir un suffixe (« 2 500+ », « 15 % ») : il est conservé.
+  var compteurs = document.querySelectorAll("[data-compteur]");
+  if (!compteurs.length || calme || !("IntersectionObserver" in window)) return;
+  var format = function (n) { return Math.round(n).toLocaleString("fr-FR").replace(/ | /g, " "); };
+  compteurs.forEach(function (el) {
+    var texte = el.textContent.trim();
+    var m = texte.match(/^([^\d]*)([\d\s  .,]+)(.*)$/);
+    if (!m) return;
+    var cible = parseFloat(m[2].replace(/[\s  ]/g, "").replace(",", "."));
+    if (!isFinite(cible) || cible <= 0) return;
+    var avant = m[1], apres = m[3], duree = parseInt(el.getAttribute("data-duree") || "2200", 10);
+    el.setAttribute("aria-label", texte);
+    el.textContent = avant + "0";
+    var obs = new IntersectionObserver(function (entrees) {
+      if (!entrees[0].isIntersecting) return;
+      obs.disconnect();
+      var t0 = performance.now();
+      var pas = function (t) {
+        var p = Math.min(1, (t - t0) / duree);
+        var v = 1 - Math.pow(1 - p, 3);
+        el.textContent = avant + format(cible * v) + (p >= 1 ? apres : "");
+        if (p < 1) requestAnimationFrame(pas);
+      };
+      requestAnimationFrame(pas);
+    }, { threshold: 0.5 });
+    obs.observe(el);
+  });
+})();
