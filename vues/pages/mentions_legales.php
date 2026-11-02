@@ -9,6 +9,6 @@
     <h2>Contenus et images</h2>
     <p>Les textes, logos et photos publiés sur ce site appartiennent à YouthConnekt Mali ou à leurs auteurs, et ne peuvent être réutilisés sans autorisation. Les témoignages et photos de personnes sont publiés avec leur accord.</p>
     <h2>Données personnelles</h2>
-    <p>Voir la <a href="<?= url('/confidentialite') ?>" class="font-bold text-vert underline">politique de confidentialité</a>.</p>
+    <p>Voir la <a href="<?= url('/confidentialite') ?>" class="lien-texte">politique de confidentialité</a>.</p>
   </div>
 </section>

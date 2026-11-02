@@ -1,20 +1,27 @@
 <?php
 /*
- * Bouton d'intégration selon la situation du membre.
+ * Action principale d'une communauté selon la situation du membre.
+ * On ne propose jamais « Quitter » ici : un membre voit la communauté, il ne la quitte
+ * que depuis son espace (Mes communautés) ou en bas de la page de la communauté.
  * Paramètres : $c (communauté), $statut (null, en_attente, acceptee, refusee), $style (« clair » sur fond vert)
  */
 $clair = ($style ?? '') === 'clair';
-$retour = '<input type="hidden" name="suivant" value="' . e(adresse_actuelle()) . '">';
 if (!est_connecte()): ?>
   <a href="<?= url('/compte/connexion', ['suivant' => $c['url']]) ?>" class="btn btn-orange">Demander à intégrer</a>
 <?php elseif ($statut === 'acceptee'): ?>
-  <form method="post" action="<?= url('/communaute/' . $c['slug'] . '/quitter') ?>" data-confirmer="Quitter la communauté <?= e($c['nom']) ?> ?"><?= csrf() . $retour ?>
-    <button type="submit" class="btn <?= $clair ? 'btn-blanc' : 'btn-contour' ?>">Quitter la communauté</button></form>
+  <?php if ($clair): ?>
+  <span class="inline-flex min-h-11 items-center rounded-full bg-white px-5 text-sm font-bold text-vert">Vous êtes membre</span>
+  <?php else: ?>
+  <a href="<?= e($c['url']) ?>" class="btn btn-vert">Voir la communauté</a>
+  <?php endif ?>
 <?php elseif ($statut === 'en_attente'): ?>
-  <form method="post" action="<?= url('/communaute/' . $c['slug'] . '/quitter') ?>" class="flex flex-wrap items-center gap-x-3 gap-y-2"><?= csrf() . $retour ?>
-    <span class="inline-flex items-center gap-2 rounded-full <?= $clair ? 'bg-white text-vert' : 'bg-orange/15 text-orange-fonce' ?> px-3 py-1 text-sm font-bold">En cours de traitement</span>
-    <button type="submit" class="text-sm font-bold underline underline-offset-4 <?= $clair ? 'text-white' : 'text-vert' ?>">Annuler la demande</button></form>
+  <form method="post" action="<?= url('/communaute/' . $c['slug'] . '/quitter') ?>" class="flex flex-wrap items-center gap-2"><?= csrf() ?>
+    <input type="hidden" name="suivant" value="<?= e(adresse_actuelle()) ?>">
+    <span class="inline-flex min-h-10 items-center rounded-full px-4 text-sm font-bold <?= $clair ? 'bg-white text-vert' : 'bg-orange/15 text-orange-fonce' ?>">En cours de traitement</span>
+    <button type="submit" class="btn-discret">Annuler la demande</button>
+  </form>
 <?php else: ?>
-  <form method="post" action="<?= url('/communaute/' . $c['slug'] . '/rejoindre') ?>"><?= csrf() . $retour ?>
+  <form method="post" action="<?= url('/communaute/' . $c['slug'] . '/rejoindre') ?>"><?= csrf() ?>
+    <input type="hidden" name="suivant" value="<?= e(adresse_actuelle()) ?>">
     <button type="submit" class="btn btn-orange">Demander à intégrer</button></form>
 <?php endif;

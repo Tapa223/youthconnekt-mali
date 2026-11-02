@@ -132,7 +132,7 @@ $points = [
         <div class="flex flex-1 flex-col px-2.5 pt-2.5 pb-3 sm:p-6">
           <h3 class="text-sm font-bold sm:text-2xl"><?= e($axe['nom']) ?></h3>
           <p class="mt-1 line-clamp-4 flex-1 text-xs leading-snug text-encre sm:mt-2 sm:line-clamp-none sm:text-[15px] sm:leading-relaxed"><?= e($axe['description']) ?></p>
-          <a href="<?= url('/a-propos') ?>#axes" class="mt-2.5 self-start rounded-full bg-turquoise-clair px-2.5 py-1 text-xs font-bold text-vert after:absolute after:inset-0 sm:mt-4 sm:bg-transparent sm:p-0 sm:text-sm sm:underline-offset-4 sm:hover:text-orange sm:hover:underline"><span class="sm:hidden">Lire</span><span class="hidden sm:inline">En savoir plus</span><span class="sr-only"> sur l'axe <?= e($axe['nom']) ?></span></a>
+          <a href="<?= url('/a-propos') ?>#axes" class="mt-2.5 self-start rounded-full bg-turquoise-clair px-2.5 py-1 text-xs font-bold text-vert transition-colors after:absolute after:inset-0 hover:bg-orange hover:text-white sm:mt-4 sm:border-2 sm:border-vert sm:bg-white sm:px-4 sm:py-1.5 sm:text-sm sm:hover:border-orange"><span class="sm:hidden">Lire</span><span class="hidden sm:inline">En savoir plus</span><span class="sr-only"> sur l'axe <?= e($axe['nom']) ?></span></a>
         </div>
       </li>
       <?php endforeach ?>
@@ -173,7 +173,7 @@ $points = [
       <?php endforeach ?>
     </ul>
     <?php else: ?>
-    <p class="mt-8 rounded-xl border border-dashed border-vert/30 bg-white p-5 text-sm">Aucune initiative publiée pour l'instant. Cette section est masquée aux visiteurs tant qu'elle est vide. <a href="<?= url('/gestion/initiatives/ajouter') ?>" class="font-bold text-vert underline">Ajouter une initiative</a></p>
+    <p class="mt-8 rounded-xl border border-dashed border-vert/30 bg-white p-5 text-sm">Aucune initiative publiée pour l'instant. Cette section est masquée aux visiteurs tant qu'elle est vide. <a href="<?= url('/gestion/initiatives/ajouter') ?>" class="btn-lien ml-2">Ajouter une initiative</a></p>
     <?php endif ?>
   </div>
 </section>
@@ -306,7 +306,7 @@ $points = [
       <?php endforeach ?>
     </ul>
     <?php else: ?>
-    <p class="mt-8 rounded-xl border border-dashed border-vert/30 bg-gris p-5 text-sm">Aucune opportunité ouverte pour l'instant. Cette section est masquée aux visiteurs tant qu'elle est vide. <a href="<?= url('/gestion/opportunites/ajouter') ?>" class="font-bold text-vert underline">Ajouter une opportunité</a></p>
+    <p class="mt-8 rounded-xl border border-dashed border-vert/30 bg-gris p-5 text-sm">Aucune opportunité ouverte pour l'instant. Cette section est masquée aux visiteurs tant qu'elle est vide. <a href="<?= url('/gestion/opportunites/ajouter') ?>" class="btn-lien ml-2">Ajouter une opportunité</a></p>
     <?php endif ?>
   </div>
 </section>
@@ -362,7 +362,7 @@ $points = [
       <?php endif ?>
     </div>
     <?php else: ?>
-    <p class="mt-8 rounded-xl border border-dashed border-vert/30 bg-white p-5 text-sm">Aucune actualité publiée pour l'instant. Cette section est masquée aux visiteurs tant qu'elle est vide. <a href="<?= url('/gestion/actualites/ajouter') ?>" class="font-bold text-vert underline">Ajouter une actualité</a></p>
+    <p class="mt-8 rounded-xl border border-dashed border-vert/30 bg-white p-5 text-sm">Aucune actualité publiée pour l'instant. Cette section est masquée aux visiteurs tant qu'elle est vide. <a href="<?= url('/gestion/actualites/ajouter') ?>" class="btn-lien ml-2">Ajouter une actualité</a></p>
     <?php endif ?>
   </div>
 </section>
@@ -409,7 +409,7 @@ $points = [
       </li>
       <?php endforeach; endif ?>
     </ul>
-    <?php if (!$partenaires && $admin): ?><p class="text-sm lg:col-start-2"><a href="<?= url('/gestion/partenaires/ajouter') ?>" class="font-bold text-vert underline">Ajouter les logos des partenaires</a> pour remplacer les cases de la maquette.</p><?php endif ?>
+    <?php if (!$partenaires && $admin): ?><p class="text-sm lg:col-start-2"><a href="<?= url('/gestion/partenaires/ajouter') ?>" class="btn-lien ml-2">Ajouter les logos des partenaires</a> pour remplacer les cases de la maquette.</p><?php endif ?>
   </div>
 </section>
 
@@ -433,11 +433,11 @@ $points = [
         <ul class="grid gap-2.5 text-sm text-encre sm:grid-cols-2 sm:gap-4 sm:text-[15px]">
           <li class="flex items-center gap-3">
             <span class="grid size-9 shrink-0 place-items-center rounded-full bg-gris text-vert sm:size-10" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>
-            <?php if ($p['email_contact']): ?><a href="mailto:<?= e($p['email_contact']) ?>" class="break-all hover:text-orange hover:underline"><?= e($p['email_contact']) ?></a><?php else: ?>[Adresse e-mail officielle]<?php endif ?>
+            <?php if ($p['email_contact']): ?><a href="mailto:<?= e($p['email_contact']) ?>" class="break-all hover:text-orange"><?= e($p['email_contact']) ?></a><?php else: ?>[Adresse e-mail officielle]<?php endif ?>
           </li>
           <li class="flex items-center gap-3">
             <span class="grid size-9 shrink-0 place-items-center rounded-full bg-gris text-vert sm:size-10" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></span>
-            <?php if ($p['telephone']): ?><a href="tel:<?= e(str_replace(' ', '', $p['telephone'])) ?>" class="hover:text-orange hover:underline"><?= e($p['telephone']) ?></a><?php else: ?>[Téléphone officiel]<?php endif ?>
+            <?php if ($p['telephone']): ?><a href="tel:<?= e(str_replace(' ', '', $p['telephone'])) ?>" class="hover:text-orange"><?= e($p['telephone']) ?></a><?php else: ?>[Téléphone officiel]<?php endif ?>
           </li>
           <li class="flex items-center gap-3 sm:col-span-2">
             <span class="grid size-9 shrink-0 place-items-center rounded-full bg-gris text-vert sm:size-10" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span>

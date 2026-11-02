@@ -7,7 +7,7 @@
     </div>
     <nav class="flex gap-2" aria-label="Filtrer">
       <?php foreach ($filtres as $valeur => $libelle): $actif = $filtre === $valeur; ?>
-      <a href="<?= url('/actualites', ['filtre' => $valeur]) ?>" class="survol-orange inline-flex min-h-10 items-center rounded-full border-[1.5px] border-vert px-4 text-sm font-bold transition-colors <?= $actif ? 'bg-vert text-white' : 'text-vert hover:bg-vert-clair' ?>" <?= $actif ? 'aria-current="true"' : '' ?>><?= $libelle ?></a>
+      <a href="<?= url('/actualites', ['filtre' => $valeur]) ?>" class="survol-orange inline-flex min-h-10 items-center rounded-full border-[1.5px] px-4 text-sm font-bold transition-colors <?= $actif ? 'border-orange bg-orange text-white' : 'border-vert text-vert hover:bg-vert-clair' ?>" <?= $actif ? 'aria-current="true"' : '' ?>><?= $libelle ?></a>
       <?php endforeach ?>
     </nav>
   </div>

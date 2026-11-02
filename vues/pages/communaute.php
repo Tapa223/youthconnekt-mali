@@ -7,7 +7,6 @@
   <div class="conteneur flex flex-col gap-6 pt-24 pb-10 sm:pt-32 md:flex-row md:items-end md:justify-between">
     <div>
       <?php partiel('partials/retour', ['url' => url('/communaute'), 'libelle' => 'Retour aux communautés', 'clair' => true]) ?>
-      <?php if ($statut === 'acceptee'): ?><span class="etiquette mt-3 inline-block rounded-full bg-white text-vert">Vous êtes membre</span><?php endif ?>
       <h1 class="mt-2 text-4xl leading-tight font-bold text-white sm:text-6xl"><?= e($c['nom']) ?></h1>
       <p class="mt-2 text-white/90"><?= $c['nb_membres'] ? $c['nb_membres'] . ' membre' . pluriel($c['nb_membres']) : 'Nouvelle communauté' ?></p>
     </div>
@@ -24,6 +23,12 @@
       <?php if ($activites): ?>
       <h3 class="mt-6 font-bold text-encre">Ce qu'on y fait</h3>
       <ul class="mt-3 space-y-2"><?php foreach ($activites as $act): ?><li class="flex items-start gap-3 text-[15px]"><span class="mt-2 size-2 shrink-0 rounded-full bg-orange" aria-hidden="true"></span><?= e($act) ?></li><?php endforeach ?></ul>
+      <?php endif ?>
+      <?php if ($statut === 'acceptee'): ?>
+      <form method="post" action="<?= url('/communaute/' . $c['slug'] . '/quitter') ?>" class="mt-8 border-t border-ligne pt-5" data-confirmer="Quitter la communauté <?= e($c['nom']) ?> ?"><?= csrf() ?>
+        <input type="hidden" name="suivant" value="<?= e(url('/compte/mon-espace/communautes')) ?>">
+        <button type="submit" class="btn-discret">Quitter la communauté</button>
+      </form>
       <?php endif ?>
     </div>
     <div class="space-y-5">

@@ -11,11 +11,11 @@
         <ul class="mt-8 space-y-4">
           <?php if ($p['email_contact'] || $admin): ?>
           <li class="flex items-center gap-4"><span class="grid size-11 shrink-0 place-items-center rounded-full bg-white/15" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>
-            <span><span class="block text-xs text-white/75">E-mail</span><?php if ($p['email_contact']): ?><a href="mailto:<?= e($p['email_contact']) ?>" class="font-bold break-all hover:underline"><?= e($p['email_contact']) ?></a><?php else: ?><span class="font-bold">[Adresse e-mail officielle]</span><?php endif ?></span></li>
+            <span><span class="block text-xs text-white/75">E-mail</span><?php if ($p['email_contact']): ?><a href="mailto:<?= e($p['email_contact']) ?>" class="font-bold break-all hover:text-orange"><?= e($p['email_contact']) ?></a><?php else: ?><span class="font-bold">[Adresse e-mail officielle]</span><?php endif ?></span></li>
           <?php endif ?>
           <?php if ($p['telephone'] || $admin): ?>
           <li class="flex items-center gap-4"><span class="grid size-11 shrink-0 place-items-center rounded-full bg-white/15" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></span>
-            <span><span class="block text-xs text-white/75">Téléphone</span><?php if ($p['telephone']): ?><a href="tel:<?= e(str_replace(' ', '', $p['telephone'])) ?>" class="font-bold hover:underline"><?= e($p['telephone']) ?></a><?php else: ?><span class="font-bold">[Téléphone officiel]</span><?php endif ?></span></li>
+            <span><span class="block text-xs text-white/75">Téléphone</span><?php if ($p['telephone']): ?><a href="tel:<?= e(str_replace(' ', '', $p['telephone'])) ?>" class="font-bold hover:text-orange"><?= e($p['telephone']) ?></a><?php else: ?><span class="font-bold">[Téléphone officiel]</span><?php endif ?></span></li>
           <?php endif ?>
           <?php if ($p['adresse'] || $admin): ?>
           <li class="flex items-center gap-4"><span class="grid size-11 shrink-0 place-items-center rounded-full bg-white/15" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span>
@@ -43,7 +43,7 @@
         <?php partiel('partials/champ', ['nom' => 'profil', 'libelle' => 'Vous êtes', 'type' => 'select', 'options' => PROFILS_CONTACT, 'valeur' => $valeurs['profil'], 'erreur' => $erreurs['profil'] ?? '']) ?>
         <?php partiel('partials/champ', ['nom' => 'sujet', 'libelle' => 'Sujet', 'type' => 'select', 'options' => ['' => 'Choisir un sujet'] + SUJETS_CONTACT, 'valeur' => $valeurs['sujet'], 'erreur' => $erreurs['sujet'] ?? '']) ?>
         <?php partiel('partials/champ', ['nom' => 'message', 'libelle' => 'Message', 'type' => 'textarea', 'valeur' => $valeurs['message'], 'erreur' => $erreurs['message'] ?? '', 'classes_bloc' => 'sm:col-span-2', 'attributs' => ['rows' => 6, 'placeholder' => 'Écrivez votre message…', 'maxlength' => 5000]]) ?>
-        <?php partiel('partials/case', ['nom' => 'consentement', 'libelle_html' => 'J\'accepte que mes données soient utilisées pour répondre à ma demande, conformément à la <a href="' . url('/confidentialite') . '" class="font-bold text-vert underline">politique de confidentialité</a>.', 'coche' => $valeurs['consentement'] !== '', 'erreur' => $erreurs['consentement'] ?? '', 'classes_bloc' => 'sm:col-span-2']) ?>
+        <?php partiel('partials/case', ['nom' => 'consentement', 'libelle_html' => 'J\'accepte que mes données soient utilisées pour répondre à ma demande, conformément à la <a href="' . url('/confidentialite') . '" class="lien-texte">politique de confidentialité</a>.', 'coche' => $valeurs['consentement'] !== '', 'erreur' => $erreurs['consentement'] ?? '', 'classes_bloc' => 'sm:col-span-2']) ?>
         <div class="sm:col-span-2"><button type="submit" class="btn btn-orange min-h-13 w-full px-8 text-base sm:w-auto">Envoyer le message</button></div>
       </form>
     </div>

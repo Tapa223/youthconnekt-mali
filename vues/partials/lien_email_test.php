@@ -12,5 +12,5 @@ if ($lien_test === '' || !en_developpement()) {
 <div class="fixed inset-x-4 top-20 z-50 mx-auto max-w-md rounded-xl border-2 border-dashed border-orange bg-white p-4 text-sm text-encre shadow-xl sm:left-6 sm:right-auto" role="status">
   <p class="font-bold text-vert">Test en local : e-mail non envoyé</p>
   <p class="mt-1">En ligne, ce lien arrive par e-mail. Sur WAMP, ouvrez-le directement :</p>
-  <a href="<?= e($lien_test) ?>" class="mt-2 block break-all font-bold text-orange underline"><?= e($lien_test) ?></a>
+  <a href="<?= e($lien_test) ?>" class="mt-2 block break-all font-bold text-orange"><?= e($lien_test) ?></a>
 </div>

@@ -29,7 +29,7 @@
   <?php if ($opportunites): ?>
   <ul class="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3"><?php foreach ($opportunites as $o): ?><li><?php partiel('cartes/opportunite', ['o' => $o, 'compacte' => true, 'via' => $o['via']]) ?></li><?php endforeach ?></ul>
   <?php else: ?>
-  <p class="mt-4 rounded-xl bg-gris p-4 text-sm"><?= $mes_communautes ? 'Aucune opportunité ouverte dans vos communautés pour le moment.' : 'Rejoignez une communauté pour recevoir ici les opportunités qui vous concernent.' ?> <a href="<?= url('/opportunites') ?>" class="font-bold text-vert underline">Voir toutes les opportunités</a></p>
+  <p class="mt-4 rounded-xl bg-gris p-4 text-sm"><?= $mes_communautes ? 'Aucune opportunité ouverte dans vos communautés pour le moment.' : 'Rejoignez une communauté pour recevoir ici les opportunités qui vous concernent.' ?> <a href="<?= url('/opportunites') ?>" class="btn-lien mt-3 sm:mt-0 sm:ml-2">Voir toutes les opportunités</a></p>
   <?php endif ?>
 </section>
 
@@ -61,7 +61,7 @@
     <ul class="mt-2 space-y-2">
       <?php foreach ($suggestions as $c): ?>
       <li class="flex items-center gap-3 rounded-xl bg-gris p-3">
-        <span class="min-w-0 flex-1"><a href="<?= e($c['url']) ?>" class="block font-bold text-vert hover:underline"><?= e($c['nom']) ?></a><span class="text-xs"><?= $c['nb_membres'] ? $c['nb_membres'] . ' membre' . pluriel($c['nb_membres']) : 'Soyez parmi les premiers' ?></span></span>
+        <span class="min-w-0 flex-1"><a href="<?= e($c['url']) ?>" class="block font-bold text-vert hover:text-orange"><?= e($c['nom']) ?></a><span class="text-xs"><?= $c['nb_membres'] ? $c['nb_membres'] . ' membre' . pluriel($c['nb_membres']) : 'Soyez parmi les premiers' ?></span></span>
         <form method="post" action="<?= url('/communaute/' . $c['slug'] . '/rejoindre') ?>"><?= csrf() ?><input type="hidden" name="suivant" value="<?= e(adresse_actuelle()) ?>"><button type="submit" class="btn btn-contour min-h-9 rounded-full px-4 text-sm">Demander à intégrer</button></form>
       </li>
       <?php endforeach ?>

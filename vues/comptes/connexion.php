@@ -9,12 +9,12 @@
   <?php partiel('partials/champ', ['nom' => 'mot_de_passe', 'libelle' => 'Mot de passe', 'mdp' => true, 'attributs' => ['autocomplete' => 'current-password']]) ?>
   <div class="flex items-center justify-between gap-3">
     <label class="flex items-center gap-2 text-sm text-encre"><input type="checkbox" name="se_souvenir" value="1" class="size-5 rounded accent-vert"> Se souvenir de moi</label>
-    <a href="<?= url('/compte/mot-de-passe-oublie') ?>" class="text-sm font-bold text-vert underline underline-offset-4">Mot de passe oublié ?</a>
+    <a href="<?= url('/compte/mot-de-passe-oublie') ?>" class="btn-discret">Mot de passe oublié ?</a>
   </div>
   <button type="submit" class="btn btn-vert min-h-13 w-full text-base">Se connecter</button>
 </form>
 <?php if ($non_confirme): ?>
-<form method="post" action="<?= url('/compte/inscription/renvoyer') ?>" class="mt-3 text-center"><?= csrf() ?><button type="submit" class="text-sm font-bold text-vert underline underline-offset-4">Renvoyer l'e-mail de confirmation</button></form>
+<form method="post" action="<?= url('/compte/inscription/renvoyer') ?>" class="mt-3 text-center"><?= csrf() ?><button type="submit" class="btn-lien">Renvoyer l'e-mail de confirmation</button></form>
 <?php endif ?>
 <div class="my-6 flex items-center gap-3 text-sm"><span class="h-px flex-1 bg-ligne"></span>Pas encore membre ?<span class="h-px flex-1 bg-ligne"></span></div>
 <a href="<?= url('/compte/inscription') ?>" class="btn btn-contour min-h-13 w-full text-base">Rejoindre le chapitre</a>

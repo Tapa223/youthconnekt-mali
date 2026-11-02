@@ -16,7 +16,7 @@
     <?php else: ?>
       <p class="text-xs text-texte"><time datetime="<?= e(date_iso($a['date_affichee'])) ?>"><?= e(date_courte($a['date_affichee'])) ?></time></p>
     <?php endif ?>
-    <h3 class="mt-1.5 text-base leading-snug font-bold sm:text-lg <?= $mode === 'lire' ? 'text-encre' : 'text-vert' ?> group-hover:underline"><?= e($a['titre']) ?></h3>
+    <h3 class="mt-1.5 text-base leading-snug font-bold sm:text-lg <?= $mode === 'lire' ? 'text-encre' : 'text-vert' ?> group-hover:text-orange"><?= e($a['titre']) ?></h3>
     <?php if ($mode === 'actualite'): ?><p class="mt-2 line-clamp-2 text-sm"><?= e($a['chapeau']) ?></p><?php endif ?>
   </div>
 </a>

@@ -8,4 +8,4 @@
     <button type="submit" class="btn btn-contour">Renvoyer l'e-mail</button>
   </form>
 </div>
-<p class="mt-5 text-center text-sm">Mauvaise adresse ? <a href="<?= url('/contact', ['sujet' => 'compte']) ?>" class="font-bold text-vert underline underline-offset-4">Contactez-nous</a></p>
+<p class="mt-5 text-center text-sm">Mauvaise adresse ? <a href="<?= url('/contact', ['sujet' => 'compte']) ?>" class="btn-lien ml-1">Contactez-nous</a></p>

@@ -9,7 +9,7 @@
     <?php foreach ($demandes as $d): ?>
     <li class="flex flex-wrap items-center gap-4 rounded-xl border border-ligne p-4">
       <div class="min-w-0 flex-1">
-        <a href="<?= url('/communaute/' . $d['communaute_slug']) ?>" class="text-lg font-bold text-vert hover:underline"><?= e($d['communaute_nom']) ?></a>
+        <a href="<?= url('/communaute/' . $d['communaute_slug']) ?>" class="text-lg font-bold text-vert hover:text-orange"><?= e($d['communaute_nom']) ?></a>
         <p class="text-xs">Demande du <?= e(date_longue($d['demandee_le'])) ?></p>
       </div>
       <?php if ($d['statut'] === 'acceptee'): ?><span class="rounded-full bg-vert-clair px-3 py-1 text-xs font-bold text-vert">Membre</span>
@@ -17,7 +17,7 @@
       <?php else: ?><span class="rounded-full bg-rouge/10 px-3 py-1 text-xs font-bold text-rouge">Non retenue</span><?php endif ?>
       <?php if ($d['statut'] !== 'refusee'): ?>
       <form method="post" action="<?= url('/communaute/' . $d['communaute_slug'] . '/quitter') ?>" <?= $d['statut'] === 'acceptee' ? 'data-confirmer="Quitter la communauté ' . e($d['communaute_nom']) . ' ?"' : '' ?>><?= csrf() ?><input type="hidden" name="suivant" value="<?= e(adresse_actuelle()) ?>">
-        <button type="submit" class="text-sm font-bold text-vert underline underline-offset-4"><?= $d['statut'] === 'acceptee' ? 'Quitter' : 'Annuler la demande' ?></button></form>
+        <button type="submit" class="btn-discret"><?= $d['statut'] === 'acceptee' ? 'Quitter' : 'Annuler la demande' ?></button></form>
       <?php endif ?>
     </li>
     <?php endforeach ?>

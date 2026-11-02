@@ -101,7 +101,7 @@
   }
 
   .lien-fleche {
-    @apply inline-flex items-center gap-1.5 text-sm font-bold text-vert underline-offset-4 hover:underline;
+    @apply inline-flex min-h-10 items-center gap-1.5 rounded-full border-2 border-vert bg-white px-4 text-sm font-bold text-vert transition-colors hover:border-orange hover:bg-orange hover:text-white;
   }
 
   /* Bloc de remplacement quand une photo n'a pas encore été fournie */
@@ -137,9 +137,13 @@
   .lien-espace {
     @apply flex min-h-11 shrink-0 items-center rounded-full border border-ligne bg-white px-4 text-sm font-medium whitespace-nowrap text-encre hover:bg-gris lg:w-full lg:rounded-lg lg:border-0 lg:border-l-[3px] lg:border-transparent lg:px-3;
   }
-  .lien-espace.actif { @apply border-vert bg-vert font-bold text-white lg:border-orange lg:bg-gris lg:text-vert; }
+  .lien-espace.actif { @apply border-orange bg-orange font-bold text-white lg:border-orange lg:bg-orange lg:text-white; }
   .bloc { @apply rounded-2xl bg-white p-5 sm:p-6; }
-  .lien-pied { @apply inline-flex min-h-9 items-center text-white/85 underline-offset-4 transition-colors hover:text-orange hover:underline; }
+  .lien-pied { @apply inline-flex min-h-9 items-center text-white/85 transition-colors hover:text-orange; }
+  /* Liens d'action : de petits boutons, jamais de soulignement */
+  .btn-lien { @apply inline-flex min-h-10 shrink-0 items-center justify-center rounded-full border-2 border-vert bg-white px-4 text-sm font-bold whitespace-nowrap text-vert transition-colors hover:border-orange hover:bg-orange hover:text-white; }
+  .btn-discret { @apply inline-flex min-h-9 shrink-0 items-center justify-center rounded-full bg-gris px-3.5 text-[13px] font-bold whitespace-nowrap text-texte transition-colors hover:bg-orange hover:text-white; }
+  .lien-texte { @apply font-bold text-orange transition-colors hover:text-vert; }
   .erreur { @apply mt-1.5 text-sm font-medium text-rouge; }
   .aide { @apply mt-1.5 text-xs text-texte; }
 }

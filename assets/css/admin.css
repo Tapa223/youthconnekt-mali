@@ -613,3 +613,36 @@ input[type=file]::file-selector-button {
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
 }
+
+/* =====================================================================
+   Liens d'action en boutons (aucun soulignement) et états sélectionnés en orange
+   ===================================================================== */
+.ycm-ariane a { text-decoration: none; }
+.ycm-ariane a:hover { color: var(--ycm-orange); }
+
+.ycm-lien, .ycm-actions-ligne a, td.ycm-actions-ligne a, .ycm-carte-pied a, .ycm-bouton-lien, .ycm-recherche-active a {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 34px; padding: 0 14px;
+  border: 1.5px solid var(--ycm-vert); border-radius: 999px; background: #fff;
+  color: var(--ycm-vert); font-size: 13px; font-weight: 700; white-space: nowrap;
+  text-decoration: none !important; cursor: pointer;
+  transition: background-color .15s, color .15s, border-color .15s;
+}
+.ycm-lien:hover, .ycm-actions-ligne a:hover, td.ycm-actions-ligne a:hover, .ycm-carte-pied a:hover, .ycm-bouton-lien:hover, .ycm-recherche-active a:hover {
+  background: var(--ycm-orange); border-color: var(--ycm-orange); color: #fff;
+}
+.ycm-actions-ligne { gap: 8px; }
+.ycm-carte-pied { gap: 8px; flex-wrap: wrap; }
+.ycm-liste-simple li a { display: inline-block; padding: 4px 0; font-weight: 700; color: var(--ycm-encre); }
+.ycm-liste-simple li a:hover { color: var(--ycm-orange); }
+.ycm-lecture-meta a { text-decoration: none; font-weight: 700; }
+.ycm-vide .ycm-lien { margin-left: 6px; }
+
+.ycm-onglets a.actif, .ycm-onglets a.actif:hover { background: var(--ycm-orange); border-color: var(--ycm-orange); color: #fff; }
+.ycm-menu a.actif { background: var(--ycm-orange); border-left-color: #fff; }
+.ycm-menu a.actif .ycm-pastille { background: #fff; color: var(--ycm-orange); }
+.ycm-paginateur .actuelle { background: var(--ycm-orange); }
+.ycm-liste-messages a.ouvert { background: var(--ycm-orange-clair); }
+.ycm-tableau tbody tr:has(input:checked) td { background: var(--ycm-orange-clair); }
+.ycm-cases label:has(input:checked) { border-color: var(--ycm-orange); background: var(--ycm-orange-clair); }
+.ycm-cases input, .ycm-case-ligne input, .ycm-tableau input[type=checkbox] { accent-color: var(--ycm-orange); }

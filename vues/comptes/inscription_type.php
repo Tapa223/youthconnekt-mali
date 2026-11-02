@@ -28,4 +28,4 @@
   </article>
   <?php endforeach ?>
 </div>
-<p class="mt-6 text-center text-sm">Déjà membre ? <a href="<?= url('/compte/connexion') ?>" class="font-bold text-vert underline underline-offset-4">Se connecter</a></p>
+<p class="mt-6 flex items-center justify-center gap-3 text-sm">Déjà membre ? <a href="<?= url('/compte/connexion') ?>" class="btn-lien">Se connecter</a></p>

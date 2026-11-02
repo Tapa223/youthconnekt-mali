@@ -17,9 +17,9 @@
     </form>
 
     <nav class="masquer-defilement -mx-4 mt-5 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0" aria-label="Filtrer par type">
-      <a href="<?= url('/opportunites', ['q' => $recherche]) ?>" class="survol-orange inline-flex min-h-10 shrink-0 items-center rounded-full border-2 border-white px-4 text-sm font-bold transition-colors <?= !$type_actif ? 'bg-vert text-white' : 'bg-white text-vert' ?>">Toutes</a>
+      <a href="<?= url('/opportunites', ['q' => $recherche]) ?>" class="survol-orange inline-flex min-h-10 shrink-0 items-center rounded-full border-2 px-4 text-sm font-bold transition-colors <?= !$type_actif ? 'border-orange bg-orange text-white' : 'border-white bg-white text-vert hover:bg-vert-clair' ?>">Toutes</a>
       <?php foreach (TYPES_OPPORTUNITE as $valeur => $libelle): $actif = $type_actif === $valeur; ?>
-      <a href="<?= url('/opportunites', ['type' => $valeur, 'q' => $recherche]) ?>" class="survol-orange inline-flex min-h-10 shrink-0 items-center rounded-full border-2 border-white px-4 text-sm font-bold transition-colors <?= $actif ? 'bg-vert text-white' : 'bg-white text-vert hover:bg-vert-clair' ?>" <?= $actif ? 'aria-current="true"' : '' ?>><?= e($libelle) ?></a>
+      <a href="<?= url('/opportunites', ['type' => $valeur, 'q' => $recherche]) ?>" class="survol-orange inline-flex min-h-10 shrink-0 items-center rounded-full border-2 px-4 text-sm font-bold transition-colors <?= $actif ? 'border-orange bg-orange text-white' : 'border-white bg-white text-vert hover:bg-vert-clair' ?>" <?= $actif ? 'aria-current="true"' : '' ?>><?= e($libelle) ?></a>
       <?php endforeach ?>
     </nav>
   </div>

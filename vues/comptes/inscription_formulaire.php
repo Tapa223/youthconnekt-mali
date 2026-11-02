@@ -29,9 +29,9 @@ partiel('comptes/etapes', ['etape' => $etape]);
   <?php endif ?>
   <?php partiel('partials/champ', ['nom' => 'password1', 'libelle' => 'Mot de passe', 'mdp' => true, 'erreur' => $erreurs['password1'] ?? '', 'aide' => '8 caractères au minimum, pas uniquement des chiffres.', 'attributs' => ['autocomplete' => 'new-password']]) ?>
   <?php partiel('partials/champ', ['nom' => 'password2', 'libelle' => 'Confirmer le mot de passe', 'type' => 'password', 'erreur' => $erreurs['password2'] ?? '', 'attributs' => ['autocomplete' => 'new-password']]) ?>
-  <?php partiel('partials/case', ['nom' => 'conditions', 'libelle_html' => 'J\'accepte la <a href="' . url('/confidentialite') . '" target="_blank" class="font-bold text-vert underline">politique de confidentialité</a> et les conditions d\'utilisation de la plateforme.', 'coche' => $valeurs['conditions'] !== '', 'erreur' => $erreurs['conditions'] ?? '', 'classes_bloc' => 'sm:col-span-2']) ?>
+  <?php partiel('partials/case', ['nom' => 'conditions', 'libelle_html' => 'J\'accepte la <a href="' . url('/confidentialite') . '" target="_blank" class="lien-texte">politique de confidentialité</a> et les conditions d\'utilisation de la plateforme.', 'coche' => $valeurs['conditions'] !== '', 'erreur' => $erreurs['conditions'] ?? '', 'classes_bloc' => 'sm:col-span-2']) ?>
   <?php partiel('partials/case', ['nom' => 'newsletter', 'libelle' => 'Je souhaite recevoir les opportunités et actualités par e-mail.', 'coche' => $valeurs['newsletter'] !== '', 'classes_bloc' => 'sm:col-span-2']) ?>
   <p class="rounded-xl bg-vert-clair px-4 py-3 text-sm font-medium text-vert sm:col-span-2">En créant votre compte, vous rejoignez le chapitre YouthConnekt Mali.</p>
   <div class="sm:col-span-2"><button type="submit" class="btn btn-orange min-h-13 w-full text-base">Créer mon compte</button></div>
 </form>
-<p class="mt-5 text-center text-sm">Déjà membre ? <a href="<?= url('/compte/connexion') ?>" class="font-bold text-vert underline underline-offset-4">Se connecter</a></p>
+<p class="mt-6 flex items-center justify-center gap-3 text-sm">Déjà membre ? <a href="<?= url('/compte/connexion') ?>" class="btn-lien">Se connecter</a></p>

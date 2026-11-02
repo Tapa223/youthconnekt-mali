@@ -98,3 +98,39 @@
     });
   });
 })();
+
+/* Garder la position dans la page : après un filtre, un onglet, un enregistrement ou un bouton
+   qui ramène sur la même page, on revient exactement là où l'on était au lieu de remonter en haut. */
+(function () {
+  "use strict";
+  var CLE = "ycm-defilement";
+  function memoriser() {
+    try { sessionStorage.setItem(CLE, JSON.stringify({ p: location.pathname, y: window.scrollY, t: Date.now() })); } catch (e) {}
+  }
+  window.ycmMemoriserDefilement = memoriser;
+  try {
+    var d = JSON.parse(sessionStorage.getItem(CLE) || "null");
+    sessionStorage.removeItem(CLE);
+    if (d && d.p === location.pathname && Date.now() - d.t < 20000 && !location.hash) {
+      if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+      var revenir = function () { window.scrollTo(0, d.y); };
+      revenir();
+      document.addEventListener("DOMContentLoaded", revenir);
+      window.addEventListener("load", revenir);
+    }
+  } catch (e) {}
+  document.addEventListener("click", function (e) {
+    var lien = e.target.closest && e.target.closest("a[href]");
+    if (!lien || lien.target === "_blank" || lien.hasAttribute("download")) return;
+    try {
+      var cible = new URL(lien.href, location.href);
+      if (cible.origin === location.origin && cible.pathname === location.pathname && !cible.hash) memoriser();
+    } catch (err) {}
+  });
+  document.addEventListener("submit", function (e) {
+    if (!e.defaultPrevented) memoriser();
+  });
+  document.addEventListener("change", function (e) {
+    if (e.target.matches && e.target.matches("select[data-filtre]")) memoriser();
+  }, true);
+})();

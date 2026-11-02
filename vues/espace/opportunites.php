@@ -5,9 +5,9 @@
   <?php if ($opportunites): ?>
   <ul class="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3"><?php foreach ($opportunites as $o): ?><li><?php partiel('cartes/opportunite', ['o' => $o, 'compacte' => true, 'via' => $o['via']]) ?></li><?php endforeach ?></ul>
   <?php elseif ($a_des_communautes): ?>
-  <p class="mt-5 rounded-xl bg-gris p-5">Aucune opportunité ouverte dans vos communautés pour le moment. <a href="<?= url('/opportunites') ?>" class="font-bold text-vert underline">Voir toutes les opportunités</a></p>
+  <p class="mt-5 rounded-xl bg-gris p-5">Aucune opportunité ouverte dans vos communautés pour le moment. <a href="<?= url('/opportunites') ?>" class="btn-lien mt-3 sm:mt-0 sm:ml-2">Voir toutes les opportunités</a></p>
   <?php else: ?>
-  <p class="mt-5 rounded-xl bg-gris p-5">Rejoignez une communauté pour voir ici les opportunités qui vous concernent. <a href="<?= url('/communaute') ?>" class="font-bold text-vert underline">Découvrir les communautés</a></p>
+  <p class="mt-5 rounded-xl bg-gris p-5">Rejoignez une communauté pour voir ici les opportunités qui vous concernent. <a href="<?= url('/communaute') ?>" class="btn-lien mt-3 sm:mt-0 sm:ml-2">Découvrir les communautés</a></p>
   <?php endif ?>
 </section>
 <?php $espace = ob_get_clean(); partiel('espace/base', get_defined_vars());
