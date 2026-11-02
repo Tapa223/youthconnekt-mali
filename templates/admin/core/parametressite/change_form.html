@@ -1,0 +1,21 @@
+{% extends "admin/change_form.html" %}
+{% comment %} Paramètres : coordonnées, réseaux, puis la liste des comptes d'administration (maquette) {% endcomment %}
+{% block after_field_sets_ycm %}
+{% if equipe_admin %}
+<section class="ycm-boite ycm-boite--pad" aria-labelledby="titre-equipe">
+  <div class="ycm-boite-tete ycm-boite-tete--nu">
+    <h2 id="titre-equipe">Comptes administrateurs</h2>
+    {% if peut_ajouter_admin %}<a href="{% url 'admin:comptes_utilisateur_add' %}" class="ycm-bouton-contour">Ajouter un administrateur</a>{% endif %}
+  </div>
+  <ul class="ycm-liste-admins">
+    {% for a in equipe_admin %}
+    <li>
+      <span class="ycm-personne"><span class="ycm-avatar ycm-avatar--{{ a.couleur }}" aria-hidden="true">{{ a.initiales }}</span><span><strong>{{ a.nom }}</strong><small>{{ a.role }}</small></span></span>
+      <a href="{{ a.url }}" class="ycm-lien">Modifier</a>
+    </li>
+    {% endfor %}
+  </ul>
+  <p class="ycm-note" style="margin-top:12px">Pour donner un rôle (Éditeur de contenus, Modération des communautés, Gestion des membres), ouvrez le compte et choisissez le groupe.</p>
+</section>
+{% endif %}
+{% endblock %}

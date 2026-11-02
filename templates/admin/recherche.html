@@ -1,0 +1,17 @@
+{% extends "admin/base_site.html" %}
+{% block breadcrumbs %}<ol class="breadcrumbs"><li><a href="{% url 'admin:index' %}">Tableau de bord</a></li><li aria-current="page">Recherche</li></ol>{% endblock %}
+{% block content_title %}
+<div class="ycm-entete-page"><div><h1>Recherche</h1>
+<p class="ycm-sous-titre">{% if q %}Résultats pour « {{ q }} »{% else %}Tapez au moins deux lettres dans la barre de recherche.{% endif %}</p></div></div>
+{% endblock %}
+{% block content %}
+{% if q and not groupes %}<div class="ycm-boite ycm-boite--pad"><p class="ycm-vide">Aucun résultat.</p></div>{% endif %}
+<div class="ycm-resultats">
+{% for g in groupes %}
+  <section class="ycm-boite ycm-boite--pad">
+    <div class="ycm-boite-tete ycm-boite-tete--nu"><h2>{{ g.titre }}</h2><a class="ycm-lien" href="{{ g.tout }}">Tout voir</a></div>
+    <ul class="ycm-liste-simple">{% for e in g.elements %}<li><a href="{{ e.url }}">{{ e.texte }}</a></li>{% endfor %}</ul>
+  </section>
+{% endfor %}
+</div>
+{% endblock %}

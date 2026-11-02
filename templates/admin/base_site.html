@@ -1,5 +1,9 @@
 {% extends "admin/base.html" %}
 {% load static %}
+{% comment %}
+  Habillage de toute l'administration, d'après la maquette validée :
+  menu latéral vert (admin/nav_sidebar.html) et barre du haut ci-dessous.
+{% endcomment %}
 
 {% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | Administration YouthConnekt Mali{% endblock %}
 
@@ -11,12 +15,62 @@
 <link rel="stylesheet" href="{% static 'css/admin.css' %}">
 {% endblock %}
 
-{% block branding %}
-<a href="{% url 'admin:index' %}" class="ycm-logo" aria-label="Tableau de bord de l'administration"><img src="{% static 'img/logo-youthconnekt-mali.png' %}" alt="YouthConnekt Mali" width="652" height="293"></a>
-<div id="site-name"><a href="{% url 'admin:index' %}">Administration</a></div>
-{% if user.is_anonymous %}
-  {% include "admin/color_theme_toggle.html" %}
-{% endif %}
+{% block extrahead %}
+{{ block.super }}
+<script src="{% static 'js/admin.js' %}" defer></script>
 {% endblock %}
 
-{% block nav-global %}{% endblock %}
+{% block bodyclass %}{{ block.super }}{% if menu_admin %} ycm-avec-menu{% endif %}{% endblock %}
+
+{% block header %}
+<header id="header" class="ycm-barre">
+  {% if menu_admin %}
+  <button type="button" class="ycm-burger" data-ouvrir-menu-admin aria-controls="nav-sidebar" aria-expanded="false">
+    <span class="visually-hidden">Ouvrir le menu</span>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  </button>
+  {% else %}
+  <a href="{% url 'admin:index' %}" class="ycm-logo-seul"><img src="{% static 'img/logo-youthconnekt-mali.png' %}" alt="YouthConnekt Mali" width="652" height="293"><span>Admin</span></a>
+  {% endif %}
+
+  <nav class="ycm-ariane" aria-label="Fil d'Ariane">
+    {% block breadcrumbs %}
+      <ol class="breadcrumbs">
+        <li><a href="{% url 'admin:index' %}">Tableau de bord</a></li>
+        {% if title %}<li aria-current="page">{{ title }}</li>{% endif %}
+      </ol>
+    {% endblock %}
+  </nav>
+
+  {% if menu_admin %}
+  <div class="ycm-outils">
+    {% if cl and cl.search_fields %}
+      <form class="ycm-recherche" method="get" action="" role="search">
+        <label for="ycm-q" class="visually-hidden">Rechercher dans cette liste</label>
+        <input id="ycm-q" type="search" name="q" value="{{ cl.query }}" placeholder="Rechercher…">
+        {% for k, v in cl.params.items %}{% if k != "q" and k != "p" %}<input type="hidden" name="{{ k }}" value="{{ v }}">{% endif %}{% endfor %}
+      </form>
+    {% else %}
+      <form class="ycm-recherche" method="get" action="{{ url_recherche }}" role="search">
+        <label for="ycm-q" class="visually-hidden">Rechercher dans l'administration</label>
+        <input id="ycm-q" type="search" name="q" value="{{ q|default:'' }}" placeholder="Rechercher…">
+      </form>
+    {% endif %}
+    <a href="{{ site_url|default:'/' }}" class="ycm-bouton-contour ycm-voir-site" target="_blank" rel="noopener">Voir le site</a>
+    <details class="ycm-compte">
+      <summary>
+        <span class="ycm-avatar ycm-avatar--orange" aria-hidden="true">{{ admin_initiales }}</span>
+        <span class="ycm-compte-texte"><strong>{{ admin_nom }}</strong><small>{{ admin_role }}</small></span>
+      </summary>
+      <div class="ycm-compte-menu">
+        {% if user.has_usable_password %}<a href="{% url 'admin:password_change' %}">Changer mon mot de passe</a>{% endif %}
+        <form method="post" action="{% url 'admin:logout' %}">{% csrf_token %}<button type="submit">Se déconnecter</button></form>
+        {% include "admin/color_theme_toggle.html" %}
+      </div>
+    </details>
+  </div>
+  {% endif %}
+</header>
+{% endblock %}
+
+{% block nav-breadcrumbs %}{% endblock %}

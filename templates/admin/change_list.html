@@ -1,0 +1,44 @@
+{% extends "admin/change_list.html" %}
+{% load ycm_admin admin_urls %}
+{% comment %} Liste à l'allure de la maquette : titre, onglets, filtres, export, tableau en carte {% endcomment %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumbs"><li><a href="{% url 'admin:index' %}">Tableau de bord</a></li><li aria-current="page">{{ ycm_titre|default:cl.opts.verbose_name_plural|capfirst }}</li></ol>
+{% endblock %}
+
+{% block content_title %}
+<div class="ycm-entete-page">
+  <div>
+    <h1>{{ ycm_titre|default:cl.opts.verbose_name_plural|capfirst }}</h1>
+    {% if ycm_description %}<p class="ycm-sous-titre">{{ ycm_description }}</p>{% endif %}
+  </div>
+  {% if has_add_permission %}{% url cl.opts|admin_urlname:'add' as add_url %}<a href="{% add_preserved_filters add_url is_popup to_field %}" class="ycm-bouton-orange">{{ ycm_libelle_ajout }}</a>{% endif %}
+</div>
+{% endblock %}
+
+{% block object-tools %}{% endblock %}
+{% block filters %}{% endblock %}
+{% block date_hierarchy %}{% endblock %}
+
+{% block search %}
+{% ycm_filtres cl as filtres %}
+{% if ycm_onglets or filtres or ycm_export_url %}
+<div class="ycm-barre-liste">
+  {% if ycm_onglets %}
+  <nav class="ycm-onglets" aria-label="Filtrer la liste">
+    {% for o in ycm_onglets %}<a href="{{ o.url }}"{% if o.actif %} class="actif" aria-current="true"{% endif %}>{{ o.libelle }} <span>({{ o.nombre }})</span></a>{% endfor %}
+  </nav>
+  {% endif %}
+  <div class="ycm-filtres-droite">
+    {% for f in filtres %}
+      <label class="visually-hidden" for="filtre-{{ forloop.counter }}">{{ f.titre }}</label>
+      <select id="filtre-{{ forloop.counter }}" data-filtre>
+        {% for o in f.options %}<option value="{{ o.url }}"{% if o.choisi %} selected{% endif %}>{{ o.libelle }}</option>{% endfor %}
+      </select>
+    {% endfor %}
+    {% if ycm_export_url %}<a href="{{ ycm_export_url }}" class="ycm-bouton-blanc">Exporter en CSV</a>{% endif %}
+  </div>
+</div>
+{% endif %}
+{% if cl.query %}<p class="ycm-recherche-active">Recherche : « {{ cl.query }} » <a href="?">Effacer</a></p>{% endif %}
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "admin/change_form.html" %}
+{% load admin_modify admin_urls %}
+{% comment %}
+  Formulaire à l'allure de la maquette : chaque groupe de champs dans une carte,
+  et à droite un panneau (groupes marqués « cote » : publication, photo…)
+  avec les boutons d'enregistrement.
+{% endcomment %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumbs">
+  <li><a href="{% url 'admin:index' %}">Tableau de bord</a></li>
+  {% if ycm_fiche_unique %}
+  <li aria-current="page">{{ ycm_titre_liste }}</li>
+  {% else %}
+  {% if has_view_permission %}<li><a href="{{ ycm_url_liste|default:'#' }}">{{ ycm_titre_liste|default:opts.verbose_name_plural|capfirst }}</a></li>{% endif %}
+  <li aria-current="page">{% if add %}Ajouter{% else %}{{ original|truncatewords:"8" }}{% endif %}</li>
+  {% endif %}
+</ol>
+{% endblock %}
+
+{% block content_title %}
+<div class="ycm-entete-page">
+  <div>
+    <h1>{% if ycm_fiche_unique %}{{ ycm_titre_liste }}{% elif add %}{{ ycm_titre_formulaire|default:title }}{% else %}{{ original|truncatewords:"12" }}{% endif %}</h1>
+    {% if ycm_description %}<p class="ycm-sous-titre">{{ ycm_description }}</p>{% endif %}
+  </div>
+  <p class="ycm-note">Les champs marqués d'un astérisque sont obligatoires.</p>
+</div>
+{% endblock %}
+
+{% block content_subtitle %}{% endblock %}
+
+{% block object-tools %}
+{% if change and not is_popup and not ycm_fiche_unique %}
+<ul class="object-tools ycm-outils-objet">
+  {% block object-tools-items %}{{ block.super }}{% endblock %}
+</ul>
+{% endif %}
+{% endblock %}
+
+{% block field_sets %}
+<div class="ycm-form-grille">
+  <div class="ycm-form-principal">
+    {% for fieldset in adminform %}
+      {% if "cote" not in fieldset.classes %}
+        {% include "admin/includes/fieldset.html" with heading_level=2 prefix="fieldset" id_prefix=0 id_suffix=forloop.counter0 %}
+      {% endif %}
+    {% endfor %}
+    {% block after_field_sets_ycm %}{% endblock %}
+    {% for inline_admin_formset in inline_admin_formsets %}
+      {% include inline_admin_formset.opts.template %}
+    {% endfor %}
+  </div>
+  <aside class="ycm-form-cote">
+    {% for fieldset in adminform %}
+      {% if "cote" in fieldset.classes %}
+        {% include "admin/includes/fieldset.html" with heading_level=2 prefix="fieldset" id_prefix=0 id_suffix=forloop.counter0 %}
+      {% endif %}
+    {% endfor %}
+    <div class="ycm-panneau-boutons">{% submit_row %}</div>
+    {% block ycm_aide_cote %}{% if adminform.model_admin.aide_cote %}<p class="ycm-encadre-info">{{ adminform.model_admin.aide_cote }}</p>{% endif %}{% endblock %}
+  </aside>
+</div>
+{% endblock %}
+
+{% block inline_field_sets %}{% endblock %}
+{% block submit_buttons_bottom %}{% endblock %}

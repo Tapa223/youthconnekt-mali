@@ -1,0 +1,12 @@
+{% extends "admin/change_form.html" %}
+{% comment %} Demande d'intégration : boutons « Accepter » et « Refuser » dans le panneau de droite {% endcomment %}
+{% block ycm_aide_cote %}
+{% if original.statut == "en_attente" and has_change_permission %}
+<div class="ycm-panneau-boutons">
+  <div class="submit-row">
+    <input type="submit" name="_accepter" value="Accepter la demande" class="default">
+    <input type="submit" name="_refuser" value="Refuser la demande" class="ycm-refuser">
+  </div>
+</div>
+{% endif %}
+{% endblock %}

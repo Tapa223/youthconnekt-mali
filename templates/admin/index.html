@@ -1,67 +1,109 @@
-{% extends "admin/index.html" %}
-{% comment %}
-  Tableau de bord de l'administration YouthConnekt Mali.
-  On reprend la page d'accueil de Django et on ajoute, au-dessus du menu :
-  les raccourcis, ce qu'il reste à traiter et les chiffres du site.
-{% endcomment %}
+{% extends "admin/base_site.html" %}
+{% comment %} Tableau de bord, d'après la maquette « Administration — Tableau de bord » {% endcomment %}
 
+{% block bodyclass %}{{ block.super }} dashboard ycm-tdb-page{% endblock %}
 {% block coltype %}colM{% endblock %}
-{% block sidebar %}{% endblock %}
+{% block nav-sidebar %}{% include "admin/nav_sidebar.html" %}{% endblock %}
+{% block breadcrumbs %}<ol class="breadcrumbs"><li aria-current="page">Tableau de bord</li></ol>{% endblock %}
 
-{% block content_title %}<h1>Bonjour{% if user.first_name %} {{ user.first_name }}{% endif %}, voici l'essentiel du jour.</h1>{% endblock %}
+{% block content_title %}
+<div class="ycm-entete-page">
+  <div>
+    <h1>Bonjour{% if prenom_admin %}, {{ prenom_admin }}{% endif %}.</h1>
+    <p class="ycm-sous-titre">Voici ce qui se passe sur YouthConnekt Mali aujourd'hui.</p>
+  </div>
+  {% if action_principale %}<a href="{{ action_principale.url }}" class="ycm-bouton-orange">{{ action_principale.libelle }}</a>{% endif %}
+</div>
+{% endblock %}
 
 {% block content %}
-<div class="ycm-tdb">
+{% if cartes_tdb %}
+<section class="ycm-cartes-chiffres" aria-label="Le site en chiffres">
+  {% for c in cartes_tdb %}
+  <a class="ycm-carte-chiffre" href="{{ c.url }}">
+    <span class="ycm-carte-chiffre-tete">{{ c.libelle }}<span class="ycm-icone-ronde ycm-fond-{{ c.couleur }}" aria-hidden="true"><svg viewBox="0 0 24 24">{{ c.icone|safe }}</svg></span></span>
+    <strong>{{ c.valeur }}</strong>
+    <small>{{ c.detail }}</small>
+  </a>
+  {% endfor %}
+</section>
+{% endif %}
 
-  {% if raccourcis %}
-  <section aria-labelledby="tdb-raccourcis">
-    <h2 class="ycm-titre" id="tdb-raccourcis">Publier</h2>
-    <div class="ycm-raccourcis">
-      {% for r in raccourcis %}<a href="{{ r.lien }}"{% if not forloop.first %} class="ycm-secondaire"{% endif %}>{{ r.libelle }}</a>{% endfor %}
-    </div>
-  </section>
-  {% endif %}
+<div class="ycm-tdb-grille">
+  <div class="ycm-tdb-principal">
+    {% if url_membres %}
+    <section class="ycm-boite" aria-labelledby="tdb-inscriptions">
+      <div class="ycm-boite-tete">
+        <h2 id="tdb-inscriptions">Dernières inscriptions</h2>
+        <a href="{{ url_membres }}" class="ycm-lien">Tous les membres</a>
+      </div>
+      {% if inscriptions %}
+      <div class="ycm-tableau-defile">
+        <table class="ycm-tableau">
+          <thead><tr><th>Nom</th><th>Profil</th><th>Région</th><th>Inscription</th><th><span class="visually-hidden">Action</span></th></tr></thead>
+          <tbody>
+            {% for i in inscriptions %}
+            <tr>
+              <td><span class="ycm-personne"><span class="ycm-avatar ycm-avatar--{% cycle 'orange' 'turquoise' 'bleu' 'vert' %}" aria-hidden="true">{{ i.initiales }}</span><strong>{{ i.nom }}</strong></span></td>
+              <td>{{ i.profil }}</td>
+              <td>{{ i.region }}</td>
+              <td>{{ i.date|date:"j b Y" }}</td>
+              <td class="ycm-actions-ligne"><a href="{{ i.url }}">Voir</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <p class="ycm-vide">Aucune inscription pour l'instant.</p>
+      {% endif %}
+    </section>
+    {% endif %}
+  </div>
 
-  {% if a_traiter %}
-  <section aria-labelledby="tdb-traiter">
-    <h2 class="ycm-titre" id="tdb-traiter">À traiter</h2>
-    <div class="ycm-grille">
-      {% for bloc in a_traiter %}
-      <article class="ycm-carte {% if bloc.nombre %}ycm-carte--alerte{% else %}ycm-carte--calme{% endif %}">
-        <div class="ycm-carte-tete"><strong>{{ bloc.titre }}</strong><span class="ycm-nombre">{{ bloc.nombre }}</span></div>
-        {% if bloc.elements %}
-        <ul>
-          {% for e in bloc.elements %}<li><a href="{{ e.lien }}">{{ e.texte|truncatechars:60 }}</a><span>{{ e.date|date:"j b, H:i" }}</span></li>{% endfor %}
-        </ul>
-        <a href="{{ bloc.lien }}" class="ycm-lien-carte">{{ bloc.libelle_lien }}</a>
-        {% else %}
-        <p class="ycm-vide">{{ bloc.vide }}</p>
-        {% endif %}
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-  {% endif %}
+  <div class="ycm-tdb-cote">
+    {% if bientot_closes %}
+    <section class="ycm-boite ycm-boite--pad" aria-labelledby="tdb-bientot">
+      <h2 id="tdb-bientot">Bientôt clôturées</h2>
+      <ul class="ycm-bientot">
+        {% for o in bientot_closes %}
+        <li>
+          <span class="ycm-jours{% if o.jours <= 25 %} ycm-jours--urgent{% endif %}"><small>J-</small>{{ o.jours }}</span>
+          <a href="{{ o.url }}"><strong>{{ o.titre }}</strong><small>Clôture le {{ o.date|date:"j b" }}</small></a>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
 
-  {% if brouillons %}
-  <section aria-labelledby="tdb-brouillons">
-    <h2 class="ycm-titre" id="tdb-brouillons">Pas encore publié</h2>
-    <div class="ycm-brouillons">{% for b in brouillons %}<a href="{{ b.lien }}">{{ b.texte }}</a>{% endfor %}</div>
-  </section>
-  {% endif %}
-
-  {% if chiffres_admin %}
-  <section aria-labelledby="tdb-chiffres">
-    <h2 class="ycm-titre" id="tdb-chiffres">Le site en chiffres</h2>
-    <div class="ycm-chiffres">
-      {% for c in chiffres_admin %}<a class="ycm-chiffre" href="{{ c.lien }}"><strong>{{ c.valeur }}</strong><span>{{ c.libelle }}</span></a>{% endfor %}
-    </div>
-  </section>
-  {% endif %}
-
-  <section aria-labelledby="tdb-menu">
-    <h2 class="ycm-titre" id="tdb-menu">Gérer le site</h2>
-  </section>
+    {% if actions_rapides %}
+    <section class="ycm-actions-rapides" aria-labelledby="tdb-actions">
+      <h2 id="tdb-actions">Actions rapides</h2>
+      <ul>
+        {% for a in actions_rapides %}
+        <li><a href="{{ a.url }}"><svg viewBox="0 0 24 24" aria-hidden="true">{{ a.icone|safe }}</svg>{{ a.libelle }}</a></li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+  </div>
 </div>
-{{ block.super }}
+
+{% if chiffres_tdb %}
+<section class="ycm-boite ycm-boite--pad" aria-labelledby="tdb-chiffres">
+  <div class="ycm-boite-tete ycm-boite-tete--nu">
+    <h2 id="tdb-chiffres">Chiffres clés affichés sur l'accueil</h2>
+    <span class="ycm-note">Modifiables à tout moment</span>
+  </div>
+  <form method="post" action="{% url 'admin:chiffres_rapides' %}" class="ycm-chiffres-form">
+    {% csrf_token %}
+    {% for c in chiffres_tdb %}
+    <label>{{ c.libelle|capfirst }}<input type="text" name="chiffre_{{ c.pk }}" value="{{ c.valeur }}" maxlength="30"></label>
+    {% endfor %}
+    <button type="submit" class="ycm-bouton-vert">Enregistrer</button>
+  </form>
+</section>
+{% endif %}
 {% endblock %}
+
+{% block sidebar %}{% endblock %}

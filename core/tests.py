@@ -84,11 +84,49 @@ class AdministrationTests(TestCase):
         MessageContact.objects.create(nom="Awa", email="awa@test.ml", objet="Partenariat", message="Bonjour")
         self.client.force_login(self.admin)
         reponse = self.client.get(reverse("admin:index"))
-        self.assertContains(reponse, "À traiter")
-        self.assertContains(reponse, "Messages de contact à traiter")
-        self.assertContains(reponse, "Partenariat")
-        for rubrique in ["Publications", "Accueil et pages", "Communautés", "Membres", "Messages et newsletter"]:
+        self.assertContains(reponse, "Messages non lus")
+        self.assertContains(reponse, "Dernières inscriptions")
+        self.assertContains(reponse, "Actions rapides")
+        for rubrique in ["Contenus", "Communauté", "Échanges", "Site", "Messages de contact", "Membres individuels"]:
             self.assertContains(reponse, rubrique)
+        # Boîte de réception : le message s'ouvre dans la liste
+        reponse = self.client.get(reverse("admin:core_messagecontact_changelist"))
+        self.assertContains(reponse, "Partenariat")
+        self.assertContains(reponse, "Marquer comme traité")
+        # Export CSV
+        reponse = self.client.get(reverse("admin:core_messagecontact_changelist") + "?_export=csv")
+        self.assertEqual(reponse["Content-Type"], "text/csv; charset=utf-8")
+        self.assertIn("Partenariat", reponse.content.decode())
+
+    def test_toutes_les_pages_de_l_administration_s_ouvrent(self):
+        self.client.force_login(self.admin)
+        noms = [
+            "contenus_opportunite", "contenus_actualite", "contenus_initiative", "contenus_temoignage",
+            "contenus_partenaire", "contenus_chiffrecle", "contenus_axeaction", "comptes_profilindividuel",
+            "comptes_profilorganisation", "comptes_utilisateur", "communautes_communaute",
+            "communautes_demandeadhesion", "core_messagecontact", "core_abonnenewsletter", "core_sectionapropos",
+        ]
+        for nom in noms:
+            with self.subTest(nom):
+                self.assertEqual(self.client.get(reverse(f"admin:{nom}_changelist")).status_code, 200)
+        for nom in ["contenus_opportunite", "contenus_actualite", "contenus_initiative", "comptes_utilisateur"]:
+            with self.subTest(nom + "_add"):
+                self.assertEqual(self.client.get(reverse(f"admin:{nom}_add")).status_code, 200)
+        # Fiches uniques : la liste ouvre directement le formulaire
+        for nom in ["contenus_motduministre", "core_parametressite"]:
+            with self.subTest(nom):
+                reponse = self.client.get(reverse(f"admin:{nom}_changelist"), follow=True)
+                self.assertEqual(reponse.status_code, 200)
+        self.assertEqual(self.client.get(reverse("admin:recherche") + "?q=test").status_code, 200)
+
+    def test_marquer_un_message_comme_traite(self):
+        from .models import MessageContact
+
+        m = MessageContact.objects.create(nom="Awa", email="awa@test.ml", objet="Question", message="Bonjour")
+        self.client.force_login(self.admin)
+        self.client.post(reverse("admin:core_messagecontact_traiter", args=[m.pk]), {"traite": "1"})
+        m.refresh_from_db()
+        self.assertTrue(m.traite)
 
     def test_redaction_ne_voit_pas_les_messages(self):
         from django.contrib.auth.models import Group
@@ -98,7 +136,7 @@ class AdministrationTests(TestCase):
         self.client.force_login(redac)
         reponse = self.client.get(reverse("admin:index"))
         self.assertContains(reponse, "Publier une actualité")
-        self.assertNotContains(reponse, "Messages de contact à traiter")
+        self.assertNotContains(reponse, "Messages non lus")
         self.assertEqual(self.client.get(reverse("admin:core_messagecontact_changelist")).status_code, 403)
         self.assertEqual(self.client.get(reverse("admin:contenus_actualite_add")).status_code, 200)
 

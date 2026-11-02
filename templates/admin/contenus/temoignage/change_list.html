@@ -1,0 +1,24 @@
+{% extends "admin/change_list.html" %}
+{% comment %} Témoignages en cartes (maquette « Témoignages ») {% endcomment %}
+{% block result_list %}
+{% if cl.result_count %}
+<div class="ycm-grille-cartes ycm-grille-cartes--2">
+  {% for t in cl.result_list %}
+  <article class="ycm-carte-simple">
+    <blockquote>« {{ t.texte }} »</blockquote>
+    <span class="ycm-personne">
+      {% if t.photo %}<img src="{{ t.photo.url }}" alt="" class="ycm-avatar">{% else %}<span class="ycm-avatar ycm-avatar--{% cycle 'orange' 'turquoise' 'bleu' 'vert' %}" aria-hidden="true">{{ t.nom|slice:":2"|upper }}</span>{% endif %}
+      <span><strong>{{ t.nom }}</strong>{% if t.role %}<small>{{ t.role }}</small>{% endif %}</span>
+    </span>
+    <div class="ycm-carte-pied">
+      {% if t.publie %}<span class="ycm-badge ycm-badge--vert">Affiché sur l'accueil</span>{% else %}<span class="ycm-badge ycm-badge--gris">Masqué</span>{% endif %}
+      <a href="{% url 'admin:contenus_temoignage_change' t.pk %}">Modifier</a>
+    </div>
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<div class="ycm-boite ycm-boite--pad"><p class="ycm-vide">Aucun témoignage pour l'instant.</p></div>
+{% endif %}
+{% endblock %}
+{% block pagination %}{% endblock %}

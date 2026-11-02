@@ -1,0 +1,59 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+{% comment %} Maquette « Communautés » : demandes d'intégration en attente, puis les communautés en cartes {% endcomment %}
+{% block search %}{% endblock %}
+{% block result_list %}
+{% if total_attente is not None %}
+<div class="ycm-sous-section"><h2>Demandes d'intégration</h2><span>({{ total_attente }} en attente)</span></div>
+{% if acceptation_auto %}
+<p class="ycm-alerte"><strong>Règle actuelle :</strong> les membres intègrent les communautés automatiquement. Les demandes ci-dessous datent d'avant ce réglage.</p>
+{% endif %}
+<div class="ycm-boite" style="margin-bottom:8px">
+  {% if demandes_attente %}
+  <div class="ycm-tableau-defile">
+    <table class="ycm-tableau">
+      <thead><tr><th>Membre</th><th>Communauté demandée</th><th>Date</th><th>Statut</th><th style="text-align:right">Actions</th></tr></thead>
+      <tbody>
+      {% for d in demandes_attente %}
+        <tr>
+          <td><span class="ycm-personne"><span class="ycm-avatar ycm-avatar--{{ d.couleur }}" aria-hidden="true">{{ d.initiales }}</span><span><strong>{{ d.membre }}</strong>{% if d.detail %}<small>{{ d.detail }}</small>{% endif %}</span></span></td>
+          <td><strong style="color:var(--ycm-vert)">{{ d.communaute }}</strong></td>
+          <td>{{ d.date|date:"j b Y" }}</td>
+          <td><span class="ycm-badge ycm-badge--orange">En attente</span></td>
+          <td class="ycm-actions-ligne"><a href="{{ d.url }}">Voir la demande</a></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="ycm-vide" style="padding:20px">Aucune demande en attente.</p>
+  {% endif %}
+  <p class="paginator"><span>{{ total_attente }} demande{{ total_attente|pluralize }} en attente</span><a class="ycm-lien" href="{{ url_demandes }}" style="margin-left:auto;background:none;border:0">Historique des demandes</a></p>
+</div>
+{% endif %}
+
+<div class="ycm-sous-section"><h2>Les communautés</h2><span>({{ cl.result_count }})</span></div>
+{% if cl.result_count %}
+<div class="ycm-grille-cartes">
+  {% for c in cl.result_list %}
+  <article class="ycm-carte-simple ycm-carte-communaute" style="--couleur: {% cycle 'var(--ycm-turquoise)' 'var(--ycm-orange)' 'var(--ycm-vert)' 'var(--ycm-bleu)' %}">
+    <div class="ycm-carte-image">{% if c.image %}<img src="{{ c.image.url }}" alt="">{% else %}<img src="{% static 'img/communaute/carte-' %}{% cycle '1' '2' '3' '4' '5' '6' %}.jpg" alt="">{% endif %}</div>
+    <div class="ycm-carte-corps">
+      <h3>{{ c.nom }}</h3>
+      <div class="ycm-carte-ligne"><span>{{ c.nb_membres }} membre{{ c.nb_membres|pluralize }}</span><span>{{ c.nb_opportunites }} opportunité{{ c.nb_opportunites|pluralize }} ciblée{{ c.nb_opportunites|pluralize }}</span></div>
+      {% if not c.active %}<span class="ycm-badge ycm-badge--gris" style="align-self:flex-start">Désactivée</span>{% endif %}
+      <div class="ycm-carte-pied">
+        <a href="{% url 'admin:communautes_communaute_change' c.pk %}">Modifier</a>
+        <a href="{{ url_demandes }}?statut__exact=acceptee&amp;communaute__id__exact={{ c.pk }}">Voir les membres</a>
+        {% if c.nb_attente %}<span class="ycm-badge ycm-badge--orange">{{ c.nb_attente }} en attente</span>{% endif %}
+      </div>
+    </div>
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<div class="ycm-boite ycm-boite--pad"><p class="ycm-vide">Aucune communauté pour l'instant.</p></div>
+{% endif %}
+{% endblock %}
+{% block pagination %}{% endblock %}

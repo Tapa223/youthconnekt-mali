@@ -1,0 +1,13 @@
+{% extends "admin/change_list.html" %}
+{% comment %} Chiffres clés : valeurs modifiables directement, puis aperçu de l'accueil (maquette) {% endcomment %}
+{% block result_list %}
+{{ block.super }}
+{% if cl.result_count %}
+<section class="ycm-boite ycm-boite--pad" style="margin-top:22px" aria-labelledby="titre-apercu">
+  <div class="ycm-boite-tete ycm-boite-tete--nu"><h2 id="titre-apercu">Aperçu sur l'accueil</h2></div>
+  <div class="ycm-apercu-chiffres">
+    {% for c in cl.result_list %}{% if c.publie %}<div><strong>{{ c.valeur }}</strong><span aria-hidden="true"></span><small>{{ c.libelle }}</small></div>{% endif %}{% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}

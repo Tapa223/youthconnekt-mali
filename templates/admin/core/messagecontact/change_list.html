@@ -1,0 +1,41 @@
+{% extends "admin/change_list.html" %}
+{% comment %} Boîte de réception des messages de contact (maquette « Messages de contact ») {% endcomment %}
+{% block result_list %}
+{% if cl.result_count %}
+<div class="ycm-boite-reception">
+  <ul class="ycm-liste-messages">
+    {% for m in cl.result_list %}
+    <li>
+      <a href="?{% for k, v in cl.params.items %}{% if k != 'ouvert' %}{{ k }}={{ v|urlencode }}&amp;{% endif %}{% endfor %}ouvert={{ m.pk }}" class="{% if not m.traite %}non-lu{% endif %}{% if message_ouvert and message_ouvert.pk == m.pk %} ouvert{% endif %}">
+        <strong>{{ m.nom }}</strong>
+        <time datetime="{{ m.recu_le|date:'c' }}">{{ m.recu_le|timesince }}</time>
+        <span class="profil">{{ m.get_profil_display }}</span>
+        <span class="objet">{{ m.objet|truncatechars:70 }}</span>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+  <div class="ycm-lecture">
+    {% with m=message_ouvert|default:cl.result_list.0 %}
+    <div class="ycm-lecture-tete">
+      <h2>{{ m.objet }}</h2>
+      {% if m.traite %}<span class="ycm-badge ycm-badge--vert">Traité</span>{% else %}<span class="ycm-badge ycm-badge--turquoise">{{ m.get_profil_display }}</span>{% endif %}
+    </div>
+    <p class="ycm-lecture-meta">{{ m.nom }} · <a href="mailto:{{ m.email }}">{{ m.email }}</a> · {{ m.recu_le|date:"j F Y, H \h i" }}</p>
+    <div class="ycm-lecture-texte">{{ m.message }}</div>
+    <div class="ycm-lecture-actions">
+      <a class="ycm-bouton-vert" href="mailto:{{ m.email }}?subject={{ 'Re : '|add:m.objet|urlencode }}">Répondre par e-mail</a>
+      <form method="post" action="{% url 'admin:core_messagecontact_traiter' m.pk %}">
+        {% csrf_token %}
+        <input type="hidden" name="retour" value="{{ request.get_full_path }}">
+        <input type="hidden" name="traite" value="{% if m.traite %}0{% else %}1{% endif %}">
+        <button type="submit" class="ycm-bouton-contour">{% if m.traite %}Remettre à traiter{% else %}Marquer comme traité{% endif %}</button>
+      </form>
+    </div>
+    {% endwith %}
+  </div>
+</div>
+{% else %}
+<div class="ycm-boite ycm-boite--pad"><p class="ycm-vide">Aucun message dans cette liste.</p></div>
+{% endif %}
+{% endblock %}

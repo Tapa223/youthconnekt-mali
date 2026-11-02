@@ -1,0 +1,29 @@
+{% load static %}
+{% comment %} Menu latéral de l'administration, rangé comme la maquette {% endcomment %}
+{% if menu_admin %}
+<nav id="nav-sidebar" class="ycm-menu" aria-label="Menu de l'administration" data-menu-admin>
+  <div class="ycm-menu-tete">
+    <a href="{% url 'admin:index' %}" class="ycm-menu-logo" aria-label="Tableau de bord">
+      <img src="{% static 'img/logo-youthconnekt-mali.png' %}" alt="YouthConnekt Mali" width="652" height="293">
+      <span>Admin</span>
+    </a>
+    <button type="button" class="ycm-menu-fermer" data-fermer-menu-admin><span class="visually-hidden">Fermer le menu</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  </div>
+  {% for groupe in menu_admin %}
+    {% if groupe.rubrique %}<p class="ycm-menu-rubrique">{{ groupe.rubrique }}</p>{% endif %}
+    <ul>
+      {% for lien in groupe.liens %}
+      <li>
+        <a href="{{ lien.url }}"{% if lien.actif %} class="actif" aria-current="page"{% endif %}>
+          <svg viewBox="0 0 24 24" aria-hidden="true">{{ lien.icone|safe }}</svg>
+          <span>{{ lien.libelle }}</span>
+          {% if lien.pastille %}<span class="ycm-pastille" aria-label="{{ lien.pastille }} à traiter">{{ lien.pastille }}</span>{% endif %}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  {% endfor %}
+</nav>
+<input type="search" id="nav-filter" hidden aria-hidden="true" tabindex="-1">
+<div class="ycm-voile" data-fermer-menu-admin hidden></div>
+{% endif %}
