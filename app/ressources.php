@@ -74,7 +74,7 @@ function options_axes(): array
     return $o;
 }
 
-const AIDE_MISE_EN_FORME = "Paragraphes séparés par une ligne vide. « ## » au début d'une ligne pour un intertitre, « - » pour une liste, « > » pour une citation (puis « — » et l'auteur à la ligne suivante), et [photos] pour placer la galerie.";
+const AIDE_MISE_EN_FORME = "Paragraphes séparés par une ligne vide. « ## » au début d'une ligne pour un intertitre, « - » pour une liste, « > » pour une citation (puis « — » et l'auteur à la ligne suivante).";
 
 function ressource(string $slug): ?array
 {
@@ -188,7 +188,7 @@ function ressources(): array
                     'chapeau' => ['type' => 'zone', 'libelle' => 'Chapeau (introduction)', 'max' => 400, 'lignes' => 3],
                 ]],
                 ['Article', 'description' => AIDE_MISE_EN_FORME, 'champs' => [
-                    'contenu' => ['type' => 'zone', 'libelle' => "Corps de l'article", 'barre' => 'article', 'lignes' => 14],
+                    'contenu' => ['type' => 'zone', 'libelle' => "Corps de l'article", 'barre' => 'texte', 'lignes' => 14],
                 ]],
                 ['Image', 'champs' => ['image' => ['type' => 'image', 'libelle' => 'Image principale', 'requis' => false, 'dossier' => 'actualites']]],
                 ['Ciblage', 'description' => 'Les activités liées à une communauté apparaissent sur sa page.', 'champs' => [
@@ -196,7 +196,7 @@ function ressources(): array
                 ]],
                 groupe_publication(),
             ],
-            'galerie' => ['photos_actualites', 'actualite_id', 'actualites/galerie', 'Galerie de photos (affichée là où l\'article contient [photos])'],
+            'galerie' => ['photos_actualites', 'actualite_id', 'actualites/galerie', 'Photothèque (défile avec l\'image principale en haut de la page, puis s\'affiche en bas)'],
             'liaison' => ['actualite_communaute', 'actualite_id'],
             'avant' => preparer_publiable('actualites'),
         ],

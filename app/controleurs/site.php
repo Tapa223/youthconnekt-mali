@@ -33,8 +33,8 @@ function accueil(): void
         'actualite_une' => $actualites[0] ?? null,
         'actualites' => array_slice($actualites, 1, 3),
         'partenaires' => $partenaires,
-        // Cases de la maquette, tant qu'aucun logo n'est saisi dans l'administration
-        'partenaires_maquette' => array_merge(['PNUD', 'Ministère de la Jeunesse et des Sports'], array_fill(0, 6, '[Logo partenaire]')),
+        // Tant qu'aucun logo n'est saisi dans l'administration, seuls les partenaires connus sont affichés
+        'partenaires_maquette' => ['PNUD', 'Ministère de la Jeunesse et des Sports'],
         'temoignages' => lignes('SELECT * FROM temoignages WHERE publie = 1 ORDER BY ordre, id DESC LIMIT 3'),
     ]));
 }

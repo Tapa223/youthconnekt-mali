@@ -72,8 +72,6 @@ $etapes = lignes_texte($o['etapes']);
     <p class="text-xs leading-tight"><?php if ($o['est_expiree']): ?>Statut<br><strong class="text-sm text-rouge">Candidatures closes</strong><?php else: ?>Date limite<br><strong class="text-sm text-rouge"><?= $o['date_limite'] ? e(date_longue($o['date_limite'])) : 'Aucune' ?></strong><?php endif ?></p>
     <?php if (!$o['est_expiree'] && $o['lien_candidature']): ?>
     <a href="<?= e($o['lien_candidature']) ?>" target="_blank" rel="noopener" class="btn btn-orange min-h-12 px-8 text-base">Postuler</a>
-    <?php elseif (!$o['est_expiree']): ?>
-    <span class="text-right text-xs">Lien de candidature<br>bientôt disponible</span>
     <?php endif ?>
   </div>
 </div>

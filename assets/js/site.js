@@ -243,3 +243,60 @@ document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
     if (e.target.matches && e.target.matches("select[data-filtre]")) memoriser();
   }, true);
 })();
+
+/* Carrousel d'images (détail d'une actualité) : défilement automatique, flèches et points. */
+(function () {
+  "use strict";
+  document.querySelectorAll("[data-carrousel]").forEach(function (bloc) {
+    var vues = bloc.querySelectorAll(".carrousel-vue");
+    var points = bloc.querySelectorAll("[data-point]");
+    if (vues.length < 2) return;
+    var i = 0, minuterie = null;
+    var calme = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function montrer(n) {
+      i = (n + vues.length) % vues.length;
+      vues.forEach(function (v, k) { v.classList.toggle("actif", k === i); v.setAttribute("aria-hidden", k === i ? "false" : "true"); });
+      points.forEach(function (p, k) { p.classList.toggle("actif", k === i); });
+    }
+    function lancer() { if (!calme) { arreter(); minuterie = setInterval(function () { montrer(i + 1); }, 5000); } }
+    function arreter() { if (minuterie) clearInterval(minuterie); minuterie = null; }
+    bloc.querySelector("[data-precedent]").addEventListener("click", function () { montrer(i - 1); lancer(); });
+    bloc.querySelector("[data-suivant]").addEventListener("click", function () { montrer(i + 1); lancer(); });
+    points.forEach(function (p) { p.addEventListener("click", function () { montrer(+p.dataset.point); lancer(); }); });
+    bloc.addEventListener("mouseenter", arreter);
+    bloc.addEventListener("mouseleave", lancer);
+    // Glisser du doigt sur téléphone
+    var depart = null;
+    bloc.addEventListener("touchstart", function (e) { depart = e.touches[0].clientX; }, { passive: true });
+    bloc.addEventListener("touchend", function (e) {
+      if (depart === null) return;
+      var dx = e.changedTouches[0].clientX - depart;
+      if (Math.abs(dx) > 40) { montrer(i + (dx < 0 ? 1 : -1)); lancer(); }
+      depart = null;
+    });
+    lancer();
+  });
+
+  /* Photothèque : une photo s'ouvre en grand, on passe à la suivante avec les flèches ou le clavier. */
+  document.querySelectorAll("[data-phototheque]").forEach(function (zone) {
+    var boutons = zone.querySelectorAll("[data-agrandir]");
+    var boite = zone.querySelector("dialog");
+    if (!boite || !boite.showModal) return;
+    var image = boite.querySelector("img"), legende = boite.querySelector(".visionneuse-legende"), i = 0;
+    function montrer(n) {
+      i = (n + boutons.length) % boutons.length;
+      var source = boutons[i].querySelector("img");
+      image.src = source.src; image.alt = source.alt;
+      legende.textContent = (source.alt ? source.alt + " · " : "") + (i + 1) + " / " + boutons.length;
+    }
+    boutons.forEach(function (b) { b.addEventListener("click", function () { montrer(+b.dataset.agrandir); boite.showModal(); }); });
+    boite.querySelector("[data-fermer]").addEventListener("click", function () { boite.close(); });
+    boite.querySelector("[data-precedent]").addEventListener("click", function () { montrer(i - 1); });
+    boite.querySelector("[data-suivant]").addEventListener("click", function () { montrer(i + 1); });
+    boite.addEventListener("click", function (e) { if (e.target === boite) boite.close(); });
+    boite.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowLeft") montrer(i - 1);
+      if (e.key === "ArrowRight") montrer(i + 1);
+    });
+  });
+})();

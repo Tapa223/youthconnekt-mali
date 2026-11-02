@@ -43,6 +43,13 @@ $ariane = $ariane ?? [];
         <?php endforeach ?>
       </ul>
     <?php endforeach ?>
+    <form method="post" action="<?= url('/compte/deconnexion') ?>" class="ycm-menu-sortie">
+      <?= csrf() ?>
+      <button type="submit">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l-5-5 5-5M5 12h11"/></svg>
+        <span>Se déconnecter</span>
+      </button>
+    </form>
   </nav>
   <script>
     /* Le menu garde sa position : on la note avant de quitter la page et on la remet tout de suite,

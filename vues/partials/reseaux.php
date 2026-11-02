@@ -6,6 +6,4 @@ if ($reseaux): ?>
   <li><a href="<?= e($lien) ?>" target="_blank" rel="noopener" class="inline-flex min-h-9 items-center rounded-full border border-vert px-3.5 text-sm font-bold text-vert hover:border-orange hover:bg-orange hover:text-white"><?= e($nom) ?></a></li>
   <?php endforeach ?>
 </ul>
-<?php elseif (est_admin()): ?>
-<p class="mt-4 text-sm text-encre">[Réseaux sociaux officiels]</p>
 <?php endif;

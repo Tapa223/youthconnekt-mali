@@ -653,3 +653,13 @@ input[type=file]::file-selector-button {
 .ycm-menu-rubrique { margin: 16px 14px 6px; }
 .ycm-menu li { margin: 1px 0; }
 .ycm-menu a { min-height: 38px; font-size: 14.5px; }
+
+/* Déconnexion en bas du menu latéral */
+.ycm-menu-sortie { margin: 22px 0 0; padding-top: 14px; border-top: 1px solid rgb(255 255 255 / .16); }
+.ycm-menu-sortie button {
+  display: flex; align-items: center; gap: 12px; width: 100%; min-height: 42px; padding: 0 14px;
+  border: 0; border-radius: 10px; background: rgb(255 255 255 / .1); color: #fff;
+  font: inherit; font-size: 14.5px; font-weight: 700; cursor: pointer; transition: background-color .15s;
+}
+.ycm-menu-sortie button:hover { background: var(--ycm-orange); }
+.ycm-menu-sortie svg { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }

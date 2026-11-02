@@ -29,8 +29,6 @@
       <p class="mt-4 max-w-sm text-sm leading-relaxed text-white/85 sm:mt-5 sm:text-[15px]">Chapitre national de YouthConnekt Africa, YouthConnekt Mali relie les jeunes du pays aux opportunités, aux initiatives et aux organisations qui les accompagnent.</p>
       <?php if ($reseaux): ?>
       <div class="mt-5 [&_a]:border-white/40 [&_a]:text-white"><?php partiel('partials/reseaux') ?></div>
-      <?php elseif (est_admin()): ?>
-      <p class="mt-5 text-sm text-white/70">[Réseaux sociaux officiels à renseigner dans les paramètres du site]</p>
       <?php endif ?>
     </div>
 
@@ -62,8 +60,8 @@
       <p class="text-xs font-bold tracking-[0.16em] text-white uppercase"><span class="mb-3 block h-[3px] w-8 rounded-full bg-bleu" aria-hidden="true"></span>Nous joindre</p>
       <ul class="mt-4 space-y-2.5 text-[15px] text-white/85">
         <li><?= e($p['adresse'] ?: 'Bamako, Mali') ?></li>
-        <?php if ($p['email_contact']): ?><li><a href="mailto:<?= e($p['email_contact']) ?>" class="lien-pied break-all"><?= e($p['email_contact']) ?></a></li><?php elseif (est_admin()): ?><li class="text-white/60">[Adresse e-mail officielle]</li><?php endif ?>
-        <?php if ($p['telephone']): ?><li><a href="tel:<?= e(str_replace(' ', '', $p['telephone'])) ?>" class="lien-pied"><?= e($p['telephone']) ?></a></li><?php elseif (est_admin()): ?><li class="text-white/60">[Téléphone officiel]</li><?php endif ?>
+        <?php if ($p['email_contact']): ?><li><a href="mailto:<?= e($p['email_contact']) ?>" class="lien-pied break-all"><?= e($p['email_contact']) ?></a></li><?php endif ?>
+        <?php if ($p['telephone']): ?><li><a href="tel:<?= e(str_replace(' ', '', $p['telephone'])) ?>" class="lien-pied"><?= e($p['telephone']) ?></a></li><?php endif ?>
         <?php if ($p['horaires']): ?><li><?= e($p['horaires']) ?></li><?php endif ?>
       </ul>
       <a href="<?= url('/contact') ?>" class="btn btn-blanc mt-5 min-h-11">Nous écrire</a>

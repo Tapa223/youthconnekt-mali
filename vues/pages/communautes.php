@@ -3,8 +3,7 @@
   <?php partiel('partials/reseau_deco') ?>
   <div class="conteneur relative grid items-center gap-10 py-12 sm:py-16 lg:grid-cols-2">
     <div class="anim-entree">
-      <p class="surtitre surtitre-trait text-white/85">Communauté</p>
-      <h1 class="mt-3 text-5xl leading-none font-bold text-white sm:text-7xl">La communauté.</h1>
+      <h1 class="text-5xl leading-none font-bold text-white sm:text-7xl">Communauté</h1>
       <p class="mt-5 max-w-md text-base text-white/90 sm:text-lg">Chaque membre rejoint les communautés qui lui ressemblent : on s'y retrouve entre passionnés, on y partage, on y avance ensemble.</p>
       <?php if (!$connecte): ?>
       <div class="mt-7 flex flex-wrap gap-3">

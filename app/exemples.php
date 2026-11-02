@@ -37,15 +37,15 @@ const EXEMPLES_INITIATIVES = [
 
 // [slug, titre, type, jours avant la date limite, organisme, lieu, photo, communautés]
 const EXEMPLES_OPPORTUNITES = [
-    ['stage-en-gestion-de-projet', 'Stage en gestion de projet', 'emploi', 19, '[Organisation]', 'Bamako', 'stand', ['jeunes-professionnels']],
+    ['stage-en-gestion-de-projet', 'Stage en gestion de projet', 'emploi', 19, '', 'Bamako', 'stand', ['jeunes-professionnels']],
     ['atelier-monter-son-projet', 'Atelier « Monter son projet »', 'formation', 24, 'YouthConnekt Mali', 'Ségou · présentiel', 'salle-bleue', ['entrepreneuriat-et-startups']],
-    ['stage-en-communication-numerique', 'Stage en communication numérique', 'emploi', 32, '[Entreprise]', 'Bamako', 'panel', ['tech-et-numerique']],
+    ['stage-en-communication-numerique', 'Stage en communication numérique', 'emploi', 32, '', 'Bamako', 'panel', ['tech-et-numerique']],
     ['formation-en-marketing-digital', 'Formation en marketing digital', 'formation', 34, 'YouthConnekt Mali', 'Bamako, présentiel', 'stand', ['tech-et-numerique', 'entrepreneuriat-et-startups']],
-    ['bourse-detudes-en-entrepreneuriat', "Bourse d'études en entrepreneuriat", 'bourse', 39, '[Organisme]', 'International', 'ceremonie', ['etudiants']],
+    ['bourse-detudes-en-entrepreneuriat', "Bourse d'études en entrepreneuriat", 'bourse', 39, '', 'International', 'ceremonie', ['etudiants']],
     ['concours-de-pitch-jeunes-innovateurs', 'Concours de pitch « Jeunes innovateurs »', 'evenement', 42, 'YouthConnekt Mali', 'Bamako', 'ceremonie', ['innovation-et-porteurs-de-projets', 'agriculture-et-environnement']],
     ['programme-de-mentorat-2027', 'Programme de mentorat 2027', 'appel', 49, 'YouthConnekt Mali et partenaires', 'En ligne', 'intervenant', ['leadership-et-citoyennete']],
-    ['forum-national-de-lemploi-des-jeunes', "Forum national de l'emploi des jeunes", 'evenement', 75, '[Organisateur]', 'Bamako · présentiel', 'arena', ['jeunes-professionnels']],
-    ['bourse-de-leadership-feminin', 'Bourse de leadership féminin', 'bourse', 85, '[Organisme]', 'En ligne', 'intervenant', ['leadership-et-citoyennete']],
+    ['forum-national-de-lemploi-des-jeunes', "Forum national de l'emploi des jeunes", 'evenement', 75, '', 'Bamako · présentiel', 'arena', ['jeunes-professionnels']],
+    ['bourse-de-leadership-feminin', 'Bourse de leadership féminin', 'bourse', 85, '', 'En ligne', 'intervenant', ['leadership-et-citoyennete']],
 ];
 
 const EXEMPLE_DETAIL_MARKETING = [
@@ -58,7 +58,7 @@ const EXEMPLE_DETAIL_MARKETING = [
 
 // [slug, titre, catégorie, décalage en jours de la date de l'événement, lieu, photo, chapeau]
 const EXEMPLES_ACTUALITES = [
-    ['participation-youthconnekt-sahel', 'Participation du Mali au YouthConnekt Sahel', 'evenement', 40, '[Lieu à confirmer]', 'ceremonie', 'Une délégation de jeunes Maliens au forum régional de la jeunesse sahélienne.'],
+    ['participation-youthconnekt-sahel', 'Participation du Mali au YouthConnekt Sahel', 'evenement', 40, '', 'ceremonie', 'Une délégation de jeunes Maliens au forum régional de la jeunesse sahélienne.'],
     ['lancement-officiel-de-la-plateforme', 'Lancement officiel de la plateforme YouthConnekt Mali', 'actualite', null, '', 'ceremonie', "Une nouvelle porte d'entrée pour les jeunes et les organisations du pays."],
     ['atelier-monter-son-projet-segou', 'Atelier « Monter son projet »', 'evenement', 46, 'Ségou', 'salle-bleue', 'Un atelier pratique pour structurer son projet.'],
     ['forum-national-emploi', "Forum national de l'emploi des jeunes", 'evenement', 69, 'Bamako', 'arena', 'Rencontrer des recruteurs et découvrir des offres.'],
@@ -168,7 +168,7 @@ function charger_exemples(): void
         }
         $id = inserer('actualites', [
             'titre' => $titre, 'slug' => $slug, 'categorie' => $categorie, 'chapeau' => $chapeau, 'lieu' => $lieu, 'statut' => 'publie',
-            'contenu' => $s === 'lancement-officiel-de-la-plateforme' ? EXEMPLE_CORPS_LANCEMENT : $chapeau . "\n\nContenu d'exemple, à remplacer.",
+            'contenu' => $s === 'lancement-officiel-de-la-plateforme' ? EXEMPLE_CORPS_LANCEMENT : $chapeau,
             'date_evenement' => $decalage !== null ? date('Y-m-d', strtotime(($decalage >= 0 ? '+' : '') . $decalage . ' days')) : null,
             'mis_en_avant' => $ordre === 0 ? 1 : 0, 'publie_le' => date('Y-m-d H:i:s', $maintenant - $ordre * 3 * 86400),
             'image' => photo_exemple($image), 'cree_le' => maintenant(), 'modifie_le' => maintenant(),

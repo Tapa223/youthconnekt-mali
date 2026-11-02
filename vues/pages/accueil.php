@@ -97,8 +97,6 @@ $points = [
         </div>
         <?php endforeach ?>
       </dl>
-      <?php elseif ($admin): ?>
-      <p class="order-2 rounded-lg border border-dashed border-ligne p-3 text-sm lg:mt-8">[Chiffres clés à saisir et vérifier dans l'administration avant publication]</p>
       <?php endif ?>
     </div>
 
@@ -405,11 +403,11 @@ $points = [
       </li>
       <?php endforeach; else: foreach ($partenaires_maquette as $k => $nom): $n = $k + 1; ?>
       <li class="<?= ($n + 1) % 3 === 0 ? 'mt-[18px] sm:mt-9' : '' ?> <?= $n % 2 === 0 ? 'lg:mt-9' : 'lg:mt-0' ?>">
-        <div class="survol-leve flex h-[72px] items-center justify-center rounded-[14px] border-2 bg-white p-2 text-center shadow-lg shadow-vert/10 sm:h-[110px] sm:rounded-[20px] sm:p-3 <?= cycle($bords, $k) ?> <?= $nom[0] === '[' ? 'text-[11px] font-medium text-texte sm:text-[15px]' : 'text-[11px] leading-tight font-bold text-vert sm:text-[15px]' . ($k === 0 ? ' text-sm sm:text-lg' : '') ?>"><?= e($nom) ?></div>
+        <div class="survol-leve flex h-[72px] items-center justify-center rounded-[14px] border-2 bg-white p-2 text-center shadow-lg shadow-vert/10 sm:h-[110px] sm:rounded-[20px] sm:p-3 <?= cycle($bords, $k) ?> text-[11px] leading-tight font-bold text-vert sm:text-[15px]<?= $k === 0 ? ' text-sm sm:text-lg' : '' ?>"><?= e($nom) ?></div>
       </li>
       <?php endforeach; endif ?>
     </ul>
-    <?php if (!$partenaires && $admin): ?><p class="text-sm lg:col-start-2"><a href="<?= url('/gestion/partenaires/ajouter') ?>" class="btn-lien ml-2">Ajouter les logos des partenaires</a> pour remplacer les cases de la maquette.</p><?php endif ?>
+    
   </div>
 </section>
 
@@ -431,21 +429,27 @@ $points = [
       </div>
       <div class="flex flex-col justify-center border-[1.5px] border-t-0 border-ligne bg-white p-5 sm:border-0 sm:p-10">
         <ul class="grid gap-2.5 text-sm text-encre sm:grid-cols-2 sm:gap-4 sm:text-[15px]">
+          <?php if ($p['email_contact']): ?>
           <li class="flex items-center gap-3">
             <span class="grid size-9 shrink-0 place-items-center rounded-full bg-gris text-vert sm:size-10" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>
-            <?php if ($p['email_contact']): ?><a href="mailto:<?= e($p['email_contact']) ?>" class="break-all hover:text-orange"><?= e($p['email_contact']) ?></a><?php else: ?>[Adresse e-mail officielle]<?php endif ?>
+            <a href="mailto:<?= e($p['email_contact']) ?>" class="break-all hover:text-orange"><?= e($p['email_contact']) ?></a>
           </li>
+          <?php endif ?>
+          <?php if ($p['telephone']): ?>
           <li class="flex items-center gap-3">
             <span class="grid size-9 shrink-0 place-items-center rounded-full bg-gris text-vert sm:size-10" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></span>
-            <?php if ($p['telephone']): ?><a href="tel:<?= e(str_replace(' ', '', $p['telephone'])) ?>" class="hover:text-orange"><?= e($p['telephone']) ?></a><?php else: ?>[Téléphone officiel]<?php endif ?>
+            <a href="tel:<?= e(str_replace(' ', '', $p['telephone'])) ?>" class="hover:text-orange"><?= e($p['telephone']) ?></a>
           </li>
+          <?php endif ?>
           <li class="flex items-center gap-3 sm:col-span-2">
             <span class="grid size-9 shrink-0 place-items-center rounded-full bg-gris text-vert sm:size-10" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span>
-            <?= e($p['adresse'] ?: '[Adresse du chapitre], Bamako') ?>
+            <?= e($p['adresse'] ?: 'Bamako, Mali') ?>
           </li>
         </ul>
+        <?php if (reseaux_sociaux()): ?>
         <p class="mt-6 text-xs font-bold tracking-[0.14em] text-vert uppercase sm:mt-7">Suivez le chapitre</p>
-        <?php if (reseaux_sociaux()): partiel('partials/reseaux'); else: ?><p class="mt-2.5 text-sm text-texte">[Réseaux sociaux officiels]</p><?php endif ?>
+        <?php partiel('partials/reseaux') ?>
+        <?php endif ?>
       </div>
     </div>
   </div>

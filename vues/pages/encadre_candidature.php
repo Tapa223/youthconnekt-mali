@@ -18,8 +18,6 @@
     <p class="mt-4 rounded-lg bg-gris p-3 text-center text-sm font-bold text-rouge">Les candidatures sont closes.</p>
   <?php elseif ($o['lien_candidature']): ?>
     <a href="<?= e($o['lien_candidature']) ?>" target="_blank" rel="noopener" class="btn btn-orange mt-4 min-h-12 w-full text-base">Postuler</a>
-  <?php else: ?>
-    <p class="mt-4 rounded-lg border border-dashed border-ligne p-3 text-center text-sm">Le lien de candidature sera bientôt disponible.</p>
   <?php endif ?>
   <div class="mt-3 grid grid-cols-2 gap-2">
     <button type="button" class="btn btn-contour px-2 text-sm" data-partager data-titre="<?= e($o['titre']) ?>">Partager</button>
