@@ -67,3 +67,49 @@ class PagesTests(TestCase):
         self.assertEqual(MessageContact.objects.get().objet, "Partenariat")
         r = self.client.post(reverse("core:contact"), {"nom": "Awa", "email": "a@b.ml", "profil": "jeune", "sujet": "partenariat", "message": "Bonjour à tous"})
         self.assertContains(r, "Cochez cette case")
+
+
+class AdministrationTests(TestCase):
+    """Tableau de bord, rubriques et rôles de l'administration."""
+
+    def setUp(self):
+        from django.core.management import call_command
+
+        call_command("creer_roles", stdout=open("/dev/null", "w"))
+        self.admin = Utilisateur.objects.create_superuser("chef@test.ml", "MotDePasse!2026")
+
+    def test_tableau_de_bord_et_rubriques(self):
+        from .models import MessageContact
+
+        MessageContact.objects.create(nom="Awa", email="awa@test.ml", objet="Partenariat", message="Bonjour")
+        self.client.force_login(self.admin)
+        reponse = self.client.get(reverse("admin:index"))
+        self.assertContains(reponse, "À traiter")
+        self.assertContains(reponse, "Messages de contact à traiter")
+        self.assertContains(reponse, "Partenariat")
+        for rubrique in ["Publications", "Accueil et pages", "Communautés", "Membres", "Messages et newsletter"]:
+            self.assertContains(reponse, rubrique)
+
+    def test_redaction_ne_voit_pas_les_messages(self):
+        from django.contrib.auth.models import Group
+
+        redac = Utilisateur.objects.create_user("redac@test.ml", "MotDePasse!2026", is_staff=True)
+        redac.groups.add(Group.objects.get(name="Éditeur de contenus"))
+        self.client.force_login(redac)
+        reponse = self.client.get(reverse("admin:index"))
+        self.assertContains(reponse, "Publier une actualité")
+        self.assertNotContains(reponse, "Messages de contact à traiter")
+        self.assertEqual(self.client.get(reverse("admin:core_messagecontact_changelist")).status_code, 403)
+        self.assertEqual(self.client.get(reverse("admin:contenus_actualite_add")).status_code, 200)
+
+    def test_gestion_des_membres_ne_peut_pas_se_donner_plus_de_droits(self):
+        from django.contrib.auth.models import Group
+
+        gestion = Utilisateur.objects.create_user("gestion@test.ml", "MotDePasse!2026", is_staff=True)
+        gestion.groups.add(Group.objects.get(name="Gestion des membres"))
+        self.client.force_login(gestion)
+        url = reverse("admin:comptes_utilisateur_change", args=[gestion.pk])
+        reponse = self.client.get(url)
+        self.assertEqual(reponse.status_code, 200)
+        self.assertNotContains(reponse, 'name="is_superuser"')
+        self.assertNotContains(reponse, 'name="groups"')

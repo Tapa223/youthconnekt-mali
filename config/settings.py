@@ -54,7 +54,7 @@ CSRF_TRUSTED_ORIGINS = env_liste("CSRF_TRUSTED_ORIGINS", "")
 # --------------------------------------------------------------------------
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
+    "core.admin_site.AdminYouthConnektMaliConfig",  # administration personnalisée
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -191,14 +191,30 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
 
 # --------------------------------------------------------------------------
 # E-mails
-# En développement, les e-mails s'affichent dans le terminal.
+# Sans EMAIL_HOST dans .env : les e-mails s'affichent dans le terminal
+# (pratique sur ton PC). Avec EMAIL_HOST : ils partent vraiment, par SMTP.
 # --------------------------------------------------------------------------
 
-MAILERS = {
-    "default": {
-        "BACKEND": "django.core.mail.backends.console.EmailBackend",
-    },
-}
+if os.getenv("EMAIL_HOST"):
+    MAILERS = {
+        "default": {
+            "BACKEND": "django.core.mail.backends.smtp.EmailBackend",
+            "OPTIONS": {
+                "host": os.getenv("EMAIL_HOST"),
+                "port": int(os.getenv("EMAIL_PORT", "587")),
+                "username": os.getenv("EMAIL_HOST_USER", ""),
+                "password": os.getenv("EMAIL_HOST_PASSWORD", ""),
+                "use_tls": os.getenv("EMAIL_USE_TLS", "True") == "True",
+                "timeout": 20,
+            },
+        },
+    }
+else:
+    MAILERS = {
+        "default": {
+            "BACKEND": "django.core.mail.backends.console.EmailBackend",
+        },
+    }
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "YouthConnekt Mali <noreply@localhost>")
 
 

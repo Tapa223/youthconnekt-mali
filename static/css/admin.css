@@ -1,0 +1,287 @@
+/* =====================================================================
+   Administration YouthConnekt Mali
+   Couleurs de la charte appliquées à l'administration Django.
+   Ce fichier est écrit à la main (il ne passe pas par Tailwind).
+   ===================================================================== */
+
+:root,
+html[data-theme="light"] {
+  --ycm-vert: #035E4D;
+  --ycm-vert-fonce: #024a3d;
+  --ycm-vert-clair: #e6f2ef;
+  --ycm-orange: #F1592A;
+  --ycm-orange-fonce: #d8481c;
+  --ycm-turquoise: #04B2B1;
+  --ycm-bleu: #0358D9;
+  --ycm-rouge: #7C0D02;
+  --ycm-gris: #f3f5f4;
+  --ycm-ligne: #dfe5e3;
+  --ycm-encre: #17211f;
+  --ycm-carte: #ffffff;
+
+  --primary: var(--ycm-vert);
+  --secondary: var(--ycm-vert);
+  --accent: var(--ycm-orange);
+  --primary-fg: #ffffff;
+  --body-fg: var(--ycm-encre);
+  --body-bg: #ffffff;
+  --header-color: #ffffff;
+  --header-branding-color: #ffffff;
+  --header-bg: var(--ycm-vert);
+  --header-link-color: #ffffff;
+  --breadcrumbs-bg: var(--ycm-vert-fonce);
+  --breadcrumbs-link-fg: #ffffff;
+  --breadcrumbs-fg: #d7ebe6;
+  --link-fg: var(--ycm-vert);
+  --link-hover-color: var(--ycm-orange);
+  --link-selected-fg: var(--ycm-vert);
+  --button-bg: var(--ycm-vert);
+  --button-hover-bg: var(--ycm-vert-fonce);
+  --default-button-bg: var(--ycm-orange);
+  --default-button-hover-bg: var(--ycm-orange-fonce);
+  --selected-row: var(--ycm-vert-clair);
+  --message-success-bg: var(--ycm-vert-clair);
+  --delete-button-bg: var(--ycm-rouge);
+  --delete-button-hover-bg: #5e0a01;
+  --darkened-bg: var(--ycm-gris);
+  --font-family-primary: "Ubuntu", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* Mode sombre : on garde les fonds sombres de Django, avec les couleurs de la charte */
+html[data-theme="dark"] {
+  --ycm-carte: #1f2a28;
+  --ycm-gris: #182220;
+  --ycm-ligne: #2c3a37;
+  --ycm-encre: #eef3f1;
+  --ycm-vert-clair: #12332c;
+  --primary: var(--ycm-vert);
+  --secondary: var(--ycm-vert);
+  --accent: var(--ycm-orange);
+  --header-bg: var(--ycm-vert);
+  --breadcrumbs-bg: var(--ycm-vert-fonce);
+  --link-fg: #5fd3b9;
+  --link-hover-color: var(--ycm-orange);
+  --button-bg: var(--ycm-vert);
+  --default-button-bg: var(--ycm-orange);
+  --selected-row: #12332c;
+  --font-family-primary: "Ubuntu", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  html[data-theme="auto"] {
+    --ycm-carte: #1f2a28;
+    --ycm-gris: #182220;
+    --ycm-ligne: #2c3a37;
+    --ycm-encre: #eef3f1;
+    --ycm-vert-clair: #12332c;
+    --primary: var(--ycm-vert);
+    --header-bg: var(--ycm-vert);
+    --breadcrumbs-bg: var(--ycm-vert-fonce);
+    --link-fg: #5fd3b9;
+    --link-hover-color: var(--ycm-orange);
+    --button-bg: var(--ycm-vert);
+    --default-button-bg: var(--ycm-orange);
+    --selected-row: #12332c;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   En-tête
+   --------------------------------------------------------------------- */
+#header {
+  padding: 10px 24px;
+  border-bottom: 4px solid var(--ycm-orange);
+}
+#branding { display: flex; align-items: center; gap: 14px; }
+.ycm-logo {
+  display: inline-flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 10px;
+  padding: 5px 9px;
+  line-height: 0;
+}
+.ycm-logo svg, .ycm-logo img { height: 34px; width: auto; }
+#site-name { margin: 0; font-size: 1.05rem; font-weight: 700; letter-spacing: .01em; }
+#site-name a:link, #site-name a:visited { color: #fff; }
+#user-tools a { border-bottom-color: rgb(255 255 255 / .35); }
+#user-tools a:hover, #user-tools a:focus { color: #fff; border-bottom-color: var(--ycm-orange); }
+
+/* Titres des blocs */
+.module h2, .module caption, .inline-group h2 {
+  background: var(--ycm-vert);
+  font-weight: 700;
+  letter-spacing: .01em;
+}
+.module caption a.section { color: #fff; }
+
+/* Boutons un peu plus confortables, surtout au doigt */
+.button, input[type=submit], input[type=button], .submit-row input, a.button {
+  border-radius: 8px;
+  font-weight: 700;
+}
+.submit-row input, .submit-row a.button, .submit-row a.deletelink, .submit-row a.closelink {
+  min-height: 40px;
+}
+.object-tools a:link, .object-tools a:visited {
+  background: var(--ycm-vert);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-weight: 700;
+}
+.object-tools a:hover, .object-tools a:focus { background: var(--ycm-orange); }
+
+/* Badges d'état utilisés dans les listes */
+.ycm-badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.ycm-badge--vert { background: var(--ycm-vert-clair); color: var(--ycm-vert); }
+.ycm-badge--orange { background: #fde8e0; color: #b23a12; }
+.ycm-badge--rouge { background: #f6e3e1; color: var(--ycm-rouge); }
+.ycm-badge--gris { background: var(--ycm-gris); color: #3c4a47; }
+html[data-theme="dark"] .ycm-badge--vert { color: #5fd3b9; }
+html[data-theme="dark"] .ycm-badge--orange { background: #4a2416; color: #ffb79c; }
+html[data-theme="dark"] .ycm-badge--rouge { background: #3d1612; color: #f4a39a; }
+html[data-theme="dark"] .ycm-badge--gris { color: #c8d3d0; }
+
+/* Aperçu d'image dans les formulaires */
+.ycm-apercu { max-height: 160px; max-width: 100%; border-radius: 10px; border: 1px solid var(--ycm-ligne); }
+
+/* Message lu dans l'écran d'un message de contact */
+.ycm-message {
+  white-space: pre-wrap;
+  background: var(--ycm-gris);
+  border-left: 4px solid var(--ycm-orange);
+  border-radius: 8px;
+  padding: 14px 16px;
+  max-width: 760px;
+  line-height: 1.6;
+}
+
+/* ---------------------------------------------------------------------
+   Tableau de bord
+   --------------------------------------------------------------------- */
+.ycm-tdb { display: grid; gap: 24px; margin-bottom: 28px; }
+.ycm-tdb h2.ycm-titre {
+  margin: 0 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--ycm-vert);
+  background: none;
+  padding: 0;
+}
+html[data-theme="dark"] .ycm-tdb h2.ycm-titre { color: #5fd3b9; }
+
+.ycm-raccourcis { display: flex; flex-wrap: wrap; gap: 10px; }
+.ycm-raccourcis a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 8px;
+  background: var(--ycm-orange);
+  color: #fff !important;
+  font-weight: 700;
+  text-decoration: none;
+}
+.ycm-raccourcis a:hover, .ycm-raccourcis a:focus { background: var(--ycm-vert); }
+.ycm-raccourcis a.ycm-secondaire {
+  background: var(--ycm-carte);
+  color: var(--ycm-vert) !important;
+  border: 2px solid var(--ycm-vert);
+}
+.ycm-raccourcis a.ycm-secondaire:hover { background: var(--ycm-vert); color: #fff !important; }
+
+.ycm-grille { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.ycm-carte {
+  background: var(--ycm-carte);
+  border: 1px solid var(--ycm-ligne);
+  border-radius: 16px;
+  padding: 18px 20px;
+}
+.ycm-carte--alerte { border-top: 5px solid var(--ycm-orange); }
+.ycm-carte--calme { border-top: 5px solid var(--ycm-turquoise); }
+.ycm-carte-tete { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.ycm-carte-tete strong { font-size: 15px; color: var(--ycm-encre); }
+.ycm-nombre { font-size: 30px; font-weight: 700; color: var(--ycm-orange); line-height: 1; }
+.ycm-carte--calme .ycm-nombre { color: var(--ycm-turquoise); }
+.ycm-carte ul { list-style: none; margin: 12px 0 0; padding: 0; }
+.ycm-carte li {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 0;
+  border-top: 1px solid var(--ycm-ligne);
+  font-size: 13px;
+}
+.ycm-carte li span { color: #6b7a76; white-space: nowrap; }
+.ycm-carte p.ycm-vide { margin: 12px 0 0; color: #6b7a76; }
+.ycm-carte a.ycm-lien-carte {
+  display: inline-flex;
+  margin-top: 12px;
+  font-weight: 700;
+}
+
+.ycm-chiffres { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+.ycm-chiffre {
+  display: block;
+  background: var(--ycm-carte);
+  border: 1px solid var(--ycm-ligne);
+  border-left: 4px solid var(--ycm-vert);
+  border-radius: 12px;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+.ycm-chiffre:nth-child(4n+2) { border-left-color: var(--ycm-orange); }
+.ycm-chiffre:nth-child(4n+3) { border-left-color: var(--ycm-turquoise); }
+.ycm-chiffre:nth-child(4n+4) { border-left-color: var(--ycm-bleu); }
+.ycm-chiffre strong { display: block; font-size: 26px; color: var(--ycm-encre); line-height: 1.1; }
+.ycm-chiffre span { display: block; margin-top: 4px; font-size: 13px; color: #5b6b67; }
+.ycm-chiffre:hover { border-color: var(--ycm-orange); }
+
+.ycm-brouillons { display: flex; flex-wrap: wrap; gap: 8px; }
+.ycm-brouillons a {
+  display: inline-flex;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--ycm-gris);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+/* Liens du tableau de bord : pas de soulignement, ce sont des boutons ou des cartes */
+#content .ycm-tdb a { text-decoration: none !important; }
+#content .ycm-carte a:hover, #content .ycm-brouillons a:hover { text-decoration: underline !important; }
+#content .ycm-raccourcis a:hover, #content .ycm-chiffre:hover { text-decoration: none; }
+
+/* Page d'accueil de l'administration : pleine largeur, menu sur deux colonnes */
+.dashboard #content { width: auto; max-width: 1240px; }
+.dashboard h1 { font-weight: 700; color: var(--ycm-vert); }
+html[data-theme="dark"] .dashboard h1 { color: #eef3f1; }
+@media (min-width: 1024px) {
+  .dashboard #content-main.app-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 24px;
+    align-items: start;
+  }
+}
+.dashboard .module table { width: 100%; }
+
+/* ---------------------------------------------------------------------
+   Téléphone
+   --------------------------------------------------------------------- */
+@media (max-width: 767px) {
+  #header { padding: 10px 14px; flex-wrap: wrap; gap: 8px; }
+  .ycm-logo svg, .ycm-logo img { height: 28px; }
+  #site-name { font-size: .95rem; }
+  .ycm-nombre { font-size: 26px; }
+  .ycm-raccourcis a { flex: 1 1 auto; justify-content: center; }
+}

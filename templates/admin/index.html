@@ -1,0 +1,67 @@
+{% extends "admin/index.html" %}
+{% comment %}
+  Tableau de bord de l'administration YouthConnekt Mali.
+  On reprend la page d'accueil de Django et on ajoute, au-dessus du menu :
+  les raccourcis, ce qu'il reste à traiter et les chiffres du site.
+{% endcomment %}
+
+{% block coltype %}colM{% endblock %}
+{% block sidebar %}{% endblock %}
+
+{% block content_title %}<h1>Bonjour{% if user.first_name %} {{ user.first_name }}{% endif %}, voici l'essentiel du jour.</h1>{% endblock %}
+
+{% block content %}
+<div class="ycm-tdb">
+
+  {% if raccourcis %}
+  <section aria-labelledby="tdb-raccourcis">
+    <h2 class="ycm-titre" id="tdb-raccourcis">Publier</h2>
+    <div class="ycm-raccourcis">
+      {% for r in raccourcis %}<a href="{{ r.lien }}"{% if not forloop.first %} class="ycm-secondaire"{% endif %}>{{ r.libelle }}</a>{% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if a_traiter %}
+  <section aria-labelledby="tdb-traiter">
+    <h2 class="ycm-titre" id="tdb-traiter">À traiter</h2>
+    <div class="ycm-grille">
+      {% for bloc in a_traiter %}
+      <article class="ycm-carte {% if bloc.nombre %}ycm-carte--alerte{% else %}ycm-carte--calme{% endif %}">
+        <div class="ycm-carte-tete"><strong>{{ bloc.titre }}</strong><span class="ycm-nombre">{{ bloc.nombre }}</span></div>
+        {% if bloc.elements %}
+        <ul>
+          {% for e in bloc.elements %}<li><a href="{{ e.lien }}">{{ e.texte|truncatechars:60 }}</a><span>{{ e.date|date:"j b, H:i" }}</span></li>{% endfor %}
+        </ul>
+        <a href="{{ bloc.lien }}" class="ycm-lien-carte">{{ bloc.libelle_lien }}</a>
+        {% else %}
+        <p class="ycm-vide">{{ bloc.vide }}</p>
+        {% endif %}
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if brouillons %}
+  <section aria-labelledby="tdb-brouillons">
+    <h2 class="ycm-titre" id="tdb-brouillons">Pas encore publié</h2>
+    <div class="ycm-brouillons">{% for b in brouillons %}<a href="{{ b.lien }}">{{ b.texte }}</a>{% endfor %}</div>
+  </section>
+  {% endif %}
+
+  {% if chiffres_admin %}
+  <section aria-labelledby="tdb-chiffres">
+    <h2 class="ycm-titre" id="tdb-chiffres">Le site en chiffres</h2>
+    <div class="ycm-chiffres">
+      {% for c in chiffres_admin %}<a class="ycm-chiffre" href="{{ c.lien }}"><strong>{{ c.valeur }}</strong><span>{{ c.libelle }}</span></a>{% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <section aria-labelledby="tdb-menu">
+    <h2 class="ycm-titre" id="tdb-menu">Gérer le site</h2>
+  </section>
+</div>
+{{ block.super }}
+{% endblock %}

@@ -2,4 +2,7 @@ from django.apps import AppConfig
 
 
 class CoreConfig(AppConfig):
-    name = 'core'
+    default = True
+    name = "core"
+    verbose_name = "Site"
+
