@@ -1,0 +1,13 @@
+{
+  "name": "youthconnekt-mali",
+  "private": true,
+  "description": "Outils de compilation du CSS du site YouthConnekt Mali (Tailwind CSS)",
+  "scripts": {
+    "css": "tailwindcss -i assets/src/site.css -o assets/css/site.css --minify",
+    "css:suivre": "tailwindcss -i assets/src/site.css -o assets/css/site.css --watch"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.0",
+    "tailwindcss": "^4.1.0"
+  }
+}

@@ -1,5 +1,19 @@
-.venv/
-__pycache__/
-*.pyc
-db.sqlite3
-.env
+# Configuration locale (mots de passe)
+config.php
+
+# Images envoyées et journaux : propres à chaque installation
+uploads/*
+!uploads/.htaccess
+!uploads/.gitkeep
+stockage/*
+!stockage/.htaccess
+!stockage/.gitkeep
+
+# Outils de compilation du CSS
+node_modules/
+
+# Système
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/

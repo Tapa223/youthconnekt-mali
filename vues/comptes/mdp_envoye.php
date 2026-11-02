@@ -1,0 +1,3 @@
+<h1 class="text-3xl font-bold">Vérifiez votre boîte e-mail</h1>
+<p class="mt-3">Si un compte existe avec cette adresse, vous allez recevoir un lien pour choisir un nouveau mot de passe. Pensez à regarder dans les courriers indésirables.</p>
+<a href="<?= url('/compte/connexion') ?>" class="btn btn-contour mt-6 w-full">Retour à la connexion</a>
