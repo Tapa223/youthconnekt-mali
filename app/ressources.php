@@ -425,7 +425,6 @@ function ressources(): array
             'groupes' => [
                 [null, 'champs' => [
                     'nom' => ['type' => 'texte', 'libelle' => 'Nom', 'max' => 120],
-                    'type' => ['type' => 'select', 'libelle' => 'Catégorie', 'requis' => false, 'options' => ['' => 'Sans catégorie'] + array_map(fn ($t) => $t['nom'], types_communaute()), 'aide' => 'Sert au tri sur la page Communauté. Les catégories se gèrent dans « Catégories de communautés ».'],
                     'public_vise' => ['type' => 'texte', 'libelle' => 'Public visé', 'max' => 255, 'aide' => 'Affiché sur les cartes, sous le nom.'],
                     'description' => ['type' => 'zone', 'libelle' => 'Description', 'requis' => false, 'lignes' => 4],
                     'activites' => ['type' => 'zone', 'libelle' => "Ce qu'on y fait", 'requis' => false, 'aide' => 'Une activité par ligne.', 'lignes' => 4],
@@ -623,35 +622,6 @@ function ressources(): array
             'avant_suppression' => function (array $ligne) {
                 $n = (int) valeur('SELECT COUNT(*) FROM actualites WHERE categorie = ?', [$ligne['slug']]);
                 return $n ? "Cette catégorie est utilisée par $n actualité" . pluriel($n) . " : changez d'abord leur catégorie, puis supprimez-la." : null;
-            },
-        ],
-
-        'types-communautes' => [
-            'table' => 'types_communaute', 'titre' => 'Catégories de communautés', 'rubrique' => 'communautes',
-            'description' => "Les catégories proposées dans le tri de la page Communauté. Une catégorie utilisée par des communautés ne peut pas être supprimée.",
-            'libelle_ajout' => 'Ajouter une catégorie', 'ordre' => 't.ordre, t.nom',
-            'champs_select' => 't.*, (SELECT COUNT(*) FROM communautes c WHERE c.type = t.slug) AS nb',
-            'colonnes' => [
-                ['Catégorie', fn ($l) => '<strong>' . e($l['nom']) . '</strong>', 'lien' => true],
-                ['Couleur', fn ($l) => point_couleur(COULEURS_CHARTE[$l['couleur']] ?? $l['couleur'], $l['couleur'])],
-                ['Communautés', fn ($l) => (int) $l['nb']],
-                ['Ordre', fn ($l) => (int) $l['ordre']],
-            ],
-            'groupes' => [
-                [null, 'champs' => [
-                    'nom' => ['type' => 'texte', 'libelle' => 'Nom de la catégorie', 'max' => 80, 'aide' => "Exemple : Secteurs d'activité, Engagement citoyen…"],
-                ]],
-                ['Affichage', 'cote' => true, 'champs' => [
-                    'couleur' => ['type' => 'select', 'libelle' => 'Couleur', 'options' => COULEURS_CHARTE],
-                    'ordre' => ['type' => 'nombre', 'libelle' => "Ordre d'affichage", 'defaut' => 0],
-                ]],
-            ],
-            'avant' => function (array &$d, ?array $ancien) {
-                $d['slug'] = $ancien['slug'] ?? slug_unique('types_communaute', $d['nom'], null);
-            },
-            'avant_suppression' => function (array $ligne) {
-                $n = (int) valeur('SELECT COUNT(*) FROM communautes WHERE type = ?', [$ligne['slug']]);
-                return $n ? "Cette catégorie est utilisée par $n communauté" . pluriel($n) . " : changez d'abord leur catégorie, puis supprimez-la." : null;
             },
         ],
 
