@@ -3,45 +3,55 @@ $avantages = lignes_texte($o['avantages']);
 $criteres = lignes_texte($o['criteres']);
 $etapes = lignes_texte($o['etapes']);
 ?>
-<section class="relative isolate overflow-hidden bg-vert text-white">
-  <?php partiel('partials/reseau_deco') ?>
-  <div class="conteneur relative pt-4 pb-6 sm:pt-6 sm:pb-9">
-    <?php partiel('partials/retour', ['url' => url('/opportunites'), 'clair' => true]) ?>
-    <span class="etiquette rounded-full <?= fond($o['couleur']) ?>"><?= e($o['type_libelle']) ?></span>
-    <h1 class="mt-3 max-w-3xl text-[1.75rem] leading-[1.1] font-bold text-white sm:text-5xl"><?= e($o['titre']) ?></h1>
-    <p class="mt-2 text-sm text-white/85"><?php if ($o['organisme']): ?>Proposée par <strong class="text-white"><?= e($o['organisme']) ?></strong> · <?php endif ?>Publiée le <?= e(date_longue($o['publie_le'])) ?></p>
-  </div>
-</section>
+<div class="conteneur pt-4 pb-10 sm:pt-6 sm:pb-14">
+  <?php partiel('partials/retour', ['url' => url('/opportunites')]) ?>
 
-<div class="conteneur grid gap-6 py-6 sm:py-10 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-10">
-  <?php /* Sur téléphone, la fiche essentielle vient tout de suite, avant la photo */ ?>
-  <div class="lg:hidden"><?php partiel('pages/encadre_candidature', ['o' => $o]) ?></div>
+  <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-10">
+    <div class="min-w-0">
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="etiquette rounded-full <?= fond($o['couleur']) ?>"><?= e($o['type_libelle']) ?></span>
+        <?php if ($o['est_expiree']): ?><span class="etiquette rounded-full bg-gris text-rouge">Candidatures closes</span>
+        <?php elseif ($o['jours_restants'] !== null): ?><span class="etiquette rounded-full bg-orange-clair text-orange-fonce">J-<?= $o['jours_restants'] ?> · <?= e(mb_strtolower(libelle_jours($o['jours_restants']))) ?></span><?php endif ?>
+      </div>
+      <h1 class="mt-3 text-[1.75rem] leading-[1.12] font-bold sm:text-[2.6rem]"><?= e($o['titre']) ?></h1>
+      <?php if ($o['organisme']): ?><p class="mt-2 text-[15px]">Proposée par <strong class="text-encre"><?= e($o['organisme']) ?></strong></p><?php endif ?>
 
-  <div class="min-w-0">
-    <?php if ($o['image']): ?>
-    <div class="relative aspect-[16/9] overflow-hidden rounded-2xl border-b-[5px] lg:border-b-8 <?= bordure($o['couleur']) ?>">
-      <?php partiel('partials/photo', ['image' => $o['image'], 'eager' => true]) ?>
+      <?php /* Sur téléphone : les informations utiles en une liste simple, juste sous le titre */ ?>
+      <dl class="mt-5 grid grid-cols-2 gap-x-4 gap-y-3 rounded-2xl bg-gris p-4 text-sm lg:hidden">
+        <div><dt class="text-xs text-texte">Date limite</dt><dd class="font-bold text-rouge"><?= $o['date_limite'] ? e(date_courte($o['date_limite'])) : 'Aucune' ?></dd></div>
+        <?php foreach (['lieu' => 'Lieu', 'duree' => 'Durée', 'public' => 'Public', 'cout' => 'Coût'] as $c => $l): if ($o[$c] !== ''): ?>
+        <div><dt class="text-xs text-texte"><?= $l ?></dt><dd class="font-bold <?= $c === 'cout' ? 'text-vert' : 'text-encre' ?>"><?= e($o[$c]) ?></dd></div>
+        <?php endif; endforeach ?>
+      </dl>
+
+      <?php if ($o['image']): ?>
+      <div class="mt-6 aspect-[16/9] overflow-hidden rounded-2xl">
+        <?php partiel('partials/photo', ['image' => $o['image'], 'eager' => true]) ?>
+      </div>
+      <?php endif ?>
+
+      <div class="prose-ycm mt-7">
+        <h2 class="!mt-0">Présentation</h2>
+        <?= paragraphes($o['description']) ?>
+        <?php if ($avantages): ?><h2>Ce que vous gagnez</h2><ul><?php foreach ($avantages as $x): ?><li><?= e($x) ?></li><?php endforeach ?></ul><?php endif ?>
+        <?php if ($criteres): ?><h2>Qui peut postuler</h2><ul><?php foreach ($criteres as $x): ?><li><?= e($x) ?></li><?php endforeach ?></ul><?php endif ?>
+      </div>
+
+      <?php if ($etapes): ?>
+      <h2 class="mt-9 text-2xl font-bold">Comment postuler</h2>
+      <ol class="mt-4 space-y-3">
+        <?php foreach ($etapes as $k => $x): ?><li class="flex items-center gap-3 text-encre"><span class="grid size-8 shrink-0 place-items-center rounded-full bg-vert text-sm font-bold text-white"><?= $k + 1 ?></span><?= e($x) ?></li><?php endforeach ?>
+      </ol>
+      <?php endif ?>
+
+      <?php partiel('partials/partage', ['titre' => $o['titre'], 'classes' => 'mt-9 border-t border-ligne pt-5 lg:hidden']) ?>
+      <p class="mt-5 text-xs text-texte">Publiée le <?= e(date_longue($o['publie_le'])) ?></p>
     </div>
-    <?php endif ?>
 
-    <div class="prose-ycm <?= $o['image'] ? 'mt-7' : '' ?>">
-      <h2 class="!mt-0">Présentation</h2>
-      <?= paragraphes($o['description']) ?>
-      <?php if ($avantages): ?><h2>Ce que vous gagnez</h2><ul><?php foreach ($avantages as $x): ?><li><?= e($x) ?></li><?php endforeach ?></ul><?php endif ?>
-      <?php if ($criteres): ?><h2>Qui peut postuler</h2><ul><?php foreach ($criteres as $x): ?><li><?= e($x) ?></li><?php endforeach ?></ul><?php endif ?>
-    </div>
-
-    <?php if ($etapes): ?>
-    <h2 class="mt-9 text-2xl font-bold">Comment postuler</h2>
-    <ol class="mt-4 space-y-3">
-      <?php foreach ($etapes as $k => $x): ?><li class="flex items-center gap-3 text-encre"><span class="grid size-8 shrink-0 place-items-center rounded-full bg-vert text-sm font-bold text-white"><?= $k + 1 ?></span><?= e($x) ?></li><?php endforeach ?>
-    </ol>
-    <?php endif ?>
+    <aside class="hidden lg:block">
+      <div class="sticky top-24"><?php partiel('pages/encadre_candidature', ['o' => $o]) ?></div>
+    </aside>
   </div>
-
-  <aside class="hidden lg:block">
-    <div class="sticky top-24"><?php partiel('pages/encadre_candidature', ['o' => $o]) ?></div>
-  </aside>
 </div>
 
 <?php if ($similaires): ?>
@@ -60,13 +70,10 @@ $etapes = lignes_texte($o['etapes']);
 <?php endif ?>
 
 <?php if (!$o['est_expiree'] && $o['lien_candidature']): ?>
-<div class="sticky bottom-0 z-30 border-t border-ligne bg-white/95 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-6px_20px_rgba(0,0,0,0.06)] backdrop-blur lg:hidden">
-  <div class="mx-auto flex max-w-xl items-center justify-between gap-3">
-    <p class="flex items-center gap-2.5 text-xs leading-tight">
-      <?php if ($o['jours_restants'] !== null): ?><span class="rounded-lg bg-orange px-2 py-1.5 text-base leading-none font-bold whitespace-nowrap text-white">J-<?= $o['jours_restants'] ?></span><span>Clôture le<br><strong class="text-sm text-rouge"><?= e(date_courte($o['date_limite'])) ?></strong></span>
-      <?php else: ?><strong class="text-sm text-vert">Sans date limite</strong><?php endif ?>
-    </p>
-    <a href="<?= e($o['lien_candidature']) ?>" target="_blank" rel="noopener" class="btn btn-orange min-h-12 px-8 text-base">Postuler</a>
+<div class="sticky bottom-0 z-30 border-t border-ligne bg-white/95 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur lg:hidden">
+  <div class="mx-auto flex max-w-xl items-center justify-between gap-4">
+    <p class="text-xs leading-tight">Date limite<br><strong class="text-sm text-rouge"><?= $o['date_limite'] ? e(date_courte($o['date_limite'])) : 'Aucune' ?></strong></p>
+    <a href="<?= e($o['lien_candidature']) ?>" target="_blank" rel="noopener" class="btn btn-orange min-h-12 flex-1 text-base sm:flex-none sm:px-10">Postuler</a>
   </div>
 </div>
 <?php endif ?>
