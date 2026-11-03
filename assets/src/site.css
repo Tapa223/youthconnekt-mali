@@ -316,3 +316,7 @@ a.text-orange:not(.btn):not([class*="hover:bg-"]):hover { color: var(--color-ver
 .aide-sujet-autre { border-style: dashed; }
 .aide[data-ouvert] .aide-icone-message { display: none; }
 .aide[data-ouvert] .aide-icone-croix { display: block; }
+
+/* En-tête de l'assistant : couleur inverse du bouton (bouton vert : en-tête orange ; bouton orange : en-tête vert) */
+.aide-tete { background: var(--color-orange); }
+.aide[data-sur-vert] .aide-tete { background: var(--color-vert); }

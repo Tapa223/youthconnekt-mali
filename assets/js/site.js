@@ -349,7 +349,7 @@ document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
   bouton.addEventListener("click", function () { basculer(panneau.hidden); });
   aide.querySelector("[data-fermer-aide]").addEventListener("click", function () { basculer(false); bouton.focus(); });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !panneau.hidden) { basculer(false); bouton.focus(); } });
-  document.addEventListener("click", function (e) { if (!panneau.hidden && !aide.contains(e.target)) basculer(false); });
+  document.addEventListener("click", function (e) { if (!panneau.hidden && e.target.isConnected && !aide.contains(e.target)) basculer(false); });
 
   // Sujets proposés : réponse prête
   aide.querySelectorAll("[data-sujet]").forEach(function (b) {
@@ -360,9 +360,8 @@ document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
     });
   });
 
-  // Le champ s'agrandit avec le texte ; Entrée envoie, Maj + Entrée passe à la ligne
-  champ.addEventListener("input", function () { champ.style.height = "auto"; champ.style.height = Math.min(champ.scrollHeight, 112) + "px"; });
-  champ.addEventListener("keydown", function (e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); form.requestSubmit ? form.requestSubmit() : form.dispatchEvent(new Event("submit")); } });
+  // Le champ s'agrandit avec le texte ; la touche Entrée passe simplement à la ligne
+  champ.addEventListener("input", function () { champ.style.height = "auto"; champ.style.height = Math.min(champ.scrollHeight, 128) + "px"; });
 
   // Message libre : envoyé à l'équipe
   form.addEventListener("submit", function (e) {
@@ -374,6 +373,25 @@ document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
       identite.focus();
       return;
     }
+    if (!form.hasAttribute("data-confirme")) {
+      // On demande une confirmation dans la conversation avant d'envoyer
+      var ancienne = fil.querySelector("[data-confirmation]");
+      if (ancienne) ancienne.remove();
+      var boite = document.createElement("div");
+      boite.className = "aide-bot";
+      boite.setAttribute("data-confirmation", "");
+      boite.innerHTML = '<span class="block">Envoyer ce message à l\'équipe du chapitre ?</span><span class="mt-2.5 flex flex-wrap gap-2"><button type="button" class="aide-lien !mt-0" data-oui>Oui, envoyer</button><button type="button" class="aide-sujet" data-non>Modifier</button></span>';
+      fil.appendChild(boite);
+      defiler();
+      boite.querySelector("[data-oui]").addEventListener("click", function () {
+        boite.remove();
+        form.setAttribute("data-confirme", "");
+        form.requestSubmit ? form.requestSubmit() : form.dispatchEvent(new Event("submit", { cancelable: true }));
+      });
+      boite.querySelector("[data-non]").addEventListener("click", function () { boite.remove(); champ.focus(); });
+      return;
+    }
+    form.removeAttribute("data-confirme");
     var envoyer = form.querySelector("button[type=submit]");
     envoyer.disabled = true;
     bulle("aide-moi", texte);

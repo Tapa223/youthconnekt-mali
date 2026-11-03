@@ -18,19 +18,19 @@ $sujets = [
 $champ = 'min-h-10 w-full rounded-lg border border-ligne bg-white px-3 text-sm text-encre placeholder:text-texte/60 focus:border-vert focus:ring-[3px] focus:ring-orange/35 focus:outline-none';
 ?>
 <div class="aide fixed right-4 z-40 sm:right-6 <?= $plus_haut ? 'bottom-24 lg:bottom-6' : 'bottom-4 sm:bottom-6' ?>" data-aide>
-  <div id="panneau-aide" class="aide-panneau absolute right-0 bottom-[calc(100%+12px)] flex max-h-[min(30rem,calc(100dvh-7rem))] w-[min(21rem,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-ligne bg-white shadow-2xl shadow-vert/20" role="dialog" aria-labelledby="titre-aide" hidden>
-    <div class="flex shrink-0 items-center justify-between gap-3 bg-vert px-4 py-3 text-white">
+  <div id="panneau-aide" class="aide-panneau absolute right-0 bottom-[calc(100%+12px)] flex h-[min(34rem,calc(100dvh-7rem))] w-[min(23rem,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-ligne bg-white shadow-2xl shadow-vert/20" role="dialog" aria-labelledby="titre-aide" hidden>
+    <div class="aide-tete flex shrink-0 items-center justify-between gap-3 px-4 py-3 text-white">
       <div>
         <p id="titre-aide" class="text-base font-bold">Assistant YouthConnekt Mali</p>
       </div>
-      <button type="button" class="-mr-1.5 grid size-9 shrink-0 place-items-center rounded-full text-white transition-colors hover:bg-orange" data-fermer-aide aria-label="Fermer">
+      <button type="button" class="-mr-1.5 grid size-9 shrink-0 place-items-center rounded-full text-white transition-colors hover:bg-white/20" data-fermer-aide aria-label="Fermer">
         <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
       </button>
     </div>
 
     <div class="aide-fil flex-1 space-y-2.5 overflow-y-auto bg-gris/60 px-3.5 py-3.5" data-fil aria-live="polite">
       <div class="aide-bot">Bonjour<?= $prenom !== '' ? ' ' . e($prenom) : '' ?> ! Choisissez un sujet, ou écrivez-nous en bas.</div>
-      <div class="flex flex-wrap gap-2" data-sujets>
+      <div class="flex flex-wrap gap-2 pb-6" data-sujets>
         <?php foreach ($sujets as $k => [$libelle, $reponse, $lien]): ?>
         <button type="button" class="aide-sujet" data-sujet="<?= $k ?>"><?= e($libelle) ?></button>
         <?php endforeach ?>
@@ -52,7 +52,7 @@ $champ = 'min-h-10 w-full rounded-lg border border-ligne bg-white px-3 text-sm t
       <?php endif ?>
       <div class="flex items-end gap-2">
         <label for="aide-message" class="sr-only">Votre message</label>
-        <textarea id="aide-message" name="message" rows="1" maxlength="3000" placeholder="Écrire un message…" class="<?= $champ ?> max-h-28 min-h-11 resize-none py-2.5 text-[15px]" data-champ-message></textarea>
+        <textarea id="aide-message" name="message" rows="2" maxlength="3000" placeholder="Écrire un message… (Entrée pour aller à la ligne)" class="<?= $champ ?> max-h-32 min-h-16 resize-none py-2.5 text-[15px]" data-champ-message></textarea>
         <button type="submit" class="grid size-11 shrink-0 place-items-center rounded-full bg-orange text-white transition-colors hover:bg-vert" aria-label="Envoyer">
           <svg class="size-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 4.5 21 12 4 19.5l2.2-7.5L4 4.5z"/></svg>
         </button>
