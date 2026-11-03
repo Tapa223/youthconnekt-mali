@@ -11,7 +11,7 @@ $etapes = lignes_texte($o['etapes']);
       <div class="flex flex-wrap items-center gap-2">
         <span class="etiquette rounded-full <?= fond($o['couleur']) ?>"><?= e($o['type_libelle']) ?></span>
         <?php if ($o['est_expiree']): ?><span class="etiquette rounded-full bg-gris text-rouge">Candidatures closes</span>
-        <?php elseif ($o['jours_restants'] !== null): ?><span class="etiquette rounded-full bg-orange-clair text-orange-fonce">J-<?= $o['jours_restants'] ?> · <?= e(mb_strtolower(libelle_jours($o['jours_restants']))) ?></span><?php endif ?>
+        <?php elseif ($o['jours_restants'] !== null): ?><span class="etiquette rounded-full bg-orange-clair text-orange-fonce">J-<?= $o['jours_restants'] ?></span><?php endif ?>
       </div>
       <h1 class="mt-3 text-[1.75rem] leading-[1.12] font-bold sm:text-[2.6rem]"><?= e($o['titre']) ?></h1>
       <?php if ($o['organisme']): ?><p class="mt-2 text-[15px]">Proposée par <strong class="text-encre"><?= e($o['organisme']) ?></strong></p><?php endif ?>
