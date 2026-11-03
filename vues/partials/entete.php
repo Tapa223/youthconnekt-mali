@@ -49,8 +49,8 @@ $navigation = [
 </header>
 
 <div id="menu-mobile" class="fixed inset-0 z-50 hidden xl:hidden" role="dialog" aria-modal="true" aria-label="Menu" data-menu-mobile>
-  <div class="absolute inset-0 bg-encre/40" data-fermer-menu></div>
-  <div class="absolute inset-y-0 right-0 flex w-full max-w-sm flex-col bg-white shadow-2xl">
+  <div class="absolute inset-0 bg-encre/35 backdrop-blur-[3px]" data-fermer-menu></div>
+  <div class="absolute inset-y-0 right-0 flex w-[84%] max-w-sm flex-col bg-white shadow-2xl">
     <div class="flex h-16 items-center justify-between border-b border-ligne px-4">
       <?php partiel('partials/logo', ['classes' => 'h-10 w-auto']) ?>
       <button type="button" class="-mr-2 grid size-12 place-items-center rounded-lg text-vert hover:bg-vert-clair" data-fermer-menu>

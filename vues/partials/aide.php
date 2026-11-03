@@ -44,8 +44,8 @@ $champ = 'min-h-11 w-full rounded-lg border border-ligne bg-white px-3.5 text-[1
     </div>
   </div>
 
-  <button type="button" class="aide-bouton grid size-14 place-items-center rounded-full text-white shadow-lg transition-colors" aria-expanded="false" aria-controls="panneau-aide" data-ouvrir-aide>
+  <button type="button" class="aide-bouton grid size-12 place-items-center sm:size-14 rounded-full text-white shadow-lg transition-colors" aria-expanded="false" aria-controls="panneau-aide" data-ouvrir-aide>
     <span class="sr-only">Une question, une suggestion ?</span>
-    <span class="aide-point text-[28px] leading-none font-bold" aria-hidden="true">?</span>
+    <span class="aide-point text-[22px] leading-none font-bold sm:text-[28px]" aria-hidden="true">?</span>
   </button>
 </div>
