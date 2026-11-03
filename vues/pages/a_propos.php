@@ -22,7 +22,8 @@
   <?php partiel('partials/mention_photo', ['texte' => 'Photos provisoires · hors Mali']) ?>
 </section>
 
-<section id="pourquoi" class="conteneur grid scroll-mt-24 gap-6 py-10 sm:gap-10 sm:py-20 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-14">
+<section id="pourquoi" class="scroll-mt-24 bg-white py-12 sm:py-20">
+<div class="conteneur grid gap-6 sm:gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-14">
   <div>
     <p class="surtitre surtitre-trait">Pourquoi YouthConnekt Mali</p>
     <h2 class="titre-section">Une jeunesse pleine d'énergie, qui mérite d'être connectée</h2>
@@ -39,18 +40,21 @@
     </ol>
     <p class="mt-5 font-bold text-vert">YouthConnekt Mali est né pour lever ces trois obstacles.</p>
   </div>
+</div>
 </section>
 
-<section id="qui-sommes-nous" class="conteneur scroll-mt-24 pb-10 sm:pb-20">
+<section id="qui-sommes-nous" class="scroll-mt-24 bg-gris py-12 sm:py-20">
+<div class="conteneur">
   <div class="grid items-center gap-6 md:gap-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-14">
     <div>
       <p class="surtitre surtitre-trait">Qui sommes-nous</p>
       <h2 class="titre-section">Une plateforme nationale au service de la jeunesse malienne</h2>
-      <div class="mt-4 space-y-3 text-[15px] leading-relaxed sm:mt-5 sm:space-y-4 sm:text-[17px]">
+      <div class="repliable mt-4 space-y-3 text-[15px] leading-relaxed sm:mt-5 sm:space-y-4 sm:text-[17px]" id="texte-qui" data-repliable>
         <p>YouthConnekt Mali rassemble les jeunes, les étudiants, les entrepreneurs et les organisations qui veulent faire avancer le pays. Le chapitre relaie des opportunités, organise des rencontres et met en valeur les initiatives des jeunes, partout au Mali.</p>
         <p>Notre conviction est simple : les jeunes Maliens ont des idées, de l'énergie et du talent, mais l'information et les réseaux leur manquent souvent. Le chapitre est là pour combler ce manque, en mettant au même endroit les jeunes, les organisations qui les accompagnent et les institutions qui décident.</p>
         <p>Il s'appuie sur le réseau YouthConnekt Africa et travaille aux côtés du ministère chargé de la Jeunesse et de ses partenaires.</p>
       </div>
+      <?php partiel('partials/voir_plus', ['cible' => 'texte-qui']) ?>
     </div>
     <div class="relative mx-auto hidden w-full max-w-md pr-6 pb-6 md:block">
       <div class="absolute top-6 right-0 bottom-0 left-10 rounded-3xl bg-orange" aria-hidden="true"></div>
@@ -75,15 +79,17 @@
   </ul>
   <ul class="mt-14 hidden gap-5 md:grid md:grid-cols-3">
     <?php foreach ($publics as $k => [$t, $texte]): ?>
-    <li class="survol-leve rounded-2xl border border-t-[5px] border-ligne bg-white p-6 <?= cycle(['border-t-orange', 'border-t-turquoise', 'border-t-bleu'], $k) ?>">
+    <li class="survol-leve rounded-2xl border border-t-[5px] border-ligne bg-white p-6 shadow-sm <?= cycle(['border-t-orange', 'border-t-turquoise', 'border-t-bleu'], $k) ?>">
       <h3 class="text-xl font-bold"><?= e($t) ?></h3>
       <p class="mt-2 text-[15px] leading-relaxed"><?= e($texte) ?></p>
     </li>
     <?php endforeach ?>
   </ul>
+</div>
 </section>
 
-<section id="mission" class="conteneur scroll-mt-24 pb-10 sm:pb-20">
+<section id="mission" class="scroll-mt-24 bg-white py-12 sm:py-20">
+<div class="conteneur">
   <p class="surtitre surtitre-trait">Mission et valeurs</p>
   <h2 class="titre-section">Ce qui nous guide</h2>
   <div class="mt-5 grid gap-2.5 sm:mt-8 md:grid-cols-3 md:items-start md:gap-5">
@@ -103,9 +109,10 @@
       <p class="mt-0.5 text-sm leading-relaxed md:mt-2 md:text-[15px] text-vert">Engagement, ouverture, excellence et solidarité : ce sont elles qui guident chacune de nos actions.</p></div>
     </div>
   </div>
+</div>
 </section>
 
-<section class="relative isolate overflow-hidden bg-vert py-10 text-white sm:py-20">
+<section class="relative isolate overflow-hidden bg-vert py-12 sm:py-20 text-white">
   <?php partiel('partials/reseau_deco') ?>
   <div class="conteneur relative">
     <p class="surtitre surtitre-trait text-white/85">Notre approche</p>
@@ -126,7 +133,7 @@
 </section>
 
 <?php if ($axes): ?>
-<section id="axes" class="scroll-mt-24 bg-gris py-10 sm:py-20">
+<section id="axes" class="scroll-mt-24 bg-gris py-12 sm:py-20">
   <div class="conteneur">
     <p class="surtitre surtitre-trait">Nos axes d'action</p>
     <h2 class="titre-section"><?= count($axes) === 3 ? "Trois façons d'agir avec les jeunes" : "Nos façons d'agir avec les jeunes" ?></h2>
@@ -165,26 +172,62 @@
 </section>
 <?php endif ?>
 
-<section id="parcours" class="conteneur scroll-mt-24 py-10 sm:py-20">
-  <p class="surtitre surtitre-trait">Notre parcours</p>
-  <h2 class="titre-section">De la naissance du chapitre à aujourd'hui</h2>
-  <ol class="mt-5 grid grid-cols-2 gap-2.5 sm:mt-10 sm:gap-8 lg:grid-cols-4">
-    <?php foreach ($parcours as $k => [$annee, $t, $texte]): ?>
-    <li class="rounded-xl border-t-4 bg-gris p-3 sm:rounded-none sm:border-t-0 sm:bg-transparent sm:p-0 <?= cycle(['border-orange', 'border-turquoise', 'border-bleu', 'border-vert'], $k) ?>">
-      <div class="hidden items-center gap-3 sm:flex">
-        <span class="grid size-8 shrink-0 place-items-center rounded-full border-2 <?= cycle(['border-orange', 'border-turquoise', 'border-bleu', 'border-vert'], $k) ?>" aria-hidden="true"><span class="size-4 rounded-full <?= cycle(['bg-orange', 'bg-turquoise', 'bg-bleu', 'bg-vert'], $k) ?>"></span></span>
-        <?php if ($k < count($parcours) - 1): ?><span class="hidden h-px flex-1 border-t-2 border-dashed border-ligne lg:block" aria-hidden="true"></span><?php endif ?>
-      </div>
-      <p class="text-xl font-bold text-vert sm:mt-4 sm:text-3xl"><?= e($annee) ?></p>
-      <h3 class="mt-0.5 text-sm font-bold text-encre sm:mt-1 sm:text-base"><?= e($t) ?></h3>
-      <p class="mt-0.5 text-[13px] leading-snug sm:mt-1 sm:text-sm"><?= e($texte) ?></p>
-    </li>
-    <?php endforeach ?>
-  </ol>
+<section id="parcours" class="scroll-mt-24 bg-white py-12 sm:py-20">
+  <div class="conteneur">
+    <p class="surtitre surtitre-trait">Notre parcours</p>
+    <h2 class="titre-section">De la naissance du chapitre à aujourd'hui</h2>
+    <?php $couleurs_parcours = ['orange', 'turquoise', 'bleu', 'vert']; ?>
+    <ol class="relative mt-6 space-y-5 border-l-2 border-ligne pl-6 sm:hidden">
+      <?php foreach ($parcours as $k => [$annee, $t, $texte]): ?>
+      <li class="relative">
+        <span class="absolute top-1 -left-[33px] size-4 rounded-full border-[3px] border-white <?= fond(cycle($couleurs_parcours, $k)) ?> shadow" aria-hidden="true"></span>
+        <p class="text-lg leading-none font-bold text-vert"><?= e($annee) ?> <span class="ml-1 text-sm font-bold text-encre"><?= e($t) ?></span></p>
+        <p class="mt-1 text-[13px] leading-snug"><?= e($texte) ?></p>
+      </li>
+      <?php endforeach ?>
+    </ol>
+    <ol class="mt-10 hidden gap-8 sm:grid sm:grid-cols-2 lg:grid-cols-4">
+      <?php foreach ($parcours as $k => [$annee, $t, $texte]): ?>
+      <li>
+        <div class="flex items-center gap-3">
+          <span class="grid size-8 shrink-0 place-items-center rounded-full border-2 <?= cycle(['border-orange', 'border-turquoise', 'border-bleu', 'border-vert'], $k) ?>" aria-hidden="true"><span class="size-4 rounded-full <?= fond(cycle($couleurs_parcours, $k)) ?>"></span></span>
+          <?php if ($k < count($parcours) - 1): ?><span class="hidden h-px flex-1 border-t-2 border-dashed border-ligne lg:block" aria-hidden="true"></span><?php endif ?>
+        </div>
+        <p class="mt-4 text-3xl font-bold text-vert"><?= e($annee) ?></p>
+        <h3 class="mt-1 text-base font-bold text-encre"><?= e($t) ?></h3>
+        <p class="mt-1 text-sm"><?= e($texte) ?></p>
+      </li>
+      <?php endforeach ?>
+    </ol>
+  </div>
 </section>
 
+<?php /* Le réseau en chiffres : calculés à partir des comptes et des communautés */ ?>
+<section class="bg-gris py-12 sm:py-20" aria-labelledby="titre-reseau">
+  <div class="conteneur">
+    <p class="surtitre surtitre-trait">Le réseau</p>
+    <h2 id="titre-reseau" class="titre-section">Un chapitre qui grandit chaque jour</h2>
+    <dl class="mt-6 grid grid-cols-3 gap-2.5 sm:mt-10 sm:gap-5">
+      <?php foreach ([
+          [$reseau['membres'], 'membre', 'membres', 'border-orange'],
+          [$reseau['organisations'], 'organisation', 'organisations', 'border-turquoise'],
+          [$reseau['communautes'], 'communauté', 'communautés', 'border-bleu'],
+      ] as [$nombre, $singulier, $pluriel_mot, $bord]): ?>
+      <div class="rounded-2xl border-t-4 bg-white p-3 text-center shadow-sm sm:p-7 <?= $bord ?>">
+        <dt class="sr-only"><?= e($pluriel_mot) ?></dt>
+        <dd class="text-3xl font-bold text-vert tabular-nums sm:text-5xl" data-compteur data-duree="1400"><?= $nombre ?></dd>
+        <dd class="mt-1 text-xs text-encre sm:text-base"><?= $nombre > 1 ? $pluriel_mot : $singulier ?></dd>
+      </div>
+      <?php endforeach ?>
+    </dl>
+    <p class="mt-5 text-center text-[15px] sm:text-base">Et chaque nouvelle inscription agrandit le réseau. <a href="<?= url('/compte/inscription') ?>" class="btn-lien ml-1 mt-2 sm:mt-0">Rejoindre le chapitre</a></p>
+  </div>
+</section>
+
+<?php partiel('partials/partenaires', ['partenaires' => $partenaires, 'fond' => 'bg-white']) ?>
+
 <?php if ($mot): ?>
-<section id="mot-du-ministre" class="scroll-mt-24 bg-gris py-16 sm:py-20">
+<section id="mot-du-ministre" class="scroll-mt-24 bg-gris py-12 sm:py-20">
   <div class="conteneur grid gap-8 md:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] md:gap-14">
     <div class="mx-auto w-full max-w-[240px] md:max-w-xs">
       <div class="aspect-[4/5] overflow-hidden rounded-2xl border-t-[6px] border-orange bg-white shadow-xl">
@@ -193,7 +236,8 @@
     </div>
     <div>
       <p class="surtitre surtitre-trait">Le mot du ministre</p>
-      <div class="prose-ycm mt-5"><?= paragraphes($mot['message']) ?></div>
+      <div class="repliable prose-ycm mt-5" id="texte-ministre" data-repliable><?= paragraphes($mot['message']) ?></div>
+      <?php partiel('partials/voir_plus', ['cible' => 'texte-ministre']) ?>
       <p class="mt-6 border-l-[3px] border-orange pl-4"><strong class="block text-encre"><?= e($mot['nom']) ?></strong><span class="text-sm"><?= e($mot['titre_officiel']) ?></span></p>
     </div>
   </div>

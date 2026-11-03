@@ -33,8 +33,6 @@ function accueil(): void
         'actualite_une' => $actualites[0] ?? null,
         'actualites' => array_slice($actualites, 1, 3),
         'partenaires' => $partenaires,
-        // Tant qu'aucun logo n'est saisi dans l'administration, seuls les partenaires connus sont affichés
-        'partenaires_maquette' => ['PNUD', 'Ministère de la Jeunesse et des Sports'],
         'temoignages' => lignes('SELECT * FROM temoignages WHERE publie = 1 ORDER BY ordre, id DESC LIMIT 3'),
     ]));
 }
@@ -69,6 +67,12 @@ function a_propos(): void
         ],
         'axes' => axes(),
         'mot' => ($mot['publie'] && trim((string) $mot['message']) !== '') ? $mot : null,
+        'reseau' => [
+            'membres' => (int) valeur("SELECT COUNT(*) FROM utilisateurs WHERE type_compte = 'individuel' AND actif = 1 AND email_confirme = 1"),
+            'organisations' => (int) valeur("SELECT COUNT(*) FROM utilisateurs WHERE type_compte = 'organisation' AND actif = 1 AND email_confirme = 1"),
+            'communautes' => (int) valeur('SELECT COUNT(*) FROM communautes WHERE active = 1'),
+        ],
+        'partenaires' => lignes('SELECT * FROM partenaires WHERE actif = 1 ORDER BY ordre, nom'),
         'temoignages' => lignes('SELECT * FROM temoignages WHERE publie = 1 ORDER BY ordre, id DESC LIMIT 3'),
     ]));
 }
@@ -212,3 +216,12 @@ function message_rapide(): void
     rediriger(adresse_retour(url('/')));
 }
 
+/** Tous les témoignages publiés (page accessible depuis la section Témoignages, pas depuis le menu) */
+function temoignages(): void
+{
+    afficher(vue('pages/temoignages', [
+        'titre' => 'Témoignages | YouthConnekt Mali',
+        'description' => 'Ce que les jeunes, les organisations et les partenaires disent de YouthConnekt Mali.',
+        'temoignages' => lignes('SELECT * FROM temoignages WHERE publie = 1 ORDER BY ordre, id DESC'),
+    ]));
+}

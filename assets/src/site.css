@@ -290,3 +290,10 @@ a.text-orange:not(.btn):not([class*="hover:bg-"]):hover { color: var(--color-ver
 .aide-choix:has(input:focus-visible) { outline: 3px solid rgb(241 89 42 / .45); }
 @keyframes yc-aide { from { opacity: 0; transform: translateY(10px) scale(.97); } to { opacity: 1; transform: none; } }
 .aide-panneau:not([hidden]) { animation: yc-aide .18s ease-out; transform-origin: bottom right; }
+
+/* Texte replié sur téléphone, déplié avec le bouton « Voir plus » */
+@media (max-width: 767px) {
+  .js .repliable:not(.deplie) { max-height: 9.5rem; overflow: hidden; -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent); mask-image: linear-gradient(to bottom, #000 55%, transparent); }
+  .js .voir-plus.actif { display: inline-flex; }
+}
+.voir-plus[aria-expanded="true"] svg { transform: rotate(180deg); }

@@ -394,3 +394,25 @@ document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
   window.addEventListener("load", majCouleur);
   majCouleur();
 })();
+
+/* « Voir plus » : déplie un texte replié sur téléphone (le bouton n'apparaît que si le texte dépasse). */
+(function () {
+  "use strict";
+  document.querySelectorAll("[data-voir-plus]").forEach(function (bouton) {
+    var bloc = document.getElementById(bouton.getAttribute("aria-controls"));
+    if (!bloc) return;
+    function verifier() {
+      if (bloc.classList.contains("deplie")) return;
+      bouton.classList.toggle("actif", bloc.scrollHeight > bloc.clientHeight + 4);
+    }
+    bouton.addEventListener("click", function () {
+      var ouvert = bloc.classList.toggle("deplie");
+      bouton.setAttribute("aria-expanded", ouvert ? "true" : "false");
+      bouton.querySelector("[data-libelle]").textContent = ouvert ? "Voir moins" : "Voir plus";
+      if (!ouvert) bloc.scrollIntoView({ block: "nearest" });
+    });
+    verifier();
+    window.addEventListener("resize", verifier);
+    window.addEventListener("load", verifier);
+  });
+})();
