@@ -11,6 +11,7 @@ const ROUTES = [
     ['GET', '/', 'site', 'accueil'],
     ['GET', '/a-propos', 'site', 'a_propos'],
     ['GET|POST', '/contact', 'site', 'contact'],
+    ['POST', '/contact/message-rapide', 'site', 'message_rapide'],
     ['GET', '/confidentialite', 'site', 'confidentialite'],
     ['GET', '/mentions-legales', 'site', 'mentions_legales'],
     ['POST', '/newsletter', 'site', 'newsletter'],

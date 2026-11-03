@@ -270,18 +270,15 @@ a.text-orange:not(.btn):not([class*="hover:bg-"]):hover { color: var(--color-ver
   &::-webkit-scrollbar { display: none; }
 }
 
-/* Bandeau défilant des communautés (accueil) */
-@keyframes yc-defile { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-.bandeau-piste { animation: yc-defile 40s linear infinite; }
-.bandeau-defilant:hover .bandeau-piste { animation-play-state: paused; }
-
-/* Bulle d'aide */
-.aide[data-ouvert] .aide-icone { display: none; }
-.aide[data-ouvert] .aide-croix { display: block; }
-.aide[data-ouvert] .aide-bouton { background: var(--color-vert); box-shadow: none; }
+/* Bulle d'aide : vert sur fond clair, orange sur fond vert (choisi par le script) */
+.aide-bouton { background: var(--color-vert); box-shadow: 0 10px 24px rgb(3 94 77 / .35); }
+.aide[data-sur-vert] .aide-bouton { background: var(--color-orange); box-shadow: 0 10px 24px rgb(241 89 42 / .4); }
+@media (hover: hover) {
+  .aide-bouton:hover { background: var(--color-orange); box-shadow: 0 10px 24px rgb(241 89 42 / .4); }
+  .aide[data-sur-vert] .aide-bouton:hover { background: #fff; color: var(--color-orange); }
+}
+.aide-choix { display: flex; min-height: 40px; cursor: pointer; align-items: center; justify-content: center; border-radius: 10px; font-size: 14px; font-weight: 700; color: var(--color-vert); transition: background-color .15s, color .15s; }
+.aide-choix:has(input:checked) { background: var(--color-orange); color: #fff; }
+.aide-choix:has(input:focus-visible) { outline: 3px solid rgb(241 89 42 / .45); }
 @keyframes yc-aide { from { opacity: 0; transform: translateY(10px) scale(.97); } to { opacity: 1; transform: none; } }
 .aide-panneau:not([hidden]) { animation: yc-aide .18s ease-out; transform-origin: bottom right; }
-
-@media (prefers-reduced-motion: reduce) {
-  .bandeau-piste { animation: none; }
-}

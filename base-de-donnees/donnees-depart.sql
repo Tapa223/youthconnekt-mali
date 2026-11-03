@@ -43,3 +43,12 @@ INSERT IGNORE INTO communautes (nom, slug, public_vise, ordre) VALUES
   ('Innovation et porteurs de projets', 'innovation-et-porteurs-de-projets', 'Innovateurs et porteurs de projets à la recherche d''accompagnement', 7),
   ('Étudiants', 'etudiants', 'Étudiants de toutes filières', 8),
   ('Jeunes professionnels', 'jeunes-professionnels', 'Jeunes en début de carrière', 9);
+
+-- Témoignages de la maquette (exemples, modifiables dans Administration > Témoignages)
+INSERT INTO temoignages (nom, role, texte, ordre, publie)
+SELECT * FROM (
+  SELECT 'Aminata K.' AS nom, 'Étudiante en agronomie, Sikasso · Jeune' AS role, 'Le Bootcamp m''a aidée à transformer mon idée de transformation de mangues en vrai projet. J''y ai aussi trouvé des mentors.' AS texte, 1 AS ordre, 1 AS publie
+  UNION ALL SELECT 'Moussa T.', 'Jeune entrepreneur, Ségou · Jeune', 'J''ai découvert ici un appel à candidatures que je n''aurais jamais vu ailleurs. Aujourd''hui, mon projet est accompagné.', 2, 1
+  UNION ALL SELECT 'Organisation partenaire', 'Responsable de programmes · Partenaire', 'Travailler avec YouthConnekt Mali nous permet de toucher des jeunes motivés partout dans le pays.', 3, 1
+) AS exemples
+WHERE NOT EXISTS (SELECT 1 FROM temoignages);

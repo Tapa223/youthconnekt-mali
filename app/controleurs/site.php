@@ -27,7 +27,7 @@ function accueil(): void
         'axes' => array_slice(axes(), 0, 3),
         'initiatives' => $initiatives,
         'mot' => mot_ministre(),
-        'communautes' => communautes_actives(),
+        'communautes' => communautes_actives(6),
         'prochain' => actualites_publiees("AND categorie = 'evenement' AND date_evenement >= CURDATE() ORDER BY date_evenement LIMIT 1")[0] ?? null,
         'nb_communautes' => (int) valeur('SELECT COUNT(*) FROM communautes WHERE active = 1'),
         'opportunites' => $opportunites,
@@ -167,3 +167,50 @@ function newsletter(): void
     $retour = strtok(adresse_retour(url('/')), '#');
     rediriger($retour . '#newsletter');
 }
+
+/**
+ * Message envoyé depuis la bulle en bas à droite (question ou suggestion).
+ * Répond en JSON quand il est envoyé par le script de la page, sinon revient à la page d'origine.
+ */
+function message_rapide(): void
+{
+    $ajax = ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'fetch';
+    $u = utilisateur();
+    $type = post('type') === 'suggestion' ? 'suggestion' : 'question';
+    $nom = $u ? $u['nom_affiche'] : post('nom');
+    $email = $u ? $u['email'] : mb_strtolower(post('email'));
+    $message = post('message');
+    $erreurs = [];
+    if ($nom === '') {
+        $erreurs['nom'] = 'Indiquez votre nom.';
+    }
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $erreurs['email'] = $email === '' ? 'Indiquez votre adresse e-mail pour recevoir la réponse.' : "Cette adresse e-mail n'est pas valide.";
+    }
+    if (mb_strlen($message) < 5) {
+        $erreurs['message'] = $message === '' ? 'Écrivez votre message.' : 'Votre message est trop court.';
+    }
+    if (!$erreurs && post('site_web') === '') { // champ piège contre les robots
+        inserer('messages_contact', [
+            'nom' => mb_substr($nom, 0, 120),
+            'profil' => $u ? ($u['type_compte'] === 'organisation' ? 'organisation' : 'jeune') : 'autre',
+            'email' => mb_substr($email, 0, 190),
+            'objet' => ($type === 'suggestion' ? 'Suggestion' : 'Question') . ' (bulle du site)',
+            'message' => mb_substr($message, 0, 3000),
+            'recu_le' => maintenant(),
+        ]);
+        $copie = (string) config('email.copie_contact', '');
+        if ($copie !== '') {
+            envoyer_email($copie, ($type === 'suggestion' ? 'Nouvelle suggestion' : 'Nouvelle question') . ' depuis le site', "De : $nom <$email>\n\n$message", '', $email);
+        }
+    }
+    $texte = $type === 'suggestion' ? 'Merci pour votre suggestion, elle a bien été transmise à l\'équipe.' : 'Merci, votre question a bien été envoyée. L\'équipe vous répondra par e-mail.';
+    if ($ajax) {
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($erreurs ? ['ok' => false, 'erreurs' => $erreurs] : ['ok' => true, 'message' => $texte], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+    flash($erreurs ? 'erreur' : 'succes', $erreurs ? reset($erreurs) : $texte);
+    rediriger(adresse_retour(url('/')));
+}
+

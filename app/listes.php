@@ -107,6 +107,7 @@ const PROFILS_CONTACT = [
 
 const SUJETS_CONTACT = [
     'question' => 'Question générale',
+    'suggestion' => 'Suggestion',
     'partenariat' => 'Partenariat',
     'opportunite' => 'Proposer une opportunité',
     'initiative' => 'Faire connaître une initiative',

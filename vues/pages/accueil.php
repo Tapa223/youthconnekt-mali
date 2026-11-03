@@ -21,8 +21,8 @@ $points = [
   <div class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(3_94_77/.95)_0%,rgb(3_94_77/.88)_34%,rgb(3_94_77/.72)_60%,rgb(3_94_77/.86)_100%)]" aria-hidden="true"></div>
 
   <?php /* Cadre de la maquette (1440 × 820) mis à l'échelle de l'écran : anneau, grand cercle et bulles s'y alignent */ ?>
-  <div class="pointer-events-none absolute inset-y-0 left-1/2 hidden aspect-[1440/820] -translate-x-1/2 lg:block">
-    <svg class="absolute inset-0 h-full w-full overflow-visible" viewBox="0 0 1440 820" fill="none" aria-hidden="true">
+  <div class="pointer-events-none absolute inset-y-0 left-1/2 hidden aspect-[1440/820] -translate-x-1/2 lg:block" aria-hidden="true">
+    <svg class="absolute inset-0 h-full w-full overflow-visible" viewBox="0 0 1440 820" fill="none">
       <circle cx="720" cy="710" r="450" stroke="#fff" stroke-opacity=".3" stroke-width="1.5" stroke-dasharray="6 8"/>
       <circle cx="720" cy="710" r="490" stroke="#fff" stroke-opacity=".1"/>
       <g class="anim-orbite" style="transform-origin: 720px 710px">
@@ -33,11 +33,11 @@ $points = [
       <g stroke="#fff" stroke-opacity=".35" stroke-width="1.5" stroke-dasharray="4 6"><path d="M195 360 L346 460"/><path d="M289 536 L303 541"/><path d="M1243 334 L1085 447"/><path d="M1143 517 L1129 523"/></g>
       <circle cx="346" cy="460" r="4" fill="#F1592A"/><circle cx="303" cy="541" r="4" fill="#04B2B1"/><circle cx="1085" cy="447" r="4" fill="#04B2B1"/><circle cx="1129" cy="523" r="4" fill="#F1592A"/>
     </svg>
-    <a href="<?= url('/communaute') ?>" class="bulle-acces pointer-events-auto group anim-flotte-2 absolute top-[34.4%] left-[7.1%] aspect-square w-[6.7%] rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)]"><span class="block h-full w-full overflow-hidden rounded-full"><img src="<?= asset('img/accueil/bulle-1.jpg') ?>" alt="" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"></span><span class="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 rounded-full bg-white px-3 py-1 text-[13px] font-bold whitespace-nowrap text-vert shadow-md transition-colors group-hover:bg-orange group-hover:text-white">Communauté</span></a>
-    <a href="<?= url('/initiatives') ?>" class="bulle-acces pointer-events-auto group anim-flotte absolute top-[59%] left-[14.9%] aspect-square w-[5%] rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)]"><span class="block h-full w-full overflow-hidden rounded-full"><img src="<?= asset('img/accueil/bulle-2.jpg') ?>" alt="" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"></span><span class="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 rounded-full bg-white px-3 py-1 text-[13px] font-bold whitespace-nowrap text-vert shadow-md transition-colors group-hover:bg-orange group-hover:text-white">Initiatives</span></a>
-    <a href="<?= url('/opportunites') ?>" class="bulle-acces pointer-events-auto group anim-flotte-2 absolute top-[30.2%] left-[86%] aspect-square w-[7.2%] rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)]"><span class="block h-full w-full overflow-hidden rounded-full"><img src="<?= asset('img/accueil/bulle-3.jpg') ?>" alt="" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"></span><span class="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 rounded-full bg-white px-3 py-1 text-[13px] font-bold whitespace-nowrap text-vert shadow-md transition-colors group-hover:bg-orange group-hover:text-white">Opportunités</span></a>
-    <a href="<?= url('/actualites') ?>" class="bulle-acces pointer-events-auto group anim-flotte absolute top-[56.7%] left-[79.5%] aspect-square w-[4.9%] rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)]"><span class="block h-full w-full overflow-hidden rounded-full"><img src="<?= asset('img/accueil/bulle-4.jpg') ?>" alt="" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"></span><span class="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 rounded-full bg-white px-3 py-1 text-[13px] font-bold whitespace-nowrap text-vert shadow-md transition-colors group-hover:bg-orange group-hover:text-white">Actualités</span></a>
-    <div class="anim-soleil absolute top-[36.6%] left-[21.5%] aspect-square w-[57%]" aria-hidden="true">
+    <span class="anim-flotte-2 absolute top-[34.4%] left-[7.1%] aspect-square w-[6.7%] rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= asset('img/accueil/bulle-1.jpg') ?>" alt=""></span>
+    <span class="anim-flotte absolute top-[59%] left-[14.9%] aspect-square w-[5%] rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= asset('img/accueil/bulle-2.jpg') ?>" alt=""></span>
+    <span class="anim-flotte-2 absolute top-[30.2%] left-[86%] aspect-square w-[7.2%] rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= asset('img/accueil/bulle-3.jpg') ?>" alt=""></span>
+    <span class="anim-flotte absolute top-[56.7%] left-[79.5%] aspect-square w-[4.9%] rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= asset('img/accueil/bulle-4.jpg') ?>" alt=""></span>
+    <div class="anim-soleil absolute top-[36.6%] left-[21.5%] aspect-square w-[57%]">
       <div class="absolute inset-0 overflow-hidden rounded-full bg-vert shadow-[0_0_0_8px_rgb(255_255_255/.14)]" data-diapo="accueil" data-diapo-zoom>
         <img data-diapo-image src="<?= asset('img/accueil/premier-ecran.jpg') ?>" alt="" class="absolute inset-0 h-full w-full object-cover object-[62%_30%]" fetchpriority="high">
         <img data-diapo-image src="<?= asset('img/accueil/premier-ecran-2.jpg') ?>" alt="" class="absolute inset-0 h-full w-full object-cover object-[50%_20%]" loading="lazy">
@@ -241,17 +241,6 @@ $points = [
   </div>
 </section>
 
-<?php /* 4 bis. Bandeau défilant des communautés */ ?>
-<?php if ($communautes): $couleurs_bandeau = ['text-orange', 'text-turquoise', 'text-white', 'text-orange', 'text-turquoise']; ?>
-<div class="bandeau-defilant overflow-hidden bg-vert py-4 sm:py-5" aria-hidden="true">
-  <div class="bandeau-piste flex w-max items-center">
-    <?php for ($tour = 0; $tour < 2; $tour++): foreach ($communautes as $k => $communaute): ?>
-    <span class="flex items-center gap-6 pr-6 text-lg font-bold whitespace-nowrap sm:gap-8 sm:pr-8 sm:text-2xl <?= cycle($couleurs_bandeau, $k) ?>"><?= e($communaute['nom']) ?><span class="size-2 rounded-full bg-white/40"></span></span>
-    <?php endforeach; endfor ?>
-  </div>
-</div>
-<?php endif ?>
-
 <?php /* 5. Communauté */ ?>
 <?php if ($communautes): ?>
 <section id="communaute" class="relative overflow-hidden bg-gris py-12 sm:py-14" aria-labelledby="titre-communaute">
@@ -285,9 +274,9 @@ $points = [
       </div>
     </div>
 
-    <ul class="mt-7 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:mt-6 lg:grid-cols-5 lg:gap-3">
-      <?php foreach ($communautes as $communaute): ?>
-      <li><a href="<?= e($communaute['url']) ?>" class="flex h-full min-h-14 items-center rounded-xl border border-ligne bg-white px-3.5 py-2 text-[14px] leading-tight font-bold text-vert transition-colors hover:border-orange hover:bg-orange hover:text-white lg:min-h-[52px] lg:justify-center lg:text-center lg:text-[15px]"><?= e($communaute['nom']) ?></a></li>
+    <ul class="mt-7 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:mt-8 lg:grid-cols-4 lg:gap-5">
+      <?php foreach (array_slice($communautes, 0, 6) as $k => $communaute): ?>
+      <li class="<?= $k >= 4 ? 'lg:hidden' : '' ?>"><a href="<?= e($communaute['url']) ?>" class="survol-leve flex h-full min-h-14 items-center rounded-xl border border-ligne bg-white px-4 py-3 text-[14px] leading-tight font-bold text-vert transition-colors hover:border-orange hover:bg-orange hover:text-white lg:min-h-[76px] lg:rounded-2xl lg:px-6 lg:text-lg"><?= e($communaute['nom']) ?></a></li>
       <?php endforeach ?>
     </ul>
     <a href="<?= url('/communaute') ?>" class="btn btn-orange mt-6 w-full lg:hidden">Découvrir les communautés</a>
@@ -397,30 +386,6 @@ $points = [
   </div>
 </section>
 <?php endif ?>
-
-<?php /* 7 bis. Comment ça marche */ ?>
-<section class="relative overflow-hidden py-16 sm:py-20" aria-labelledby="titre-etapes">
-  <div class="conteneur">
-    <div class="text-center">
-      <p class="surtitre justify-center">Comment ça marche</p>
-      <h2 id="titre-etapes" class="titre-section">Trois étapes pour vous lancer</h2>
-    </div>
-    <ol class="relative mt-10 grid gap-5 sm:mt-12 md:grid-cols-3 md:gap-8">
-      <svg class="pointer-events-none absolute top-9 left-[16%] hidden h-4 w-[68%] md:block" viewBox="0 0 680 16" preserveAspectRatio="none" aria-hidden="true"><path d="M0 8 H680" stroke="#04B2B1" stroke-width="2" stroke-dasharray="6 8" fill="none"/></svg>
-      <?php foreach ([
-          ['Créer mon compte', 'En tant que membre individuel ou organisation. Votre compte fait de vous un membre du chapitre.', 'bg-orange', '/compte/inscription'],
-          ['Intégrer une communauté', 'Choisissez celles qui vous ressemblent et envoyez une courte demande pour les rejoindre.', 'bg-turquoise', '/communaute'],
-          ['Recevoir les opportunités', 'Formations, appels, bourses et événements de vos communautés arrivent dans votre espace.', 'bg-vert', '/opportunites'],
-      ] as $k => [$titre_etape, $texte_etape, $fond_etape, $lien_etape]): ?>
-      <li class="relative rounded-2xl border border-ligne bg-white p-6 text-center shadow-lg shadow-vert/5 sm:p-7">
-        <span class="mx-auto grid size-[72px] place-items-center rounded-full border-[6px] border-white text-2xl font-bold text-white shadow-md <?= $fond_etape ?>"><?= $k + 1 ?></span>
-        <h3 class="mt-4 text-xl font-bold text-vert"><?= $titre_etape ?></h3>
-        <p class="mt-2 text-[15px] leading-relaxed"><?= $texte_etape ?></p>
-      </li>
-      <?php endforeach ?>
-    </ol>
-  </div>
-</section>
 
 <?php /* 8. Let's Connekt */ ?>
 <section id="rejoindre" class="relative isolate scroll-mt-20 overflow-hidden bg-vert py-20 text-center text-white sm:py-28" aria-labelledby="titre-invitation">

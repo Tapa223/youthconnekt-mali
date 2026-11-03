@@ -321,12 +321,76 @@ document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
   if (!aide) return;
   var bouton = aide.querySelector("[data-ouvrir-aide]");
   var panneau = aide.querySelector(".aide-panneau");
+  var form = aide.querySelector("[data-form-aide]");
+  var merci = aide.querySelector("[data-merci-aide]");
+  var erreur = aide.querySelector("[data-erreur-aide]");
   function basculer(ouvrir) {
     panneau.hidden = !ouvrir;
     bouton.setAttribute("aria-expanded", ouvrir ? "true" : "false");
-    if (ouvrir) aide.setAttribute("data-ouvert", ""); else aide.removeAttribute("data-ouvert");
+    if (ouvrir) { var champ = form.querySelector("input[type=text], textarea"); if (champ) champ.focus(); }
   }
   bouton.addEventListener("click", function () { basculer(panneau.hidden); });
+  aide.querySelector("[data-fermer-aide]").addEventListener("click", function () { basculer(false); bouton.focus(); });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !panneau.hidden) { basculer(false); bouton.focus(); } });
   document.addEventListener("click", function (e) { if (!panneau.hidden && !aide.contains(e.target)) basculer(false); });
+
+  // Envoi sans quitter la page
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var envoyer = form.querySelector("button[type=submit]");
+    envoyer.disabled = true;
+    erreur.classList.add("hidden");
+    fetch(form.action, { method: "POST", body: new FormData(form), headers: { "X-Requested-With": "fetch" }, credentials: "same-origin" })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (d.ok) {
+          merci.querySelector("[data-texte-merci]").textContent = d.message;
+          form.classList.add("hidden");
+          merci.classList.remove("hidden");
+          form.reset();
+        } else {
+          var messages = Object.keys(d.erreurs || {}).map(function (k) { return d.erreurs[k]; });
+          erreur.textContent = messages.join(" ");
+          erreur.classList.remove("hidden");
+        }
+      })
+      .catch(function () {
+        erreur.textContent = "Le message n'a pas pu partir. Rechargez la page puis réessayez.";
+        erreur.classList.remove("hidden");
+      })
+      .then(function () { envoyer.disabled = false; });
+  });
+  aide.querySelector("[data-nouveau-aide]").addEventListener("click", function () {
+    merci.classList.add("hidden");
+    form.classList.remove("hidden");
+  });
+
+  // Couleur du bouton selon le fond qui se trouve derrière lui
+  function fondDerriere() {
+    var r = bouton.getBoundingClientRect();
+    var x = r.left + r.width / 2, y = r.top + r.height / 2;
+    var pile = document.elementsFromPoint ? document.elementsFromPoint(x, y) : [];
+    for (var i = 0; i < pile.length; i++) {
+      if (aide.contains(pile[i])) continue;
+      for (var el = pile[i]; el && el !== document.documentElement; el = el.parentElement) {
+        var c = getComputedStyle(el).backgroundColor.match(/[\d.]+/g);
+        if (c && (c.length < 4 || +c[3] > 0.5)) {
+          var lum = (0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]) / 255;
+          return lum < 0.5;
+        }
+      }
+      break;
+    }
+    return false;
+  }
+  var attente = null;
+  function majCouleur() {
+    attente = null;
+    if (fondDerriere()) aide.setAttribute("data-sur-vert", ""); else aide.removeAttribute("data-sur-vert");
+  }
+  function planifier() { if (!attente) attente = window.requestAnimationFrame(majCouleur); }
+  window.addEventListener("scroll", planifier, { passive: true });
+  window.addEventListener("resize", planifier);
+  window.addEventListener("load", majCouleur);
+  majCouleur();
 })();

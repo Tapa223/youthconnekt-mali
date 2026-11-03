@@ -15,11 +15,11 @@ $rotations = ['md:z-[1] md:translate-x-[30px] md:translate-y-10 md:-rotate-[4deg
         <div class="<?= cycle(['anim-flotte', 'anim-flotte-2', 'anim-flotte'], $i) ?> h-full">
           <figure class="survol-carte flex h-full flex-col gap-2 rounded-[14px] border-t-4 bg-white px-4 py-3.5 shadow-[0_14px_30px_rgb(0_0_0/.22)] md:gap-4 md:rounded-[22px] md:border-t-[6px] md:p-7 md:shadow-[0_22px_48px_rgb(0_0_0/.25)] <?= cycle(['border-orange', 'border-turquoise', 'border-orange'], $i) ?>">
             <span class="hidden h-7 text-6xl leading-[.6] font-bold text-orange md:block" aria-hidden="true">«</span>
-            <blockquote class="text-[13px] leading-relaxed text-encre md:text-[17px]">« <?= e($t['texte']) ?> »</blockquote>
+            <blockquote class="text-[13px] leading-relaxed text-encre md:text-[18px] md:leading-[1.55]"><span class="md:hidden">« </span><?= e($t['texte']) ?><span class="md:hidden"> »</span></blockquote>
             <figcaption class="mt-auto flex items-center gap-2 md:gap-3">
               <?php if ($t['photo']): ?><img src="<?= e(media($t['photo'])) ?>" alt="" class="size-7 rounded-full object-cover md:size-11" loading="lazy">
-              <?php else: ?><span class="grid size-7 shrink-0 place-items-center rounded-full text-[11px] font-bold text-white md:size-11 md:text-sm <?= cycle(['bg-vert', 'bg-turquoise', 'bg-bleu'], $i) ?>" aria-hidden="true"><?= e(mb_strtoupper(mb_substr($t['nom'], 0, 1))) ?></span><?php endif ?>
-              <span class="text-xs md:text-base"><span class="font-bold text-vert md:block"><?= e($t['nom']) ?></span><?php if ($t['role']): ?><span class="text-encre md:block md:text-sm"><span class="md:hidden"> · </span><?= e($t['role']) ?></span><?php endif ?></span>
+              <?php else: ?><span class="grid size-7 shrink-0 place-items-center rounded-full text-[11px] font-bold text-white md:size-11 md:text-sm <?= cycle(['bg-vert', 'bg-turquoise', 'bg-bleu'], $i) ?>" aria-hidden="true"><?= e(initiales($t['nom'])) ?></span><?php endif ?>
+              <span class="text-xs md:text-base"><span class="font-bold text-vert md:block"><?= e($t['nom']) ?></span><?php if ($t['role']): $parties = explode(' · ', $t['role']); ?><span class="text-texte md:block md:text-sm md:text-encre"><span class="md:hidden"> · <?= e(end($parties)) ?></span><span class="hidden md:inline"><?= e($t['role']) ?></span></span><?php endif ?></span>
             </figcaption>
           </figure>
         </div>
