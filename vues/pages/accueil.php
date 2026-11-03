@@ -76,32 +76,6 @@ $points = [
   <?php partiel('partials/mention_photo', ['texte' => 'Photos provisoires · Sommet YouthConnekt Africa, hors Mali']) ?>
 </section>
 
-<?php /* 1 bis. Prochain événement, avec compte à rebours (repris automatiquement) */ ?>
-<?php if ($prochain): $cible = date('Y-m-d', strtotime($prochain['date_evenement'])) . 'T08:00:00'; ?>
-<section class="border-b border-ligne bg-white" aria-labelledby="titre-prochain">
-  <div class="conteneur flex flex-col gap-4 py-5 sm:py-6 lg:flex-row lg:items-center lg:gap-8">
-    <div class="flex min-w-0 flex-1 items-center gap-4">
-      <span class="grid size-14 shrink-0 place-items-center rounded-xl bg-orange text-center leading-none text-white sm:size-16" aria-hidden="true">
-        <span><strong class="block text-xl sm:text-2xl"><?= e(jour($prochain['date_evenement'])) ?></strong><span class="text-[11px] font-bold uppercase"><?= e(mois_pastille($prochain['date_evenement'])) ?></span></span>
-      </span>
-      <div class="min-w-0">
-        <p class="text-xs font-bold tracking-[0.14em] text-orange uppercase">Prochain événement</p>
-        <h2 id="titre-prochain" class="mt-1 truncate text-lg leading-tight font-bold text-vert sm:text-xl"><?= e($prochain['titre']) ?></h2>
-        <p class="mt-0.5 text-sm"><?= e(implode(' · ', array_filter([date_longue($prochain['date_evenement']), $prochain['lieu']]))) ?></p>
-      </div>
-    </div>
-    <div class="flex items-center gap-4 sm:gap-6">
-      <dl class="flex gap-2" data-rebours="<?= e($cible) ?>" aria-label="Temps restant avant l'événement">
-        <?php foreach (['jours' => 'Jours', 'heures' => 'Heures', 'minutes' => 'Min'] as $cle => $libelle): ?>
-        <div class="w-16 rounded-xl bg-gris py-2 text-center"><dt class="sr-only"><?= $libelle ?></dt><dd class="text-xl font-bold text-vert tabular-nums sm:text-2xl" data-<?= $cle ?>>0</dd><span class="block text-[11px] font-bold text-texte uppercase" aria-hidden="true"><?= $libelle ?></span></div>
-        <?php endforeach ?>
-      </dl>
-      <a href="<?= e($prochain['url']) ?>" class="btn btn-vert shrink-0">Voir l'événement</a>
-    </div>
-  </div>
-</section>
-<?php endif ?>
-
 <?php /* 2. Le chapitre : présentation, chiffres clés, axes */ ?>
 <section id="chapitre" class="relative scroll-mt-20 overflow-hidden py-16 sm:py-20 lg:py-24" aria-labelledby="titre-chapitre">
   <div class="absolute -top-24 -right-24 hidden size-80 rounded-full bg-turquoise/10 md:block" aria-hidden="true"></div>
@@ -274,10 +248,24 @@ $points = [
       </div>
     </div>
 
+    <?php
+    // 3 communautés sur ordinateur (5 sur téléphone), puis une carte « + N autres communautés »
+    $carte_communaute = 'survol-leve flex h-full min-h-14 items-center rounded-xl border px-4 py-3 text-[14px] leading-tight font-bold transition-colors lg:min-h-[76px] lg:rounded-2xl lg:px-6 lg:text-lg';
+    $plus_ordi = max(0, $nb_communautes - 3);
+    $plus_tel = max(0, $nb_communautes - 5);
+    ?>
     <ul class="mt-7 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:mt-8 lg:grid-cols-4 lg:gap-5">
-      <?php foreach (array_slice($communautes, 0, 6) as $k => $communaute): ?>
-      <li class="<?= $k >= 4 ? 'lg:hidden' : '' ?>"><a href="<?= e($communaute['url']) ?>" class="survol-leve flex h-full min-h-14 items-center rounded-xl border border-ligne bg-white px-4 py-3 text-[14px] leading-tight font-bold text-vert transition-colors hover:border-orange hover:bg-orange hover:text-white lg:min-h-[76px] lg:rounded-2xl lg:px-6 lg:text-lg"><?= e($communaute['nom']) ?></a></li>
+      <?php foreach (array_slice($communautes, 0, $plus_tel ? 5 : 6) as $k => $communaute): ?>
+      <li class="<?= $k >= ($plus_ordi ? 3 : 4) ? 'lg:hidden' : '' ?>"><a href="<?= e($communaute['url']) ?>" class="<?= $carte_communaute ?> border-ligne bg-white text-vert hover:border-orange hover:bg-orange hover:text-white"><?= e($communaute['nom']) ?></a></li>
       <?php endforeach ?>
+      <?php if ($plus_ordi || $plus_tel): ?>
+      <li class="<?= $plus_tel ? '' : 'max-lg:hidden' ?> <?= $plus_ordi ? '' : 'lg:hidden' ?>">
+        <a href="<?= url('/communaute') ?>" class="<?= $carte_communaute ?> justify-between gap-3 border-orange bg-orange text-white hover:border-vert hover:bg-vert">
+          <span><span class="lg:hidden">+ <?= $plus_tel ?> autre<?= pluriel($plus_tel) ?></span><span class="hidden lg:inline">+ <?= $plus_ordi ?> autre<?= pluriel($plus_ordi) ?> communauté<?= pluriel($plus_ordi) ?></span></span>
+          <svg class="hidden size-6 shrink-0 lg:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
+        </a>
+      </li>
+      <?php endif ?>
     </ul>
     <a href="<?= url('/communaute') ?>" class="btn btn-orange mt-6 w-full lg:hidden">Découvrir les communautés</a>
   </div>

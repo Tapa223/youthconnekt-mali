@@ -28,7 +28,6 @@ function accueil(): void
         'initiatives' => $initiatives,
         'mot' => mot_ministre(),
         'communautes' => communautes_actives(6),
-        'prochain' => actualites_publiees("AND categorie = 'evenement' AND date_evenement >= CURDATE() ORDER BY date_evenement LIMIT 1")[0] ?? null,
         'nb_communautes' => (int) valeur('SELECT COUNT(*) FROM communautes WHERE active = 1'),
         'opportunites' => $opportunites,
         'actualite_une' => $actualites[0] ?? null,

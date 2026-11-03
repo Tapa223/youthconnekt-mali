@@ -68,6 +68,32 @@
     </div>
   </div>
 
+  <?php
+  /* Bande « Avec l'appui de » : le logo s'affiche dès que son fichier est déposé dans assets/img/appui/
+     (pnud.svg ou pnud.png, ministere.svg ou ministere.png) ; sinon le nom est écrit en toutes lettres. */
+  $appuis = [
+      ['pnud', 'PNUD Mali', 'Programme des Nations Unies pour le développement'],
+      ['ministere', 'Ministère de la Jeunesse et des Sports', "Chargé de l'Instruction civique et de la Construction citoyenne · République du Mali"],
+  ];
+  ?>
+  <div class="relative border-t border-white/15">
+    <div class="conteneur sans-apparition flex flex-col gap-4 py-6 sm:py-7 lg:flex-row lg:items-center lg:gap-8">
+      <p class="shrink-0 text-xs font-bold tracking-[0.16em] text-white uppercase">Avec l'appui de</p>
+      <ul class="grid gap-3 sm:grid-cols-2 lg:flex lg:flex-1 lg:gap-4">
+        <?php foreach ($appuis as [$fichier, $nom, $detail]):
+            $logo = null;
+            foreach (['svg', 'png', 'webp', 'jpg'] as $ext) {
+                if (is_file(RACINE . "/assets/img/appui/$fichier.$ext")) { $logo = asset("img/appui/$fichier.$ext"); break; }
+            } ?>
+        <li class="flex min-h-[72px] items-center gap-4 rounded-2xl bg-white px-5 py-3 lg:max-w-md">
+          <?php if ($logo): ?><img src="<?= e($logo) ?>" alt="" class="h-12 w-auto max-w-[140px] shrink-0 object-contain" loading="lazy"><?php endif ?>
+          <span class="leading-tight"><strong class="block text-[15px] text-vert"><?= e($nom) ?></strong><span class="mt-0.5 block text-xs text-encre"><?= e($detail) ?></span></span>
+        </li>
+        <?php endforeach ?>
+      </ul>
+    </div>
+  </div>
+
   <div class="relative border-t border-white/15">
     <div class="conteneur sans-apparition flex flex-col gap-3 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] text-[13px] text-white/75 sm:py-6 sm:text-sm md:flex-row md:items-center md:justify-between">
       <p>&copy; <?= date('Y') ?> YouthConnekt Mali · Un chapitre du réseau YouthConnekt Africa</p>
