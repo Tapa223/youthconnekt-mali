@@ -359,15 +359,6 @@ document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
       repondre(modele.content.firstElementChild.cloneNode(true));
     });
   });
-  aide.querySelector("[data-autre]").addEventListener("click", function () {
-    bulle("aide-moi", "Autre question");
-    var d = document.createElement("div");
-    d.className = "aide-bot";
-    d.textContent = "Écrivez votre message en bas : il est transmis à l'équipe du chapitre, qui vous répondra par e-mail.";
-    repondre(d);
-    if (identite) { identite.classList.remove("hidden"); identite.classList.add("grid"); }
-    setTimeout(function () { champ.focus(); }, 500);
-  });
 
   // Le champ s'agrandit avec le texte ; Entrée envoie, Maj + Entrée passe à la ligne
   champ.addEventListener("input", function () { champ.style.height = "auto"; champ.style.height = Math.min(champ.scrollHeight, 112) + "px"; });
@@ -378,20 +369,10 @@ document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
     e.preventDefault();
     var texte = champ.value.trim();
     if (texte === "") { champ.focus(); return; }
-    if (identite) {
-      var nom = identite.querySelector("[name=nom]"), email = identite.querySelector("[name=email]");
-      if (nom.value.trim() === "" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
-        if (identite.classList.contains("hidden")) {
-          identite.classList.remove("hidden"); identite.classList.add("grid");
-          var d = document.createElement("div"); d.className = "aide-bot";
-          d.textContent = "Pour que l'équipe puisse vous répondre, indiquez votre nom et votre adresse e-mail, puis envoyez.";
-          repondre(d);
-        } else {
-          bulle("aide-bot aide-alerte", nom.value.trim() === "" ? "Indiquez votre nom." : "Cette adresse e-mail n'est pas valide.");
-        }
-        (nom.value.trim() === "" ? nom : email).focus();
-        return;
-      }
+    if (identite && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identite.value.trim())) {
+      bulle("aide-bot aide-alerte", identite.value.trim() === "" ? "Indiquez votre adresse e-mail pour recevoir la réponse." : "Cette adresse e-mail n'est pas valide.");
+      identite.focus();
+      return;
     }
     var envoyer = form.querySelector("button[type=submit]");
     envoyer.disabled = true;
@@ -404,7 +385,6 @@ document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
           b.className = "aide-bot";
           b.textContent = "Merci, votre message a bien été transmis. L'équipe du chapitre vous répondra par e-mail.";
           champ.value = ""; champ.style.height = "";
-          if (identite) { identite.classList.add("hidden"); identite.classList.remove("grid"); }
         } else {
           b.className = "aide-bot aide-alerte";
           b.textContent = Object.keys(d.erreurs || {}).map(function (k) { return d.erreurs[k]; }).join(" ");

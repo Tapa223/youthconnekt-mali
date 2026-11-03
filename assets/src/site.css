@@ -305,13 +305,13 @@ a.text-orange:not(.btn):not([class*="hover:bg-"]):hover { color: var(--color-ver
 .choix-type[open] .choix-fleche { transform: rotate(180deg); }
 
 /* Assistant : bulles de conversation et sujets */
-.aide-bot { max-width: 88%; border-radius: 16px 16px 16px 4px; background: #fff; padding: 10px 14px; font-size: 14.5px; line-height: 1.5; color: var(--color-encre); box-shadow: 0 1px 2px rgb(0 0 0 / .06); }
-.aide-moi { margin-left: auto; max-width: 85%; width: fit-content; border-radius: 16px 16px 4px 16px; background: var(--color-vert); padding: 10px 14px; font-size: 14.5px; line-height: 1.45; color: #fff; white-space: pre-line; }
+.aide-bot { max-width: 90%; border-radius: 14px 14px 14px 4px; background: #fff; padding: 8px 12px; font-size: 14px; line-height: 1.5; color: var(--color-encre); box-shadow: 0 1px 2px rgb(0 0 0 / .06); }
+.aide-moi { margin-left: auto; max-width: 85%; width: fit-content; border-radius: 14px 14px 4px 14px; background: var(--color-vert); padding: 8px 12px; font-size: 14px; line-height: 1.45; color: #fff; white-space: pre-line; }
 .aide-alerte { color: var(--color-rouge); }
 .aide-ecrit { width: fit-content; letter-spacing: 3px; color: var(--color-texte); }
-.aide-lien { margin-top: 10px; display: flex; width: fit-content; min-height: 38px; align-items: center; border-radius: 999px; background: var(--color-orange); padding: 0 16px; font-size: 14px; font-weight: 700; color: #fff; }
+.aide-lien { margin-top: 8px; display: flex; width: fit-content; min-height: 34px; align-items: center; border-radius: 999px; background: var(--color-orange); padding: 0 16px; font-size: 14px; font-weight: 700; color: #fff; }
 .aide-lien:hover { background: var(--color-vert); color: #fff; }
-.aide-sujet { min-height: 36px; border-radius: 999px; border: 1.5px solid var(--color-vert); background: #fff; padding: 0 14px; font-size: 14px; font-weight: 700; color: var(--color-vert); transition: background-color .15s, color .15s, border-color .15s; }
+.aide-sujet { min-height: 34px; border-radius: 999px; border: 1.5px solid var(--color-vert); background: #fff; padding: 0 14px; font-size: 14px; font-weight: 700; color: var(--color-vert); transition: background-color .15s, color .15s, border-color .15s; }
 .aide-sujet:hover { border-color: var(--color-orange); background: var(--color-orange); color: #fff; }
 .aide-sujet-autre { border-style: dashed; }
 .aide[data-ouvert] .aide-icone-message { display: none; }

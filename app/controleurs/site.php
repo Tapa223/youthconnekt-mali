@@ -188,6 +188,10 @@ function message_rapide(): void
     $ajax = ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'fetch';
     $u = utilisateur();
     $nom = $u ? $u['nom_affiche'] : post('nom');
+    if (!$u && $nom === '' && !isset($_POST['initiative'])) {
+        // Bulle du site : le visiteur ne donne que son e-mail
+        $nom = trim(explode('@', post('email'))[0]) ?: 'Visiteur';
+    }
     $email = $u ? $u['email'] : mb_strtolower(post('email'));
     $message = post('message');
     $initiative = post('sujet') === 'initiative';
