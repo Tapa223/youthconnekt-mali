@@ -182,7 +182,12 @@ function message_rapide(): void
     $nom = $u ? $u['nom_affiche'] : post('nom');
     $email = $u ? $u['email'] : mb_strtolower(post('email'));
     $message = post('message');
+    $initiative = post('sujet') === 'initiative';
     $erreurs = [];
+    if ($initiative && isset($_POST['initiative']) && post('initiative') === '') {
+        // Formulaire de proposition : le nom de l'initiative est demandé
+        $erreurs['initiative'] = "Indiquez le nom de votre initiative.";
+    }
     if ($nom === '') {
         $erreurs['nom'] = 'Indiquez votre nom.';
     }
@@ -192,12 +197,23 @@ function message_rapide(): void
     if (mb_strlen($message) < 5) {
         $erreurs['message'] = $message === '' ? 'Écrivez votre message.' : 'Votre message est trop court.';
     }
+    if ($initiative && !$erreurs) {
+        // On regroupe les champs du formulaire dans le message reçu par l'équipe
+        $details = array_filter([
+            post('initiative') !== '' ? 'Initiative : ' . post('initiative') : '',
+            post('lieu') !== '' ? 'Lieu : ' . post('lieu') : '',
+            post('telephone') !== '' ? 'Téléphone : ' . post('telephone') : '',
+        ]);
+        if ($details) {
+            $message = implode("\n", $details) . "\n\n" . $message;
+        }
+    }
     if (!$erreurs && post('site_web') === '') { // champ piège contre les robots
         inserer('messages_contact', [
             'nom' => mb_substr($nom, 0, 120),
             'profil' => $u ? ($u['type_compte'] === 'organisation' ? 'organisation' : 'jeune') : 'autre',
             'email' => mb_substr($email, 0, 190),
-            'objet' => post('sujet') === 'initiative' ? 'Proposition d\'initiative (bulle du site)' : 'Message envoyé depuis la bulle du site',
+            'objet' => $initiative ? 'Proposition d\'initiative' . (post('initiative') !== '' ? ' : ' . mb_substr(post('initiative'), 0, 150) : '') : 'Message envoyé depuis la bulle du site',
             'message' => mb_substr($message, 0, 3000),
             'recu_le' => maintenant(),
         ]);

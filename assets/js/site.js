@@ -434,3 +434,40 @@ document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
     window.addEventListener("load", verifier);
   });
 })();
+
+/* Fenêtre « Parlez-nous de votre initiative » (page Initiatives) */
+(function () {
+  "use strict";
+  var boite = document.querySelector("[data-proposition]");
+  if (!boite || !boite.showModal) return;
+  var form = boite.querySelector("[data-form-proposition]");
+  var merci = boite.querySelector("[data-merci-proposition]");
+  var erreur = boite.querySelector("[data-erreur-proposition]");
+  document.querySelectorAll("[data-ouvrir-proposition]").forEach(function (lien) {
+    lien.addEventListener("click", function (e) {
+      e.preventDefault();
+      form.classList.remove("hidden");
+      merci.classList.add("hidden");
+      erreur.classList.add("hidden");
+      boite.showModal();
+      var premier = form.querySelector("input:not([type=hidden]):not([tabindex])");
+      if (premier) premier.focus();
+    });
+  });
+  boite.querySelectorAll("[data-fermer-proposition]").forEach(function (b) { b.addEventListener("click", function () { boite.close(); }); });
+  boite.addEventListener("click", function (e) { if (e.target === boite) boite.close(); });
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var envoyer = form.querySelector("button[type=submit]");
+    envoyer.disabled = true;
+    erreur.classList.add("hidden");
+    fetch(form.action, { method: "POST", body: new FormData(form), headers: { "X-Requested-With": "fetch" }, credentials: "same-origin" })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (d.ok) { form.reset(); form.classList.add("hidden"); merci.classList.remove("hidden"); }
+        else { erreur.textContent = Object.keys(d.erreurs || {}).map(function (k) { return d.erreurs[k]; }).join(" "); erreur.classList.remove("hidden"); }
+      })
+      .catch(function () { erreur.textContent = "Le message n'a pas pu partir. Rechargez la page puis réessayez."; erreur.classList.remove("hidden"); })
+      .then(function () { envoyer.disabled = false; });
+  });
+})();

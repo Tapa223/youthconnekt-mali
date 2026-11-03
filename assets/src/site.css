@@ -297,3 +297,7 @@ a.text-orange:not(.btn):not([class*="hover:bg-"]):hover { color: var(--color-ver
   .js .voir-plus.actif { display: inline-flex; }
 }
 .voir-plus[aria-expanded="true"] svg { transform: rotate(180deg); }
+
+/* Fenêtre de proposition d'initiative */
+.proposition::backdrop { background: rgb(2 30 25 / .6); backdrop-filter: blur(3px); }
+.proposition[open] { animation: yc-aide .2s ease-out; }
