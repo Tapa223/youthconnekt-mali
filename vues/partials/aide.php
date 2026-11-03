@@ -14,6 +14,7 @@ $sujets = [
     ['Rejoindre le chapitre', "Créez votre compte, en tant que jeune ou en tant qu'organisation : c'est gratuit.", $u ? null : ['Créer mon compte', url('/compte/inscription')]],
     ['Opportunités', 'Formations, bourses, stages et appels sont sur la page Opportunités, triés par date limite.', ['Voir les opportunités', url('/opportunites')]],
     ['Communautés', "Ouvrez une communauté et cliquez sur « Intégrer la communauté ».", ['Voir les communautés', url('/communaute')]],
+    ['Événements', 'Les prochains événements du chapitre et les dernières nouvelles sont sur la page Actualités.', ['Voir les événements', url('/actualites')]],
 ];
 $champ = 'min-h-10 w-full rounded-lg border border-ligne bg-white px-3 text-sm text-encre placeholder:text-texte/60 focus:border-vert focus:ring-[3px] focus:ring-orange/35 focus:outline-none';
 ?>
