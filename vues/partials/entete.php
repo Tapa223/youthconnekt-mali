@@ -12,7 +12,7 @@ $navigation = [
 ];
 ?>
 <header class="sticky top-0 z-40 border-b border-transparent bg-white/95 backdrop-blur transition-[border-color,box-shadow] duration-200 data-[defile]:border-ligne data-[defile]:shadow-sm" data-entete>
-  <div class="conteneur flex h-16 items-center justify-between gap-6 xl:h-[76px] xl:max-w-[78rem]">
+  <div class="conteneur flex h-16 items-center justify-between gap-6 xl:max-w-[78rem]">
     <a href="<?= url('/') ?>" class="shrink-0 rounded-md" aria-label="YouthConnekt Mali, retour à l'accueil">
       <?php partiel('partials/logo', ['classes' => 'h-10 w-auto xl:h-11']) ?>
     </a>
@@ -22,7 +22,7 @@ $navigation = [
         <?php foreach ($navigation as [$lien, $libelle, $prefixe]): $actif = $section === $prefixe; ?>
         <li>
           <a href="<?= url($lien) ?>"
-             class="relative flex h-[76px] items-center px-3 text-[15px] font-medium whitespace-nowrap transition-colors <?= $actif ? 'text-vert after:absolute after:inset-x-3 after:bottom-0 after:h-[3px] after:rounded-t after:bg-orange' : 'text-encre hover:text-orange' ?>"
+             class="relative flex h-16 items-center px-3 text-[15px] font-medium whitespace-nowrap transition-colors <?= $actif ? 'text-vert after:absolute after:inset-x-3 after:bottom-0 after:h-[3px] after:rounded-t after:bg-orange' : 'text-encre hover:text-orange' ?>"
              <?= $actif ? 'aria-current="page"' : '' ?>><?= e($libelle) ?></a>
         </li>
         <?php endforeach ?>

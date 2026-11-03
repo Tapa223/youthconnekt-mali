@@ -12,7 +12,7 @@ $points = [
 ?>
 
 <?php /* 1. Premier écran */ ?>
-<section class="relative isolate overflow-hidden bg-vert text-white lg:h-[calc(100svh-4rem)] lg:max-h-[940px] lg:min-h-[620px] xl:h-[calc(100svh-76px)]" aria-labelledby="titre-accueil" data-diapo-pause>
+<section class="relative isolate overflow-hidden bg-vert text-white lg:h-[calc(100svh-4rem)] lg:max-h-[940px] lg:min-h-[620px]" aria-labelledby="titre-accueil" data-diapo-pause>
   <div class="absolute -inset-5 -z-10" data-diapo="accueil" aria-hidden="true">
     <img data-diapo-image src="<?= asset('img/accueil/premier-ecran.jpg') ?>" alt="" class="absolute inset-0 h-full w-full object-cover blur-[3.5px]">
     <img data-diapo-image src="<?= asset('img/accueil/premier-ecran-2.jpg') ?>" alt="" class="absolute inset-0 h-full w-full object-cover blur-[3.5px]" loading="lazy">
