@@ -1,13 +1,15 @@
 <?php /** Page À propos */ ?>
 <section class="relative isolate overflow-hidden bg-vert text-white">
   <?php partiel('partials/reseau_deco') ?>
-  <div class="conteneur relative grid items-center gap-10 py-12 sm:py-16 lg:grid-cols-2">
+  <div class="conteneur relative grid items-center gap-6 pt-6 pb-8 sm:py-10 lg:grid-cols-2 lg:gap-10 lg:py-10">
     <div class="anim-entree">
-      <p class="surtitre surtitre-trait text-white/85">À propos</p>
-      <h1 class="mt-3 text-4xl leading-[1.05] font-bold text-white sm:text-6xl">Un chapitre, une jeunesse, un même élan</h1>
-      <p class="mt-5 max-w-lg text-base text-white/90 sm:text-lg">YouthConnekt Mali est le chapitre national de YouthConnekt Africa. Il relie les jeunes du pays aux opportunités, aux décideurs et entre eux.</p>
+      <h1 class="text-[2.1rem] leading-[1.05] font-bold text-white sm:text-5xl lg:text-6xl">Un chapitre, une jeunesse, un même élan</h1>
+      <p class="mt-4 max-w-lg text-[15px] leading-relaxed text-white/90 sm:mt-5 sm:text-lg">YouthConnekt Mali est le chapitre national de YouthConnekt Africa. Il relie les jeunes du pays aux opportunités, aux décideurs et entre eux.</p>
     </div>
-    <div class="relative mx-auto aspect-[5/4] w-full max-w-md" aria-hidden="true">
+    <div class="flex -space-x-3 lg:hidden" aria-hidden="true">
+      <?php foreach (['cercle-centre', 'cercle-1', 'cercle-2', 'cercle-3'] as $k => $photo): ?><span class="size-16 overflow-hidden rounded-full border-[3px] bg-white shadow-lg sm:size-20 <?= cycle(['border-orange', 'border-turquoise', 'border-white', 'border-turquoise'], $k) ?>"><img src="<?= asset('img/a-propos/' . $photo . '.jpg') ?>" alt="" class="h-full w-full object-cover"></span><?php endforeach ?>
+    </div>
+    <div class="relative mx-auto hidden aspect-[5/4] w-full max-w-sm lg:block" aria-hidden="true">
       <svg class="absolute inset-0 h-full w-full" viewBox="0 0 500 400"><g stroke="rgb(255 255 255 / .35)" stroke-width="1.3" fill="none"><path d="M90 90 L250 190 L400 80"/><path d="M250 190 L410 310"/><path d="M90 90 L400 80"/></g></svg>
       <div class="anim-soleil absolute top-[20%] left-[26%] aspect-square w-[48%] overflow-hidden rounded-full border-4 border-orange shadow-2xl"><img src="<?= asset('img/a-propos/cercle-centre.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
       <div class="anim-flotte absolute top-[4%] left-[6%] aspect-square w-[22%] overflow-hidden rounded-full border-4 border-turquoise shadow-xl"><img src="<?= asset('img/a-propos/cercle-1.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
@@ -130,13 +132,13 @@
     <h2 class="titre-section"><?= count($axes) === 3 ? "Trois façons d'agir avec les jeunes" : "Nos façons d'agir avec les jeunes" ?></h2>
     <div class="mt-5 space-y-2.5 md:hidden">
       <?php foreach ($axes as $k => $axe): ?>
-      <a href="<?= url('/initiatives', ['axe' => $axe['slug']]) ?>" class="flex gap-3 rounded-2xl bg-white p-2.5 shadow-sm">
+      <div class="flex gap-3 rounded-2xl bg-white p-2.5 shadow-sm">
         <span class="relative w-24 shrink-0 overflow-hidden rounded-xl border-b-4 <?= bordure($axe['couleur']) ?>">
           <span class="absolute inset-0"><?php partiel('partials/image_axe', ['axe' => $axe]) ?></span>
           <span class="absolute top-1.5 left-1.5 grid size-6 place-items-center rounded-full bg-white/90 text-[11px] font-bold text-vert"><?= sprintf('%02d', $k + 1) ?></span>
         </span>
         <span class="min-w-0 py-1"><strong class="block text-lg text-vert"><?= e($axe['nom']) ?></strong><span class="mt-0.5 block text-sm leading-snug"><?= e($axe['description']) ?></span></span>
-      </a>
+      </div>
       <?php endforeach ?>
     </div>
     <div class="mt-10 hidden space-y-16 md:block">
@@ -155,7 +157,6 @@
             <?php foreach ($elements as $el): ?><li class="flex items-center gap-3 text-[15px] text-encre"><span class="size-2 shrink-0 rounded-full <?= fond($axe['couleur']) ?>" aria-hidden="true"></span><?= e($el) ?></li><?php endforeach ?>
           </ul>
           <?php endif ?>
-          <a href="<?= url('/initiatives', ['axe' => $axe['slug']]) ?>" class="lien-fleche mt-5">Voir les initiatives</a>
         </div>
       </article>
       <?php endforeach ?>
