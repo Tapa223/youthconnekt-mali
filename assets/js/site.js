@@ -329,7 +329,25 @@ document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
     bouton.setAttribute("aria-expanded", ouvrir ? "true" : "false");
     if (ouvrir) { var champ = form.querySelector("input[type=text], textarea"); if (champ) champ.focus(); }
   }
-  bouton.addEventListener("click", function () { basculer(panneau.hidden); });
+  // Deux usages : message libre (bouton « ? ») ou proposition d'initiative (boutons data-aide-initiative)
+  function mode(initiative) {
+    var cle = initiative ? "initiative" : "defaut";
+    aide.querySelectorAll("[data-titre-aide], [data-sous-titre-aide]").forEach(function (el) { el.innerHTML = el.getAttribute("data-" + cle); });
+    var zone = form.querySelector("textarea");
+    zone.placeholder = zone.getAttribute("data-" + cle);
+    form.querySelector("[data-sujet-aide]").value = initiative ? "initiative" : "";
+  }
+  bouton.addEventListener("click", function () { if (panneau.hidden) mode(false); basculer(panneau.hidden); });
+  document.querySelectorAll("[data-aide-initiative]").forEach(function (lien) {
+    lien.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      mode(true);
+      merci.classList.add("hidden");
+      form.classList.remove("hidden");
+      basculer(true);
+    });
+  });
   aide.querySelector("[data-fermer-aide]").addEventListener("click", function () { basculer(false); bouton.focus(); });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !panneau.hidden) { basculer(false); bouton.focus(); } });
   document.addEventListener("click", function (e) { if (!panneau.hidden && !aide.contains(e.target)) basculer(false); });

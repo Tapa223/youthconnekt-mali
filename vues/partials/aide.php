@@ -12,8 +12,8 @@ $champ = 'min-h-11 w-full rounded-lg border border-ligne bg-white px-3.5 text-[1
   <div id="panneau-aide" class="aide-panneau absolute right-0 bottom-[calc(100%+12px)] w-[min(23rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-ligne bg-white shadow-2xl shadow-vert/20" role="dialog" aria-labelledby="titre-aide" hidden>
     <div class="flex items-start justify-between gap-3 bg-vert px-5 py-4 text-white">
       <div>
-        <p id="titre-aide" class="text-lg font-bold">Une question, une suggestion&nbsp;?</p>
-        <p class="text-sm text-white/85">Écrivez-nous, l'équipe vous répondra par e-mail</p>
+        <p id="titre-aide" class="text-lg font-bold" data-titre-aide data-defaut="Une question, une suggestion&nbsp;?" data-initiative="Parlez-nous de votre initiative">Une question, une suggestion&nbsp;?</p>
+        <p class="text-sm text-white/85" data-sous-titre-aide data-defaut="Écrivez-nous, l'équipe vous répondra par e-mail" data-initiative="Ce que vous faites, où et avec qui : l'équipe vous recontacte par e-mail">Écrivez-nous, l'équipe vous répondra par e-mail</p>
       </div>
       <button type="button" class="-mt-1 -mr-2 grid size-10 shrink-0 place-items-center rounded-full text-white transition-colors hover:bg-orange" data-fermer-aide aria-label="Fermer">
         <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
@@ -23,6 +23,7 @@ $champ = 'min-h-11 w-full rounded-lg border border-ligne bg-white px-3.5 text-[1
     <form action="<?= url('/contact/message-rapide') ?>" method="post" class="grid gap-3 p-4" novalidate data-form-aide>
       <?= csrf() ?>
       <input type="hidden" name="suivant" value="<?= e(adresse_actuelle()) ?>">
+      <input type="hidden" name="sujet" value="" data-sujet-aide>
       <div class="hidden" aria-hidden="true"><label>Ne pas remplir <input type="text" name="site_web" tabindex="-1" autocomplete="off"></label></div>
       <?php if (!$u): ?>
       <div class="grid grid-cols-2 gap-2">
@@ -32,7 +33,7 @@ $champ = 'min-h-11 w-full rounded-lg border border-ligne bg-white px-3.5 text-[1
       <?php else: ?>
       <p class="text-sm">Réponse envoyée à <strong class="break-all text-encre"><?= e($u['email']) ?></strong></p>
       <?php endif ?>
-      <div><label for="aide-message" class="sr-only">Votre message</label><textarea id="aide-message" name="message" rows="4" maxlength="3000" placeholder="Votre message…" class="<?= $champ ?> min-h-28 py-2.5"></textarea></div>
+      <div><label for="aide-message" class="sr-only">Votre message</label><textarea id="aide-message" name="message" rows="4" maxlength="3000" placeholder="Votre message…" data-defaut="Votre message…" data-initiative="Présentez votre initiative : son nom, ce qu'elle fait, où et quand elle a lieu, et ce que vous attendez du chapitre…" class="<?= $champ ?> min-h-28 py-2.5"></textarea></div>
       <p class="hidden text-sm font-medium text-rouge" data-erreur-aide role="alert"></p>
       <button type="submit" class="btn btn-orange min-h-12 w-full">Envoyer</button>
     </form>

@@ -197,16 +197,18 @@ function message_rapide(): void
             'nom' => mb_substr($nom, 0, 120),
             'profil' => $u ? ($u['type_compte'] === 'organisation' ? 'organisation' : 'jeune') : 'autre',
             'email' => mb_substr($email, 0, 190),
-            'objet' => 'Message envoyé depuis la bulle du site',
+            'objet' => post('sujet') === 'initiative' ? 'Proposition d\'initiative (bulle du site)' : 'Message envoyé depuis la bulle du site',
             'message' => mb_substr($message, 0, 3000),
             'recu_le' => maintenant(),
         ]);
         $copie = (string) config('email.copie_contact', '');
         if ($copie !== '') {
-            envoyer_email($copie, 'Nouveau message depuis la bulle du site', "De : $nom <$email>\n\n$message", '', $email);
+            envoyer_email($copie, post('sujet') === 'initiative' ? 'Nouvelle proposition d\'initiative' : 'Nouveau message depuis la bulle du site', "De : $nom <$email>\n\n$message", '', $email);
         }
     }
-    $texte = 'Merci, votre message a bien été envoyé. L\'équipe vous répondra par e-mail.';
+    $texte = post('sujet') === 'initiative'
+        ? 'Merci, votre initiative a bien été transmise. L\'équipe vous recontactera par e-mail.'
+        : 'Merci, votre message a bien été envoyé. L\'équipe vous répondra par e-mail.';
     if ($ajax) {
         header('Content-Type: application/json; charset=utf-8');
         echo json_encode($erreurs ? ['ok' => false, 'erreurs' => $erreurs] : ['ok' => true, 'message' => $texte], JSON_UNESCAPED_UNICODE);

@@ -6,43 +6,19 @@
   <div class="conteneur anim-entree relative pt-6 pb-7 sm:py-12">
     <h1 class="text-[2.1rem] leading-none font-bold sm:text-6xl lg:text-7xl">Nos initiatives</h1>
     <p class="mt-3 max-w-xl text-[15px] sm:mt-5 sm:text-lg">Formations, rencontres, prix : ce que le chapitre organise avec et pour les jeunes, partout au Mali.</p>
-    <nav class="masquer-defilement -mx-4 mt-5 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:mt-7 sm:flex-wrap sm:overflow-visible sm:px-0" aria-label="Filtrer par axe d'action">
-      <a href="<?= url('/initiatives') ?>" class="survol-orange inline-flex min-h-10 shrink-0 items-center gap-1.5 rounded-full border-2 px-4 text-sm font-bold transition-colors <?= !$axe_actif ? 'border-orange bg-orange text-white' : 'border-vert bg-white text-vert hover:bg-vert-clair' ?>" <?= !$axe_actif ? 'aria-current="true"' : '' ?>>Toutes <span class="opacity-70">(<?= $nombres[''] ?>)</span></a>
+    <nav class="mt-5 flex gap-1.5 sm:mt-7 sm:flex-wrap sm:gap-2" aria-label="Filtrer par axe d'action">
+      <a href="<?= url('/initiatives') ?>" class="survol-orange inline-flex min-h-9 min-w-0 flex-auto items-center justify-center gap-1.5 rounded-full border-2 px-2 text-[12.5px] font-bold sm:min-h-10 sm:flex-none sm:px-4 sm:text-sm transition-colors <?= !$axe_actif ? 'border-orange bg-orange text-white' : 'border-vert bg-white text-vert hover:bg-vert-clair' ?>" <?= !$axe_actif ? 'aria-current="true"' : '' ?>>Toutes <span class="hidden opacity-70 sm:inline">(<?= $nombres[''] ?>)</span></a>
       <?php foreach ($axes as $axe): $actif = $axe_actif === $axe['slug']; ?>
-      <a href="<?= url('/initiatives', ['axe' => $axe['slug']]) ?>" class="survol-orange inline-flex min-h-10 shrink-0 items-center gap-1.5 rounded-full border-2 px-4 text-sm font-bold transition-colors <?= $actif ? 'border-orange bg-orange text-white' : bordure($axe['couleur']) . ' bg-white text-vert hover:bg-gris' ?>" <?= $actif ? 'aria-current="true"' : '' ?>><?= e($axe['nom']) ?> <span class="opacity-70">(<?= $nombres[$axe['slug']] ?? 0 ?>)</span></a>
+      <a href="<?= url('/initiatives', ['axe' => $axe['slug']]) ?>" class="survol-orange inline-flex min-h-9 min-w-0 flex-auto items-center justify-center gap-1.5 rounded-full border-2 px-2 text-[12.5px] font-bold sm:min-h-10 sm:flex-none sm:px-4 sm:text-sm transition-colors <?= $actif ? 'border-orange bg-orange text-white' : bordure($axe['couleur']) . ' bg-white text-vert hover:bg-gris' ?>" <?= $actif ? 'aria-current="true"' : '' ?>><?= e($axe['nom']) ?> <span class="hidden opacity-70 sm:inline">(<?= $nombres[$axe['slug']] ?? 0 ?>)</span></a>
       <?php endforeach ?>
     </nav>
   </div>
 </section>
 
-<?php if ($une): ?>
-<section class="conteneur pt-6 sm:pt-12" aria-label="Initiative à la une">
-  <article class="survol-zoom grid overflow-hidden rounded-3xl bg-vert text-white lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
-    <div class="relative aspect-[16/10] lg:aspect-auto lg:min-h-[380px]">
-      <?php partiel('partials/photo', ['image' => $une['image']]) ?>
-      <span class="etiquette absolute top-4 left-4 rounded-full bg-orange text-white">À la une</span>
-    </div>
-    <div class="flex flex-col justify-center p-5 sm:p-9">
-      <?php if ($une['axe_nom']): ?><span class="etiquette self-start rounded-full bg-white text-vert"><?= e($une['axe_nom']) ?></span><?php endif ?>
-      <h2 class="mt-2 text-xl leading-tight font-bold text-white sm:mt-3 sm:text-4xl"><?= e($une['titre']) ?></h2>
-      <p class="mt-2 line-clamp-2 text-sm leading-relaxed text-white/90 sm:mt-3 sm:line-clamp-none sm:text-[15px]"><?= e($une['resume']) ?></p>
-      <?php if ($une['date_libelle'] || $une['lieu'] || $une['participants'] || $une['format']): ?>
-      <dl class="mt-5 hidden grid-cols-2 gap-x-6 gap-y-3 text-sm sm:grid">
-        <?php foreach (['date_libelle' => 'Date', 'lieu' => 'Lieu', 'participants' => 'Participants', 'format' => 'Format'] as $c => $l): if ($une[$c]): ?>
-        <div><dt class="text-xs text-white/75"><?= $l ?></dt><dd class="font-bold"><?= e($une[$c]) ?></dd></div>
-        <?php endif; endforeach ?>
-      </dl>
-      <?php endif ?>
-      <a href="<?= e($une['url']) ?>" class="btn btn-blanc mt-4 self-start sm:mt-6">Découvrir l'initiative</a>
-    </div>
-  </article>
-</section>
-<?php endif ?>
-
-<section class="conteneur py-8 sm:py-16" aria-labelledby="titre-liste">
-  <h2 id="titre-liste" class="text-xl font-bold sm:text-3xl"><?= $une ? 'Les autres initiatives' : 'Toutes les initiatives' ?></h2>
+<section class="conteneur pt-6 pb-10 sm:py-14" aria-labelledby="titre-liste">
+  <h2 id="titre-liste" class="sr-only">Liste des initiatives</h2>
   <?php if ($liste): ?>
-  <ul class="mt-4 grid grid-cols-2 gap-2.5 sm:mt-6 sm:gap-5 lg:grid-cols-3">
+  <ul class="grid grid-cols-2 gap-2.5 sm:gap-5 lg:grid-cols-3">
     <?php foreach ($liste as $i): ?><li><?php partiel('cartes/initiative', ['i' => $i, 'compacte_tel' => true]) ?></li><?php endforeach ?>
   </ul>
   <?php partiel('partials/pagination', ['pagination' => $pagination]) ?>
@@ -58,9 +34,9 @@
     <div class="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <h2 class="text-xl font-bold text-white sm:text-3xl">Vous portez une initiative ?</h2>
-        <p class="mt-1 text-white/90">Parlez-en au chapitre, nous pouvons la faire connaître.</p>
+        <p class="mt-1 text-white/90">Parlez-nous de votre initiative : l'équipe du chapitre peut la faire connaître et vous accompagner.</p>
       </div>
-      <a href="<?= url('/contact', ['sujet' => 'initiative']) ?>" class="btn btn-blanc self-start sm:self-auto">Nous écrire</a>
+      <a href="<?= url('/contact', ['sujet' => 'initiative']) ?>" class="btn btn-blanc self-start sm:self-auto" data-aide-initiative>Parler de mon initiative</a>
     </div>
   </div>
 </section>
