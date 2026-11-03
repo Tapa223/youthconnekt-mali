@@ -322,66 +322,97 @@ document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
   if (!aide) return;
   var bouton = aide.querySelector("[data-ouvrir-aide]");
   var panneau = aide.querySelector(".aide-panneau");
+  var fil = aide.querySelector("[data-fil]");
   var form = aide.querySelector("[data-form-aide]");
-  var merci = aide.querySelector("[data-merci-aide]");
-  var erreur = aide.querySelector("[data-erreur-aide]");
+  var champ = aide.querySelector("[data-champ-message]");
+  var identite = aide.querySelector("[data-identite]");
+
   function basculer(ouvrir) {
     panneau.hidden = !ouvrir;
     bouton.setAttribute("aria-expanded", ouvrir ? "true" : "false");
-    if (ouvrir) { var champ = form.querySelector("input[type=text], textarea"); if (champ) champ.focus(); }
+    if (ouvrir) aide.setAttribute("data-ouvert", ""); else aide.removeAttribute("data-ouvert");
   }
-  // Deux usages : message libre (bouton « ? ») ou proposition d'initiative (boutons data-aide-initiative)
-  function mode(initiative) {
-    var cle = initiative ? "initiative" : "defaut";
-    aide.querySelectorAll("[data-titre-aide], [data-sous-titre-aide]").forEach(function (el) { el.innerHTML = el.getAttribute("data-" + cle); });
-    var zone = form.querySelector("textarea");
-    zone.placeholder = zone.getAttribute("data-" + cle);
-    form.querySelector("[data-sujet-aide]").value = initiative ? "initiative" : "";
+  function defiler() { fil.scrollTop = fil.scrollHeight; }
+  function bulle(classe, texte) {
+    var d = document.createElement("div");
+    d.className = classe;
+    d.textContent = texte;
+    fil.appendChild(d);
+    defiler();
+    return d;
   }
-  bouton.addEventListener("click", function () { if (panneau.hidden) mode(false); basculer(panneau.hidden); });
-  document.querySelectorAll("[data-aide-initiative]").forEach(function (lien) {
-    lien.addEventListener("click", function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      mode(true);
-      merci.classList.add("hidden");
-      form.classList.remove("hidden");
-      basculer(true);
-    });
-  });
+  function repondre(noeud) {
+    var attente = bulle("aide-bot aide-ecrit", "…");
+    setTimeout(function () { attente.remove(); fil.appendChild(noeud); defiler(); }, 450);
+  }
+
+  bouton.addEventListener("click", function () { basculer(panneau.hidden); });
   aide.querySelector("[data-fermer-aide]").addEventListener("click", function () { basculer(false); bouton.focus(); });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !panneau.hidden) { basculer(false); bouton.focus(); } });
   document.addEventListener("click", function (e) { if (!panneau.hidden && !aide.contains(e.target)) basculer(false); });
 
-  // Envoi sans quitter la page
+  // Sujets proposés : réponse prête
+  aide.querySelectorAll("[data-sujet]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      bulle("aide-moi", b.textContent);
+      var modele = aide.querySelector('template[data-reponse="' + b.getAttribute("data-sujet") + '"]');
+      repondre(modele.content.firstElementChild.cloneNode(true));
+    });
+  });
+  aide.querySelector("[data-autre]").addEventListener("click", function () {
+    bulle("aide-moi", "Autre question");
+    var d = document.createElement("div");
+    d.className = "aide-bot";
+    d.textContent = "Écrivez votre message en bas : il est transmis à l'équipe du chapitre, qui vous répondra par e-mail.";
+    repondre(d);
+    if (identite) { identite.classList.remove("hidden"); identite.classList.add("grid"); }
+    setTimeout(function () { champ.focus(); }, 500);
+  });
+
+  // Le champ s'agrandit avec le texte ; Entrée envoie, Maj + Entrée passe à la ligne
+  champ.addEventListener("input", function () { champ.style.height = "auto"; champ.style.height = Math.min(champ.scrollHeight, 112) + "px"; });
+  champ.addEventListener("keydown", function (e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); form.requestSubmit ? form.requestSubmit() : form.dispatchEvent(new Event("submit")); } });
+
+  // Message libre : envoyé à l'équipe
   form.addEventListener("submit", function (e) {
     e.preventDefault();
+    var texte = champ.value.trim();
+    if (texte === "") { champ.focus(); return; }
+    if (identite) {
+      var nom = identite.querySelector("[name=nom]"), email = identite.querySelector("[name=email]");
+      if (nom.value.trim() === "" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+        if (identite.classList.contains("hidden")) {
+          identite.classList.remove("hidden"); identite.classList.add("grid");
+          var d = document.createElement("div"); d.className = "aide-bot";
+          d.textContent = "Pour que l'équipe puisse vous répondre, indiquez votre nom et votre adresse e-mail, puis envoyez.";
+          repondre(d);
+        } else {
+          bulle("aide-bot aide-alerte", nom.value.trim() === "" ? "Indiquez votre nom." : "Cette adresse e-mail n'est pas valide.");
+        }
+        (nom.value.trim() === "" ? nom : email).focus();
+        return;
+      }
+    }
     var envoyer = form.querySelector("button[type=submit]");
     envoyer.disabled = true;
-    erreur.classList.add("hidden");
+    bulle("aide-moi", texte);
     fetch(form.action, { method: "POST", body: new FormData(form), headers: { "X-Requested-With": "fetch" }, credentials: "same-origin" })
       .then(function (r) { return r.json(); })
       .then(function (d) {
+        var b = document.createElement("div");
         if (d.ok) {
-          merci.querySelector("[data-texte-merci]").textContent = d.message;
-          form.classList.add("hidden");
-          merci.classList.remove("hidden");
-          form.reset();
+          b.className = "aide-bot";
+          b.textContent = "Merci, votre message a bien été transmis. L'équipe du chapitre vous répondra par e-mail.";
+          champ.value = ""; champ.style.height = "";
+          if (identite) { identite.classList.add("hidden"); identite.classList.remove("grid"); }
         } else {
-          var messages = Object.keys(d.erreurs || {}).map(function (k) { return d.erreurs[k]; });
-          erreur.textContent = messages.join(" ");
-          erreur.classList.remove("hidden");
+          b.className = "aide-bot aide-alerte";
+          b.textContent = Object.keys(d.erreurs || {}).map(function (k) { return d.erreurs[k]; }).join(" ");
         }
+        repondre(b);
       })
-      .catch(function () {
-        erreur.textContent = "Le message n'a pas pu partir. Rechargez la page puis réessayez.";
-        erreur.classList.remove("hidden");
-      })
+      .catch(function () { bulle("aide-bot aide-alerte", "Le message n'a pas pu partir. Rechargez la page puis réessayez."); })
       .then(function () { envoyer.disabled = false; });
-  });
-  aide.querySelector("[data-nouveau-aide]").addEventListener("click", function () {
-    merci.classList.add("hidden");
-    form.classList.remove("hidden");
   });
 
   // Couleur du bouton selon le fond qui se trouve derrière lui
