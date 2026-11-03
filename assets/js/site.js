@@ -489,3 +489,33 @@ document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
     document.addEventListener("click", function (e) { if (d.open && !d.contains(e.target)) d.open = false; });
   });
 })();
+
+/* Newsletter du pied de page : vérification et confirmation sous le champ, sans recharger la page. */
+(function () {
+  "use strict";
+  document.querySelectorAll("[data-form-newsletter]").forEach(function (form) {
+    var retour = form.querySelector("[data-retour-newsletter]");
+    var champ = form.querySelector("input[type=email]");
+    var accord = form.querySelector("input[name=accord]");
+    function afficher(ok, texte) {
+      retour.textContent = texte;
+      retour.classList.remove("hidden", "bg-white", "text-rouge", "bg-orange", "text-white");
+      retour.classList.add("flex");
+      retour.classList.add.apply(retour.classList, ok ? ["bg-orange", "text-white"] : ["bg-white", "text-rouge"]);
+    }
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var email = champ.value.trim();
+      if (email === "") { afficher(false, "Indiquez votre adresse e-mail."); champ.focus(); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { afficher(false, "Cette adresse e-mail n'est pas valide."); champ.focus(); return; }
+      if (!accord.checked) { afficher(false, "Cochez la case pour accepter de recevoir la newsletter."); accord.focus(); return; }
+      var bouton = form.querySelector("button[type=submit]");
+      bouton.disabled = true;
+      fetch(form.action, { method: "POST", body: new FormData(form), headers: { "X-Requested-With": "fetch" }, credentials: "same-origin" })
+        .then(function (r) { return r.json(); })
+        .then(function (d) { afficher(d.ok, d.message); if (d.ok) form.reset(); })
+        .catch(function () { afficher(false, "L'inscription n'a pas abouti. Rechargez la page puis réessayez."); })
+        .then(function () { bouton.disabled = false; });
+    });
+  });
+})();

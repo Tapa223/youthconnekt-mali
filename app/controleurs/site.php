@@ -155,20 +155,26 @@ function mentions_legales(): void
 
 function newsletter(): void
 {
+    $ajax = ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'fetch';
     $email = mb_strtolower(post('email'));
+    $erreur = '';
     if ($email === '') {
-        flash('erreur', 'Indiquez votre adresse e-mail.');
+        $erreur = 'Indiquez votre adresse e-mail.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL) || mb_strlen($email) > 190) {
-        flash('erreur', "Cette adresse e-mail n'est pas valide.");
+        $erreur = "Cette adresse e-mail n'est pas valide.";
     } elseif (post('accord') === '') {
-        flash('erreur', 'Cochez la case pour accepter de recevoir la newsletter.');
-    } else {
-        if (post('site_web') === '') {
-            requete('INSERT INTO abonnes_newsletter (email, inscrit_le, actif) VALUES (?, ?, 1) ON DUPLICATE KEY UPDATE actif = 1', [$email, maintenant()]);
-        }
-        // Même message dans tous les cas, sans révéler si l'adresse était déjà inscrite
-        flash('succes', 'Merci, votre inscription à la newsletter est bien prise en compte.');
+        $erreur = 'Cochez la case pour accepter de recevoir la newsletter.';
+    } elseif (post('site_web') === '') {
+        requete('INSERT INTO abonnes_newsletter (email, inscrit_le, actif) VALUES (?, ?, 1) ON DUPLICATE KEY UPDATE actif = 1', [$email, maintenant()]);
     }
+    // Même message dans tous les cas, sans révéler si l'adresse était déjà inscrite
+    $succes = 'Merci, votre inscription à la newsletter est bien prise en compte.';
+    if ($ajax) {
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($erreur !== '' ? ['ok' => false, 'message' => $erreur] : ['ok' => true, 'message' => $succes], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+    flash($erreur !== '' ? 'erreur' : 'succes', $erreur !== '' ? $erreur : $succes);
     $retour = strtok(adresse_retour(url('/')), '#');
     rediriger($retour . '#newsletter');
 }

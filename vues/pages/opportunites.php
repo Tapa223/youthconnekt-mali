@@ -42,14 +42,12 @@ $total_ouvertes = array_sum($nombres);
   </form>
 </div>
 
-<section class="bg-gris pt-5 pb-10 sm:pt-8 sm:pb-14" aria-labelledby="titre-resultats">
+<section class="bg-gris pt-4 pb-10 sm:pt-6 sm:pb-14" aria-labelledby="titre-resultats">
   <div class="conteneur">
-    <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-      <h2 id="titre-resultats" class="text-lg font-bold sm:text-2xl"><?= $total ?> opportunité<?= pluriel($total) ?> ouverte<?= pluriel($total) ?><?= $nom_type !== '' ? ' · ' . e($nom_type) : '' ?><?= $recherche !== '' ? ' pour « ' . e($recherche) . ' »' : '' ?></h2>
-      <p class="text-xs sm:text-sm">Triées par date limite</p>
-    </div>
+    <h2 id="titre-resultats" class="sr-only">Liste des opportunités</h2>
+    <?php if ($recherche !== '' || $type_actif): ?><p class="mb-3 text-sm sm:mb-5">Résultats<?= $type_actif ? ' · <strong class="text-vert">' . e($nom_type) . '</strong>' : '' ?><?= $recherche !== '' ? ' pour « <strong class="text-vert">' . e($recherche) . '</strong> »' : '' ?> <a href="<?= url('/opportunites') ?>" class="btn-discret ml-1">Tout afficher</a></p><?php endif ?>
     <?php if ($liste): ?>
-    <ul class="mt-4 grid grid-cols-2 gap-2.5 sm:mt-6 sm:gap-5 lg:grid-cols-3">
+    <ul class="grid grid-cols-2 gap-2.5 sm:gap-5 lg:grid-cols-3">
       <?php foreach ($liste as $o): ?><li><?php partiel('cartes/opportunite', ['o' => $o]) ?></li><?php endforeach ?>
     </ul>
     <?php partiel('partials/pagination', ['pagination' => $pagination]) ?>

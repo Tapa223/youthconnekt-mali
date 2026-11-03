@@ -54,7 +54,7 @@
           <p class="text-2xl leading-tight font-bold text-white sm:text-[1.75rem]">Abonnez-vous à la newsletter</p>
           <p class="mt-1.5 text-sm text-white/80">Opportunités, initiatives et événements, directement par e-mail.</p>
         </div>
-        <form action="<?= url('/newsletter') ?>" method="post" novalidate>
+        <form action="<?= url('/newsletter') ?>" method="post" novalidate data-form-newsletter>
           <?= csrf() ?>
           <input type="hidden" name="suivant" value="<?= e(adresse_actuelle()) ?>">
           <div class="hidden" aria-hidden="true"><label>Ne pas remplir <input type="text" name="site_web" tabindex="-1" autocomplete="off"></label></div>
@@ -70,6 +70,7 @@
             <input type="checkbox" name="accord" value="1" required class="mt-0.5 size-4 shrink-0 rounded accent-orange">
             <span>J'accepte de recevoir la newsletter de YouthConnekt Mali et la <a href="<?= url('/confidentialite') ?>" class="font-bold text-white hover:text-orange">politique de confidentialité</a>.</span>
           </label>
+          <p class="mt-3 hidden items-start gap-2 rounded-xl px-3.5 py-2.5 text-sm font-medium" data-retour-newsletter role="status" aria-live="polite"></p>
         </form>
       </div>
       <div class="grid grid-cols-2 gap-x-6 gap-y-9 pt-8 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)_minmax(0,3fr)] md:gap-8">
