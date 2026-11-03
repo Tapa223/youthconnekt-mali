@@ -48,26 +48,7 @@
           'lien_tiktok' => ['TikTok', '<path d="M14 3.5v11.2a3.3 3.3 0 1 1-3.3-3.3M14 3.5c.5 2.6 2.3 4.2 4.8 4.4"/>'],
       ];
       ?>
-      <a href="<?= url('/') ?>" class="inline-flex rounded-xl bg-white px-3 py-2" aria-label="YouthConnekt Mali, retour à l'accueil">
-        <?php partiel('partials/logo', ['classes' => 'h-11 w-auto']) ?>
-      </a>
-      <p class="mt-4 max-w-sm text-sm leading-relaxed text-white/85 sm:mt-5 sm:text-[15px]">Chapitre national de YouthConnekt Africa, YouthConnekt Mali relie les jeunes du pays aux opportunités, aux initiatives et aux organisations qui les accompagnent.</p>
-
-      <ul class="mt-5 flex flex-wrap gap-2" aria-label="Réseaux sociaux de YouthConnekt Mali">
-        <?php foreach ($icones_reseaux as $cle => [$nom_reseau, $trace]):
-            if ($cle === 'lien_tiktok' && empty($p[$cle])) continue;
-            $classe_icone = 'grid size-10 place-items-center rounded-full border border-white/30 text-white transition-colors'; ?>
-        <li>
-          <?php if (!empty($p[$cle])): ?>
-          <a href="<?= e($p[$cle]) ?>" target="_blank" rel="noopener" class="<?= $classe_icone ?> hover:border-orange hover:bg-orange" aria-label="<?= e($nom_reseau) ?>"><svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><?= $trace ?></svg></a>
-          <?php else: ?>
-          <span class="<?= $classe_icone ?>" title="<?= e($nom_reseau) ?>"><svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><?= $trace ?></svg><span class="sr-only"><?= e($nom_reseau) ?></span></span>
-          <?php endif ?>
-        </li>
-        <?php endforeach ?>
-      </ul>
-
-      <ul class="mt-7 max-w-sm space-y-3 border-t border-white/15 pt-5 text-[13px] leading-snug text-white/80">
+      <ul class="max-w-sm space-y-3 border-b border-white/15 pb-5 text-[13px] leading-snug text-white/80">
         <li class="flex items-center gap-3">
           <?php if (isset($logo_de['Ministère de la Jeunesse et des Sports'])): ?><img src="<?= e($logo_de['Ministère de la Jeunesse et des Sports']) ?>" alt="" class="size-9 shrink-0 rounded-full bg-white object-contain p-0.5" loading="lazy">
           <?php else: ?><span class="flex h-9 w-1.5 shrink-0 flex-col overflow-hidden rounded-full" aria-hidden="true"><span class="flex-1 bg-[#14B53A]"></span><span class="flex-1 bg-[#FCD116]"></span><span class="flex-1 bg-[#CE1126]"></span></span><?php endif ?>
@@ -79,6 +60,12 @@
           <strong class="font-bold text-white">PNUD Mali</strong>
         </li>
       </ul>
+      <a href="<?= url('/') ?>" class="mt-6 inline-flex rounded-xl bg-white px-3 py-2" aria-label="YouthConnekt Mali, retour à l'accueil">
+        <?php partiel('partials/logo', ['classes' => 'h-11 w-auto']) ?>
+      </a>
+      <p class="mt-4 max-w-sm text-sm leading-relaxed text-white/85 sm:mt-5 sm:text-[15px]">Chapitre national de YouthConnekt Africa, YouthConnekt Mali relie les jeunes du pays aux opportunités, aux initiatives et aux organisations qui les accompagnent.</p>
+
+
     </div>
 
     <nav class="lg:col-span-2" aria-label="Le chapitre">
@@ -114,6 +101,20 @@
         <?php if ($p['horaires']): ?><li><?= e($p['horaires']) ?></li><?php endif ?>
       </ul>
       <a href="<?= url('/contact') ?>" class="btn btn-blanc mt-5 min-h-11">Nous écrire</a>
+      <p class="mt-7 text-xs font-bold tracking-[0.16em] text-white uppercase">Suivez-nous</p>
+      <ul class="mt-3 flex flex-wrap gap-2" aria-label="Réseaux sociaux de YouthConnekt Mali">
+        <?php foreach ($icones_reseaux as $cle => [$nom_reseau, $trace]):
+            if ($cle === 'lien_tiktok' && empty($p[$cle])) continue;
+            $classe_icone = 'grid size-10 place-items-center rounded-full border border-white/30 text-white transition-colors'; ?>
+        <li>
+          <?php if (!empty($p[$cle])): ?>
+          <a href="<?= e($p[$cle]) ?>" target="_blank" rel="noopener" class="<?= $classe_icone ?> hover:border-orange hover:bg-orange" aria-label="<?= e($nom_reseau) ?>"><svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><?= $trace ?></svg></a>
+          <?php else: ?>
+          <span class="<?= $classe_icone ?>" title="<?= e($nom_reseau) ?>"><svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><?= $trace ?></svg><span class="sr-only"><?= e($nom_reseau) ?></span></span>
+          <?php endif ?>
+        </li>
+        <?php endforeach ?>
+      </ul>
     </div>
   </div>
 
