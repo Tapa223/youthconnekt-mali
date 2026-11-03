@@ -12,24 +12,24 @@ $navigation = [
 ];
 ?>
 <header class="sticky top-0 z-40 border-b border-transparent bg-white/95 backdrop-blur transition-[border-color,box-shadow] duration-200 data-[defile]:border-ligne data-[defile]:shadow-sm" data-entete>
-  <div class="conteneur flex h-16 items-center justify-between gap-4 xl:h-[76px]">
+  <div class="conteneur flex h-16 items-center justify-between gap-6 xl:h-[76px] xl:max-w-[78rem]">
     <a href="<?= url('/') ?>" class="shrink-0 rounded-md" aria-label="YouthConnekt Mali, retour à l'accueil">
       <?php partiel('partials/logo', ['classes' => 'h-10 w-auto xl:h-11']) ?>
     </a>
 
     <nav class="hidden xl:block" aria-label="Menu principal">
-      <ul class="flex items-center gap-0.5">
+      <ul class="flex items-center gap-1 2xl:gap-2">
         <?php foreach ($navigation as [$lien, $libelle, $prefixe]): $actif = $section === $prefixe; ?>
         <li>
           <a href="<?= url($lien) ?>"
-             class="relative flex h-[76px] items-center px-2.5 text-[15px] font-medium whitespace-nowrap transition-colors <?= $actif ? 'text-vert after:absolute after:inset-x-2.5 after:bottom-0 after:h-[3px] after:rounded-t after:bg-orange' : 'text-encre hover:text-orange' ?>"
+             class="relative flex h-[76px] items-center px-3 text-[15px] font-medium whitespace-nowrap transition-colors <?= $actif ? 'text-vert after:absolute after:inset-x-3 after:bottom-0 after:h-[3px] after:rounded-t after:bg-orange' : 'text-encre hover:text-orange' ?>"
              <?= $actif ? 'aria-current="page"' : '' ?>><?= e($libelle) ?></a>
         </li>
         <?php endforeach ?>
       </ul>
     </nav>
 
-    <div class="hidden items-center gap-2 xl:flex">
+    <div class="hidden items-center gap-2.5 xl:flex">
       <?php if ($u): ?>
         <a href="<?= url(est_membre($u) ? '/compte/mon-espace' : '/gestion') ?>" class="inline-flex min-h-11 items-center gap-2.5 rounded-full bg-vert py-1.5 pr-5 pl-1.5 text-[15px] font-bold text-white hover:bg-vert-fonce">
           <span class="grid size-8 place-items-center rounded-full bg-orange text-xs" aria-hidden="true"><?= e($u['initiales']) ?></span>

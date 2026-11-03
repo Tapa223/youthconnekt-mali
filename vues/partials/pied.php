@@ -1,13 +1,10 @@
 <?php $p = parametres(); $u = utilisateur(); $reseaux = reseaux_sociaux(); ?>
-<footer class="relative isolate overflow-hidden bg-vert text-white" aria-labelledby="titre-pied">
-  <h2 id="titre-pied" class="sr-only">Informations sur YouthConnekt Mali</h2>
-  <?php partiel('partials/reseau_deco', ['opacite' => 'opacity-40']) ?>
-
-  <div class="relative border-b border-white/15">
-    <div id="newsletter" class="conteneur sans-apparition grid scroll-mt-24 gap-4 py-8 sm:gap-5 sm:py-9 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] md:items-center md:gap-10 lg:py-10">
+<section class="bg-gris py-12 sm:py-16" aria-labelledby="titre-newsletter">
+  <div id="newsletter" class="conteneur sans-apparition scroll-mt-24">
+    <div class="grid gap-5 rounded-3xl border-t-[6px] border-orange bg-white p-6 shadow-xl shadow-vert/10 sm:p-9 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] md:items-center md:gap-10">
       <div>
-        <p class="text-xl font-bold text-white sm:text-2xl">Abonnez-vous à la newsletter</p>
-        <p class="mt-1 text-sm text-white/80 sm:text-base">Opportunités, initiatives et événements de YouthConnekt Mali, directement par e-mail.</p>
+        <h2 id="titre-newsletter" class="text-2xl font-bold text-vert sm:text-3xl">Abonnez-vous à la newsletter</h2>
+        <p class="mt-2 text-[15px] sm:text-base">Opportunités, initiatives et événements de YouthConnekt Mali, directement par e-mail.</p>
       </div>
       <form action="<?= url('/newsletter') ?>" method="post" class="flex flex-col gap-2.5 sm:flex-row" novalidate>
         <?= csrf() ?>
@@ -15,17 +12,22 @@
         <div class="hidden" aria-hidden="true"><label>Ne pas remplir <input type="text" name="site_web" tabindex="-1" autocomplete="off"></label></div>
         <label for="newsletter-email" class="sr-only">Votre adresse e-mail</label>
         <input id="newsletter-email" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="Votre adresse e-mail" maxlength="190"
-               class="min-h-12 w-full min-w-0 flex-1 rounded-lg border-2 border-white/25 bg-white px-4 text-base text-encre placeholder:text-texte/70 focus:border-orange focus:ring-[3px] focus:ring-orange/40 focus:outline-none">
+               class="min-h-12 w-full min-w-0 flex-1 rounded-lg border-2 border-ligne bg-white px-4 text-base text-encre placeholder:text-texte/70 focus:border-orange focus:ring-[3px] focus:ring-orange/40 focus:outline-none">
         <button type="submit" class="btn btn-orange min-h-12 shrink-0 px-7">S'abonner</button>
       </form>
     </div>
   </div>
+</section>
+
+<footer class="relative isolate overflow-hidden bg-vert text-white" aria-labelledby="titre-pied">
+  <h2 id="titre-pied" class="sr-only">Informations sur YouthConnekt Mali</h2>
+  <?php partiel('partials/reseau_deco', ['opacite' => 'opacity-40']) ?>
 
   <div class="conteneur sans-apparition relative grid grid-cols-2 gap-x-6 gap-y-9 py-10 sm:gap-10 lg:grid-cols-12 lg:gap-8 lg:py-14">
     <div class="col-span-2 lg:col-span-4">
       <?php
-      /* Institutions d'appui, en petites capitales comme sur le site du Palais des Pionniers.
-         Les logos s'affichent dès que leurs fichiers sont déposés dans assets/img/appui/ (pnud, ministere). */
+      /* Institutions : le ministère en tête, le PNUD à la ligne.
+         Les logos s'affichent dès que leurs fichiers sont déposés dans assets/img/appui/ (ministere, pnud). */
       $logos_appui = [];
       foreach (['ministere' => 'Ministère de la Jeunesse et des Sports', 'pnud' => 'PNUD Mali'] as $fichier => $nom_appui) {
           foreach (['svg', 'png', 'webp', 'jpg'] as $ext) {
@@ -33,10 +35,15 @@
           }
       }
       ?>
-      <?php if ($logos_appui): ?>
-      <div class="mb-4 flex items-center gap-3"><?php foreach ($logos_appui as [$src, $nom_appui]): ?><img src="<?= e($src) ?>" alt="<?= e($nom_appui) ?>" class="h-11 w-auto rounded-full bg-white object-contain p-1" loading="lazy"><?php endforeach ?></div>
-      <?php endif ?>
-      <p class="mb-4 max-w-md text-[11px] leading-relaxed font-bold tracking-widest text-white/60 uppercase">Ministère de la Jeunesse et des Sports, chargé de l'Instruction civique et de la Construction citoyenne · Avec l'appui du PNUD Mali</p>
+      <div class="flex items-start gap-3">
+        <?php foreach ($logos_appui as [$src, $nom_appui]): if ($nom_appui === 'PNUD Mali') continue; ?><img src="<?= e($src) ?>" alt="" class="size-14 shrink-0 rounded-full bg-white object-contain p-1" loading="lazy"><?php endforeach ?>
+        <p class="text-lg leading-snug font-bold text-white sm:text-xl">Ministère de la Jeunesse et des Sports<span class="mt-1 block text-sm leading-snug font-medium text-white/85 sm:text-[15px]">chargé de l'Instruction civique et de la Construction citoyenne</span></p>
+      </div>
+      <p class="mt-3 flex items-center gap-2.5 text-sm text-white/85">
+        <?php foreach ($logos_appui as [$src, $nom_appui]): if ($nom_appui !== 'PNUD Mali') continue; ?><img src="<?= e($src) ?>" alt="" class="h-8 w-auto rounded bg-white object-contain p-0.5" loading="lazy"><?php endforeach ?>
+        <span>Avec l'appui du <strong class="font-bold text-white">PNUD Mali</strong></span>
+      </p>
+      <div class="my-6 h-px max-w-sm bg-white/20" aria-hidden="true"></div>
       <a href="<?= url('/') ?>" class="inline-flex rounded-xl bg-white px-3 py-2" aria-label="YouthConnekt Mali, retour à l'accueil">
         <?php partiel('partials/logo', ['classes' => 'h-11 w-auto']) ?>
       </a>
