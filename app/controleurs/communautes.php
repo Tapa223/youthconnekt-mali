@@ -47,6 +47,7 @@ function liste(): void
         'description' => 'Les communautés thématiques de YouthConnekt Mali : rejoignez celles qui vous ressemblent.',
         'communautes' => $communautes,
         'total' => count($toutes),
+        'toutes' => $toutes,
         'types' => $types,
         'type_actif' => $type_actif,
         'nombres' => $nombres,

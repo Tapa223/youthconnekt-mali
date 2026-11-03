@@ -13,11 +13,24 @@ $connecte = est_connecte();
     <div class="relative aspect-[5/4] w-[38%] shrink-0 sm:w-[34%] lg:w-[30%] lg:max-w-sm" aria-hidden="true">
       <svg class="absolute inset-0 h-full w-full" viewBox="0 0 500 400"><g stroke="rgb(255 255 255 / .35)" stroke-width="2" fill="none"><path d="M90 80 L250 185 L430 70"/><path d="M90 80 L80 290 L250 185 L450 160"/><path d="M250 185 L260 370 L410 290"/><path d="M430 70 L450 160 L410 290"/></g></svg>
       <div class="absolute top-[46%] left-1/2 aspect-square w-[32%] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full border-[3px] border-orange shadow-2xl sm:border-4"><img src="<?= asset('img/communaute/cercle-centre.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
-      <div class="anim-flotte absolute top-[8%] left-[10%] aspect-square w-[19%] overflow-hidden rounded-full border-2 border-turquoise sm:border-4"><img src="<?= asset('img/communaute/cercle-1.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
-      <div class="anim-flotte-2 absolute top-[5%] right-[6%] aspect-square w-[19%] overflow-hidden rounded-full border-2 border-white sm:border-4"><img src="<?= asset('img/communaute/cercle-2.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
-      <div class="anim-flotte-2 absolute bottom-[14%] left-[6%] aspect-square w-[18%] overflow-hidden rounded-full border-2 border-white sm:border-4"><img src="<?= asset('img/communaute/cercle-4.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
-      <div class="anim-flotte absolute right-[8%] bottom-[14%] aspect-square w-[19%] overflow-hidden rounded-full border-2 border-turquoise sm:border-4"><img src="<?= asset('img/communaute/cercle-5.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
-      <div class="anim-flotte-2 absolute bottom-[0%] left-[44%] aspect-square w-[14%] overflow-hidden rounded-full border-2 border-orange sm:border-4"><img src="<?= asset('img/communaute/cercle-6.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
+      <?php
+      /* Bulles thématiques autour du réseau : une photo si elle a été déposée dans assets/img/communaute/
+         (theme-tech.jpg, theme-leadership.jpg…), sinon un pictogramme sur fond de couleur */
+      $bulles = [
+          ['tech', 'Tech et numérique', 'bg-bleu', 'border-turquoise', 'anim-flotte top-[8%] left-[10%] w-[19%]', '<rect x="3" y="5" width="18" height="11" rx="1.5"/><path d="M1.5 19h21M9.5 9l-2 1.5 2 1.5M14.5 9l2 1.5-2 1.5"/>'],
+          ['leadership', 'Leadership', 'bg-orange', 'border-white', 'anim-flotte-2 top-[5%] right-[6%] w-[19%]', '<path d="M3 10v4l11 4V6L3 10zM14 8.5c2.5.5 4 2 4 3.5s-1.5 3-4 3.5M6 14.5l1 4.5h3l-1-3.6"/>'],
+          ['agriculture', 'Agriculture', 'bg-vert', 'border-white', 'anim-flotte-2 bottom-[14%] left-[6%] w-[18%]', '<path d="M12 21v-9M12 12c0-4 3-7 8-7 0 5-3 7-8 7zM12 15c0-3-2.5-5.5-7-5.5 0 4 2.5 5.5 7 5.5z"/>'],
+          ['entrepreneuriat', 'Entrepreneuriat', 'bg-turquoise', 'border-turquoise', 'anim-flotte right-[8%] bottom-[14%] w-[19%]', '<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3z"/>'],
+          ['arts', 'Arts et culture', 'bg-rouge', 'border-orange', 'anim-flotte-2 bottom-[0%] left-[44%] w-[14%]', '<circle cx="12" cy="12" r="9"/><circle cx="8" cy="10" r="1.2"/><circle cx="12" cy="7.5" r="1.2"/><circle cx="16" cy="10" r="1.2"/><path d="M14 21c-1.5-1.5-1-4 1.5-4H21"/>'],
+      ];
+      foreach ($bulles as [$cle, $titre_bulle, $fond_bulle, $bord, $place, $trace]):
+          $photo = 'img/communaute/theme-' . $cle . '.jpg';
+          $a_photo = is_file(RACINE . '/assets/' . $photo); ?>
+      <div class="<?= $place ?> absolute grid aspect-square place-items-center overflow-hidden rounded-full border-2 sm:border-4 <?= $bord ?> <?= $a_photo ? '' : $fond_bulle ?>" title="<?= e($titre_bulle) ?>">
+        <?php if ($a_photo): ?><img src="<?= asset($photo) ?>" alt="" class="h-full w-full object-cover">
+        <?php else: ?><svg class="w-[55%] text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><?= $trace ?></svg><?php endif ?>
+      </div>
+      <?php endforeach ?>
     </div>
   </div>
 </section>
@@ -34,7 +47,7 @@ $connecte = est_connecte();
         <svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       </button>
     </div>
-    <?php if ($nombres): ?>
+    <?php if ($total): ?>
     <details class="choix-type relative shrink-0" data-choix-type>
       <summary class="flex min-h-12 cursor-pointer list-none items-center gap-2 rounded-full border-2 px-4 text-sm font-bold transition-colors [&::-webkit-details-marker]:hidden <?= $type_actif ? 'border-orange bg-orange text-white' : 'border-vert bg-white text-vert hover:bg-vert-clair' ?>">
         <svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
@@ -43,12 +56,18 @@ $connecte = est_connecte();
       </summary>
       <ul class="absolute right-0 z-40 mt-2 max-h-[60vh] w-64 overflow-y-auto rounded-2xl border border-ligne bg-white p-1.5 shadow-2xl shadow-vert/15">
         <li><a href="<?= url('/communaute', ['q' => $recherche]) ?>" class="flex min-h-11 items-center justify-between gap-3 rounded-xl px-3 text-[15px] font-bold <?= !$type_actif ? 'bg-orange text-white' : 'text-encre hover:bg-gris' ?>">Toutes les communautés <span class="text-sm opacity-75"><?= $total ?></span></a></li>
+        <?php if ($nombres): ?>
         <?php foreach ($types as $slug_type => $t): if (empty($nombres[$slug_type])) continue; $actif = $type_actif === $slug_type; ?>
         <li><a href="<?= url('/communaute', ['type' => $slug_type, 'q' => $recherche]) ?>" class="flex min-h-11 items-center justify-between gap-3 rounded-xl px-3 text-[15px] font-bold <?= $actif ? 'bg-orange text-white' : 'text-encre hover:bg-gris' ?>">
           <span class="flex items-center gap-2.5"><span class="size-2.5 shrink-0 rounded-full <?= $actif ? 'bg-white' : fond($t['couleur']) ?>" aria-hidden="true"></span><?= e($t['nom']) ?></span>
           <span class="text-sm opacity-75"><?= $nombres[$slug_type] ?></span>
         </a></li>
         <?php endforeach ?>
+        <?php else: /* Aucune catégorie encore attribuée : on propose directement chaque communauté */ ?>
+        <?php foreach ($toutes as $c): ?>
+        <li><a href="<?= e($c['url']) ?>" class="flex min-h-11 items-center gap-2.5 rounded-xl px-3 text-[15px] font-bold text-encre hover:bg-gris"><span class="size-2.5 shrink-0 rounded-full bg-turquoise" aria-hidden="true"></span><?= e($c['nom']) ?></a></li>
+        <?php endforeach ?>
+        <?php endif ?>
       </ul>
     </details>
     <?php endif ?>
