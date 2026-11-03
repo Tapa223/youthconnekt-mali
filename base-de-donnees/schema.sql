@@ -97,10 +97,21 @@ CREATE TABLE IF NOT EXISTS tentatives_connexion (
 -- ---------------------------------------------------------------------
 -- Communautés thématiques
 -- ---------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS types_communaute (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  nom VARCHAR(80) NOT NULL,
+  slug VARCHAR(60) NOT NULL,
+  couleur VARCHAR(20) NOT NULL DEFAULT 'vert',
+  ordre SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (id),
+  UNIQUE KEY uk_types_communaute_slug (slug)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS communautes (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   nom VARCHAR(120) NOT NULL,
   slug VARCHAR(140) NOT NULL,
+  type VARCHAR(60) NOT NULL DEFAULT '',
   public_vise VARCHAR(255) NOT NULL,
   description TEXT NULL,
   activites TEXT NULL,

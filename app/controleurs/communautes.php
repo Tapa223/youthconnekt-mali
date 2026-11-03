@@ -10,15 +10,46 @@ function liste(): void
 {
     $u = utilisateur();
     $statuts = statuts_du_membre($u);
-    $communautes = array_map(function ($c) use ($statuts) {
+    $types = types_communaute();
+    $type_actif = get('type');
+    if (!isset($types[$type_actif])) {
+        $type_actif = '';
+    }
+    $recherche = mb_substr(trim(get('q')), 0, 100);
+
+    $toutes = array_map(function ($c) use ($statuts) {
         $c['statut_membre'] = $statuts[(int) $c['id']] ?? null;
         return $c;
     }, communautes_actives());
+
+    // Nombre de communautés par type, pour le menu (seuls les types utilisés y figurent)
+    $nombres = [];
+    foreach ($toutes as $c) {
+        if (isset($types[$c['type']])) {
+            $nombres[$c['type']] = ($nombres[$c['type']] ?? 0) + 1;
+        }
+    }
+
+    $communautes = array_values(array_filter($toutes, function ($c) use ($type_actif, $recherche) {
+        if ($type_actif !== '' && $c['type'] !== $type_actif) {
+            return false;
+        }
+        if ($recherche !== '') {
+            $texte = mb_strtolower($c['nom'] . ' ' . $c['public_vise'] . ' ' . $c['description'] . ' ' . $c['type_libelle']);
+            return mb_strpos($texte, mb_strtolower($recherche)) !== false;
+        }
+        return true;
+    }));
 
     afficher(vue('pages/communautes', [
         'titre' => 'Communauté | YouthConnekt Mali',
         'description' => 'Les communautés thématiques de YouthConnekt Mali : rejoignez celles qui vous ressemblent.',
         'communautes' => $communautes,
+        'total' => count($toutes),
+        'types' => $types,
+        'type_actif' => $type_actif,
+        'nombres' => $nombres,
+        'recherche' => $recherche,
     ]));
 }
 

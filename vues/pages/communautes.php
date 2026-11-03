@@ -1,13 +1,62 @@
-<?php $connecte = est_connecte(); ?>
+<?php
+/** Page Communauté : en-tête illustré, recherche et tri par type (types gérés dans l'administration), cartes des communautés */
+$nom_type = $type_actif ? ($types[$type_actif]['nom'] ?? '') : '';
+$connecte = est_connecte();
+?>
 <section class="relative isolate overflow-hidden bg-vert text-white">
   <?php partiel('partials/reseau_deco') ?>
-  <div class="conteneur anim-entree relative pt-6 pb-5 sm:pt-10 sm:pb-8">
-    <h1 class="text-[2.1rem] leading-none font-bold text-white sm:text-6xl">Communauté</h1>
-    <p class="mt-2.5 text-[15px] text-white/90 sm:mt-3 sm:text-lg">Découvrez nos différentes communautés.</p>
+  <div class="conteneur relative flex items-center gap-4 pt-5 pb-5 sm:gap-10 sm:pt-8 sm:pb-8">
+    <div class="anim-entree min-w-0 flex-1">
+      <h1 class="text-[1.65rem] leading-[1.1] font-bold text-white sm:text-4xl lg:text-[3.1rem]">Découvrez nos différentes communautés</h1>
+      <p class="mt-2.5 max-w-xl text-sm text-white/90 sm:mt-4 sm:text-lg">Des groupes de jeunes qui partagent un même domaine ou un même parcours. Rejoignez ceux qui vous ressemblent.</p>
+    </div>
+    <div class="relative aspect-[5/4] w-[38%] shrink-0 sm:w-[34%] lg:w-[30%] lg:max-w-sm" aria-hidden="true">
+      <svg class="absolute inset-0 h-full w-full" viewBox="0 0 500 400"><g stroke="rgb(255 255 255 / .35)" stroke-width="2" fill="none"><path d="M90 80 L250 185 L430 70"/><path d="M90 80 L80 290 L250 185 L450 160"/><path d="M250 185 L260 370 L410 290"/><path d="M430 70 L450 160 L410 290"/></g></svg>
+      <div class="absolute top-[46%] left-1/2 aspect-square w-[32%] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full border-[3px] border-orange shadow-2xl sm:border-4"><img src="<?= asset('img/communaute/cercle-centre.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
+      <div class="anim-flotte absolute top-[8%] left-[10%] aspect-square w-[19%] overflow-hidden rounded-full border-2 border-turquoise sm:border-4"><img src="<?= asset('img/communaute/cercle-1.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
+      <div class="anim-flotte-2 absolute top-[5%] right-[6%] aspect-square w-[19%] overflow-hidden rounded-full border-2 border-white sm:border-4"><img src="<?= asset('img/communaute/cercle-2.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
+      <div class="anim-flotte-2 absolute bottom-[14%] left-[6%] aspect-square w-[18%] overflow-hidden rounded-full border-2 border-white sm:border-4"><img src="<?= asset('img/communaute/cercle-4.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
+      <div class="anim-flotte absolute right-[8%] bottom-[14%] aspect-square w-[19%] overflow-hidden rounded-full border-2 border-turquoise sm:border-4"><img src="<?= asset('img/communaute/cercle-5.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
+      <div class="anim-flotte-2 absolute bottom-[0%] left-[44%] aspect-square w-[14%] overflow-hidden rounded-full border-2 border-orange sm:border-4"><img src="<?= asset('img/communaute/cercle-6.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
+    </div>
   </div>
 </section>
 
-<section class="conteneur pt-5 pb-10 sm:pt-8 sm:pb-16" aria-label="Les communautés">
+<?php /* Recherche et type : restent visibles en haut de l'écran pendant qu'on fait défiler */ ?>
+<div class="sticky top-16 z-30 border-b border-ligne/70 bg-gris/95 backdrop-blur">
+  <form method="get" action="<?= url('/communaute') ?>" class="conteneur flex gap-2 py-2.5 sm:py-3" role="search">
+    <?php if ($type_actif): ?><input type="hidden" name="type" value="<?= e($type_actif) ?>"><?php endif ?>
+    <label for="recherche" class="sr-only">Rechercher une communauté</label>
+    <div class="relative min-w-0 flex-1 sm:max-w-md">
+      <input id="recherche" name="q" type="search" value="<?= e($recherche) ?>" placeholder="Rechercher…" maxlength="100"
+             class="min-h-11 w-full rounded-full border border-ligne bg-white pr-12 pl-4 text-[15px] text-encre placeholder:text-texte/70 focus:border-vert focus:ring-[3px] focus:ring-orange/35 focus:outline-none">
+      <button type="submit" class="absolute top-1/2 right-1 grid size-9 -translate-y-1/2 place-items-center rounded-full bg-orange text-white transition-colors hover:bg-vert" aria-label="Rechercher">
+        <svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+    </div>
+    <?php if ($nombres): ?>
+    <details class="choix-type relative shrink-0" data-choix-type>
+      <summary class="flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-full border-2 px-4 text-sm font-bold transition-colors [&::-webkit-details-marker]:hidden <?= $type_actif ? 'border-orange bg-orange text-white' : 'border-vert bg-white text-vert hover:bg-vert-clair' ?>">
+        <svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+        <span class="max-w-[9rem] truncate sm:max-w-none"><?= $type_actif ? e($nom_type) : 'Type' ?></span>
+        <svg class="choix-fleche size-4 shrink-0 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </summary>
+      <ul class="absolute right-0 z-40 mt-2 max-h-[60vh] w-64 overflow-y-auto rounded-2xl border border-ligne bg-white p-1.5 shadow-2xl shadow-vert/15">
+        <li><a href="<?= url('/communaute', ['q' => $recherche]) ?>" class="flex min-h-11 items-center justify-between gap-3 rounded-xl px-3 text-[15px] font-bold <?= !$type_actif ? 'bg-orange text-white' : 'text-encre hover:bg-gris' ?>">Toutes les communautés <span class="text-sm opacity-75"><?= $total ?></span></a></li>
+        <?php foreach ($types as $slug_type => $t): if (empty($nombres[$slug_type])) continue; $actif = $type_actif === $slug_type; ?>
+        <li><a href="<?= url('/communaute', ['type' => $slug_type, 'q' => $recherche]) ?>" class="flex min-h-11 items-center justify-between gap-3 rounded-xl px-3 text-[15px] font-bold <?= $actif ? 'bg-orange text-white' : 'text-encre hover:bg-gris' ?>">
+          <span class="flex items-center gap-2.5"><span class="size-2.5 shrink-0 rounded-full <?= $actif ? 'bg-white' : fond($t['couleur']) ?>" aria-hidden="true"></span><?= e($t['nom']) ?></span>
+          <span class="text-sm opacity-75"><?= $nombres[$slug_type] ?></span>
+        </a></li>
+        <?php endforeach ?>
+      </ul>
+    </details>
+    <?php endif ?>
+  </form>
+</div>
+
+<section class="conteneur pt-4 pb-10 sm:pt-6 sm:pb-16" aria-label="Les communautés">
+  <?php if ($recherche !== '' || $type_actif): ?><p class="mb-3 text-sm sm:mb-5">Résultats<?= $type_actif ? ' · <strong class="text-vert">' . e($nom_type) . '</strong>' : '' ?><?= $recherche !== '' ? ' pour « <strong class="text-vert">' . e($recherche) . '</strong> »' : '' ?> <a href="<?= url('/communaute') ?>" class="btn-discret ml-1">Tout afficher</a></p><?php endif ?>
   <?php if ($communautes): ?>
   <ul class="grid grid-cols-2 gap-2.5 sm:gap-5 lg:grid-cols-3">
     <?php foreach ($communautes as $k => $c): ?>
@@ -25,6 +74,7 @@
           <?php elseif ($c['statut_membre'] === 'en_attente'): ?><span class="etiquette absolute top-2 left-2 rounded-full bg-orange text-[10px] text-white sm:top-3 sm:left-3 sm:text-xs">Demande en cours</span><?php endif ?>
         </span>
         <span class="flex flex-1 flex-col p-3 sm:p-5">
+          <?php if ($c['type_libelle'] !== ''): ?><span class="mb-1 text-[10px] font-bold tracking-[0.1em] uppercase sm:text-xs <?= texte_couleur($c['couleur']) ?>"><?= e($c['type_libelle']) ?></span><?php endif ?>
           <span class="text-[15px] leading-tight font-bold text-vert group-hover:text-orange sm:text-xl"><?= e($c['nom']) ?></span>
           <span class="mt-1 line-clamp-2 text-xs leading-snug text-texte sm:text-sm"><?= e($c['public_vise']) ?></span>
           <span class="mt-auto block pt-3 sm:pt-4"><?php partiel('partials/bouton_carte', ['texte' => 'Découvrir']) ?></span>
@@ -33,7 +83,8 @@
     </li>
     <?php endforeach ?>
   </ul>
-  <?php else: partiel('partials/vide', ['message' => 'Les communautés seront bientôt ouvertes.', 'lien_admin' => url('/gestion/communautes/ajouter')]); endif ?>
+  <?php elseif ($recherche !== '' || $type_actif): partiel('partials/vide', ['message' => 'Aucune communauté ne correspond à votre recherche.']);
+  else: partiel('partials/vide', ['message' => 'Les communautés seront bientôt ouvertes.', 'lien_admin' => url('/gestion/communautes/ajouter')]); endif ?>
 </section>
 
 <section class="bg-gris py-14 sm:py-20" aria-labelledby="titre-mode-emploi">

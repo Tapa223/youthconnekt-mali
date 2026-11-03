@@ -46,6 +46,13 @@ INSERT IGNORE INTO categories_actualite (nom, slug, couleur, ordre) VALUES
   ('Événement', 'evenement', 'orange', 1),
   ('Actualité', 'actualite', 'turquoise', 2);
 
+-- Types de communautés de départ (modifiables dans Administration > Types de communautés)
+INSERT IGNORE INTO types_communaute (nom, slug, couleur, ordre) VALUES
+  ('Secteurs d''activité', 'secteurs', 'turquoise', 1),
+  ('Entreprendre et innover', 'entreprendre', 'orange', 2),
+  ('Engagement citoyen', 'engagement', 'vert', 3),
+  ('Études et carrière', 'etudes-carriere', 'bleu', 4);
+
 INSERT IGNORE INTO communautes (nom, slug, public_vise, ordre) VALUES
   ('Tech et numérique', 'tech-et-numerique', 'Développeurs, créateurs de contenu, passionnés du numérique', 1),
   ('Entrepreneuriat et startups', 'entrepreneuriat-et-startups', 'Jeunes entrepreneurs, jeunes entreprises et startups', 2),
@@ -56,6 +63,10 @@ INSERT IGNORE INTO communautes (nom, slug, public_vise, ordre) VALUES
   ('Innovation et porteurs de projets', 'innovation-et-porteurs-de-projets', 'Innovateurs et porteurs de projets à la recherche d''accompagnement', 7),
   ('Étudiants', 'etudiants', 'Étudiants de toutes filières', 8),
   ('Jeunes professionnels', 'jeunes-professionnels', 'Jeunes en début de carrière', 9);
+UPDATE communautes SET type = 'secteurs' WHERE slug IN ('tech-et-numerique', 'agriculture-et-environnement', 'arts-culture-et-medias', 'sante-et-bien-etre') AND type = '';
+UPDATE communautes SET type = 'entreprendre' WHERE slug IN ('entrepreneuriat-et-startups', 'innovation-et-porteurs-de-projets') AND type = '';
+UPDATE communautes SET type = 'engagement' WHERE slug IN ('leadership-et-citoyennete') AND type = '';
+UPDATE communautes SET type = 'etudes-carriere' WHERE slug IN ('etudiants', 'jeunes-professionnels') AND type = '';
 
 -- Témoignages de la maquette (exemples, modifiables dans Administration > Témoignages)
 INSERT INTO temoignages (nom, role, texte, ordre, publie)

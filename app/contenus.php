@@ -169,10 +169,30 @@ function actualites_publiees(string $suite = 'ORDER BY publie_le DESC', array $p
 // Communautés
 // ---------------------------------------------------------------------------
 
+/** Types de communautés gérés dans l'administration : [slug => ['nom' => …, 'couleur' => …]] */
+function types_communaute(): array
+{
+    static $types = null;
+    if ($types === null) {
+        $types = [];
+        try {
+            foreach (lignes('SELECT slug, nom, couleur FROM types_communaute ORDER BY ordre, nom') as $t) {
+                $types[$t['slug']] = ['nom' => $t['nom'], 'couleur' => $t['couleur']];
+            }
+        } catch (Throwable $e) {
+            journaliser('Types de communautés indisponibles : ' . $e->getMessage());
+        }
+    }
+    return $types;
+}
+
 function communaute_preparer(array $c): array
 {
     $c['url'] = url('/communaute/' . $c['slug']);
     $c['nb_membres'] = (int) ($c['nb_membres'] ?? 0);
+    $type = types_communaute()[$c['type'] ?? ''] ?? null;
+    $c['type_libelle'] = $type['nom'] ?? '';
+    $c['couleur'] = $type['couleur'] ?? 'vert';
     return $c;
 }
 
