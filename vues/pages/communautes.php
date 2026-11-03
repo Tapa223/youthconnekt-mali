@@ -23,22 +23,22 @@ $connecte = est_connecte();
 </section>
 
 <?php /* Recherche et type : restent visibles en haut de l'écran pendant qu'on fait défiler */ ?>
-<div class="sticky top-16 z-30 border-b border-ligne/70 bg-gris/95 backdrop-blur">
-  <form method="get" action="<?= url('/communaute') ?>" class="conteneur flex gap-2 py-2.5 sm:py-3" role="search">
+<div class="sticky top-16 z-30 border-b border-ligne bg-white/95 shadow-sm backdrop-blur">
+  <form method="get" action="<?= url('/communaute') ?>" class="conteneur flex gap-2 py-3 sm:gap-3 sm:py-4" role="search">
     <?php if ($type_actif): ?><input type="hidden" name="type" value="<?= e($type_actif) ?>"><?php endif ?>
     <label for="recherche" class="sr-only">Rechercher une communauté</label>
-    <div class="relative min-w-0 flex-1 sm:max-w-md">
+    <div class="relative min-w-0 flex-1 sm:max-w-xl">
       <input id="recherche" name="q" type="search" value="<?= e($recherche) ?>" placeholder="Rechercher…" maxlength="100"
-             class="min-h-11 w-full rounded-full border border-ligne bg-white pr-12 pl-4 text-[15px] text-encre placeholder:text-texte/70 focus:border-vert focus:ring-[3px] focus:ring-orange/35 focus:outline-none">
-      <button type="submit" class="absolute top-1/2 right-1 grid size-9 -translate-y-1/2 place-items-center rounded-full bg-orange text-white transition-colors hover:bg-vert" aria-label="Rechercher">
+             class="min-h-12 w-full rounded-full border-2 border-vert/40 bg-gris pr-13 pl-5 text-[15px] text-encre shadow-inner placeholder:text-texte focus:border-vert focus:bg-white focus:ring-[3px] focus:ring-orange/35 focus:outline-none sm:text-base">
+      <button type="submit" class="absolute top-1/2 right-1.5 grid size-9.5 -translate-y-1/2 place-items-center rounded-full bg-orange text-white transition-colors hover:bg-vert" aria-label="Rechercher">
         <svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       </button>
     </div>
     <?php if ($nombres): ?>
     <details class="choix-type relative shrink-0" data-choix-type>
-      <summary class="flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-full border-2 px-4 text-sm font-bold transition-colors [&::-webkit-details-marker]:hidden <?= $type_actif ? 'border-orange bg-orange text-white' : 'border-vert bg-white text-vert hover:bg-vert-clair' ?>">
+      <summary class="flex min-h-12 cursor-pointer list-none items-center gap-2 rounded-full border-2 px-4 text-sm font-bold transition-colors [&::-webkit-details-marker]:hidden <?= $type_actif ? 'border-orange bg-orange text-white' : 'border-vert bg-white text-vert hover:bg-vert-clair' ?>">
         <svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
-        <span class="max-w-[9rem] truncate sm:max-w-none"><?= $type_actif ? e($nom_type) : 'Type' ?></span>
+        <span class="max-w-[9rem] truncate sm:max-w-none"><?= $type_actif ? e($nom_type) : 'Catégorie' ?></span>
         <svg class="choix-fleche size-4 shrink-0 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
       </summary>
       <ul class="absolute right-0 z-40 mt-2 max-h-[60vh] w-64 overflow-y-auto rounded-2xl border border-ligne bg-white p-1.5 shadow-2xl shadow-vert/15">
@@ -115,4 +115,3 @@ $connecte = est_connecte();
   </div>
 </section>
 
-<?php partiel('partials/bandeau_lets_connekt') ?>

@@ -40,7 +40,7 @@ const MENU_ADMIN = [
         ['Membres individuels', 'membres', 'personne', 'membres'],
         ['Organisations et entreprises', 'organisations', 'batiment', 'organisations'],
         ['Communautés', 'communautes', 'groupe', 'communautes'],
-        ['Types de communautés', 'types-communautes', 'etiquette', 'communautes'],
+        ['Catégories de communautés', 'types-communautes', 'etiquette', 'communautes'],
     ]],
     ['Échanges', [
         ['Messages de contact', 'messages', 'enveloppe', 'messages'],
