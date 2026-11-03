@@ -1,2 +1,2 @@
-<?php /* Bouton « Voir plus » en bas d'une carte entièrement cliquable (la carte est déjà un lien : simple apparence de bouton). Paramètre : $classes */ ?>
-<span class="flex min-h-9 w-full items-center justify-center rounded-full border-[1.5px] border-vert text-[13px] font-bold text-vert transition-colors group-hover:border-orange group-hover:bg-orange group-hover:text-white sm:min-h-10 sm:text-sm <?= e($classes ?? '') ?>">Voir plus</span>
+<?php /* Bouton « Voir plus » en bas d'une carte entièrement cliquable (la carte est déjà un lien : simple apparence de bouton). Paramètres : $classes, $texte (par défaut « Voir plus ») */ ?>
+<span class="flex min-h-9 w-full items-center justify-center rounded-full border-[1.5px] border-vert text-[13px] font-bold text-vert transition-colors group-hover:border-orange group-hover:bg-orange group-hover:text-white sm:min-h-10 sm:text-sm <?= e($classes ?? '') ?>"><?= e($texte ?? 'Voir plus') ?></span>
