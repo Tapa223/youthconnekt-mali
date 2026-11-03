@@ -31,6 +31,7 @@ const MENU_ADMIN = [
         ['Opportunités', 'opportunites', 'mallette', 'opportunites'],
         ["Types d'opportunités", 'types-opportunites', 'etiquette', 'opportunites'],
         ['Actualités et événements', 'actualites', 'journal', 'actualites'],
+        ["Catégories d'actualités", 'categories-actualites', 'etiquette', 'actualites'],
         ['Initiatives', 'initiatives', 'drapeau', 'initiatives'],
         ['Témoignages', 'temoignages', 'bulle', 'temoignages'],
         ['Partenaires', 'partenaires', 'batiment', 'partenaires'],

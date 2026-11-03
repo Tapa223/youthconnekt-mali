@@ -124,12 +124,37 @@ function opportunites_ouvertes(string $suite = 'ORDER BY date_limite IS NULL, da
 // Actualités et événements
 // ---------------------------------------------------------------------------
 
+/** Catégories d'actualités gérées dans l'administration : [slug => ['nom' => …, 'couleur' => …]] */
+function categories_actualite(): array
+{
+    static $categories = null;
+    if ($categories === null) {
+        $categories = [];
+        try {
+            foreach (lignes('SELECT slug, nom, couleur FROM categories_actualite ORDER BY ordre, nom') as $c) {
+                $categories[$c['slug']] = ['nom' => $c['nom'], 'couleur' => $c['couleur']];
+            }
+        } catch (Throwable $e) {
+            journaliser('Catégories d\'actualités indisponibles : ' . $e->getMessage());
+        }
+    }
+    return $categories;
+}
+
+/** [slug => nom] pour les listes de choix (avec « Sans catégorie ») */
+function options_categories_actualite(): array
+{
+    return ['' => 'Sans catégorie'] + array_map(fn ($c) => $c['nom'], categories_actualite());
+}
+
 function actualite_preparer(array $a): array
 {
     $a['url'] = url('/actualites/' . $a['slug']);
     $a['date_affichee'] = $a['date_evenement'] ?: substr($a['publie_le'], 0, 10);
     $a['est_a_venir'] = !empty($a['date_evenement']) && $a['date_evenement'] >= aujourdhui();
-    $a['categorie_libelle'] = CATEGORIES_ACTUALITE[$a['categorie']] ?? '';
+    $categorie = categories_actualite()[$a['categorie'] ?? ''] ?? null;
+    $a['categorie_libelle'] = $categorie['nom'] ?? '';
+    $a['couleur'] = $categorie['couleur'] ?? 'vert';
     $mots = str_word_count(strip_tags(($a['chapeau'] ?? '') . ' ' . ($a['contenu'] ?? '')));
     $a['minutes_lecture'] = max(1, (int) round($mots / 200));
     return $a;

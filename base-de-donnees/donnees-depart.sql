@@ -41,6 +41,11 @@ INSERT IGNORE INTO types_opportunite (nom, slug, couleur, ordre) VALUES
   ('Bourse', 'bourse', 'bleu', 4),
   ('Emploi et stage', 'emploi', 'rouge', 5);
 
+-- Catégories d'actualités de départ (modifiables dans Administration > Catégories d'actualités)
+INSERT IGNORE INTO categories_actualite (nom, slug, couleur, ordre) VALUES
+  ('Événement', 'evenement', 'orange', 1),
+  ('Actualité', 'actualite', 'turquoise', 2);
+
 INSERT IGNORE INTO communautes (nom, slug, public_vise, ordre) VALUES
   ('Tech et numérique', 'tech-et-numerique', 'Développeurs, créateurs de contenu, passionnés du numérique', 1),
   ('Entrepreneuriat et startups', 'entrepreneuriat-et-startups', 'Jeunes entrepreneurs, jeunes entreprises et startups', 2),

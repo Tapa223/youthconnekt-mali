@@ -114,29 +114,41 @@ function opportunite(string $slug): void
 
 function actualites(): void
 {
-    $filtre = get('filtre');
-    if (!in_array($filtre, ['evenements', 'actualites'], true)) {
-        $filtre = '';
+    $categories = categories_actualite();
+    $categorie = get('categorie');
+    if (!isset($categories[$categorie])) {
+        $categorie = '';
     }
-    $condition = ['' => '', 'evenements' => " AND categorie = 'evenement'", 'actualites' => " AND categorie = 'actualite'"][$filtre];
+    $condition = $categorie !== '' ? ' AND categorie = ?' : '';
+    $params = $categorie !== '' ? [$categorie] : [];
     // Plus récentes d'abord : la date de l'événement (à venir comprise) ou, à défaut, la date de publication
     $ordre = 'ORDER BY COALESCE(date_evenement, DATE(publie_le)) DESC, publie_le DESC';
 
-    $pagination = paginer((int) valeur('SELECT COUNT(*) FROM actualites WHERE ' . PUBLIE . $condition), 12);
+    // Nombre d'actualités par catégorie, pour le menu (seules les catégories utilisées y figurent)
+    $nombres = [];
+    foreach (lignes('SELECT categorie, COUNT(*) AS n FROM actualites WHERE ' . PUBLIE . " AND categorie <> '' GROUP BY categorie") as $l) {
+        if (isset($categories[$l['categorie']])) {
+            $nombres[$l['categorie']] = (int) $l['n'];
+        }
+    }
+
+    $pagination = paginer((int) valeur('SELECT COUNT(*) FROM actualites WHERE ' . PUBLIE . $condition, $params), 12);
     $une = null;
-    if ($pagination['page'] === 1 && $filtre === '') {
+    if ($pagination['page'] === 1 && $categorie === '') {
         // À la une : celle mise en avant dans l'administration, sinon la plus récente
         $une = actualites_publiees('ORDER BY mis_en_avant DESC, publie_le DESC LIMIT 1')[0] ?? null;
     }
     $exclure = $une ? ' AND id <> ' . (int) $une['id'] : '';
-    $liste = actualites_publiees($condition . $exclure . " $ordre LIMIT {$pagination['par_page']} OFFSET {$pagination['decalage']}");
+    $liste = actualites_publiees($condition . $exclure . " $ordre LIMIT {$pagination['par_page']} OFFSET {$pagination['decalage']}", $params);
 
     afficher(vue('pages/actualites', [
         'titre' => 'Actualités | YouthConnekt Mali',
         'description' => 'Les actualités et les événements de YouthConnekt Mali.',
-        'filtre' => $filtre,
+        'categories' => $categories,
+        'categorie_active' => $categorie,
+        'nombres' => $nombres,
+        'total' => (int) valeur('SELECT COUNT(*) FROM actualites WHERE ' . PUBLIE),
         'une' => $une,
-        'a_cote' => $une ? array_splice($liste, 0, 3) : [],
         'liste' => $liste,
         'pagination' => $pagination,
     ]));

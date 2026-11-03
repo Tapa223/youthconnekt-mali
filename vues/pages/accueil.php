@@ -326,7 +326,7 @@ $points = [
           <span class="mt-1 text-[11px] font-bold uppercase"><?= e(mois_pastille($une['date_affichee'])) ?></span>
         </time>
         <div class="absolute inset-x-0 bottom-0 p-4 sm:p-7">
-          <span class="etiquette bg-orange tracking-wide text-white uppercase">À la une · <?= e($une['categorie_libelle']) ?></span>
+          <span class="etiquette bg-orange tracking-wide text-white uppercase">À la une<?= $une['categorie_libelle'] !== '' ? ' · ' . e($une['categorie_libelle']) : '' ?></span>
           <h3 class="mt-3 text-xl leading-tight font-bold text-white sm:text-3xl"><?= e($une['titre']) ?></h3>
           <p class="mt-2 line-clamp-2 hidden text-sm text-white/90 sm:block sm:text-base"><?= e($une['chapeau']) ?></p>
         </div>
@@ -341,7 +341,7 @@ $points = [
               <?php partiel('partials/photo', ['image' => $actu['image']]) ?>
             </div>
             <div class="min-w-0">
-              <p class="text-[11px] font-bold tracking-[0.12em] text-vert uppercase sm:text-xs"><?= e($actu['categorie_libelle']) ?> · <time datetime="<?= e(date_iso($actu['date_affichee'])) ?>"><?= e(date_courte($actu['date_affichee'])) ?></time></p>
+              <p class="text-[11px] font-bold tracking-[0.12em] text-vert uppercase sm:text-xs"><?= $actu['categorie_libelle'] !== '' ? e($actu['categorie_libelle']) . ' · ' : '' ?><time datetime="<?= e(date_iso($actu['date_affichee'])) ?>"><?= e(date_courte($actu['date_affichee'])) ?></time></p>
               <h3 class="mt-1.5 line-clamp-2 text-[15px] leading-snug font-bold text-encre group-hover:text-orange sm:text-base"><?= e($actu['titre']) ?></h3>
             </div>
           </a>

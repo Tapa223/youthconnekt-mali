@@ -1,12 +1,12 @@
 <?php /* Carte d'actualité ou d'événement. Paramètres : $a, $mode (« evenement », « actualite », « lire » ou « liste » : compacte, deux par ligne sur téléphone) */ $mode = $mode ?? 'actualite'; ?>
-<?php if ($mode === 'liste'): $ev = $a['categorie'] === 'evenement'; ?>
+<?php if ($mode === 'liste'): ?>
 <a href="<?= e($a['url']) ?>" class="carte group flex h-full flex-col transition-shadow hover:shadow-lg">
-  <div class="relative aspect-[4/3] border-b-[3px] sm:aspect-[16/9] sm:border-b-4 <?= $ev ? 'border-orange' : 'border-turquoise' ?>">
+  <div class="relative aspect-[4/3] border-b-[3px] sm:aspect-[16/9] sm:border-b-4 <?= bordure($a['couleur']) ?>">
     <?php partiel('partials/photo', ['image' => $a['image']]) ?>
-    <?php if ($ev && $a['est_a_venir']): ?><span class="etiquette absolute top-2 left-2 rounded-full bg-orange text-white max-sm:px-2 max-sm:py-0.5 max-sm:text-[10px] sm:top-3 sm:left-3">À venir</span><?php endif ?>
+    <?php if ($a['est_a_venir']): ?><span class="etiquette absolute top-2 left-2 rounded-full bg-orange text-white max-sm:px-2 max-sm:py-0.5 max-sm:text-[10px] sm:top-3 sm:left-3">À venir</span><?php endif ?>
   </div>
   <div class="flex flex-1 flex-col p-3 sm:p-5">
-    <p class="text-[11px] font-bold tracking-[0.08em] uppercase sm:text-xs <?= $ev ? 'text-orange' : 'text-turquoise' ?>"><?= e($a['categorie_libelle']) ?> · <span class="text-texte"><?= e(date_courte($a['date_affichee'])) ?></span></p>
+    <p class="text-[11px] font-bold tracking-[0.08em] uppercase sm:text-xs <?= texte_couleur($a['couleur']) ?>"><?= $a['categorie_libelle'] !== '' ? e($a['categorie_libelle']) . ' · ' : '' ?><span class="text-texte"><?= e(date_courte($a['date_affichee'])) ?></span></p>
     <h3 class="mt-1 line-clamp-3 text-[14px] leading-tight font-bold text-vert group-hover:text-orange sm:text-lg sm:leading-snug"><?= e($a['titre']) ?></h3>
     <p class="mt-2 line-clamp-2 hidden text-sm sm:block"><?= e($a['chapeau']) ?></p>
   </div>
@@ -25,7 +25,7 @@
     <?php if ($mode === 'evenement'): ?>
       <p class="text-[11px] font-bold tracking-[0.12em] uppercase <?= $a['est_a_venir'] ? 'text-orange' : 'text-texte' ?>"><?= $a['est_a_venir'] ? 'À venir' : 'Passé' ?><?= $a['lieu'] ? ' · ' . e($a['lieu']) : '' ?></p>
     <?php elseif ($mode === 'lire'): ?>
-      <p class="text-[11px] font-bold tracking-[0.12em] text-vert uppercase"><?= e($a['categorie_libelle']) ?>s · <?= e(date_courte($a['date_affichee'])) ?></p>
+      <p class="text-[11px] font-bold tracking-[0.12em] text-vert uppercase"><?= $a['categorie_libelle'] !== '' ? e($a['categorie_libelle']) . ' · ' : '' ?><?= e(date_courte($a['date_affichee'])) ?></p>
     <?php else: ?>
       <p class="text-xs text-texte"><time datetime="<?= e(date_iso($a['date_affichee'])) ?>"><?= e(date_courte($a['date_affichee'])) ?></time></p>
     <?php endif ?>

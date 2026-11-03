@@ -236,6 +236,16 @@ CREATE TABLE IF NOT EXISTS opportunite_communaute (
   CONSTRAINT fk_oc_communaute FOREIGN KEY (communaute_id) REFERENCES communautes (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS categories_actualite (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  nom VARCHAR(80) NOT NULL,
+  slug VARCHAR(60) NOT NULL,
+  couleur VARCHAR(20) NOT NULL DEFAULT 'vert',
+  ordre SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (id),
+  UNIQUE KEY uk_categories_actualite_slug (slug)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS actualites (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   titre VARCHAR(200) NOT NULL,
@@ -243,7 +253,7 @@ CREATE TABLE IF NOT EXISTS actualites (
   statut ENUM('brouillon','publie') NOT NULL DEFAULT 'brouillon',
   publie_le DATETIME NOT NULL,
   mis_en_avant TINYINT(1) NOT NULL DEFAULT 0,
-  categorie ENUM('actualite','evenement') NOT NULL DEFAULT 'actualite',
+  categorie VARCHAR(60) NOT NULL DEFAULT '',
   chapeau VARCHAR(400) NOT NULL DEFAULT '',
   contenu MEDIUMTEXT NULL,
   image VARCHAR(255) NOT NULL DEFAULT '',

@@ -61,7 +61,7 @@ function tableau_de_bord(): void
     $exclues = array_map(fn ($d) => (int) $d['communaute_id'], $demandes);
     $suggestions = array_values(array_filter(communautes_actives(), fn ($c) => !in_array((int) $c['id'], $exclues, true)));
     usort($suggestions, fn ($a, $b) => $b['nb_membres'] <=> $a['nb_membres'] ?: $a['ordre'] <=> $b['ordre']);
-    $evenements = actualites_publiees("AND categorie = 'evenement' AND date_evenement >= CURDATE() ORDER BY date_evenement");
+    $evenements = actualites_publiees("AND date_evenement >= CURDATE() ORDER BY date_evenement");
 
     vue_espace('tableau_de_bord', 'tableau', 'Mon espace', [
         'completion' => taux_completion($u['profil'], $u['type_compte']),

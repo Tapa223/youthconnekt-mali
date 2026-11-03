@@ -27,7 +27,7 @@ $meta = array_filter([date_longue($a['date_affichee']), $a['lieu'], $a['minutes_
       <div class="grid items-center gap-8 <?= $images ? 'lg:grid-cols-[minmax(0,6fr)_minmax(0,6fr)] lg:gap-12' : '' ?>">
         <div class="<?= $images ? '' : 'max-w-3xl' ?>">
           <p class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
-            <span class="etiquette rounded-full <?= $a['categorie'] === 'evenement' ? 'bg-vert text-white' : 'bg-turquoise text-encre' ?>"><?= e($a['categorie_libelle']) ?></span>
+            <?php if ($a['categorie_libelle'] !== ''): ?><span class="etiquette rounded-full <?= fond($a['couleur']) ?>"><?= e($a['categorie_libelle']) ?></span><?php endif ?>
             <span><?= e(implode(' · ', $meta)) ?></span>
           </p>
           <h1 class="mt-4 text-[2rem] leading-[1.08] font-bold sm:text-5xl lg:text-[3.2rem]"><?= e($a['titre']) ?></h1>

@@ -182,27 +182,27 @@ function ressources(): array
             'libelle_ajout' => 'Publier une actualité', 'libelle_tous' => 'Tout',
             'ordre' => 't.publie_le DESC',
             'onglets' => [
-                ['Événements', "t.categorie = 'evenement'"],
-                ['Actualités', "t.categorie = 'actualite'"],
+                ['À venir', 't.date_evenement >= CURDATE()'],
                 ['Brouillons', "t.statut = 'brouillon'"],
             ],
+            'filtres' => [['categorie', 'Toutes catégories', array_map(fn ($c) => $c['nom'], categories_actualite()), 't.categorie']],
             'recherche' => ['t.titre', 't.chapeau', 't.contenu'],
             'colonnes' => [
                 ['Titre', fn ($l) => '<strong>' . e($l['titre']) . '</strong>', 'lien' => true],
-                ['Catégorie', fn ($l) => $l['categorie'] === 'evenement' ? badge('Événement', 'orange') : badge('Actualité', 'turquoise')],
+                ['Catégorie', fn ($l) => isset(categories_actualite()[$l['categorie']]) ? badge(categories_actualite()[$l['categorie']]['nom'], categories_actualite()[$l['categorie']]['couleur']) : '—'],
                 ['Date', fn ($l) => e(date_chiffres($l['date_evenement'] ?: $l['publie_le']))],
                 ['Statut', fn ($l) => badge_statut($l, true)],
                 ['À la une', fn ($l) => $l['mis_en_avant'] ? 'Oui' : '—'],
             ],
             'url_voir' => fn ($l) => url('/actualites/' . $l['slug']),
             'actions' => actions_publication('actualites'),
-            'export' => ['Titre' => 'titre', 'Catégorie' => fn ($l) => CATEGORIES_ACTUALITE[$l['categorie']] ?? '',
+            'export' => ['Titre' => 'titre', 'Catégorie' => fn ($l) => categories_actualite()[$l['categorie']]['nom'] ?? '',
                 'Date' => fn ($l) => date_chiffres($l['date_evenement'] ?: $l['publie_le']), 'Lieu' => 'lieu', 'Statut' => 'statut'],
             'groupes' => [
                 ['Informations principales', 'champs' => [
                     'titre' => ['type' => 'texte', 'libelle' => 'Titre', 'max' => 200],
-                    'categorie' => ['type' => 'select', 'libelle' => 'Catégorie', 'options' => CATEGORIES_ACTUALITE],
-                    'date_evenement' => ['type' => 'date', 'libelle' => "Date de l'événement", 'requis' => false, 'largeur' => 'demi', 'aide' => 'Pour les événements uniquement.'],
+                    'categorie' => ['type' => 'select', 'libelle' => 'Catégorie', 'requis' => false, 'options' => options_categories_actualite(), 'aide' => 'Facultatif. Les catégories se gèrent dans « Catégories d\'actualités ».'],
+                    'date_evenement' => ['type' => 'date', 'libelle' => "Date de l'événement", 'requis' => false, 'largeur' => 'demi', 'aide' => "Pour un événement : la page l'indique « À venir » jusqu'à cette date."],
                     'lieu' => ['type' => 'texte', 'libelle' => "Lieu de l'événement", 'requis' => false, 'max' => 120, 'largeur' => 'demi'],
                     'chapeau' => ['type' => 'zone', 'libelle' => 'Chapeau (introduction)', 'max' => 400, 'lignes' => 3],
                 ]],
@@ -572,7 +572,7 @@ function ressources(): array
             'champs_select' => 't.*, (SELECT COUNT(*) FROM opportunites o WHERE o.type = t.slug) AS nb',
             'colonnes' => [
                 ['Type', fn ($l) => '<strong>' . e($l['nom']) . '</strong>', 'lien' => true],
-                ['Couleur', fn ($l) => point_couleur(COULEURS_HEX[$l['couleur']] ?? '', COULEURS_CHARTE[$l['couleur']] ?? $l['couleur'])],
+                ['Couleur', fn ($l) => point_couleur(COULEURS_CHARTE[$l['couleur']] ?? $l['couleur'], $l['couleur'])],
                 ['Opportunités', fn ($l) => (int) $l['nb']],
                 ['Ordre', fn ($l) => (int) $l['ordre']],
             ],
@@ -592,6 +592,35 @@ function ressources(): array
             'avant_suppression' => function (array $ligne) {
                 $n = (int) valeur('SELECT COUNT(*) FROM opportunites WHERE type = ?', [$ligne['slug']]);
                 return $n ? "Ce type est utilisé par $n opportunité" . pluriel($n) . " : changez d'abord leur type, puis supprimez-le." : null;
+            },
+        ],
+
+        'categories-actualites' => [
+            'table' => 'categories_actualite', 'titre' => "Catégories d'actualités", 'rubrique' => 'actualites',
+            'description' => "Les catégories proposées dans le filtre de la page Actualités. Une catégorie utilisée par des actualités ne peut pas être supprimée.",
+            'libelle_ajout' => 'Ajouter une catégorie', 'ordre' => 't.ordre, t.nom',
+            'champs_select' => 't.*, (SELECT COUNT(*) FROM actualites a WHERE a.categorie = t.slug) AS nb',
+            'colonnes' => [
+                ['Catégorie', fn ($l) => '<strong>' . e($l['nom']) . '</strong>', 'lien' => true],
+                ['Couleur', fn ($l) => point_couleur(COULEURS_CHARTE[$l['couleur']] ?? $l['couleur'], $l['couleur'])],
+                ['Actualités', fn ($l) => (int) $l['nb']],
+                ['Ordre', fn ($l) => (int) $l['ordre']],
+            ],
+            'groupes' => [
+                [null, 'champs' => [
+                    'nom' => ['type' => 'texte', 'libelle' => 'Nom de la catégorie', 'max' => 80, 'aide' => 'Exemple : Événement, Atelier, Communiqué…'],
+                ]],
+                ['Affichage', 'cote' => true, 'champs' => [
+                    'couleur' => ['type' => 'select', 'libelle' => 'Couleur', 'options' => COULEURS_CHARTE],
+                    'ordre' => ['type' => 'nombre', 'libelle' => "Ordre d'affichage", 'defaut' => 0],
+                ]],
+            ],
+            'avant' => function (array &$d, ?array $ancien) {
+                $d['slug'] = $ancien['slug'] ?? slug_unique('categories_actualite', $d['nom'], null);
+            },
+            'avant_suppression' => function (array $ligne) {
+                $n = (int) valeur('SELECT COUNT(*) FROM actualites WHERE categorie = ?', [$ligne['slug']]);
+                return $n ? "Cette catégorie est utilisée par $n actualité" . pluriel($n) . " : changez d'abord leur catégorie, puis supprimez-la." : null;
             },
         ],
 

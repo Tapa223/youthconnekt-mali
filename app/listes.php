@@ -53,11 +53,6 @@ const TYPES_COMPTE = [
     'administration' => "Compte d'administration",
 ];
 
-const CATEGORIES_ACTUALITE = [
-    'actualite' => 'Actualité',
-    'evenement' => 'Événement',
-];
-
 const ETATS_INITIATIVE = [
     'a_venir' => 'À venir',
     'en_cours' => 'En cours',
