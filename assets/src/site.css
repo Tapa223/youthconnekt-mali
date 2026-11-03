@@ -277,6 +277,14 @@ a.text-orange:not(.btn):not([class*="hover:bg-"]):hover { color: var(--color-ver
   .aide-bouton:hover { background: var(--color-orange); box-shadow: 0 10px 24px rgb(241 89 42 / .4); }
   .aide[data-sur-vert] .aide-bouton:hover { background: #fff; color: var(--color-orange); }
 }
+/* Le point d'interrogation bouge un peu, de temps en temps */
+@keyframes yc-aide-bouge { 0%, 86%, 100% { transform: none; } 88% { transform: rotate(-14deg) scale(1.08); } 91% { transform: rotate(12deg) scale(1.08); } 94% { transform: rotate(-8deg); } 97% { transform: rotate(4deg); } }
+.aide-point { display: inline-block; animation: yc-aide-bouge 7s ease-in-out 3s infinite; }
+.aide-bouton[aria-expanded="true"] .aide-point { animation: none; }
+@media (prefers-reduced-motion: reduce) { .aide-point { animation: none; } }
+/* Icônes des réseaux sociaux du pied de page : de vrais boutons au survol */
+.icone-reseau { transition: background-color .2s, border-color .2s, color .2s, transform .2s; }
+.icone-reseau:hover { background: var(--color-orange); border-color: var(--color-orange); color: #fff; transform: translateY(-3px); }
 .aide-choix { display: flex; min-height: 40px; cursor: pointer; align-items: center; justify-content: center; border-radius: 10px; font-size: 14px; font-weight: 700; color: var(--color-vert); transition: background-color .15s, color .15s; }
 .aide-choix:has(input:checked) { background: var(--color-orange); color: #fff; }
 .aide-choix:has(input:focus-visible) { outline: 3px solid rgb(241 89 42 / .45); }

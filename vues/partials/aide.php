@@ -1,6 +1,6 @@
 <?php
 /*
- * Bulle en bas à droite : le visiteur envoie directement une question ou une suggestion.
+ * Bulle en bas à droite : le visiteur écrit directement son message (question, suggestion, situation…).
  * Les messages arrivent dans Administration > Messages de contact.
  * La couleur du bouton s'adapte au fond : orange sur le vert, vert sur le clair.
  */
@@ -13,7 +13,7 @@ $champ = 'min-h-11 w-full rounded-lg border border-ligne bg-white px-3.5 text-[1
     <div class="flex items-start justify-between gap-3 bg-vert px-5 py-4 text-white">
       <div>
         <p id="titre-aide" class="text-lg font-bold">Une question, une suggestion&nbsp;?</p>
-        <p class="text-sm text-white/85">Écrivez-nous, l'équipe vous répond par e-mail</p>
+        <p class="text-sm text-white/85">Écrivez-nous, l'équipe vous répondra par e-mail</p>
       </div>
       <button type="button" class="-mt-1 -mr-2 grid size-10 shrink-0 place-items-center rounded-full text-white transition-colors hover:bg-orange" data-fermer-aide aria-label="Fermer">
         <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
@@ -24,11 +24,6 @@ $champ = 'min-h-11 w-full rounded-lg border border-ligne bg-white px-3.5 text-[1
       <?= csrf() ?>
       <input type="hidden" name="suivant" value="<?= e(adresse_actuelle()) ?>">
       <div class="hidden" aria-hidden="true"><label>Ne pas remplir <input type="text" name="site_web" tabindex="-1" autocomplete="off"></label></div>
-      <fieldset class="grid grid-cols-2 gap-1 rounded-xl bg-gris p-1">
-        <legend class="sr-only">Type de message</legend>
-        <label class="aide-choix"><input type="radio" name="type" value="question" class="sr-only" checked> Une question</label>
-        <label class="aide-choix"><input type="radio" name="type" value="suggestion" class="sr-only"> Une suggestion</label>
-      </fieldset>
       <?php if (!$u): ?>
       <div class="grid grid-cols-2 gap-2">
         <div><label for="aide-nom" class="sr-only">Votre nom</label><input id="aide-nom" name="nom" type="text" maxlength="120" autocomplete="name" placeholder="Votre nom" class="<?= $champ ?>"></div>
@@ -51,6 +46,6 @@ $champ = 'min-h-11 w-full rounded-lg border border-ligne bg-white px-3.5 text-[1
 
   <button type="button" class="aide-bouton grid size-14 place-items-center rounded-full text-white shadow-lg transition-colors" aria-expanded="false" aria-controls="panneau-aide" data-ouvrir-aide>
     <span class="sr-only">Une question, une suggestion ?</span>
-    <span class="text-[28px] leading-none font-bold" aria-hidden="true">?</span>
+    <span class="aide-point text-[28px] leading-none font-bold" aria-hidden="true">?</span>
   </button>
 </div>

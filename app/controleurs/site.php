@@ -168,14 +168,13 @@ function newsletter(): void
 }
 
 /**
- * Message envoyé depuis la bulle en bas à droite (question ou suggestion).
+ * Message envoyé depuis la bulle en bas à droite (question, suggestion, situation…).
  * Répond en JSON quand il est envoyé par le script de la page, sinon revient à la page d'origine.
  */
 function message_rapide(): void
 {
     $ajax = ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'fetch';
     $u = utilisateur();
-    $type = post('type') === 'suggestion' ? 'suggestion' : 'question';
     $nom = $u ? $u['nom_affiche'] : post('nom');
     $email = $u ? $u['email'] : mb_strtolower(post('email'));
     $message = post('message');
@@ -194,16 +193,16 @@ function message_rapide(): void
             'nom' => mb_substr($nom, 0, 120),
             'profil' => $u ? ($u['type_compte'] === 'organisation' ? 'organisation' : 'jeune') : 'autre',
             'email' => mb_substr($email, 0, 190),
-            'objet' => ($type === 'suggestion' ? 'Suggestion' : 'Question') . ' (bulle du site)',
+            'objet' => 'Message envoyé depuis la bulle du site',
             'message' => mb_substr($message, 0, 3000),
             'recu_le' => maintenant(),
         ]);
         $copie = (string) config('email.copie_contact', '');
         if ($copie !== '') {
-            envoyer_email($copie, ($type === 'suggestion' ? 'Nouvelle suggestion' : 'Nouvelle question') . ' depuis le site', "De : $nom <$email>\n\n$message", '', $email);
+            envoyer_email($copie, 'Nouveau message depuis la bulle du site', "De : $nom <$email>\n\n$message", '', $email);
         }
     }
-    $texte = $type === 'suggestion' ? 'Merci pour votre suggestion, elle a bien été transmise à l\'équipe.' : 'Merci, votre question a bien été envoyée. L\'équipe vous répondra par e-mail.';
+    $texte = 'Merci, votre message a bien été envoyé. L\'équipe vous répondra par e-mail.';
     if ($ajax) {
         header('Content-Type: application/json; charset=utf-8');
         echo json_encode($erreurs ? ['ok' => false, 'erreurs' => $erreurs] : ['ok' => true, 'message' => $texte], JSON_UNESCAPED_UNICODE);

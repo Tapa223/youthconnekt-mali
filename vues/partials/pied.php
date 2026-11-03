@@ -105,12 +105,12 @@
       <ul class="mt-3 flex flex-wrap gap-2" aria-label="Réseaux sociaux de YouthConnekt Mali">
         <?php foreach ($icones_reseaux as $cle => [$nom_reseau, $trace]):
             if ($cle === 'lien_tiktok' && empty($p[$cle])) continue;
-            $classe_icone = 'grid size-10 place-items-center rounded-full border border-white/30 text-white transition-colors'; ?>
+            $classe_icone = 'icone-reseau grid size-10 cursor-pointer place-items-center rounded-full border border-white/30 bg-white/5 text-white'; ?>
         <li>
           <?php if (!empty($p[$cle])): ?>
-          <a href="<?= e($p[$cle]) ?>" target="_blank" rel="noopener" class="<?= $classe_icone ?> hover:border-orange hover:bg-orange" aria-label="<?= e($nom_reseau) ?>"><svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><?= $trace ?></svg></a>
+          <a href="<?= e($p[$cle]) ?>" target="_blank" rel="noopener" class="<?= $classe_icone ?>" aria-label="<?= e($nom_reseau) ?>"><svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><?= $trace ?></svg></a>
           <?php else: ?>
-          <span class="<?= $classe_icone ?>" title="<?= e($nom_reseau) ?>"><svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><?= $trace ?></svg><span class="sr-only"><?= e($nom_reseau) ?></span></span>
+          <span class="<?= $classe_icone ?>" title="<?= e($nom_reseau) ?> : bientôt disponible"><svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><?= $trace ?></svg><span class="sr-only"><?= e($nom_reseau) ?></span></span>
           <?php endif ?>
         </li>
         <?php endforeach ?>
