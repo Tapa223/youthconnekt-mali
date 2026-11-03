@@ -89,7 +89,7 @@ function types_opportunite(): array
                 $types[$t['slug']] = ['nom' => $t['nom'], 'couleur' => $t['couleur']];
             }
         } catch (Throwable $e) {
-            journaliser('Types d\'opportunités indisponibles : ' . $e->getMessage());
+            journaliser('erreurs.log', 'Types d\'opportunités indisponibles : ' . $e->getMessage());
         }
     }
     return $types;
@@ -135,7 +135,7 @@ function categories_actualite(): array
                 $categories[$c['slug']] = ['nom' => $c['nom'], 'couleur' => $c['couleur']];
             }
         } catch (Throwable $e) {
-            journaliser('Catégories d\'actualités indisponibles : ' . $e->getMessage());
+            journaliser('erreurs.log', 'Catégories d\'actualités indisponibles : ' . $e->getMessage());
         }
     }
     return $categories;
@@ -180,7 +180,7 @@ function types_communaute(): array
                 $types[$t['slug']] = ['nom' => $t['nom'], 'couleur' => $t['couleur']];
             }
         } catch (Throwable $e) {
-            journaliser('Types de communautés indisponibles : ' . $e->getMessage());
+            journaliser('erreurs.log', 'Types de communautés indisponibles : ' . $e->getMessage());
         }
     }
     return $types;

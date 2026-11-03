@@ -19,6 +19,7 @@ function liste(): void
 
     $toutes = array_map(function ($c) use ($statuts) {
         $c['statut_membre'] = $statuts[(int) $c['id']] ?? null;
+        $c['type'] = $c['type'] ?? '';
         return $c;
     }, communautes_actives());
 
