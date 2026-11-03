@@ -10,7 +10,7 @@
     <h3 class="mt-1 line-clamp-3 text-[14px] leading-tight font-bold text-vert group-hover:text-orange sm:text-lg sm:leading-snug"><?= e($a['titre']) ?></h3>
     <p class="mt-2 line-clamp-2 hidden text-sm sm:block"><?= e($a['chapeau']) ?></p>
     <?php /* Bouton en bas de carte : toujours à la même hauteur d'une carte à l'autre */ ?>
-    <span class="mt-auto pt-3 sm:pt-4"><span class="flex min-h-9 w-full items-center justify-center gap-1.5 rounded-full border-[1.5px] border-vert text-[13px] font-bold text-vert transition-colors group-hover:border-orange group-hover:bg-orange group-hover:text-white sm:min-h-10 sm:text-sm">Voir plus <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span>
+    <span class="mt-auto block pt-3 sm:pt-4"><?php partiel('partials/bouton_carte') ?></span>
   </div>
 </a>
 <?php return; endif ?>

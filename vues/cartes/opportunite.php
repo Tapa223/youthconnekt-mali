@@ -20,5 +20,6 @@
         <strong class="text-rouge"><?= $o['date_limite'] ? e(date_courte($o['date_limite'])) : '<span class="font-medium text-texte">Sans date limite</span>' ?></strong>
       </div>
     <?php endif ?>
+    <?php partiel('partials/bouton_carte', ['classes' => 'mt-3']) ?>
   </div>
 </a>

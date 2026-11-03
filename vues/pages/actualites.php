@@ -32,8 +32,25 @@ $surtitre = fn ($a) => ($a['categorie_libelle'] !== '' ? e($a['categorie_libelle
     <?php endif ?>
   </div>
 
-  <?php if ($principale): ?>
-  <div class="mt-3 grid gap-3 sm:mt-5 <?= $a_cote ? 'lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-6' : '' ?>">
+  <?php if ($une): ?>
+  <?php /* Téléphone et tablette : les actualités à la une côte à côte, on les fait glisser du doigt */ ?>
+  <ul class="masquer-defilement -mx-4 mt-3 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 sm:mt-5 lg:hidden" aria-label="À la une">
+    <?php foreach ($une as $a): ?>
+    <li class="<?= count($une) > 1 ? 'w-[80%] max-w-sm' : 'w-full' ?> shrink-0 snap-start">
+      <a href="<?= e($a['url']) ?>" class="group relative block aspect-[4/3] overflow-hidden rounded-2xl">
+        <?php partiel('partials/photo', ['image' => $a['image'], 'eager' => true]) ?>
+        <span class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent"></span>
+        <span class="absolute inset-x-0 bottom-0 p-3.5">
+          <span class="etiquette rounded-full bg-orange text-white"><?= $surtitre($a) ?></span>
+          <span class="mt-1.5 line-clamp-3 block text-[17px] leading-tight font-bold text-white"><?= e($a['titre']) ?></span>
+        </span>
+      </a>
+    </li>
+    <?php endforeach ?>
+  </ul>
+
+  <?php /* Ordinateur : la première en grand, les autres à côté */ ?>
+  <div class="mt-5 hidden gap-3 lg:grid <?= $a_cote ? 'lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-6' : '' ?>">
     <a href="<?= e($principale['url']) ?>" class="survol-leve group relative block aspect-[16/9] overflow-hidden rounded-2xl sm:rounded-3xl <?= $a_cote ? 'lg:aspect-auto lg:min-h-[340px]' : 'lg:aspect-[21/8]' ?>">
       <div class="absolute inset-0 transition-transform duration-500 group-hover:scale-105"><?php partiel('partials/photo', ['image' => $principale['image'], 'eager' => true]) ?></div>
       <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
@@ -63,7 +80,7 @@ $surtitre = fn ($a) => ($a['categorie_libelle'] !== '' ? e($a['categorie_libelle
   <?php endif ?>
 
   <?php if ($liste): ?>
-  <?php if ($une): ?><h2 class="mt-8 text-xl font-bold sm:mt-12 sm:text-2xl">Toutes les actualités</h2><?php endif ?>
+  <?php if ($une): ?><h2 class="mt-6 text-xl font-bold sm:mt-10 lg:mt-12 sm:text-2xl">Toutes les actualités</h2><?php endif ?>
   <ul class="mt-4 grid grid-cols-2 gap-2.5 sm:mt-6 sm:gap-5 lg:grid-cols-3" data-liste-continue>
     <?php foreach ($liste as $a): ?><li><?php partiel('cartes/actualite', ['a' => $a, 'mode' => 'liste']) ?></li><?php endforeach ?>
   </ul>
