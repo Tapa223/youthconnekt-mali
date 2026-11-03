@@ -118,32 +118,28 @@ function actualites(): void
     if (!in_array($filtre, ['evenements', 'actualites'], true)) {
         $filtre = '';
     }
-    $une = actualites_publiees('ORDER BY mis_en_avant DESC, publie_le DESC LIMIT 1')[0] ?? null;
-    $agenda = actualites_publiees("AND categorie = 'evenement' AND date_evenement >= CURDATE() ORDER BY date_evenement LIMIT 4");
+    $condition = ['' => '', 'evenements' => " AND categorie = 'evenement'", 'actualites' => " AND categorie = 'actualite'"][$filtre];
+    // Plus récentes d'abord : la date de l'événement (à venir comprise) ou, à défaut, la date de publication
+    $ordre = 'ORDER BY COALESCE(date_evenement, DATE(publie_le)) DESC, publie_le DESC';
 
-    $donnees = [
+    $pagination = paginer((int) valeur('SELECT COUNT(*) FROM actualites WHERE ' . PUBLIE . $condition), 12);
+    $une = null;
+    if ($pagination['page'] === 1 && $filtre === '') {
+        // À la une : celle mise en avant dans l'administration, sinon la plus récente
+        $une = actualites_publiees('ORDER BY mis_en_avant DESC, publie_le DESC LIMIT 1')[0] ?? null;
+    }
+    $exclure = $une ? ' AND id <> ' . (int) $une['id'] : '';
+    $liste = actualites_publiees($condition . $exclure . " $ordre LIMIT {$pagination['par_page']} OFFSET {$pagination['decalage']}");
+
+    afficher(vue('pages/actualites', [
         'titre' => 'Actualités | YouthConnekt Mali',
         'description' => 'Les actualités et les événements de YouthConnekt Mali.',
         'filtre' => $filtre,
         'une' => $une,
-        'agenda' => $agenda,
-        'evenements' => null,
-        'liste' => null,
-        'pagination' => null,
-    ];
-    if ($filtre !== 'actualites') {
-        // Événements à venir d'abord, puis les plus récents parmi les passés
-        $a_venir = actualites_publiees("AND categorie = 'evenement' AND date_evenement >= CURDATE() ORDER BY date_evenement LIMIT 6");
-        $passes = actualites_publiees("AND categorie = 'evenement' AND (date_evenement IS NULL OR date_evenement < CURDATE()) ORDER BY date_evenement DESC, publie_le DESC LIMIT 6");
-        $donnees['evenements'] = array_slice(array_merge($a_venir, $passes), 0, 6);
-    }
-    if ($filtre !== 'evenements') {
-        $total = (int) valeur('SELECT COUNT(*) FROM actualites WHERE ' . PUBLIE . " AND categorie = 'actualite'");
-        $pagination = paginer($total, 9);
-        $donnees['pagination'] = $pagination;
-        $donnees['liste'] = actualites_publiees("AND categorie = 'actualite' ORDER BY publie_le DESC LIMIT {$pagination['par_page']} OFFSET {$pagination['decalage']}");
-    }
-    afficher(vue('pages/actualites', $donnees));
+        'a_cote' => $une ? array_splice($liste, 0, 3) : [],
+        'liste' => $liste,
+        'pagination' => $pagination,
+    ]));
 }
 
 function actualite(string $slug): void

@@ -4,7 +4,7 @@ $objectifs = lignes_texte($i['objectifs']);
 $programme = lignes_colonnes($i['programme'], 3);
 $chiffres_i = lignes_colonnes($i['chiffres'], 2);
 ?>
-<section class="conteneur grid items-center gap-10 py-10 sm:py-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14">
+<section class="conteneur grid items-center gap-8 pt-2 pb-10 sm:gap-10 sm:py-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14">
   <div>
     <?php partiel('partials/retour', ['url' => url('/initiatives')]) ?>
     <div class="flex flex-wrap gap-2">

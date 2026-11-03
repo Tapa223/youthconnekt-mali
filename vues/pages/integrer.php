@@ -12,7 +12,7 @@ $infos = array_filter([
 ?>
 <section class="relative isolate overflow-hidden bg-vert text-white">
   <?php partiel('partials/reseau_deco') ?>
-  <div class="conteneur relative py-10 sm:py-14">
+  <div class="conteneur relative pt-2 pb-8 sm:py-14">
     <?php partiel('partials/retour', ['url' => $c['url'], 'clair' => true]) ?>
     <p class="surtitre surtitre-trait text-white/85">Intégrer la communauté</p>
     <h1 class="mt-3 text-4xl leading-tight font-bold text-white sm:text-5xl"><?= e($c['nom']) ?></h1>

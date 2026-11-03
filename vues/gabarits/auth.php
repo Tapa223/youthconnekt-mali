@@ -47,7 +47,7 @@ $retour_auth = $_SESSION['retour_auth'] ?? url('/');
     <?php partiel('partials/mention_photo') ?>
   </aside>
 
-  <main id="contenu" class="flex justify-center px-5 py-10 sm:px-8 lg:items-center lg:py-12">
+  <main id="contenu" class="flex justify-center px-5 pt-3 pb-10 sm:px-8 sm:pt-10 lg:items-center lg:py-12">
     <div class="anim-entree w-full <?= e($largeur ?? 'max-w-md') ?>">
       <?php partiel('partials/retour', ['url' => $retour_auth]) ?>
       <?php if ($messages): ?>

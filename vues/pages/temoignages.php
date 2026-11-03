@@ -1,7 +1,7 @@
 <?php /** Tous les témoignages publiés */ ?>
 <section class="relative isolate overflow-hidden bg-vert text-white">
   <?php partiel('partials/reseau_deco') ?>
-  <div class="conteneur relative pt-6 pb-8 sm:py-10">
+  <div class="conteneur relative pt-2 pb-8 sm:py-10">
     <?php partiel('partials/retour', ['url' => url('/'), 'clair' => true]) ?>
     <h1 class="text-[2.1rem] leading-[1.05] font-bold text-white sm:text-5xl">Ils en parlent mieux que nous</h1>
     <p class="mt-3 max-w-xl text-[15px] text-white/90 sm:text-lg">Jeunes, organisations et partenaires racontent ce que YouthConnekt Mali leur a apporté.</p>

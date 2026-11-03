@@ -22,7 +22,7 @@ $meta = array_filter([date_longue($a['date_affichee']), $a['lieu'], $a['minutes_
 ?>
 <article>
   <header class="bg-gris">
-    <div class="conteneur pt-6 pb-10 sm:pt-8 sm:pb-14">
+    <div class="conteneur pt-2 pb-8 sm:pt-8 sm:pb-14">
       <?php partiel('partials/retour', ['url' => url('/actualites')]) ?>
       <div class="grid items-center gap-8 <?= $images ? 'lg:grid-cols-[minmax(0,6fr)_minmax(0,6fr)] lg:gap-12' : '' ?>">
         <div class="<?= $images ? '' : 'max-w-3xl' ?>">

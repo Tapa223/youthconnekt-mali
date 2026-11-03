@@ -3,12 +3,13 @@ $avantages = lignes_texte($o['avantages']);
 $criteres = lignes_texte($o['criteres']);
 $etapes = lignes_texte($o['etapes']);
 ?>
-<div class="conteneur pt-3 pb-6 sm:pt-6 sm:pb-14">
-  <?php partiel('partials/retour', ['url' => url('/opportunites')]) ?>
+<div class="conteneur pt-2 pb-6 sm:pt-6 sm:pb-14">
+  <?php partiel('partials/retour', ['url' => url('/opportunites'), 'classes' => 'mb-4 hidden sm:block']) ?>
 
   <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-10">
     <div class="min-w-0">
       <div class="flex flex-wrap items-center gap-2">
+        <?php partiel('partials/retour', ['url' => url('/opportunites'), 'classes' => 'mr-1 sm:hidden']) ?>
         <span class="etiquette rounded-full <?= fond($o['couleur']) ?>"><?= e($o['type_libelle']) ?></span>
         <?php if ($o['est_expiree']): ?><span class="etiquette rounded-full bg-gris text-rouge">Candidatures closes</span>
         <?php elseif ($o['jours_restants'] !== null): ?><span class="etiquette rounded-full bg-orange-clair text-orange-fonce">J-<?= $o['jours_restants'] ?></span><?php endif ?>
