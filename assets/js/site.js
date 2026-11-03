@@ -547,4 +547,39 @@ document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
         .then(function () { bouton.disabled = false; });
     });
   });
+
+  // Défilement continu (Actualités) : la suite de la liste se charge quand on approche du bas
+  document.querySelectorAll("[data-suite-liste]").forEach(function (zone) {
+    var liste = zone.parentElement.querySelector("[data-liste-continue]");
+    var bouton = zone.querySelector("[data-suite-bouton]");
+    var chargement = zone.querySelector("[data-suite-chargement]");
+    if (!liste || !("IntersectionObserver" in window)) return;
+    var occupe = false;
+    bouton.classList.add("hidden");
+    chargement.classList.remove("hidden");
+    chargement.classList.add("inline-flex");
+    var charger = function () {
+      var adresse = zone.getAttribute("data-suite-liste");
+      if (occupe || !adresse) return;
+      occupe = true;
+      fetch(adresse, { headers: { "X-Requested-With": "fetch" } })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          liste.insertAdjacentHTML("beforeend", d.html);
+          if (d.suivante) { zone.setAttribute("data-suite-liste", d.suivante); occupe = false; }
+          else { observateur.disconnect(); zone.remove(); }
+        })
+        .catch(function () {
+          // En cas d'échec, on rend la main au bouton
+          observateur.disconnect();
+          chargement.classList.add("hidden");
+          bouton.href = adresse;
+          bouton.classList.remove("hidden");
+        });
+    };
+    var observateur = new IntersectionObserver(function (entrees) {
+      if (entrees[0].isIntersecting) charger();
+    }, { rootMargin: "0px 0px 600px 0px" });
+    observateur.observe(zone);
+  });
 })();

@@ -2,6 +2,7 @@
 /** Actualités : l'actualité à la une avec, à côté, les trois suivantes, puis toutes les autres. Un menu « Catégorie » apparaît dès qu'une actualité est rangée dans une catégorie (gérées dans l'administration). */
 $nom_categorie = $categorie_active ? ($categories[$categorie_active]['nom'] ?? '') : '';
 $a_cote = $une ? array_splice($liste, 0, 3) : [];
+// $suivante : adresse de la suite de la liste (défilement continu), null s'il n'y a plus rien
 // Petite ligne colorée « Catégorie · date » (sans catégorie : la date seule)
 $surtitre = fn ($a) => ($a['categorie_libelle'] !== '' ? e($a['categorie_libelle']) . ' · ' : '') . e(date_courte($a['date_affichee']));
 ?>
@@ -64,10 +65,15 @@ $surtitre = fn ($a) => ($a['categorie_libelle'] !== '' ? e($a['categorie_libelle
 
   <?php if ($liste): ?>
   <h2 class="<?= $une ? 'mt-8 sm:mt-12' : 'sr-only' ?> text-xl font-bold sm:text-2xl">Toutes les actualités</h2>
-  <ul class="mt-4 grid grid-cols-2 gap-2.5 sm:mt-6 sm:gap-5 lg:grid-cols-3">
+  <ul class="mt-4 grid grid-cols-2 gap-2.5 sm:mt-6 sm:gap-5 lg:grid-cols-3" data-liste-continue>
     <?php foreach ($liste as $a): ?><li><?php partiel('cartes/actualite', ['a' => $a, 'mode' => 'liste']) ?></li><?php endforeach ?>
   </ul>
-  <?php partiel('partials/pagination', ['pagination' => $pagination]) ?>
+  <?php if ($suivante): /* La suite se charge toute seule en faisant défiler ; le bouton reste en secours */ ?>
+  <div class="mt-6 flex justify-center" data-suite-liste="<?= e($suivante) ?>">
+    <a href="<?= e($suivante) ?>" class="btn btn-contour" data-suite-bouton>Voir plus d'actualités</a>
+    <span class="hidden items-center gap-2 text-sm font-bold text-vert" data-suite-chargement><span class="size-4 animate-spin rounded-full border-2 border-vert border-t-transparent" aria-hidden="true"></span>Chargement…</span>
+  </div>
+  <?php endif ?>
   <?php elseif (!$une && !$a_cote): ?>
   <div class="mt-6"><?php partiel('partials/vide', ['message' => $categorie_active ? 'Aucune actualité dans cette catégorie pour le moment.' : 'Aucune actualité publiée pour le moment.', 'lien_admin' => url('/gestion/actualites/ajouter')]) ?></div>
   <?php endif ?>

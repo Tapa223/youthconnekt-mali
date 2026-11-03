@@ -132,14 +132,28 @@ function actualites(): void
         }
     }
 
-    $pagination = paginer((int) valeur('SELECT COUNT(*) FROM actualites WHERE ' . PUBLIE . $condition, $params), 12);
     $une = null;
-    if ($pagination['page'] === 1 && $categorie === '') {
+    if ($categorie === '') {
         // À la une : celle mise en avant dans l'administration, sinon la plus récente
         $une = actualites_publiees('ORDER BY mis_en_avant DESC, publie_le DESC LIMIT 1')[0] ?? null;
     }
     $exclure = $une ? ' AND id <> ' . (int) $une['id'] : '';
+    $pagination = paginer((int) valeur('SELECT COUNT(*) FROM actualites WHERE ' . PUBLIE . $condition . $exclure, $params), 12);
     $liste = actualites_publiees($condition . $exclure . " $ordre LIMIT {$pagination['par_page']} OFFSET {$pagination['decalage']}", $params);
+    $suivante = $pagination['page'] < $pagination['pages'] ? avec_parametres(['page' => $pagination['page'] + 1]) : null;
+
+    // Défilement continu : le navigateur demande la suite de la liste au fur et à mesure
+    if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'fetch') {
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode([
+            'html' => implode('', array_map(fn ($a) => '<li>' . rendre('cartes/actualite', ['a' => $a, 'mode' => 'liste']) . '</li>', $liste)),
+            'suivante' => $suivante,
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+    if ($pagination['page'] > 1) {
+        $une = null;
+    }
 
     afficher(vue('pages/actualites', [
         'titre' => 'Actualités | YouthConnekt Mali',
@@ -150,7 +164,7 @@ function actualites(): void
         'total' => (int) valeur('SELECT COUNT(*) FROM actualites WHERE ' . PUBLIE),
         'une' => $une,
         'liste' => $liste,
-        'pagination' => $pagination,
+        'suivante' => $suivante,
     ]));
 }
 
