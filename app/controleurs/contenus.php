@@ -132,12 +132,14 @@ function actualites(): void
         }
     }
 
-    $une = null;
+    // À la une : les actualités cochées « À la une » dans l'administration (quatre au plus),
+    // sinon la plus récente. Elles sont en haut de la page, puis retirées de la liste en dessous.
+    $une = [];
     if ($categorie === '') {
-        // À la une : celle mise en avant dans l'administration, sinon la plus récente
-        $une = actualites_publiees('ORDER BY mis_en_avant DESC, publie_le DESC LIMIT 1')[0] ?? null;
+        $une = actualites_publiees('AND mis_en_avant = 1 ORDER BY publie_le DESC LIMIT 4')
+            ?: actualites_publiees('ORDER BY publie_le DESC LIMIT 1');
     }
-    $exclure = $une ? ' AND id <> ' . (int) $une['id'] : '';
+    $exclure = $une ? ' AND id NOT IN (' . implode(',', array_map(fn ($a) => (int) $a['id'], $une)) . ')' : '';
     $pagination = paginer((int) valeur('SELECT COUNT(*) FROM actualites WHERE ' . PUBLIE . $condition . $exclure, $params), 12);
     $liste = actualites_publiees($condition . $exclure . " $ordre LIMIT {$pagination['par_page']} OFFSET {$pagination['decalage']}", $params);
     $suivante = $pagination['page'] < $pagination['pages'] ? avec_parametres(['page' => $pagination['page'] + 1]) : null;
@@ -152,7 +154,7 @@ function actualites(): void
         exit;
     }
     if ($pagination['page'] > 1) {
-        $une = null;
+        $une = [];
     }
 
     afficher(vue('pages/actualites', [

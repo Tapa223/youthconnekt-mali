@@ -1,14 +1,17 @@
 <?php
-/** Actualités : l'actualité à la une avec, à côté, les trois suivantes, puis toutes les autres. Un menu « Catégorie » apparaît dès qu'une actualité est rangée dans une catégorie (gérées dans l'administration). */
+/** Actualités : en haut, « À la une » (les actualités cochées dans l'administration, quatre au plus), puis toutes les autres en défilement continu. Un menu « Catégorie » apparaît dès qu'une actualité est rangée dans une catégorie (gérées dans l'administration). */
 $nom_categorie = $categorie_active ? ($categories[$categorie_active]['nom'] ?? '') : '';
-$a_cote = $une ? array_splice($liste, 0, 3) : [];
+$principale = $une[0] ?? null;
+$a_cote = array_slice($une, 1);
+$titre_haut = $une ? 'À la une' : ($categorie_active ? $nom_categorie : 'Toutes les actualités');
 // $suivante : adresse de la suite de la liste (défilement continu), null s'il n'y a plus rien
 // Petite ligne colorée « Catégorie · date » (sans catégorie : la date seule)
 $surtitre = fn ($a) => ($a['categorie_libelle'] !== '' ? e($a['categorie_libelle']) . ' · ' : '') . e(date_courte($a['date_affichee']));
 ?>
 <section class="conteneur pt-4 pb-10 sm:pt-7 sm:pb-14">
   <div class="flex items-center justify-between gap-4">
-    <h1 class="text-[2.1rem] leading-none font-bold sm:text-5xl">Actualités</h1>
+    <h1 class="sr-only">Actualités</h1>
+    <h2 class="text-xl font-bold sm:text-2xl"><?= e($titre_haut) ?></h2>
     <?php if ($nombres): ?>
     <details class="choix-type relative shrink-0" data-choix-type>
       <summary class="flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-full border-2 px-4 text-sm font-bold transition-colors [&::-webkit-details-marker]:hidden <?= $categorie_active ? 'border-orange bg-orange text-white' : 'border-vert bg-white text-vert hover:bg-vert-clair' ?>">
@@ -29,24 +32,20 @@ $surtitre = fn ($a) => ($a['categorie_libelle'] !== '' ? e($a['categorie_libelle
     <?php endif ?>
   </div>
 
-  <?php if ($categorie_active): ?>
-  <p class="mt-3 text-sm">Catégorie · <strong class="text-vert"><?= e($nom_categorie) ?></strong> <a href="<?= url('/actualites') ?>" class="btn-discret ml-1">Tout afficher</a></p>
-  <?php endif ?>
-
-  <?php if ($une): ?>
-  <div class="mt-4 grid gap-3 sm:mt-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-6">
-    <a href="<?= e($une['url']) ?>" class="survol-leve group relative block aspect-[16/9] overflow-hidden rounded-2xl sm:rounded-3xl lg:aspect-auto lg:min-h-[340px]">
-      <div class="absolute inset-0 transition-transform duration-500 group-hover:scale-105"><?php partiel('partials/photo', ['image' => $une['image'], 'eager' => true]) ?></div>
+  <?php if ($principale): ?>
+  <div class="mt-3 grid gap-3 sm:mt-5 <?= $a_cote ? 'lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-6' : '' ?>">
+    <a href="<?= e($principale['url']) ?>" class="survol-leve group relative block aspect-[16/9] overflow-hidden rounded-2xl sm:rounded-3xl <?= $a_cote ? 'lg:aspect-auto lg:min-h-[340px]' : 'lg:aspect-[21/8]' ?>">
+      <div class="absolute inset-0 transition-transform duration-500 group-hover:scale-105"><?php partiel('partials/photo', ['image' => $principale['image'], 'eager' => true]) ?></div>
       <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
       <div class="absolute inset-x-0 bottom-0 p-4 sm:p-7">
-        <span class="etiquette rounded-full bg-orange text-white">À la une · <?= $surtitre($une) ?></span>
-        <h2 class="mt-2 text-lg leading-tight font-bold text-white sm:text-3xl"><?= e($une['titre']) ?></h2>
-        <p class="mt-1.5 line-clamp-2 hidden text-white/90 sm:block"><?= e($une['chapeau']) ?></p>
+        <span class="etiquette rounded-full bg-orange text-white"><?= $surtitre($principale) ?></span>
+        <h3 class="mt-2 text-lg leading-tight font-bold text-white sm:text-3xl"><?= e($principale['titre']) ?></h3>
+        <p class="mt-1.5 line-clamp-2 hidden text-white/90 sm:block"><?= e($principale['chapeau']) ?></p>
       </div>
     </a>
 
     <?php if ($a_cote): ?>
-    <ul class="grid gap-2.5 lg:content-start lg:gap-3" aria-label="Autres actualités récentes">
+    <ul class="grid gap-2.5 lg:content-start lg:gap-3" aria-label="Autres actualités à la une">
       <?php foreach ($a_cote as $a): ?>
       <li>
         <a href="<?= e($a['url']) ?>" class="group flex gap-3 rounded-2xl border border-ligne bg-white p-2 transition-shadow hover:shadow-lg sm:gap-4 sm:p-2.5">
@@ -64,7 +63,7 @@ $surtitre = fn ($a) => ($a['categorie_libelle'] !== '' ? e($a['categorie_libelle
   <?php endif ?>
 
   <?php if ($liste): ?>
-  <h2 class="<?= $une ? 'mt-8 sm:mt-12' : 'sr-only' ?> text-xl font-bold sm:text-2xl">Toutes les actualités</h2>
+  <?php if ($une): ?><h2 class="mt-8 text-xl font-bold sm:mt-12 sm:text-2xl">Toutes les actualités</h2><?php endif ?>
   <ul class="mt-4 grid grid-cols-2 gap-2.5 sm:mt-6 sm:gap-5 lg:grid-cols-3" data-liste-continue>
     <?php foreach ($liste as $a): ?><li><?php partiel('cartes/actualite', ['a' => $a, 'mode' => 'liste']) ?></li><?php endforeach ?>
   </ul>
@@ -74,7 +73,7 @@ $surtitre = fn ($a) => ($a['categorie_libelle'] !== '' ? e($a['categorie_libelle
     <span class="hidden items-center gap-2 text-sm font-bold text-vert" data-suite-chargement><span class="size-4 animate-spin rounded-full border-2 border-vert border-t-transparent" aria-hidden="true"></span>Chargement…</span>
   </div>
   <?php endif ?>
-  <?php elseif (!$une && !$a_cote): ?>
+  <?php elseif (!$une): ?>
   <div class="mt-6"><?php partiel('partials/vide', ['message' => $categorie_active ? 'Aucune actualité dans cette catégorie pour le moment.' : 'Aucune actualité publiée pour le moment.', 'lien_admin' => url('/gestion/actualites/ajouter')]) ?></div>
   <?php endif ?>
 </section>

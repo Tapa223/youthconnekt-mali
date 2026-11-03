@@ -9,7 +9,7 @@
 declare(strict_types=1);
 
 /** Champs de publication communs aux contenus (panneau de droite). */
-function groupe_publication(bool $propositions = false): array
+function groupe_publication(bool $propositions = false, ?array $mise_en_avant = null): array
 {
     $statuts = ['brouillon' => 'Brouillon', 'publie' => 'Publié'];
     if ($propositions) {
@@ -18,7 +18,7 @@ function groupe_publication(bool $propositions = false): array
     return ['Publication', 'cote' => true, 'champs' => [
         'statut' => ['type' => 'select', 'libelle' => 'Statut', 'options' => $statuts, 'defaut' => 'brouillon'],
         'publie_le' => ['type' => 'datetime', 'libelle' => 'Date de publication', 'requis' => false, 'aide' => 'Une date future programme la publication. Vide : maintenant.', 'defaut' => 'maintenant'],
-        'mis_en_avant' => ['type' => 'case', 'libelle' => "Mettre en avant sur l'accueil"],
+        'mis_en_avant' => $mise_en_avant ?? ['type' => 'case', 'libelle' => "Mettre en avant sur l'accueil"],
         'slug' => ['type' => 'slug', 'libelle' => 'Adresse (URL)', 'requis' => false, 'max' => 200, 'aide' => 'Laisser vide : elle est créée à partir du titre.'],
     ]];
 }
@@ -37,11 +37,12 @@ function badge_statut(array $l, bool $feminin = false): string
 
 function actions_publication(string $table): array
 {
+    $une = $table === 'actualites';
     return [
         'publier' => ['Publier', fn ($ids) => requete("UPDATE `$table` SET statut = 'publie' WHERE id IN (" . marqueurs($ids) . ')', $ids)->rowCount() . ' élément(s) publié(s).'],
         'depublier' => ['Repasser en brouillon', fn ($ids) => requete("UPDATE `$table` SET statut = 'brouillon' WHERE id IN (" . marqueurs($ids) . ')', $ids)->rowCount() . ' élément(s) repassé(s) en brouillon.'],
-        'avant' => ["Mettre en avant sur l'accueil", fn ($ids) => requete("UPDATE `$table` SET mis_en_avant = 1 WHERE id IN (" . marqueurs($ids) . ')', $ids)->rowCount() . ' élément(s) mis en avant.'],
-        'retirer' => ["Retirer de l'accueil", fn ($ids) => requete("UPDATE `$table` SET mis_en_avant = 0 WHERE id IN (" . marqueurs($ids) . ')', $ids)->rowCount() . " élément(s) retiré(s) de l'accueil."],
+        'avant' => [$une ? 'Mettre à la une' : "Mettre en avant sur l'accueil", fn ($ids) => requete("UPDATE `$table` SET mis_en_avant = 1 WHERE id IN (" . marqueurs($ids) . ')', $ids)->rowCount() . ' élément(s) mis en avant.'],
+        'retirer' => [$une ? 'Retirer de la une' : "Retirer de l'accueil", fn ($ids) => requete("UPDATE `$table` SET mis_en_avant = 0 WHERE id IN (" . marqueurs($ids) . ')', $ids)->rowCount() . " élément(s) retiré(s) de l'accueil."],
     ];
 }
 
@@ -213,7 +214,7 @@ function ressources(): array
                 ['Ciblage', 'description' => 'Les activités liées à une communauté apparaissent sur sa page.', 'champs' => [
                     'communautes' => ['type' => 'communautes', 'libelle' => 'Communautés concernées', 'requis' => false],
                 ]],
-                groupe_publication(),
+                groupe_publication(false, ['type' => 'case', 'libelle' => 'Mettre à la une', 'aide' => "En haut de la page Actualités (quatre au plus, les plus récentes d'abord) et sur l'accueil."]),
             ],
             'galerie' => ['photos_actualites', 'actualite_id', 'actualites/galerie', 'Photothèque (défile avec l\'image principale en haut de la page, puis s\'affiche en bas)'],
             'liaison' => ['actualite_communaute', 'actualite_id'],

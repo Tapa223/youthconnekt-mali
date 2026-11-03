@@ -142,7 +142,7 @@
   .visionneuse { @apply m-0 h-full max-h-none w-full max-w-none border-0 bg-transparent p-0; }
   .visionneuse[open] { @apply grid place-items-center; }
   .visionneuse::backdrop { background: rgb(2 30 25 / .92); }
-  .visionneuse img { @apply max-h-[82vh] max-w-[92vw] rounded-2xl object-contain; }
+  .visionneuse img { @apply max-h-[72vh] max-w-[92vw] -translate-y-6 rounded-2xl object-contain; }
   .visionneuse-legende { @apply absolute inset-x-0 bottom-5 text-center text-sm text-white; }
   .visionneuse-bouton { @apply absolute grid size-12 place-items-center rounded-full bg-white text-vert transition-colors hover:bg-orange hover:text-white; }
   .prose-article h2 { @apply mt-11 text-[1.6rem] leading-tight sm:text-3xl; }

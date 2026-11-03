@@ -67,13 +67,19 @@
 /* Partage et copie du lien de la page */
 (function () {
   "use strict";
+  // Confirme la copie : une coche pour un bouton en icône, sinon le texte « Lien copié »
   var annoncer = function (bouton, texte) {
-    var initial = bouton.textContent;
-    bouton.textContent = texte;
-    setTimeout(function () { bouton.textContent = initial; }, 2000);
+    var initial = bouton.innerHTML;
+    if (bouton.querySelector("svg")) {
+      bouton.innerHTML = '<svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg><span class="sr-only">' + texte + '</span>';
+    } else {
+      bouton.textContent = texte;
+    }
+    setTimeout(function () { bouton.innerHTML = initial; }, 2000);
   };
-  var copier = function (bouton) {
-    var url = window.location.href.split("#")[0];
+  window.ycmAnnoncer = annoncer;
+  var copier = function (bouton, adresse) {
+    var url = adresse || window.location.href.split("#")[0];
     if (navigator.clipboard && window.isSecureContext) {
       navigator.clipboard.writeText(url).then(function () { annoncer(bouton, "Lien copié"); });
     } else {
@@ -83,6 +89,7 @@
       champ.remove();
     }
   };
+  window.ycmCopier = copier;
   document.querySelectorAll("[data-copier-lien]").forEach(function (b) {
     b.addEventListener("click", function () { copier(b); });
   });
@@ -284,12 +291,23 @@ document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
     var boite = zone.querySelector("dialog");
     if (!boite || !boite.showModal) return;
     var image = boite.querySelector("img"), legende = boite.querySelector(".visionneuse-legende"), i = 0;
+    var telecharger = boite.querySelector("[data-telecharger]"), partager = boite.querySelector("[data-partager-photo]");
     function montrer(n) {
       i = (n + boutons.length) % boutons.length;
       var source = boutons[i].querySelector("img");
       image.src = source.src; image.alt = source.alt;
       legende.textContent = (source.alt ? source.alt + " · " : "") + (i + 1) + " / " + boutons.length;
+      if (telecharger) telecharger.href = source.src;
     }
+    // Partager la photo affichée : menu de partage du téléphone, sinon copie du lien de la photo
+    if (partager) partager.addEventListener("click", function () {
+      var url = new URL(image.getAttribute("src"), window.location.href).href;
+      if (navigator.share) {
+        navigator.share({ title: document.title, url: url }).catch(function () {});
+      } else if (window.ycmCopier) {
+        window.ycmCopier(partager, url);
+      }
+    });
     boutons.forEach(function (b) { b.addEventListener("click", function () { montrer(+b.dataset.agrandir); boite.showModal(); }); });
     boite.querySelector("[data-fermer]").addEventListener("click", function () { boite.close(); });
     boite.querySelector("[data-precedent]").addEventListener("click", function () { montrer(i - 1); });
