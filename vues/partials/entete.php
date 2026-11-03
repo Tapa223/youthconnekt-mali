@@ -22,21 +22,21 @@ $navigation = [
         <?php foreach ($navigation as [$lien, $libelle, $prefixe]): $actif = $section === $prefixe; ?>
         <li>
           <a href="<?= url($lien) ?>"
-             class="flex h-10 items-center rounded-lg px-2.5 text-[15px] font-medium whitespace-nowrap transition-colors <?= $actif ? 'bg-orange text-white' : 'text-encre hover:bg-vert-clair hover:text-vert' ?>"
+             class="relative flex h-[76px] items-center px-2.5 text-[15px] font-medium whitespace-nowrap transition-colors <?= $actif ? 'text-vert after:absolute after:inset-x-2.5 after:bottom-0 after:h-[3px] after:rounded-t after:bg-orange' : 'text-encre hover:text-orange' ?>"
              <?= $actif ? 'aria-current="page"' : '' ?>><?= e($libelle) ?></a>
         </li>
         <?php endforeach ?>
       </ul>
     </nav>
 
-    <div class="hidden items-center gap-1.5 xl:flex">
+    <div class="hidden items-center gap-2 xl:flex">
       <?php if ($u): ?>
         <a href="<?= url(est_membre($u) ? '/compte/mon-espace' : '/gestion') ?>" class="inline-flex min-h-11 items-center gap-2.5 rounded-full bg-vert py-1.5 pr-5 pl-1.5 text-[15px] font-bold text-white hover:bg-vert-fonce">
           <span class="grid size-8 place-items-center rounded-full bg-orange text-xs" aria-hidden="true"><?= e($u['initiales']) ?></span>
           <?= est_membre($u) ? 'Mon espace' : 'Administration' ?>
         </a>
       <?php else: ?>
-        <a href="<?= url('/compte/connexion') ?>" class="flex h-10 items-center rounded-lg px-3 text-[15px] font-bold whitespace-nowrap text-vert transition-colors hover:bg-vert-clair">Se connecter</a>
+        <a href="<?= url('/compte/connexion') ?>" class="btn btn-contour px-4 whitespace-nowrap">Se connecter</a>
         <a href="<?= url('/compte/inscription') ?>" class="btn btn-vert px-5 whitespace-nowrap">Rejoindre le chapitre</a>
       <?php endif ?>
     </div>
@@ -62,9 +62,9 @@ $navigation = [
       <ul class="space-y-1">
         <?php foreach ($navigation as [$lien, $libelle, $prefixe]): $actif = $section === $prefixe; ?>
         <li>
-          <a href="<?= url($lien) ?>" class="flex min-h-12 items-center justify-between rounded-xl px-4 text-lg font-medium <?= $actif ? 'bg-orange text-white' : 'text-encre hover:bg-vert-clair hover:text-vert' ?>" <?= $actif ? 'aria-current="page"' : '' ?>>
+          <a href="<?= url($lien) ?>" class="flex min-h-12 items-center justify-between rounded-xl px-4 text-lg font-medium <?= $actif ? 'bg-vert-clair text-vert' : 'text-encre hover:bg-gris' ?>" <?= $actif ? 'aria-current="page"' : '' ?>>
             <?= e($libelle) ?>
-            
+            <?php if ($actif): ?><span class="size-2 rounded-full bg-orange" aria-hidden="true"></span><?php endif ?>
           </a>
         </li>
         <?php endforeach ?>

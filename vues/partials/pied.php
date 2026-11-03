@@ -23,6 +23,20 @@
 
   <div class="conteneur sans-apparition relative grid grid-cols-2 gap-x-6 gap-y-9 py-10 sm:gap-10 lg:grid-cols-12 lg:gap-8 lg:py-14">
     <div class="col-span-2 lg:col-span-4">
+      <?php
+      /* Institutions d'appui, en petites capitales comme sur le site du Palais des Pionniers.
+         Les logos s'affichent dès que leurs fichiers sont déposés dans assets/img/appui/ (pnud, ministere). */
+      $logos_appui = [];
+      foreach (['ministere' => 'Ministère de la Jeunesse et des Sports', 'pnud' => 'PNUD Mali'] as $fichier => $nom_appui) {
+          foreach (['svg', 'png', 'webp', 'jpg'] as $ext) {
+              if (is_file(RACINE . "/assets/img/appui/$fichier.$ext")) { $logos_appui[] = [asset("img/appui/$fichier.$ext"), $nom_appui]; break; }
+          }
+      }
+      ?>
+      <?php if ($logos_appui): ?>
+      <div class="mb-4 flex items-center gap-3"><?php foreach ($logos_appui as [$src, $nom_appui]): ?><img src="<?= e($src) ?>" alt="<?= e($nom_appui) ?>" class="h-11 w-auto rounded-full bg-white object-contain p-1" loading="lazy"><?php endforeach ?></div>
+      <?php endif ?>
+      <p class="mb-4 max-w-md text-[11px] leading-relaxed font-bold tracking-widest text-white/60 uppercase">Ministère de la Jeunesse et des Sports, chargé de l'Instruction civique et de la Construction citoyenne · Avec l'appui du PNUD Mali</p>
       <a href="<?= url('/') ?>" class="inline-flex rounded-xl bg-white px-3 py-2" aria-label="YouthConnekt Mali, retour à l'accueil">
         <?php partiel('partials/logo', ['classes' => 'h-11 w-auto']) ?>
       </a>
@@ -65,32 +79,6 @@
         <?php if ($p['horaires']): ?><li><?= e($p['horaires']) ?></li><?php endif ?>
       </ul>
       <a href="<?= url('/contact') ?>" class="btn btn-blanc mt-5 min-h-11">Nous écrire</a>
-    </div>
-  </div>
-
-  <?php
-  /* Bande « Avec l'appui de » : le logo s'affiche dès que son fichier est déposé dans assets/img/appui/
-     (pnud.svg ou pnud.png, ministere.svg ou ministere.png) ; sinon le nom est écrit en toutes lettres. */
-  $appuis = [
-      ['pnud', 'PNUD Mali', 'Programme des Nations Unies pour le développement'],
-      ['ministere', 'Ministère de la Jeunesse et des Sports', "Chargé de l'Instruction civique et de la Construction citoyenne · République du Mali"],
-  ];
-  ?>
-  <div class="relative border-t border-white/15">
-    <div class="conteneur sans-apparition flex flex-col gap-4 py-6 sm:py-7 lg:flex-row lg:items-center lg:gap-8">
-      <p class="shrink-0 text-xs font-bold tracking-[0.16em] text-white uppercase">Avec l'appui de</p>
-      <ul class="grid gap-3 sm:grid-cols-2 lg:flex lg:flex-1 lg:gap-4">
-        <?php foreach ($appuis as [$fichier, $nom, $detail]):
-            $logo = null;
-            foreach (['svg', 'png', 'webp', 'jpg'] as $ext) {
-                if (is_file(RACINE . "/assets/img/appui/$fichier.$ext")) { $logo = asset("img/appui/$fichier.$ext"); break; }
-            } ?>
-        <li class="flex min-h-[72px] items-center gap-4 rounded-2xl bg-white px-5 py-3 lg:max-w-md">
-          <?php if ($logo): ?><img src="<?= e($logo) ?>" alt="" class="h-12 w-auto max-w-[140px] shrink-0 object-contain" loading="lazy"><?php endif ?>
-          <span class="leading-tight"><strong class="block text-[15px] text-vert"><?= e($nom) ?></strong><span class="mt-0.5 block text-xs text-encre"><?= e($detail) ?></span></span>
-        </li>
-        <?php endforeach ?>
-      </ul>
     </div>
   </div>
 

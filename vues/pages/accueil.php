@@ -229,7 +229,7 @@ $points = [
       </div>
 
       <div class="hidden h-[400px] items-center justify-center lg:flex">
-        <div class="relative h-[460px] w-[560px] shrink-0 scale-[.86]" role="img" aria-label="Des jeunes aux profils variés, réunis en communautés">
+        <div class="relative h-[460px] w-[560px] shrink-0 scale-[.86]">
           <span class="anim-flotte-2 absolute top-[125px] left-[190px] z-10 size-[200px] overflow-hidden rounded-full border-[6px] border-orange bg-white shadow-[0_16px_34px_rgb(3_94_77/.22)]"><img src="<?= asset('img/communaute/cercle-centre.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy"></span>
           <span class="anim-flotte absolute top-[70px] left-[120px] z-[9] size-[130px] overflow-hidden rounded-full border-[5px] border-turquoise bg-white shadow-[0_16px_34px_rgb(3_94_77/.22)]"><img src="<?= asset('img/communaute/cercle-1.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy"></span>
           <span class="anim-flotte-2 absolute top-[70px] left-[330px] z-[8] size-[130px] overflow-hidden rounded-full border-[5px] border-bleu bg-white shadow-[0_16px_34px_rgb(3_94_77/.22)]"><img src="<?= asset('img/communaute/cercle-2.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy"></span>
@@ -237,9 +237,9 @@ $points = [
           <span class="anim-flotte-2 absolute top-[255px] left-[120px] z-[6] size-[120px] overflow-hidden rounded-full border-[5px] border-orange bg-white shadow-[0_16px_34px_rgb(3_94_77/.22)]"><img src="<?= asset('img/communaute/cercle-4.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy"></span>
           <span class="anim-flotte absolute top-[305px] left-[240px] z-[5] size-[100px] overflow-hidden rounded-full border-[5px] border-vert bg-white shadow-[0_16px_34px_rgb(3_94_77/.22)]"><img src="<?= asset('img/communaute/cercle-5.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy"></span>
           <span class="anim-flotte-2 absolute top-[180px] left-[430px] z-[4] size-[100px] overflow-hidden rounded-full border-[5px] border-orange bg-white shadow-[0_16px_34px_rgb(3_94_77/.22)]"><img src="<?= asset('img/communaute/cercle-6.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy"></span>
-          <span class="anim-flotte absolute bottom-[34px] left-[50px] z-20 flex items-center rounded-2xl bg-white px-4 py-3 shadow-[0_16px_34px_rgb(3_94_77/.18)]">
-            <span class="flex flex-col border-l-4 border-orange pl-3 leading-tight"><strong class="text-3xl text-vert tabular-nums" data-compteur data-duree="1600"><?= $nb_communautes ?></strong><span class="text-sm text-encre">communauté<?= pluriel($nb_communautes) ?> à découvrir</span></span>
-          </span>
+          <a href="<?= url('/communaute') ?>" class="anim-flotte group absolute bottom-[34px] left-[50px] z-20 flex items-center gap-4 rounded-2xl bg-white px-4 py-3 shadow-[0_16px_34px_rgb(3_94_77/.18)] transition-colors hover:bg-orange" aria-label="Voir les <?= $nb_communautes ?> communautés">
+            <span class="flex flex-col border-l-4 border-orange pl-3 leading-tight transition-colors group-hover:border-white"><strong class="text-3xl text-vert group-hover:text-white tabular-nums" data-compteur data-duree="1600"><?= $nb_communautes ?></strong><span class="text-sm text-encre group-hover:text-white">communauté<?= pluriel($nb_communautes) ?> à découvrir</span></span>
+          </a>
         </div>
       </div>
 
@@ -248,25 +248,7 @@ $points = [
       </div>
     </div>
 
-    <?php
-    // 3 communautés sur ordinateur (5 sur téléphone), puis une carte « + N autres communautés »
-    $carte_communaute = 'survol-leve flex h-full min-h-14 items-center rounded-xl border px-4 py-3 text-[14px] leading-tight font-bold transition-colors lg:min-h-[76px] lg:rounded-2xl lg:px-6 lg:text-lg';
-    $plus_ordi = max(0, $nb_communautes - 3);
-    $plus_tel = max(0, $nb_communautes - 5);
-    ?>
-    <ul class="mt-7 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:mt-8 lg:grid-cols-4 lg:gap-5">
-      <?php foreach (array_slice($communautes, 0, $plus_tel ? 5 : 6) as $k => $communaute): ?>
-      <li class="<?= $k >= ($plus_ordi ? 3 : 4) ? 'lg:hidden' : '' ?>"><a href="<?= e($communaute['url']) ?>" class="<?= $carte_communaute ?> border-ligne bg-white text-vert hover:border-orange hover:bg-orange hover:text-white"><?= e($communaute['nom']) ?></a></li>
-      <?php endforeach ?>
-      <?php if ($plus_ordi || $plus_tel): ?>
-      <li class="<?= $plus_tel ? '' : 'max-lg:hidden' ?> <?= $plus_ordi ? '' : 'lg:hidden' ?>">
-        <a href="<?= url('/communaute') ?>" class="<?= $carte_communaute ?> justify-between gap-3 border-orange bg-orange text-white hover:border-vert hover:bg-vert">
-          <span><span class="lg:hidden">+ <?= $plus_tel ?> autre<?= pluriel($plus_tel) ?></span><span class="hidden lg:inline">+ <?= $plus_ordi ?> autre<?= pluriel($plus_ordi) ?> communauté<?= pluriel($plus_ordi) ?></span></span>
-          <svg class="hidden size-6 shrink-0 lg:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
-        </a>
-      </li>
-      <?php endif ?>
-    </ul>
+
     <a href="<?= url('/communaute') ?>" class="btn btn-orange mt-6 w-full lg:hidden">Découvrir les communautés</a>
   </div>
 </section>

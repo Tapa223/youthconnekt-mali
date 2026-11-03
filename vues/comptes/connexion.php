@@ -18,4 +18,4 @@
 <?php endif ?>
 <div class="my-6 flex items-center gap-3 text-sm"><span class="h-px flex-1 bg-ligne"></span>Pas encore membre ?<span class="h-px flex-1 bg-ligne"></span></div>
 <a href="<?= url('/compte/inscription') ?>" class="btn btn-contour min-h-13 w-full text-base">Rejoindre le chapitre</a>
-<p class="mt-5 text-center"><a href="<?= url('/') ?>" class="btn btn-contour min-h-11 w-full sm:w-auto">Retour au site</a></p>
+

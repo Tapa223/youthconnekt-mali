@@ -1,6 +1,12 @@
 <?php
 /** Gabarit des pages de connexion et d'inscription. Variables : $titre, $contenu, $accroche, $accroche_mobile, $largeur */
 $messages = flashs();
+// Bouton « Retour » : ramène à la page du site d'où la personne est venue (pas à une autre page de connexion)
+$provenance = (string) ($_SERVER['HTTP_REFERER'] ?? '');
+if ($provenance !== '' && parse_url($provenance, PHP_URL_HOST) === ($_SERVER['HTTP_HOST'] ?? '') && !preg_match('#/compte/(connexion|inscription|mot-de-passe|mdp|verification|confirmer)#', $provenance)) {
+    $_SESSION['retour_auth'] = $provenance;
+}
+$retour_auth = $_SESSION['retour_auth'] ?? url('/');
 ?><!doctype html>
 <html lang="fr">
 <head>
@@ -43,6 +49,7 @@ $messages = flashs();
 
   <main id="contenu" class="flex justify-center px-5 py-10 sm:px-8 lg:items-center lg:py-12">
     <div class="anim-entree w-full <?= e($largeur ?? 'max-w-md') ?>">
+      <?php partiel('partials/retour', ['url' => $retour_auth]) ?>
       <?php if ($messages): ?>
       <div class="mb-5 space-y-2" role="status" aria-live="polite">
         <?php foreach ($messages as $m): ?><p class="rounded-xl border px-4 py-3 text-sm font-medium <?= $m['type'] === 'erreur' ? 'border-rouge/30 text-rouge' : 'border-vert/20 bg-vert-clair text-vert' ?>"><?= e($m['texte']) ?></p><?php endforeach ?>
