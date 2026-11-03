@@ -18,6 +18,7 @@ const ROUTES = [
     ['POST', '/newsletter', 'site', 'newsletter'],
     ['GET', '/initiatives', 'contenus', 'initiatives'],
     ['GET', '/initiatives/{slug}', 'contenus', 'initiative'],
+    ['POST', '/opportunites/proposer', 'contenus', 'proposer_opportunite'],
     ['GET', '/opportunites', 'contenus', 'opportunites'],
     ['GET', '/opportunites/{slug}', 'contenus', 'opportunite'],
     ['GET', '/actualites', 'contenus', 'actualites'],

@@ -78,11 +78,35 @@ function initiatives_publiees(string $suite = '', array $params = []): array
 // Opportunités
 // ---------------------------------------------------------------------------
 
+/** Types d'opportunités (gérés dans l'administration) : [slug => ['nom' => ..., 'couleur' => ...]] */
+function types_opportunite(): array
+{
+    static $types = null;
+    if ($types === null) {
+        $types = [];
+        try {
+            foreach (lignes('SELECT slug, nom, couleur FROM types_opportunite ORDER BY ordre, nom') as $t) {
+                $types[$t['slug']] = ['nom' => $t['nom'], 'couleur' => $t['couleur']];
+            }
+        } catch (Throwable $e) {
+            journaliser('Types d\'opportunités indisponibles : ' . $e->getMessage());
+        }
+    }
+    return $types;
+}
+
+/** [slug => nom] pour les listes de choix */
+function options_types_opportunite(): array
+{
+    return array_map(fn ($t) => $t['nom'], types_opportunite());
+}
+
 function opportunite_preparer(array $o): array
 {
+    $types = types_opportunite();
     $o['url'] = url('/opportunites/' . $o['slug']);
-    $o['couleur'] = COULEURS_OPPORTUNITE[$o['type']] ?? 'vert';
-    $o['type_libelle'] = TYPES_OPPORTUNITE[$o['type']] ?? $o['type'];
+    $o['couleur'] = $types[$o['type']]['couleur'] ?? 'vert';
+    $o['type_libelle'] = $types[$o['type']]['nom'] ?? ucfirst(str_replace('-', ' ', $o['type']));
     $o['jours_restants'] = $o['date_limite'] ? jours_restants($o['date_limite']) : null;
     $o['est_expiree'] = $o['date_limite'] !== null && $o['jours_restants'] < 0;
     return $o;

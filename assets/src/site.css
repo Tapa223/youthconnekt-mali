@@ -299,5 +299,7 @@ a.text-orange:not(.btn):not([class*="hover:bg-"]):hover { color: var(--color-ver
 .voir-plus[aria-expanded="true"] svg { transform: rotate(180deg); }
 
 /* Fenêtre de proposition d'initiative */
-.proposition::backdrop { background: rgb(2 30 25 / .6); backdrop-filter: blur(3px); }
-.proposition[open] { animation: yc-aide .2s ease-out; }
+.dialogue::backdrop { background: rgb(2 30 25 / .6); backdrop-filter: blur(3px); }
+.dialogue[open] { animation: yc-aide .2s ease-out; }
+
+.choix-type[open] .choix-fleche { transform: rotate(180deg); }

@@ -695,6 +695,10 @@ function supprimer(string $slug, int $id): void
     if (!$ligne) {
         page_erreur(404);
     }
+    if (!empty($r['avant_suppression']) && ($refus = ($r['avant_suppression'])($ligne))) {
+        flash('erreur', $refus);
+        rediriger(url('/gestion/' . $slug));
+    }
     if ($slug === 'comptes') {
         if ($id === (int) utilisateur()['id']) {
             flash('erreur', 'Vous ne pouvez pas supprimer votre propre compte depuis l\'administration.');

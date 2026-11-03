@@ -9,10 +9,14 @@
 declare(strict_types=1);
 
 /** Champs de publication communs aux contenus (panneau de droite). */
-function groupe_publication(): array
+function groupe_publication(bool $propositions = false): array
 {
+    $statuts = ['brouillon' => 'Brouillon', 'publie' => 'Publié'];
+    if ($propositions) {
+        $statuts = ['propose' => 'À valider (proposée par un membre)'] + $statuts;
+    }
     return ['Publication', 'cote' => true, 'champs' => [
-        'statut' => ['type' => 'select', 'libelle' => 'Statut', 'options' => ['brouillon' => 'Brouillon', 'publie' => 'Publié'], 'defaut' => 'brouillon'],
+        'statut' => ['type' => 'select', 'libelle' => 'Statut', 'options' => $statuts, 'defaut' => 'brouillon'],
         'publie_le' => ['type' => 'datetime', 'libelle' => 'Date de publication', 'requis' => false, 'aide' => 'Une date future programme la publication. Vide : maintenant.', 'defaut' => 'maintenant'],
         'mis_en_avant' => ['type' => 'case', 'libelle' => "Mettre en avant sur l'accueil"],
         'slug' => ['type' => 'slug', 'libelle' => 'Adresse (URL)', 'requis' => false, 'max' => 200, 'aide' => 'Laisser vide : elle est créée à partir du titre.'],
@@ -24,6 +28,9 @@ function badge_statut(array $l, bool $feminin = false): string
 {
     if ($l['statut'] === 'publie') {
         return strtotime($l['publie_le']) > time() ? badge('Programmé' . ($feminin ? 'e' : ''), 'bleu') : badge('Publié' . ($feminin ? 'e' : ''), 'vert');
+    }
+    if ($l['statut'] === 'propose') {
+        return badge('À valider', 'orange');
     }
     return badge('Brouillon', 'gris');
 }
@@ -105,15 +112,18 @@ function ressources(): array
             'libelle_ajout' => 'Ajouter une opportunité', 'libelle_tous' => 'Toutes',
             'ordre' => 't.publie_le DESC',
             'onglets' => [
+                ['À valider', "t.statut = 'propose'"],
                 ['Publiées', "t.statut = 'publie'"],
                 ['Brouillons', "t.statut = 'brouillon'"],
                 ['Clôturées', 't.date_limite < CURDATE()'],
             ],
-            'filtres' => [['type', 'Tous les types', TYPES_OPPORTUNITE, 't.type']],
+            'champs_select' => "t.*, COALESCE(CONCAT(pi.prenom, ' ', pi.nom), po.nom_structure, u.email) AS propose_par_nom, u.email AS propose_par_email",
+            'depuis' => 'FROM opportunites t LEFT JOIN utilisateurs u ON u.id = t.propose_par LEFT JOIN profils_individuels pi ON pi.utilisateur_id = u.id LEFT JOIN profils_organisations po ON po.utilisateur_id = u.id',
+            'filtres' => [['type', 'Tous les types', options_types_opportunite(), 't.type']],
             'recherche' => ['t.titre', 't.organisme', 't.resume'],
             'colonnes' => [
-                ['Opportunité', fn ($l) => nom_et_detail($l['titre'], $l['organisme']), 'lien' => true],
-                ['Type', fn ($l) => e(TYPES_OPPORTUNITE[$l['type']] ?? '')],
+                ['Opportunité', fn ($l) => nom_et_detail($l['titre'], $l['propose_par'] ? 'Proposée par ' . ($l['propose_par_nom'] ?? '') : $l['organisme']), 'lien' => true],
+                ['Type', fn ($l) => e(options_types_opportunite()[$l['type']] ?? $l['type'])],
                 ['Date limite', fn ($l) => e(date_chiffres($l['date_limite']))],
                 ['Restant', function ($l) {
                     $j = jours_restants($l['date_limite']);
@@ -124,13 +134,13 @@ function ressources(): array
             ],
             'url_voir' => fn ($l) => url('/opportunites/' . $l['slug']),
             'actions' => actions_publication('opportunites'),
-            'export' => ['Titre' => 'titre', 'Organisme' => 'organisme', 'Type' => fn ($l) => TYPES_OPPORTUNITE[$l['type']] ?? '',
+            'export' => ['Titre' => 'titre', 'Organisme' => 'organisme', 'Type' => fn ($l) => options_types_opportunite()[$l['type']] ?? $l['type'],
                 'Date limite' => fn ($l) => date_chiffres($l['date_limite']), 'Lieu' => 'lieu', 'Statut' => 'statut', 'Lien de candidature' => 'lien_candidature'],
             'aide_cote' => 'Une opportunité passe automatiquement en « clôturée » après sa date limite.',
             'groupes' => [
                 ['Informations principales', 'champs' => [
                     'titre' => ['type' => 'texte', 'libelle' => 'Titre', 'max' => 200],
-                    'type' => ['type' => 'select', 'libelle' => 'Type', 'options' => TYPES_OPPORTUNITE, 'largeur' => 'demi'],
+                    'type' => ['type' => 'select', 'libelle' => 'Type', 'options' => options_types_opportunite(), 'largeur' => 'demi', 'aide' => "Liste gérée dans « Types d'opportunités »."],
                     'organisme' => ['type' => 'texte', 'libelle' => 'Organisme', 'requis' => false, 'max' => 150, 'largeur' => 'demi'],
                     'date_limite' => ['type' => 'date', 'libelle' => 'Date limite', 'requis' => false, 'largeur' => 'demi'],
                     'lieu' => ['type' => 'texte', 'libelle' => 'Lieu', 'requis' => false, 'max' => 120, 'largeur' => 'demi', 'aide' => 'Exemple : Bamako, présentiel'],
@@ -150,7 +160,16 @@ function ressources(): array
                 ['Ciblage', 'description' => "Les membres de ces communautés verront l'opportunité dans leur espace.", 'champs' => [
                     'communautes' => ['type' => 'communautes', 'libelle' => 'Communautés concernées', 'requis' => false],
                 ]],
-                groupe_publication(),
+                groupe_publication(true),
+                ['Origine', 'cote' => true, 'champs' => [
+                    'propose_par' => ['type' => 'lecture', 'libelle' => 'Proposée par', 'html' => function ($l) {
+                        if (empty($l['propose_par'])) return "L'équipe (ajoutée dans l'administration)";
+                        $m = ligne('SELECT * FROM utilisateurs WHERE id = ?', [$l['propose_par']]);
+                        if (!$m) return 'Compte supprimé';
+                        $m = completer_utilisateur($m);
+                        return '<strong>' . e($m['nom_affiche']) . '</strong><br>' . e($m['email']) . '<br>' . e(TYPES_COMPTE[$m['type_compte']] ?? '');
+                    }],
+                ]],
             ],
             'liaison' => ['opportunite_communaute', 'opportunite_id'],
             'avant' => preparer_publiable('opportunites'),
@@ -546,6 +565,36 @@ function ressources(): array
         ],
 
         // ------------------------------------------------------------------
+        'types-opportunites' => [
+            'table' => 'types_opportunite', 'titre' => "Types d'opportunités", 'rubrique' => 'opportunites',
+            'description' => "Les catégories proposées sur la page Opportunités (filtre, couleur des cartes). Un type utilisé par des opportunités ne peut pas être supprimé.",
+            'libelle_ajout' => 'Ajouter un type', 'ordre' => 't.ordre, t.nom',
+            'champs_select' => 't.*, (SELECT COUNT(*) FROM opportunites o WHERE o.type = t.slug) AS nb',
+            'colonnes' => [
+                ['Type', fn ($l) => '<strong>' . e($l['nom']) . '</strong>', 'lien' => true],
+                ['Couleur', fn ($l) => point_couleur(COULEURS_HEX[$l['couleur']] ?? '', COULEURS_CHARTE[$l['couleur']] ?? $l['couleur'])],
+                ['Opportunités', fn ($l) => (int) $l['nb']],
+                ['Ordre', fn ($l) => (int) $l['ordre']],
+            ],
+            'groupes' => [
+                [null, 'champs' => [
+                    'nom' => ['type' => 'texte', 'libelle' => 'Nom du type', 'max' => 80, 'aide' => 'Exemple : Concours, Volontariat, Financement…'],
+                ]],
+                ['Affichage', 'cote' => true, 'champs' => [
+                    'couleur' => ['type' => 'select', 'libelle' => 'Couleur', 'options' => COULEURS_CHARTE],
+                    'ordre' => ['type' => 'nombre', 'libelle' => "Ordre d'affichage", 'defaut' => 0],
+                ]],
+            ],
+            'avant' => function (array &$d, ?array $ancien) {
+                // L'adresse du type ne change plus une fois créée : les opportunités y sont rattachées
+                $d['slug'] = $ancien['slug'] ?? slug_unique('types_opportunite', $d['nom'], null);
+            },
+            'avant_suppression' => function (array $ligne) {
+                $n = (int) valeur('SELECT COUNT(*) FROM opportunites WHERE type = ?', [$ligne['slug']]);
+                return $n ? "Ce type est utilisé par $n opportunité" . pluriel($n) . " : changez d'abord leur type, puis supprimez-le." : null;
+            },
+        ],
+
         'axes' => [
             'table' => 'axes', 'titre' => "Axes d'action",
             'description' => "Les façons d'agir du chapitre, affichées sur l'accueil et la page À propos.",

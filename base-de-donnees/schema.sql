@@ -186,14 +186,25 @@ CREATE TABLE IF NOT EXISTS photos_initiatives (
   CONSTRAINT fk_photos_initiatives FOREIGN KEY (initiative_id) REFERENCES initiatives (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS types_opportunite (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  nom VARCHAR(80) NOT NULL,
+  slug VARCHAR(60) NOT NULL,
+  couleur VARCHAR(20) NOT NULL DEFAULT 'vert',
+  ordre SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (id),
+  UNIQUE KEY uk_types_opportunite_slug (slug)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS opportunites (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   titre VARCHAR(200) NOT NULL,
   slug VARCHAR(200) NOT NULL,
-  statut ENUM('brouillon','publie') NOT NULL DEFAULT 'brouillon',
+  statut ENUM('brouillon','propose','publie') NOT NULL DEFAULT 'brouillon',
   publie_le DATETIME NOT NULL,
   mis_en_avant TINYINT(1) NOT NULL DEFAULT 0,
-  type VARCHAR(20) NOT NULL,
+  type VARCHAR(60) NOT NULL,
+  propose_par INT UNSIGNED NULL,
   organisme VARCHAR(150) NOT NULL DEFAULT '',
   resume VARCHAR(300) NOT NULL DEFAULT '',
   description TEXT NULL,
@@ -212,7 +223,8 @@ CREATE TABLE IF NOT EXISTS opportunites (
   PRIMARY KEY (id),
   UNIQUE KEY uk_opportunites_slug (slug),
   KEY ix_opportunites_publication (statut, publie_le),
-  KEY ix_opportunites_limite (date_limite)
+  KEY ix_opportunites_limite (date_limite),
+  CONSTRAINT fk_opportunites_propose_par FOREIGN KEY (propose_par) REFERENCES utilisateurs (id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS opportunite_communaute (

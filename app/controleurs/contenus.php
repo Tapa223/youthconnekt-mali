@@ -55,7 +55,8 @@ function initiative(string $slug): void
 function opportunites(): void
 {
     $type_actif = get('type');
-    if (!isset(TYPES_OPPORTUNITE[$type_actif])) {
+    $types = types_opportunite();
+    if (!isset($types[$type_actif])) {
         $type_actif = '';
     }
     $recherche = mb_substr(get('q'), 0, 100);
@@ -74,10 +75,18 @@ function opportunites(): void
     $total = (int) valeur('SELECT COUNT(*) FROM opportunites WHERE ' . OUVERTE . $conditions, $params);
     $pagination = paginer($total, 12);
 
+    // Nombre d'opportunités ouvertes par type, pour la liste de choix
+    $nombres = [];
+    foreach (lignes('SELECT type, COUNT(*) AS n FROM opportunites WHERE ' . OUVERTE . ' GROUP BY type') as $l) {
+        $nombres[$l['type']] = (int) $l['n'];
+    }
+
     afficher(vue('pages/opportunites', [
         'titre' => 'Opportunités | YouthConnekt Mali',
         'description' => 'Formations, appels à candidatures, bourses, stages et événements relayés par YouthConnekt Mali.',
         'type_actif' => $type_actif,
+        'types' => $types,
+        'nombres' => $nombres,
         'recherche' => $recherche,
         'total' => $total,
         'liste' => opportunites_ouvertes("$conditions ORDER BY date_limite IS NULL, date_limite, publie_le DESC LIMIT {$pagination['par_page']} OFFSET {$pagination['decalage']}", $params),
@@ -151,4 +160,95 @@ function actualite(string $slug): void
         'photos' => lignes('SELECT * FROM photos_actualites WHERE actualite_id = ? ORDER BY ordre, id', [$a['id']]),
         'autres' => actualites_publiees('AND id <> ? ORDER BY publie_le DESC LIMIT 3', [$a['id']]),
     ]));
+}
+
+/**
+ * Proposition d'une opportunité par un membre (individuel ou organisation).
+ * Elle est enregistrée « à valider » : l'administration la relit puis la publie.
+ */
+function proposer_opportunite(): void
+{
+    $ajax = ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'fetch';
+    $u = utilisateur();
+    $repondre = function (array $erreurs, string $texte = '') use ($ajax) {
+        if ($ajax) {
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($erreurs ? ['ok' => false, 'erreurs' => $erreurs] : ['ok' => true, 'message' => $texte], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+        flash($erreurs ? 'erreur' : 'succes', $erreurs ? implode(' ', $erreurs) : $texte);
+        rediriger(url('/opportunites'));
+    };
+    if (!$u || !est_membre($u)) {
+        $repondre(['compte' => 'Connectez-vous avec votre compte membre pour proposer une opportunité.']);
+    }
+
+    $v = [];
+    foreach (['titre', 'type', 'organisme', 'date_limite', 'lieu', 'lien_candidature', 'description'] as $c) {
+        $v[$c] = post($c);
+    }
+    $erreurs = [];
+    if ($v['titre'] === '') {
+        $erreurs['titre'] = "Indiquez le titre de l'opportunité.";
+    } elseif (mb_strlen($v['titre']) > 200) {
+        $erreurs['titre'] = 'Titre trop long : 200 caractères au maximum.';
+    }
+    if (!isset(types_opportunite()[$v['type']])) {
+        $erreurs['type'] = 'Choisissez le type de l\'opportunité.';
+    }
+    if ($v['date_limite'] !== '') {
+        $d = DateTime::createFromFormat('Y-m-d', $v['date_limite']);
+        if (!$d || $d->format('Y-m-d') !== $v['date_limite']) {
+            $erreurs['date_limite'] = 'La date limite n\'est pas valide.';
+        } elseif ($v['date_limite'] < date('Y-m-d')) {
+            $erreurs['date_limite'] = 'La date limite est déjà passée.';
+        }
+    }
+    if ($v['lien_candidature'] !== '') {
+        if (!preg_match('#^https?://#i', $v['lien_candidature'])) {
+            $v['lien_candidature'] = 'https://' . $v['lien_candidature'];
+        }
+        if (!filter_var($v['lien_candidature'], FILTER_VALIDATE_URL)) {
+            $erreurs['lien_candidature'] = 'Le lien de candidature n\'est pas valide.';
+        }
+    }
+    if (mb_strlen($v['description']) < 30) {
+        $erreurs['description'] = $v['description'] === '' ? "Décrivez l'opportunité." : 'Décrivez un peu plus l\'opportunité (30 caractères au minimum).';
+    }
+    $image = null;
+    if (!$erreurs) {
+        try {
+            $image = televerser_image($_FILES['image'] ?? null, 'opportunites');
+        } catch (RuntimeException $e) {
+            $erreurs['image'] = $e->getMessage();
+        }
+    }
+    if ($erreurs) {
+        $repondre($erreurs);
+    }
+
+    $resume = trim(preg_replace('/\s+/u', ' ', $v['description']));
+    $id = inserer('opportunites', [
+        'titre' => $v['titre'],
+        'slug' => slug_unique('opportunites', $v['titre']),
+        'statut' => 'propose',
+        'publie_le' => maintenant(),
+        'type' => $v['type'],
+        'propose_par' => (int) $u['id'],
+        'organisme' => mb_substr($v['organisme'] !== '' ? $v['organisme'] : ($u['type_compte'] === 'organisation' ? $u['nom_affiche'] : ''), 0, 150),
+        'resume' => mb_strlen($resume) > 280 ? mb_substr($resume, 0, 277) . '…' : $resume,
+        'description' => mb_substr($v['description'], 0, 8000),
+        'lieu' => mb_substr($v['lieu'], 0, 120),
+        'date_limite' => $v['date_limite'] !== '' ? $v['date_limite'] : null,
+        'lien_candidature' => mb_substr($v['lien_candidature'], 0, 255),
+        'image' => $image ?? '',
+        'cree_le' => maintenant(),
+        'modifie_le' => maintenant(),
+    ]);
+    $copie = (string) config('email.copie_contact', '');
+    if ($copie !== '') {
+        envoyer_email($copie, 'Opportunité proposée : ' . $v['titre'],
+            "{$u['nom_affiche']} <{$u['email']}> propose une opportunité.\nÀ relire et publier : " . url_absolue(url('/gestion/opportunites/' . $id)), '', $u['email']);
+    }
+    $repondre([], "Merci ! Votre opportunité a bien été envoyée. Elle sera publiée après validation par l'équipe du chapitre.");
 }

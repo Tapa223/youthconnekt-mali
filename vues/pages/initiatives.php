@@ -40,7 +40,7 @@
         <h2 class="text-xl font-bold text-white sm:text-3xl">Vous portez une initiative ?</h2>
         <p class="mt-1 text-white/90">Parlez-nous de votre initiative : l'équipe du chapitre peut la faire connaître et vous accompagner.</p>
       </div>
-      <a href="<?= url('/contact', ['sujet' => 'initiative']) ?>" class="btn self-start border-white bg-white text-vert hover:border-vert hover:bg-vert hover:text-white sm:self-auto" data-ouvrir-proposition>Parler de mon initiative</a>
+      <a href="<?= url('/contact', ['sujet' => 'initiative']) ?>" class="btn self-start border-white bg-white text-vert hover:border-vert hover:bg-vert hover:text-white sm:self-auto" data-ouvrir-dialogue="dialogue-initiative">Parler de mon initiative</a>
     </div>
   </div>
 </section>

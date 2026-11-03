@@ -160,6 +160,8 @@ function newsletter(): void
         flash('erreur', 'Indiquez votre adresse e-mail.');
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL) || mb_strlen($email) > 190) {
         flash('erreur', "Cette adresse e-mail n'est pas valide.");
+    } elseif (post('accord') === '') {
+        flash('erreur', 'Cochez la case pour accepter de recevoir la newsletter.');
     } else {
         if (post('site_web') === '') {
             requete('INSERT INTO abonnes_newsletter (email, inscrit_le, actif) VALUES (?, ?, 1) ON DUPLICATE KEY UPDATE actif = 1', [$email, maintenant()]);

@@ -200,7 +200,8 @@ document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
       (cibles.get(e.target) || []).forEach(function (b) { b.classList.add("visible"); });
       obs.unobserve(e.target);
     });
-  }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+  // Seuil 0 : un bloc apparaît dès que son haut entre à l'écran, même s'il est très haut (longues listes)
+  }, { rootMargin: "0px 0px -40px 0px", threshold: 0 });
   blocs.forEach(function (b) {
     var cible = (b.classList.contains("devoile") || b.classList.contains("devoile-2")) ? (b.parentElement || b) : b;
     if (!cibles.has(cible)) { cibles.set(cible, []); obs.observe(cible); }
@@ -435,39 +436,56 @@ document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
   });
 })();
 
-/* Fenêtre « Parlez-nous de votre initiative » (page Initiatives) */
+/* Fenêtres de proposition (initiative, opportunité) : ouverture, envoi sans quitter la page, remerciement. */
 (function () {
   "use strict";
-  var boite = document.querySelector("[data-proposition]");
-  if (!boite || !boite.showModal) return;
-  var form = boite.querySelector("[data-form-proposition]");
-  var merci = boite.querySelector("[data-merci-proposition]");
-  var erreur = boite.querySelector("[data-erreur-proposition]");
-  document.querySelectorAll("[data-ouvrir-proposition]").forEach(function (lien) {
-    lien.addEventListener("click", function (e) {
+  function ouvrir(boite) {
+    var form = boite.querySelector("[data-form-dialogue]");
+    var merci = boite.querySelector("[data-merci-dialogue]");
+    if (form) { form.classList.remove("hidden"); var err = boite.querySelector("[data-erreur-dialogue]"); if (err) err.classList.add("hidden"); }
+    if (merci) merci.classList.add("hidden");
+    boite.showModal();
+    var premier = boite.querySelector("input:not([type=hidden]):not([tabindex]), select, textarea, a.btn");
+    if (premier) premier.focus();
+  }
+  document.querySelectorAll("dialog.dialogue").forEach(function (boite) {
+    if (!boite.showModal) return;
+    boite.querySelectorAll("[data-fermer-dialogue]").forEach(function (b) { b.addEventListener("click", function () { boite.close(); }); });
+    boite.addEventListener("click", function (e) { if (e.target === boite) boite.close(); });
+    var form = boite.querySelector("[data-form-dialogue]");
+    if (!form) return;
+    var merci = boite.querySelector("[data-merci-dialogue]");
+    var erreur = boite.querySelector("[data-erreur-dialogue]");
+    form.addEventListener("submit", function (e) {
       e.preventDefault();
-      form.classList.remove("hidden");
-      merci.classList.add("hidden");
+      var envoyer = form.querySelector("button[type=submit]");
+      envoyer.disabled = true;
       erreur.classList.add("hidden");
-      boite.showModal();
-      var premier = form.querySelector("input:not([type=hidden]):not([tabindex])");
-      if (premier) premier.focus();
+      fetch(form.action, { method: "POST", body: new FormData(form), headers: { "X-Requested-With": "fetch" }, credentials: "same-origin" })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          if (d.ok) { form.reset(); form.classList.add("hidden"); merci.classList.remove("hidden"); }
+          else { erreur.textContent = Object.keys(d.erreurs || {}).map(function (k) { return d.erreurs[k]; }).join(" "); erreur.classList.remove("hidden"); erreur.scrollIntoView({ block: "nearest" }); }
+        })
+        .catch(function () { erreur.textContent = "L'envoi n'a pas abouti. Rechargez la page puis réessayez."; erreur.classList.remove("hidden"); })
+        .then(function () { envoyer.disabled = false; });
     });
   });
-  boite.querySelectorAll("[data-fermer-proposition]").forEach(function (b) { b.addEventListener("click", function () { boite.close(); }); });
-  boite.addEventListener("click", function (e) { if (e.target === boite) boite.close(); });
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    var envoyer = form.querySelector("button[type=submit]");
-    envoyer.disabled = true;
-    erreur.classList.add("hidden");
-    fetch(form.action, { method: "POST", body: new FormData(form), headers: { "X-Requested-With": "fetch" }, credentials: "same-origin" })
-      .then(function (r) { return r.json(); })
-      .then(function (d) {
-        if (d.ok) { form.reset(); form.classList.add("hidden"); merci.classList.remove("hidden"); }
-        else { erreur.textContent = Object.keys(d.erreurs || {}).map(function (k) { return d.erreurs[k]; }).join(" "); erreur.classList.remove("hidden"); }
-      })
-      .catch(function () { erreur.textContent = "Le message n'a pas pu partir. Rechargez la page puis réessayez."; erreur.classList.remove("hidden"); })
-      .then(function () { envoyer.disabled = false; });
+  document.querySelectorAll("[data-ouvrir-dialogue]").forEach(function (lien) {
+    lien.addEventListener("click", function (e) {
+      var boite = document.getElementById(lien.getAttribute("data-ouvrir-dialogue"));
+      if (!boite || !boite.showModal) return;
+      e.preventDefault();
+      ouvrir(boite);
+    });
+  });
+  // Retour de connexion avec ?proposer=1 : la fenêtre s'ouvre directement
+  if (/[?&]proposer=1/.test(location.search)) {
+    var boite = document.getElementById("dialogue-opportunite");
+    if (boite && boite.showModal) ouvrir(boite);
+  }
+  // Liste « Type » des opportunités : se referme quand on clique ailleurs
+  document.querySelectorAll("[data-choix-type]").forEach(function (d) {
+    document.addEventListener("click", function (e) { if (d.open && !d.contains(e.target)) d.open = false; });
   });
 })();

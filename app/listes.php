@@ -53,23 +53,6 @@ const TYPES_COMPTE = [
     'administration' => "Compte d'administration",
 ];
 
-const TYPES_OPPORTUNITE = [
-    'formation' => 'Formation',
-    'appel' => 'Appel à candidatures',
-    'evenement' => 'Événement',
-    'bourse' => 'Bourse',
-    'emploi' => 'Emploi et stage',
-];
-
-// Couleur de la charte associée à chaque type d'opportunité
-const COULEURS_OPPORTUNITE = [
-    'formation' => 'turquoise',
-    'appel' => 'orange',
-    'evenement' => 'vert',
-    'bourse' => 'bleu',
-    'emploi' => 'rouge',
-];
-
 const CATEGORIES_ACTUALITE = [
     'actualite' => 'Actualité',
     'evenement' => 'Événement',

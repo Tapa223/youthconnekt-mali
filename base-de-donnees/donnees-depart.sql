@@ -33,6 +33,14 @@ INSERT IGNORE INTO axes (nom, slug, description, elements, couleur, ordre) VALUE
    'bleu', 3);
 
 -- Communautés thématiques de départ (cahier des charges v2, section 7.2)
+-- Types d'opportunités de départ (modifiables dans Administration > Types d'opportunités)
+INSERT IGNORE INTO types_opportunite (nom, slug, couleur, ordre) VALUES
+  ('Formation', 'formation', 'turquoise', 1),
+  ('Appel à candidatures', 'appel', 'orange', 2),
+  ('Événement', 'evenement', 'vert', 3),
+  ('Bourse', 'bourse', 'bleu', 4),
+  ('Emploi et stage', 'emploi', 'rouge', 5);
+
 INSERT IGNORE INTO communautes (nom, slug, public_vise, ordre) VALUES
   ('Tech et numérique', 'tech-et-numerique', 'Développeurs, créateurs de contenu, passionnés du numérique', 1),
   ('Entrepreneuriat et startups', 'entrepreneuriat-et-startups', 'Jeunes entrepreneurs, jeunes entreprises et startups', 2),

@@ -4,9 +4,7 @@
     <?php partiel('partials/photo', ['image' => $o['image']]) ?>
     <?php if (!$compacte): ?><span class="etiquette absolute top-3 left-3 hidden rounded-full sm:inline-block <?= fond($o['couleur']) ?>"><?= e($o['type_libelle']) ?></span><?php endif ?>
     <?php if ($o['jours_restants'] !== null && $o['jours_restants'] >= 0): ?>
-    <span class="absolute top-3 right-3 grid min-w-12 rounded-xl px-2 py-1.5 text-center leading-none shadow <?= $o['jours_restants'] <= 25 ? 'bg-orange text-white' : 'bg-white text-vert' ?>">
-      <span class="text-[10px] font-bold">J-</span><span class="text-xl font-bold"><?= $o['jours_restants'] ?></span>
-    </span>
+    <span class="absolute top-2 right-2 rounded-full px-2.5 py-1 text-sm leading-none font-bold whitespace-nowrap shadow sm:top-3 sm:right-3 sm:px-3 sm:py-1.5 sm:text-base <?= $o['jours_restants'] <= 25 ? 'bg-orange text-white' : 'bg-white text-vert' ?>" title="<?= $o['jours_restants'] ?> jour<?= pluriel($o['jours_restants']) ?> avant la date limite">J-<?= $o['jours_restants'] ?></span>
     <?php endif ?>
   </div>
   <div class="flex flex-1 flex-col p-3.5 sm:p-5">
@@ -17,9 +15,9 @@
     <?php if ($compacte): ?>
       <p class="mt-auto pt-2 text-xs text-texte"><?php if ($o['date_limite']): ?>Date limite <strong class="text-rouge"><?= e(date_longue($o['date_limite'])) ?></strong><?php else: ?>Sans date limite<?php endif ?></p>
     <?php else: ?>
-      <div class="mt-auto flex flex-col gap-0.5 pt-3 text-xs sm:mt-4 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:border-t sm:border-ligne sm:text-sm">
-        <span class="text-texte">Date limite</span>
-        <strong class="text-rouge"><?= $o['date_limite'] ? e(date_longue($o['date_limite'])) : 'Aucune' ?></strong>
+      <div class="mt-auto pt-2 text-xs sm:mt-4 sm:flex sm:items-center sm:justify-between sm:gap-3 sm:border-t sm:border-ligne sm:pt-3 sm:text-sm">
+        <span class="text-texte"><span class="sm:hidden"><?= $o['date_limite'] ? 'Avant le ' : '' ?></span><span class="hidden sm:inline">Date limite</span></span>
+        <strong class="text-rouge"><?= $o['date_limite'] ? e(date_courte($o['date_limite'])) : '<span class="font-medium text-texte">Sans date limite</span>' ?></strong>
       </div>
     <?php endif ?>
   </div>

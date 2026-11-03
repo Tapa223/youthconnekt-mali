@@ -1,24 +1,4 @@
 <?php $p = parametres(); $u = utilisateur(); $reseaux = reseaux_sociaux(); ?>
-<section class="bg-gris py-12 sm:py-16" aria-labelledby="titre-newsletter">
-  <div id="newsletter" class="conteneur sans-apparition scroll-mt-24">
-    <div class="grid gap-5 rounded-3xl border-t-[6px] border-orange bg-white p-6 shadow-xl shadow-vert/10 sm:p-9 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] md:items-center md:gap-10">
-      <div>
-        <h2 id="titre-newsletter" class="text-2xl font-bold text-vert sm:text-3xl">Abonnez-vous à la newsletter</h2>
-        <p class="mt-2 text-[15px] sm:text-base">Opportunités, initiatives et événements de YouthConnekt Mali, directement par e-mail.</p>
-      </div>
-      <form action="<?= url('/newsletter') ?>" method="post" class="flex flex-col gap-2.5 sm:flex-row" novalidate>
-        <?= csrf() ?>
-        <input type="hidden" name="suivant" value="<?= e(adresse_actuelle()) ?>">
-        <div class="hidden" aria-hidden="true"><label>Ne pas remplir <input type="text" name="site_web" tabindex="-1" autocomplete="off"></label></div>
-        <label for="newsletter-email" class="sr-only">Votre adresse e-mail</label>
-        <input id="newsletter-email" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="Votre adresse e-mail" maxlength="190"
-               class="min-h-12 w-full min-w-0 flex-1 rounded-lg border-2 border-ligne bg-white px-4 text-base text-encre placeholder:text-texte/70 focus:border-orange focus:ring-[3px] focus:ring-orange/40 focus:outline-none">
-        <button type="submit" class="btn btn-orange min-h-12 shrink-0 px-7">S'abonner</button>
-      </form>
-    </div>
-  </div>
-</section>
-
 <footer class="relative isolate overflow-hidden bg-vert text-white" aria-labelledby="titre-pied">
   <h2 id="titre-pied" class="sr-only">Informations sur YouthConnekt Mali</h2>
   <?php partiel('partials/reseau_deco', ['opacite' => 'opacity-40']) ?>
@@ -68,7 +48,32 @@
 
     </div>
 
-    <nav class="lg:col-span-2" aria-label="Le chapitre">
+    <div class="col-span-2 lg:col-span-8">
+      <div id="newsletter" class="grid scroll-mt-24 gap-4 border-b border-white/15 pb-8 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-center md:gap-8">
+        <div>
+          <p class="text-2xl leading-tight font-bold text-white sm:text-[1.75rem]">Abonnez-vous à la newsletter</p>
+          <p class="mt-1.5 text-sm text-white/80">Opportunités, initiatives et événements, directement par e-mail.</p>
+        </div>
+        <form action="<?= url('/newsletter') ?>" method="post" novalidate>
+          <?= csrf() ?>
+          <input type="hidden" name="suivant" value="<?= e(adresse_actuelle()) ?>">
+          <div class="hidden" aria-hidden="true"><label>Ne pas remplir <input type="text" name="site_web" tabindex="-1" autocomplete="off"></label></div>
+          <div class="flex overflow-hidden rounded-full bg-white p-1 focus-within:ring-[3px] focus-within:ring-orange/50">
+            <label for="newsletter-email" class="sr-only">Votre adresse e-mail</label>
+            <input id="newsletter-email" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="Votre adresse e-mail" maxlength="190"
+                   class="min-h-11 min-w-0 flex-1 border-0 bg-transparent pl-4 text-[15px] text-encre placeholder:text-texte/70 focus:outline-none">
+            <button type="submit" class="grid h-11 w-14 shrink-0 place-items-center rounded-full bg-orange text-white transition-colors hover:bg-vert sm:w-16" aria-label="S'abonner">
+              <svg class="size-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 4.5 21 12 4 19.5l2.2-7.5L4 4.5zm2.2 7.5h7"/></svg>
+            </button>
+          </div>
+          <label class="mt-3 flex cursor-pointer items-start gap-2.5 text-[13px] leading-snug text-white/85">
+            <input type="checkbox" name="accord" value="1" required class="mt-0.5 size-4 shrink-0 rounded accent-orange">
+            <span>J'accepte de recevoir la newsletter de YouthConnekt Mali et la <a href="<?= url('/confidentialite') ?>" class="font-bold text-white hover:text-orange">politique de confidentialité</a>.</span>
+          </label>
+        </form>
+      </div>
+      <div class="grid grid-cols-2 gap-x-6 gap-y-9 pt-8 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)_minmax(0,3fr)] md:gap-8">
+    <nav aria-label="Le chapitre">
       <p class="text-xs font-bold tracking-[0.16em] text-white uppercase"><span class="mb-3 block h-[3px] w-8 rounded-full bg-orange" aria-hidden="true"></span>Le chapitre</p>
       <ul class="mt-4 space-y-1 text-[15px]">
         <li><a href="<?= url('/a-propos') ?>" class="lien-pied">À propos</a></li>
@@ -78,7 +83,7 @@
       </ul>
     </nav>
 
-    <nav class="lg:col-span-3" aria-label="Participer">
+    <nav aria-label="Participer">
       <p class="text-xs font-bold tracking-[0.16em] text-white uppercase"><span class="mb-3 block h-[3px] w-8 rounded-full bg-turquoise" aria-hidden="true"></span>Participer</p>
       <ul class="mt-4 space-y-1 text-[15px]">
         <li><a href="<?= url('/opportunites') ?>" class="lien-pied">Opportunités</a></li>
@@ -92,7 +97,7 @@
       </ul>
     </nav>
 
-    <div class="col-span-2 lg:col-span-3">
+    <div class="col-span-2 md:col-span-1">
       <p class="text-xs font-bold tracking-[0.16em] text-white uppercase"><span class="mb-3 block h-[3px] w-8 rounded-full bg-bleu" aria-hidden="true"></span>Nous joindre</p>
       <ul class="mt-4 space-y-2.5 text-[15px] text-white/85">
         <li><?= e($p['adresse'] ?: 'Bamako, Mali') ?></li>
@@ -115,6 +120,8 @@
         </li>
         <?php endforeach ?>
       </ul>
+    </div>
+      </div>
     </div>
   </div>
 
