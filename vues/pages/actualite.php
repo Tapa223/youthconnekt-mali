@@ -82,7 +82,7 @@ $meta = array_filter([date_longue($a['date_affichee']), $a['lieu'], $a['minutes_
     <div class="flex items-end justify-between gap-4">
       <div>
         <p class="surtitre surtitre-trait">Photothèque</p>
-        <h2 id="titre-phototheque" class="titre-section">En images.</h2>
+        <h2 id="titre-phototheque" class="titre-section">En images</h2>
       </div>
       <p class="text-sm"><?= count($images) ?> photos</p>
     </div>
@@ -110,7 +110,7 @@ $meta = array_filter([date_longue($a['date_affichee']), $a['lieu'], $a['minutes_
 <section class="bg-gris py-14 sm:py-16" aria-labelledby="titre-autres">
   <div class="conteneur">
     <div class="flex items-end justify-between gap-4">
-      <h2 id="titre-autres" class="titre-section">À lire aussi.</h2>
+      <h2 id="titre-autres" class="titre-section">À lire aussi</h2>
       <a href="<?= url('/actualites') ?>" class="btn btn-contour hidden sm:inline-flex">Toutes les actualités</a>
       <a href="<?= url('/actualites') ?>" class="btn-tout-voir sm:hidden">Tout voir</a>
     </div>

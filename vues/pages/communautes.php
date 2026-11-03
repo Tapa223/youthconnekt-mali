@@ -28,7 +28,7 @@
 
 <section class="conteneur py-8 sm:py-20" aria-labelledby="titre-communautes">
   <p class="surtitre surtitre-trait">Les communautés</p>
-  <h2 id="titre-communautes" class="titre-section">Trouvez vos semblables.</h2>
+  <h2 id="titre-communautes" class="titre-section">Trouvez vos semblables</h2>
   <p class="mt-3 text-[15px] sm:text-base">Chaque communauté s'adresse à un public précis. Un membre peut en intégrer plusieurs.</p>
   <?php if ($communautes): ?>
   <ul class="mt-6 grid gap-2.5 sm:mt-8 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">

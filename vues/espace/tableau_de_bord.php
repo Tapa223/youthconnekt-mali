@@ -3,7 +3,7 @@
   <?php partiel('partials/reseau_deco', ['opacite' => 'opacity-50']) ?>
   <div class="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
     <div>
-      <h1 class="text-3xl font-bold text-white sm:text-4xl">Bonjour<?= $u['prenom_affiche'] ? ', ' . e($u['prenom_affiche']) : '' ?>.</h1>
+      <h1 class="text-3xl font-bold text-white sm:text-4xl">Bonjour<?= $u['prenom_affiche'] ? ', ' . e($u['prenom_affiche']) : '' ?></h1>
       <p class="mt-1 text-white/90">Voici les nouveautés de vos communautés.</p>
     </div>
     <div class="w-full rounded-xl border border-white/20 bg-white/10 p-4 md:w-72">

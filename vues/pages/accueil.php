@@ -21,8 +21,8 @@ $points = [
   <div class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(3_94_77/.95)_0%,rgb(3_94_77/.88)_34%,rgb(3_94_77/.72)_60%,rgb(3_94_77/.86)_100%)]" aria-hidden="true"></div>
 
   <?php /* Cadre de la maquette (1440 × 820) mis à l'échelle de l'écran : anneau, grand cercle et bulles s'y alignent */ ?>
-  <div class="pointer-events-none absolute inset-y-0 left-1/2 hidden aspect-[1440/820] -translate-x-1/2 lg:block" aria-hidden="true">
-    <svg class="absolute inset-0 h-full w-full overflow-visible" viewBox="0 0 1440 820" fill="none">
+  <div class="pointer-events-none absolute inset-y-0 left-1/2 hidden aspect-[1440/820] -translate-x-1/2 lg:block">
+    <svg class="absolute inset-0 h-full w-full overflow-visible" viewBox="0 0 1440 820" fill="none" aria-hidden="true">
       <circle cx="720" cy="710" r="450" stroke="#fff" stroke-opacity=".3" stroke-width="1.5" stroke-dasharray="6 8"/>
       <circle cx="720" cy="710" r="490" stroke="#fff" stroke-opacity=".1"/>
       <g class="anim-orbite" style="transform-origin: 720px 710px">
@@ -33,11 +33,11 @@ $points = [
       <g stroke="#fff" stroke-opacity=".35" stroke-width="1.5" stroke-dasharray="4 6"><path d="M195 360 L346 460"/><path d="M289 536 L303 541"/><path d="M1243 334 L1085 447"/><path d="M1143 517 L1129 523"/></g>
       <circle cx="346" cy="460" r="4" fill="#F1592A"/><circle cx="303" cy="541" r="4" fill="#04B2B1"/><circle cx="1085" cy="447" r="4" fill="#04B2B1"/><circle cx="1129" cy="523" r="4" fill="#F1592A"/>
     </svg>
-    <span class="anim-flotte-2 absolute top-[34.4%] left-[7.1%] aspect-square w-[6.7%] overflow-hidden rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)]"><img src="<?= asset('img/accueil/bulle-1.jpg') ?>" alt=""></span>
-    <span class="anim-flotte absolute top-[59%] left-[14.9%] aspect-square w-[5%] overflow-hidden rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)]"><img src="<?= asset('img/accueil/bulle-2.jpg') ?>" alt=""></span>
-    <span class="anim-flotte-2 absolute top-[30.2%] left-[86%] aspect-square w-[7.2%] overflow-hidden rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)]"><img src="<?= asset('img/accueil/bulle-3.jpg') ?>" alt=""></span>
-    <span class="anim-flotte absolute top-[56.7%] left-[79.5%] aspect-square w-[4.9%] overflow-hidden rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)]"><img src="<?= asset('img/accueil/bulle-4.jpg') ?>" alt=""></span>
-    <div class="anim-soleil absolute top-[36.6%] left-[21.5%] aspect-square w-[57%]">
+    <a href="<?= url('/communaute') ?>" class="bulle-acces pointer-events-auto group anim-flotte-2 absolute top-[34.4%] left-[7.1%] aspect-square w-[6.7%] rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)]"><span class="block h-full w-full overflow-hidden rounded-full"><img src="<?= asset('img/accueil/bulle-1.jpg') ?>" alt="" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"></span><span class="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 rounded-full bg-white px-3 py-1 text-[13px] font-bold whitespace-nowrap text-vert shadow-md transition-colors group-hover:bg-orange group-hover:text-white">Communauté</span></a>
+    <a href="<?= url('/initiatives') ?>" class="bulle-acces pointer-events-auto group anim-flotte absolute top-[59%] left-[14.9%] aspect-square w-[5%] rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)]"><span class="block h-full w-full overflow-hidden rounded-full"><img src="<?= asset('img/accueil/bulle-2.jpg') ?>" alt="" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"></span><span class="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 rounded-full bg-white px-3 py-1 text-[13px] font-bold whitespace-nowrap text-vert shadow-md transition-colors group-hover:bg-orange group-hover:text-white">Initiatives</span></a>
+    <a href="<?= url('/opportunites') ?>" class="bulle-acces pointer-events-auto group anim-flotte-2 absolute top-[30.2%] left-[86%] aspect-square w-[7.2%] rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)]"><span class="block h-full w-full overflow-hidden rounded-full"><img src="<?= asset('img/accueil/bulle-3.jpg') ?>" alt="" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"></span><span class="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 rounded-full bg-white px-3 py-1 text-[13px] font-bold whitespace-nowrap text-vert shadow-md transition-colors group-hover:bg-orange group-hover:text-white">Opportunités</span></a>
+    <a href="<?= url('/actualites') ?>" class="bulle-acces pointer-events-auto group anim-flotte absolute top-[56.7%] left-[79.5%] aspect-square w-[4.9%] rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)]"><span class="block h-full w-full overflow-hidden rounded-full"><img src="<?= asset('img/accueil/bulle-4.jpg') ?>" alt="" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"></span><span class="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 rounded-full bg-white px-3 py-1 text-[13px] font-bold whitespace-nowrap text-vert shadow-md transition-colors group-hover:bg-orange group-hover:text-white">Actualités</span></a>
+    <div class="anim-soleil absolute top-[36.6%] left-[21.5%] aspect-square w-[57%]" aria-hidden="true">
       <div class="absolute inset-0 overflow-hidden rounded-full bg-vert shadow-[0_0_0_8px_rgb(255_255_255/.14)]" data-diapo="accueil" data-diapo-zoom>
         <img data-diapo-image src="<?= asset('img/accueil/premier-ecran.jpg') ?>" alt="" class="absolute inset-0 h-full w-full object-cover object-[62%_30%]" fetchpriority="high">
         <img data-diapo-image src="<?= asset('img/accueil/premier-ecran-2.jpg') ?>" alt="" class="absolute inset-0 h-full w-full object-cover object-[50%_20%]" loading="lazy">
@@ -49,7 +49,7 @@ $points = [
   <div class="conteneur relative z-[2] flex flex-col items-center pt-7 pb-9 text-center sm:pt-10 lg:h-full lg:pt-[5vh] lg:pb-0">
     <div class="anim-entree order-2 flex flex-col items-center lg:order-1">
       <h1 id="titre-accueil" class="mt-7 max-w-4xl text-[2.1rem] leading-[1.05] font-bold text-white [text-shadow:0_4px_28px_rgb(0_0_0/.45)] sm:text-5xl lg:mt-0 lg:text-[clamp(2.75rem,8vh,4.75rem)]">
-        <?= e($p['accroche_accueil'] ?: 'La jeunesse malienne se connecte ici.') ?>
+        <?= e(rtrim($p['accroche_accueil'] ?: 'La jeunesse malienne se connecte ici', '. ')) ?>
       </h1>
       <p class="mt-5 hidden max-w-2xl rounded-2xl border border-white/20 bg-vert/80 px-6 py-3.5 text-base leading-relaxed text-white backdrop-blur-md sm:block lg:mt-[2.5vh] lg:text-[clamp(0.95rem,2.1vh,1.15rem)]">
         <?= e($p['presentation_accueil'] ?: 'Chapitre national de YouthConnekt Africa, YouthConnekt Mali rassemble les jeunes et les organisations qui font avancer le pays : formations, opportunités, rencontres et initiatives pour une jeunesse qui agit.') ?>
@@ -70,11 +70,37 @@ $points = [
       </div>
     </div>
 
-    <div class="anim-flotte absolute bottom-[15%] left-4 z-10 hidden lg:block xl:-left-4"><a href="#chapitre" class="btn btn-contour-blanc min-h-14 px-7 text-lg">Découvrir le chapitre</a></div>
-    <div class="anim-flotte-2 absolute right-4 bottom-[15%] z-10 hidden lg:block xl:-right-4"><a href="#rejoindre" class="btn btn-orange min-h-14 px-8 text-lg shadow-lg shadow-orange/30">Let's Connekt</a></div>
+    <div class="anim-flotte absolute bottom-[15%] left-4 z-10 hidden lg:block xl:-left-4"><a href="#chapitre" class="btn btn-contour-blanc min-h-14 w-[17rem] px-6 text-lg">Découvrir le chapitre</a></div>
+    <div class="anim-flotte-2 absolute right-4 bottom-[15%] z-10 hidden lg:block xl:-right-4"><a href="#rejoindre" class="btn btn-orange min-h-14 w-[17rem] px-6 text-lg shadow-lg shadow-orange/30">Let's Connekt</a></div>
   </div>
   <?php partiel('partials/mention_photo', ['texte' => 'Photos provisoires · Sommet YouthConnekt Africa, hors Mali']) ?>
 </section>
+
+<?php /* 1 bis. Prochain événement, avec compte à rebours (repris automatiquement) */ ?>
+<?php if ($prochain): $cible = date('Y-m-d', strtotime($prochain['date_evenement'])) . 'T08:00:00'; ?>
+<section class="border-b border-ligne bg-white" aria-labelledby="titre-prochain">
+  <div class="conteneur flex flex-col gap-4 py-5 sm:py-6 lg:flex-row lg:items-center lg:gap-8">
+    <div class="flex min-w-0 flex-1 items-center gap-4">
+      <span class="grid size-14 shrink-0 place-items-center rounded-xl bg-orange text-center leading-none text-white sm:size-16" aria-hidden="true">
+        <span><strong class="block text-xl sm:text-2xl"><?= e(jour($prochain['date_evenement'])) ?></strong><span class="text-[11px] font-bold uppercase"><?= e(mois_pastille($prochain['date_evenement'])) ?></span></span>
+      </span>
+      <div class="min-w-0">
+        <p class="text-xs font-bold tracking-[0.14em] text-orange uppercase">Prochain événement</p>
+        <h2 id="titre-prochain" class="mt-1 truncate text-lg leading-tight font-bold text-vert sm:text-xl"><?= e($prochain['titre']) ?></h2>
+        <p class="mt-0.5 text-sm"><?= e(implode(' · ', array_filter([date_longue($prochain['date_evenement']), $prochain['lieu']]))) ?></p>
+      </div>
+    </div>
+    <div class="flex items-center gap-4 sm:gap-6">
+      <dl class="flex gap-2" data-rebours="<?= e($cible) ?>" aria-label="Temps restant avant l'événement">
+        <?php foreach (['jours' => 'Jours', 'heures' => 'Heures', 'minutes' => 'Min'] as $cle => $libelle): ?>
+        <div class="w-16 rounded-xl bg-gris py-2 text-center"><dt class="sr-only"><?= $libelle ?></dt><dd class="text-xl font-bold text-vert tabular-nums sm:text-2xl" data-<?= $cle ?>>0</dd><span class="block text-[11px] font-bold text-texte uppercase" aria-hidden="true"><?= $libelle ?></span></div>
+        <?php endforeach ?>
+      </dl>
+      <a href="<?= e($prochain['url']) ?>" class="btn btn-vert shrink-0">Voir l'événement</a>
+    </div>
+  </div>
+</section>
+<?php endif ?>
 
 <?php /* 2. Le chapitre : présentation, chiffres clés, axes */ ?>
 <section id="chapitre" class="relative scroll-mt-20 overflow-hidden py-16 sm:py-20 lg:py-24" aria-labelledby="titre-chapitre">
@@ -82,7 +108,7 @@ $points = [
   <div class="conteneur relative flex flex-col gap-5 sm:gap-8 lg:grid lg:grid-cols-2 lg:items-center lg:gap-16">
     <div class="contents lg:block">
       <div class="order-1"><p class="surtitre surtitre-trait">Le chapitre</p>
-      <h2 id="titre-chapitre" class="titre-section">Le lieu où la jeunesse malienne se rencontre et avance.</h2></div>
+      <h2 id="titre-chapitre" class="titre-section">Le lieu où la jeunesse malienne se rencontre et avance</h2></div>
       <p class="order-4 text-base leading-relaxed sm:text-lg lg:mt-5">YouthConnekt Mali accompagne les jeunes dans leurs projets, les implique dans la vie citoyenne et met en lumière celles et ceux qui font bouger le pays. Étudiants, jeunes professionnels, entrepreneurs et organisations s'y retrouvent pour apprendre, se rencontrer et agir ensemble.</p>
       <a href="<?= url('/a-propos') ?>" class="btn btn-vert survol-leve order-5 w-full sm:w-auto sm:self-start lg:mt-7">Découvrir le chapitre</a>
 
@@ -119,7 +145,7 @@ $points = [
   <?php if ($axes): ?>
   <div class="conteneur relative mt-14 sm:mt-20 lg:mt-28">
     <p class="surtitre">Nos axes d'action</p>
-    <h2 class="titre-section">Ce que fait le chapitre.</h2>
+    <h2 class="titre-section">Ce que fait le chapitre</h2>
     <ul class="mt-4 grid grid-cols-3 gap-2 sm:mt-8 sm:gap-5">
       <?php foreach ($axes as $k => $axe): ?>
       <li class="carte survol-leve survol-zoom survol-orange relative flex flex-col rounded-[14px] border-[1.5px] sm:rounded-2xl sm:border-2">
@@ -146,7 +172,7 @@ $points = [
     <div class="flex items-end justify-between gap-4">
       <div>
         <p class="surtitre">Sur le terrain</p>
-        <h2 id="titre-initiatives" class="titre-section">Nos initiatives.</h2>
+        <h2 id="titre-initiatives" class="titre-section">Nos initiatives</h2>
       </div>
       <a href="<?= url('/initiatives') ?>" class="btn btn-vert survol-leve hidden sm:inline-flex">Toutes les initiatives</a>
       <a href="<?= url('/initiatives') ?>" class="btn-tout-voir sm:hidden">Tout voir</a>
@@ -162,9 +188,9 @@ $points = [
           </div>
           <div class="absolute inset-0 bg-gradient-to-t from-vert via-vert/55 to-transparent"></div>
           <div class="absolute inset-x-0 bottom-0 p-4 sm:p-6">
-            <?php if ($initiative['axe_nom']): ?><span class="etiquette bg-white text-vert <?= !$premiere ? 'max-lg:bg-transparent max-lg:p-0 max-lg:text-white/90' : '' ?>"><?= e($initiative['axe_nom']) ?></span><?php endif ?>
-            <h3 class="mt-2 text-base leading-tight font-bold text-white sm:text-2xl"><?= e($initiative['titre']) ?></h3>
-            <p class="mt-1.5 hidden text-[15px] text-white/90 sm:block <?= !$premiere ? 'max-lg:hidden' : '' ?>"><?= e($initiative['resume']) ?></p>
+            <span class="etiquette bg-white text-vert <?= !$premiere ? 'max-lg:bg-transparent max-lg:p-0 max-lg:text-white/90' : '' ?> <?= $initiative['axe_nom'] ? '' : 'invisible' ?>"><?= e($initiative['axe_nom'] ?: 'Initiative') ?></span>
+            <h3 class="mt-2 line-clamp-2 text-base leading-tight font-bold text-white sm:text-2xl lg:min-h-[2.5em]"><?= e($initiative['titre']) ?></h3>
+            <p class="mt-1.5 hidden text-[15px] leading-snug text-white/90 sm:line-clamp-3 lg:min-h-[4.125em] <?= !$premiere ? 'max-lg:hidden' : '' ?>"><?= e($initiative['resume']) ?></p>
           </div>
         </a>
       </li>
@@ -215,21 +241,32 @@ $points = [
   </div>
 </section>
 
+<?php /* 4 bis. Bandeau défilant des communautés */ ?>
+<?php if ($communautes): $couleurs_bandeau = ['text-orange', 'text-turquoise', 'text-white', 'text-orange', 'text-turquoise']; ?>
+<div class="bandeau-defilant overflow-hidden bg-vert py-4 sm:py-5" aria-hidden="true">
+  <div class="bandeau-piste flex w-max items-center">
+    <?php for ($tour = 0; $tour < 2; $tour++): foreach ($communautes as $k => $communaute): ?>
+    <span class="flex items-center gap-6 pr-6 text-lg font-bold whitespace-nowrap sm:gap-8 sm:pr-8 sm:text-2xl <?= cycle($couleurs_bandeau, $k) ?>"><?= e($communaute['nom']) ?><span class="size-2 rounded-full bg-white/40"></span></span>
+    <?php endforeach; endfor ?>
+  </div>
+</div>
+<?php endif ?>
+
 <?php /* 5. Communauté */ ?>
 <?php if ($communautes): ?>
-<section id="communaute" class="relative overflow-hidden bg-gris py-16 sm:py-20" aria-labelledby="titre-communaute">
+<section id="communaute" class="relative overflow-hidden bg-gris py-12 sm:py-14" aria-labelledby="titre-communaute">
   <span class="absolute -top-28 -right-40 hidden size-[620px] rounded-full bg-white lg:block" aria-hidden="true"></span>
   <div class="conteneur relative">
     <div class="grid items-center gap-8 lg:grid-cols-2 lg:gap-10">
       <div>
         <p class="surtitre surtitre-trait">Communauté</p>
-        <h2 id="titre-communaute" class="titre-section">Votre communauté, votre réseau, vos opportunités.</h2>
+        <h2 id="titre-communaute" class="titre-section">Votre communauté, votre réseau, vos opportunités</h2>
         <p class="mt-5 max-w-lg text-base leading-relaxed sm:text-lg"><span class="sm:hidden">Retrouvez celles et ceux qui vous ressemblent et les opportunités de votre domaine.</span><span class="hidden sm:inline">Étudiants, entrepreneurs, leaders d'associations, innovateurs : retrouvez celles et ceux qui vous ressemblent, échangez et accédez aux opportunités de votre domaine.</span></p>
         <a href="<?= url('/communaute') ?>" class="btn btn-orange mt-7 hidden min-h-14 px-8 text-lg lg:inline-flex">Découvrir les communautés</a>
       </div>
 
-      <div class="hidden justify-center lg:flex">
-        <div class="relative h-[460px] w-[560px]" role="img" aria-label="Des jeunes aux profils variés, réunis en communautés">
+      <div class="hidden h-[400px] items-center justify-center lg:flex">
+        <div class="relative h-[460px] w-[560px] shrink-0 scale-[.86]" role="img" aria-label="Des jeunes aux profils variés, réunis en communautés">
           <span class="anim-flotte-2 absolute top-[125px] left-[190px] z-10 size-[200px] overflow-hidden rounded-full border-[6px] border-orange bg-white shadow-[0_16px_34px_rgb(3_94_77/.22)]"><img src="<?= asset('img/communaute/cercle-centre.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy"></span>
           <span class="anim-flotte absolute top-[70px] left-[120px] z-[9] size-[130px] overflow-hidden rounded-full border-[5px] border-turquoise bg-white shadow-[0_16px_34px_rgb(3_94_77/.22)]"><img src="<?= asset('img/communaute/cercle-1.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy"></span>
           <span class="anim-flotte-2 absolute top-[70px] left-[330px] z-[8] size-[130px] overflow-hidden rounded-full border-[5px] border-bleu bg-white shadow-[0_16px_34px_rgb(3_94_77/.22)]"><img src="<?= asset('img/communaute/cercle-2.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy"></span>
@@ -248,14 +285,9 @@ $points = [
       </div>
     </div>
 
-    <ul class="mt-10 grid grid-cols-2 gap-3 sm:gap-4 lg:mt-12 lg:grid-cols-4 lg:gap-5">
-      <?php foreach ($communautes as $k => $communaute): ?>
-      <li class="<?= $k >= 4 ? 'lg:hidden' : '' ?>">
-        <a href="<?= e($communaute['url']) ?>" class="survol-leve flex h-full flex-col rounded-2xl border border-ligne bg-white p-4 sm:p-6">
-          <strong class="text-[15px] leading-tight text-vert sm:text-lg"><?= e($communaute['nom']) ?></strong>
-          <span class="mt-2 line-clamp-3 text-xs leading-snug text-encre sm:text-[15px]"><?= e($communaute['public_vise']) ?></span>
-        </a>
-      </li>
+    <ul class="mt-7 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:mt-6 lg:grid-cols-5 lg:gap-3">
+      <?php foreach ($communautes as $communaute): ?>
+      <li><a href="<?= e($communaute['url']) ?>" class="flex h-full min-h-14 items-center rounded-xl border border-ligne bg-white px-3.5 py-2 text-[14px] leading-tight font-bold text-vert transition-colors hover:border-orange hover:bg-orange hover:text-white lg:min-h-[52px] lg:justify-center lg:text-center lg:text-[15px]"><?= e($communaute['nom']) ?></a></li>
       <?php endforeach ?>
     </ul>
     <a href="<?= url('/communaute') ?>" class="btn btn-orange mt-6 w-full lg:hidden">Découvrir les communautés</a>
@@ -270,7 +302,7 @@ $points = [
     <div class="flex items-end justify-between gap-4">
       <div>
         <p class="surtitre">À saisir maintenant</p>
-        <h2 id="titre-opportunites" class="titre-section">Opportunités.</h2>
+        <h2 id="titre-opportunites" class="titre-section">Opportunités</h2>
       </div>
       <a href="<?= url('/opportunites') ?>" class="btn btn-contour survol-leve hidden sm:inline-flex">Toutes les opportunités</a>
       <a href="<?= url('/opportunites') ?>" class="btn-tout-voir sm:hidden">Tout voir</a>
@@ -317,7 +349,7 @@ $points = [
     <div class="flex items-end justify-between gap-4">
       <div>
         <p class="surtitre max-sm:text-white/85">La vie du chapitre</p>
-        <h2 id="titre-actualites" class="titre-section max-sm:text-white">Événements et actualités.</h2>
+        <h2 id="titre-actualites" class="titre-section max-sm:text-white">Événements et actualités</h2>
       </div>
       <a href="<?= url('/actualites') ?>" class="btn btn-contour survol-leve hidden sm:inline-flex">Toutes les actualités</a>
       <a href="<?= url('/actualites') ?>" class="btn-tout-voir bg-white sm:hidden">Tout voir</a>
@@ -366,6 +398,30 @@ $points = [
 </section>
 <?php endif ?>
 
+<?php /* 7 bis. Comment ça marche */ ?>
+<section class="relative overflow-hidden py-16 sm:py-20" aria-labelledby="titre-etapes">
+  <div class="conteneur">
+    <div class="text-center">
+      <p class="surtitre justify-center">Comment ça marche</p>
+      <h2 id="titre-etapes" class="titre-section">Trois étapes pour vous lancer</h2>
+    </div>
+    <ol class="relative mt-10 grid gap-5 sm:mt-12 md:grid-cols-3 md:gap-8">
+      <svg class="pointer-events-none absolute top-9 left-[16%] hidden h-4 w-[68%] md:block" viewBox="0 0 680 16" preserveAspectRatio="none" aria-hidden="true"><path d="M0 8 H680" stroke="#04B2B1" stroke-width="2" stroke-dasharray="6 8" fill="none"/></svg>
+      <?php foreach ([
+          ['Créer mon compte', 'En tant que membre individuel ou organisation. Votre compte fait de vous un membre du chapitre.', 'bg-orange', '/compte/inscription'],
+          ['Intégrer une communauté', 'Choisissez celles qui vous ressemblent et envoyez une courte demande pour les rejoindre.', 'bg-turquoise', '/communaute'],
+          ['Recevoir les opportunités', 'Formations, appels, bourses et événements de vos communautés arrivent dans votre espace.', 'bg-vert', '/opportunites'],
+      ] as $k => [$titre_etape, $texte_etape, $fond_etape, $lien_etape]): ?>
+      <li class="relative rounded-2xl border border-ligne bg-white p-6 text-center shadow-lg shadow-vert/5 sm:p-7">
+        <span class="mx-auto grid size-[72px] place-items-center rounded-full border-[6px] border-white text-2xl font-bold text-white shadow-md <?= $fond_etape ?>"><?= $k + 1 ?></span>
+        <h3 class="mt-4 text-xl font-bold text-vert"><?= $titre_etape ?></h3>
+        <p class="mt-2 text-[15px] leading-relaxed"><?= $texte_etape ?></p>
+      </li>
+      <?php endforeach ?>
+    </ol>
+  </div>
+</section>
+
 <?php /* 8. Let's Connekt */ ?>
 <section id="rejoindre" class="relative isolate scroll-mt-20 overflow-hidden bg-vert py-20 text-center text-white sm:py-28" aria-labelledby="titre-invitation">
   <img src="<?= asset('img/bandeaux/lets-connekt.jpg') ?>" alt="" class="derive absolute -inset-y-12 inset-x-0 -z-10 h-[calc(100%+6rem)] w-full object-cover" loading="lazy">
@@ -375,9 +431,9 @@ $points = [
     <h2 id="titre-invitation" class="text-5xl leading-none font-bold text-white sm:text-7xl lg:text-[8.5rem]">Let's Connekt</h2>
     <p class="mx-auto mt-5 max-w-md text-base text-white/95 sm:text-lg">Jeunes, entreprises et organisations : le chapitre YouthConnekt Mali vous ouvre ses portes.</p>
     <?php if (est_connecte()): ?>
-    <a href="<?= url('/communaute') ?>" class="btn btn-orange survol-grand mt-8 min-h-14 rounded-full px-10 text-lg">Découvrir les communautés</a>
+    <a href="<?= url('/communaute') ?>" class="btn btn-orange survol-grand mt-8 min-h-14 px-10 text-lg">Découvrir les communautés</a>
     <?php else: ?>
-    <a href="<?= url('/compte/inscription') ?>" class="btn btn-orange survol-grand mt-8 min-h-14 rounded-full px-10 text-lg">Rejoindre le chapitre</a>
+    <a href="<?= url('/compte/inscription') ?>" class="btn btn-orange survol-grand mt-8 min-h-14 px-10 text-lg">Rejoindre le chapitre</a>
     <?php endif ?>
   </div>
 </section>
@@ -389,23 +445,19 @@ $points = [
   <div class="conteneur relative grid gap-6 sm:gap-10 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:items-center">
     <div>
       <p class="surtitre">Partenaires</p>
-      <h2 id="titre-partenaires" class="titre-section">Ils accompagnent le chapitre.</h2>
+      <h2 id="titre-partenaires" class="titre-section whitespace-nowrap">Nos partenaires</h2>
       <p class="mt-3 text-[15px] sm:mt-4 sm:text-lg">Ils soutiennent YouthConnekt Mali et organisent avec lui initiatives et événements.</p>
     </div>
-    <ul class="grid grid-cols-3 gap-x-2.5 gap-y-4 sm:gap-x-5 sm:gap-y-6 lg:grid-cols-4">
-      <?php $bords = ['border-vert', 'border-orange', 'border-turquoise', 'border-bleu']; ?>
-      <?php if ($partenaires): foreach ($partenaires as $k => $partenaire): $n = $k + 1; ?>
-      <li class="<?= ($n + 1) % 3 === 0 ? 'mt-[18px] sm:mt-9' : '' ?> <?= $n % 2 === 0 ? 'lg:mt-9' : 'lg:mt-0' ?>">
-        <?php $balise = $partenaire['lien'] ? 'a href="' . e($partenaire['lien']) . '" target="_blank" rel="noopener"' : 'div'; ?>
-        <<?= $balise ?> class="survol-leve flex h-[72px] items-center justify-center rounded-[14px] border-2 bg-white p-2 shadow-lg shadow-vert/10 sm:h-[110px] sm:rounded-[20px] sm:p-3 <?= cycle($bords, $k) ?>">
-          <?php if ($partenaire['logo']): ?><img src="<?= e(media($partenaire['logo'])) ?>" alt="<?= e($partenaire['nom']) ?>" class="max-h-full max-w-full object-contain" loading="lazy"><?php else: ?><span class="text-center text-[11px] leading-tight font-bold text-vert sm:text-[15px]"><?= e($partenaire['nom']) ?></span><?php endif ?>
+    <?php $bords = ['border-vert', 'border-orange', 'border-turquoise', 'border-bleu'];
+      $liste_partenaires = $partenaires ?: array_map(fn ($nom) => ['nom' => $nom, 'logo' => '', 'lien' => ''], $partenaires_maquette); ?>
+    <ul class="flex flex-wrap justify-center gap-3 sm:gap-5 lg:justify-start">
+      <?php foreach ($liste_partenaires as $k => $partenaire): $balise = $partenaire['lien'] ? 'a href="' . e($partenaire['lien']) . '" target="_blank" rel="noopener"' : 'div'; ?>
+      <li class="w-[calc(50%-0.375rem)] sm:w-52 lg:w-56">
+        <<?= $balise ?> class="survol-leve flex h-[88px] items-center justify-center rounded-[14px] border-2 bg-white p-3 text-center shadow-lg shadow-vert/10 sm:h-[110px] sm:rounded-[20px] <?= cycle($bords, $k) ?>">
+          <?php if ($partenaire['logo']): ?><img src="<?= e(media($partenaire['logo'])) ?>" alt="<?= e($partenaire['nom']) ?>" class="max-h-full max-w-full object-contain" loading="lazy"><?php else: ?><span class="text-[13px] leading-tight font-bold text-vert sm:text-[15px]"><?= e($partenaire['nom']) ?></span><?php endif ?>
         </<?= $partenaire['lien'] ? 'a' : 'div' ?>>
       </li>
-      <?php endforeach; else: foreach ($partenaires_maquette as $k => $nom): $n = $k + 1; ?>
-      <li class="<?= ($n + 1) % 3 === 0 ? 'mt-[18px] sm:mt-9' : '' ?> <?= $n % 2 === 0 ? 'lg:mt-9' : 'lg:mt-0' ?>">
-        <div class="survol-leve flex h-[72px] items-center justify-center rounded-[14px] border-2 bg-white p-2 text-center shadow-lg shadow-vert/10 sm:h-[110px] sm:rounded-[20px] sm:p-3 <?= cycle($bords, $k) ?> text-[11px] leading-tight font-bold text-vert sm:text-[15px]<?= $k === 0 ? ' text-sm sm:text-lg' : '' ?>"><?= e($nom) ?></div>
-      </li>
-      <?php endforeach; endif ?>
+      <?php endforeach ?>
     </ul>
     
   </div>
@@ -420,7 +472,7 @@ $points = [
     <div class="grid overflow-hidden rounded-3xl shadow-2xl shadow-vert/10 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
       <div class="relative bg-vert px-5 py-6 text-white sm:p-10">
         <p class="text-xs font-medium tracking-[0.16em] text-white/80 uppercase">Contact</p>
-        <h2 id="titre-contact" class="mt-2 text-2xl leading-tight font-bold text-white sm:mt-3 sm:text-4xl">Une question ?<br>Écrivez-nous.</h2>
+        <h2 id="titre-contact" class="mt-2 text-2xl leading-tight font-bold text-white sm:mt-3 sm:text-4xl">Une question ?<br>Écrivez-nous</h2>
         <a href="<?= url('/contact') ?>" class="btn btn-blanc survol-leve mt-5 sm:mt-7">Nous contacter</a>
         <svg class="pointer-events-none absolute right-0 bottom-0 hidden h-40 w-48 md:block" viewBox="0 0 200 160" aria-hidden="true">
           <g stroke="rgb(255 255 255 / .35)" stroke-width="1.2" fill="none"><path d="M20 150 L95 55 L170 15"/><path d="M95 55 L200 115"/></g>
@@ -428,7 +480,7 @@ $points = [
         </svg>
       </div>
       <div class="flex flex-col justify-center border-[1.5px] border-t-0 border-ligne bg-white p-5 sm:border-0 sm:p-10">
-        <ul class="grid gap-2.5 text-sm text-encre sm:grid-cols-2 sm:gap-4 sm:text-[15px]">
+        <ul class="grid gap-3 text-sm text-encre sm:gap-4 sm:text-[15px]">
           <?php if ($p['email_contact']): ?>
           <li class="flex items-center gap-3">
             <span class="grid size-9 shrink-0 place-items-center rounded-full bg-gris text-vert sm:size-10" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>
@@ -441,10 +493,16 @@ $points = [
             <a href="tel:<?= e(str_replace(' ', '', $p['telephone'])) ?>" class="hover:text-orange"><?= e($p['telephone']) ?></a>
           </li>
           <?php endif ?>
-          <li class="flex items-center gap-3 sm:col-span-2">
+          <li class="flex items-center gap-3">
             <span class="grid size-9 shrink-0 place-items-center rounded-full bg-gris text-vert sm:size-10" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span>
             <?= e($p['adresse'] ?: 'Bamako, Mali') ?>
           </li>
+          <?php if ($p['horaires']): ?>
+          <li class="flex items-center gap-3">
+            <span class="grid size-9 shrink-0 place-items-center rounded-full bg-gris text-vert sm:size-10" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+            <?= e($p['horaires']) ?>
+          </li>
+          <?php endif ?>
         </ul>
         <?php if (reseaux_sociaux()): ?>
         <p class="mt-6 text-xs font-bold tracking-[0.14em] text-vert uppercase sm:mt-7">Suivez le chapitre</p>

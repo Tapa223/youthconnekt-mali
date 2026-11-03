@@ -3,7 +3,7 @@
   <div class="flex flex-wrap items-end justify-between gap-5">
     <div>
       <p class="surtitre surtitre-trait">La vie du chapitre</p>
-      <h1 class="mt-3 text-5xl leading-none font-bold sm:text-7xl">Actualités.</h1>
+      <h1 class="mt-3 text-5xl leading-none font-bold sm:text-7xl">Actualités</h1>
     </div>
     <nav class="flex gap-2" aria-label="Filtrer">
       <?php foreach ($filtres as $valeur => $libelle): $actif = $filtre === $valeur; ?>
@@ -51,7 +51,7 @@
 <section class="mt-12 bg-gris py-14 sm:py-16" aria-labelledby="titre-evenements">
   <div class="conteneur">
     <p class="surtitre surtitre-trait">À venir et passés</p>
-    <h2 id="titre-evenements" class="titre-section">Événements.</h2>
+    <h2 id="titre-evenements" class="titre-section">Événements</h2>
     <?php if ($evenements): ?>
     <ul class="mt-7 grid gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
       <?php foreach ($evenements as $a): ?><li><?php partiel('cartes/actualite', ['a' => $a, 'mode' => 'evenement']) ?></li><?php endforeach ?>
@@ -64,7 +64,7 @@
 <?php if ($liste !== null): ?>
 <section class="conteneur py-14 sm:py-16" aria-labelledby="titre-actus">
   <p class="surtitre surtitre-trait">La vie du chapitre</p>
-  <h2 id="titre-actus" class="titre-section">Actualités.</h2>
+  <h2 id="titre-actus" class="titre-section">Actualités</h2>
   <?php if ($liste): ?>
   <ul class="mt-7 grid gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
     <?php foreach ($liste as $a): ?><li><?php partiel('cartes/actualite', ['a' => $a, 'mode' => 'actualite']) ?></li><?php endforeach ?>

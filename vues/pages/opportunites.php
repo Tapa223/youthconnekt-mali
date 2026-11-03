@@ -2,7 +2,7 @@
   <?php partiel('partials/reseau_deco') ?>
   <div class="conteneur anim-entree relative py-12 sm:py-16">
     <p class="surtitre surtitre-trait text-white/85">À saisir maintenant</p>
-    <h1 class="mt-3 text-5xl leading-none font-bold text-white sm:text-7xl">Opportunités.</h1>
+    <h1 class="mt-3 text-5xl leading-none font-bold text-white sm:text-7xl">Opportunités</h1>
     <p class="mt-5 hidden max-w-lg text-base text-white/90 sm:block sm:text-lg">Formations, appels à candidatures, bourses, stages et événements relayés par le chapitre.</p>
 
     <form method="get" action="<?= url('/opportunites') ?>" class="mt-7 flex max-w-2xl flex-col gap-3 sm:flex-row" role="search">
@@ -46,7 +46,7 @@
 
 <section class="conteneur grid gap-5 py-14 sm:py-16 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
   <div class="relative overflow-hidden rounded-3xl bg-orange p-6 text-white sm:p-8">
-    <h2 class="text-2xl font-bold text-white">Ne ratez plus une opportunité.</h2>
+    <h2 class="text-2xl font-bold text-white">Ne ratez plus une opportunité</h2>
     <p class="mt-1 text-white/90">Recevez les nouvelles opportunités par e-mail.</p>
     <form action="<?= url('/newsletter') ?>" method="post" class="mt-5 grid gap-3" novalidate>
       <?= csrf() ?>

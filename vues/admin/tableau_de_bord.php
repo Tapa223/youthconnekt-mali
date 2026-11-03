@@ -1,6 +1,6 @@
 <div class="ycm-entete-page">
   <div>
-    <h1>Bonjour<?= $prenom ? ', ' . e($prenom) : '' ?>.</h1>
+    <h1>Bonjour<?= $prenom ? ', ' . e($prenom) : '' ?></h1>
     <p class="ycm-sous-titre">Voici ce qui se passe sur YouthConnekt Mali aujourd'hui.</p>
   </div>
   <?php if ($actions): ?><a href="<?= e($actions[0]['url']) ?>" class="ycm-bouton-orange"><?= e($actions[0]['libelle']) ?></a><?php endif ?>

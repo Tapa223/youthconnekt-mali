@@ -6,7 +6,7 @@
       <?php partiel('partials/reseau_deco', ['opacite' => 'opacity-50']) ?>
       <div class="relative">
         <p class="surtitre surtitre-trait text-white/85">Contact</p>
-        <h1 class="mt-3 text-4xl font-bold text-white sm:text-5xl">Parlons-en.</h1>
+        <h1 class="mt-3 text-4xl font-bold text-white sm:text-5xl">Parlons-en</h1>
         <p class="mt-4 text-base text-white/90">Une question, un projet, un partenariat ? L'équipe du chapitre vous répond.</p>
         <ul class="mt-8 space-y-4">
           <?php if ($p['email_contact']): ?>

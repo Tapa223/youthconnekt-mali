@@ -70,7 +70,7 @@ $chiffres_i = lignes_colonnes($i['chiffres'], 2);
 
 <?php if ($programme): ?>
 <section class="conteneur py-14 sm:py-16" aria-labelledby="titre-programme">
-  <h2 id="titre-programme" class="titre-section">Le programme.</h2>
+  <h2 id="titre-programme" class="titre-section">Le programme</h2>
   <ol class="mt-8 grid gap-6 md:grid-cols-3 md:gap-8">
     <?php foreach ($programme as $k => [$etiquette, $t, $texte]): ?>
     <li class="relative grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 md:block">
@@ -89,7 +89,7 @@ $chiffres_i = lignes_colonnes($i['chiffres'], 2);
 
 <?php if ($photos): $n = count($photos); ?>
 <section class="conteneur pb-14 sm:pb-16 <?= !$programme ? 'pt-14' : '' ?>" aria-labelledby="titre-images">
-  <h2 id="titre-images" class="titre-section">En images.</h2>
+  <h2 id="titre-images" class="titre-section">En images</h2>
   <ul class="mt-6 grid auto-rows-[110px] grid-cols-3 gap-2 sm:auto-rows-[180px] sm:gap-3 md:auto-rows-[240px] md:grid-cols-4">
     <?php foreach (array_slice($photos, 0, 5) as $k => $photo):
         $classe = $n === 1 ? 'col-span-3 row-span-2 md:col-span-4' : ($k === 0 ? 'row-span-2 md:col-span-2' : ($n === 2 ? 'col-span-2 row-span-2' : '')); ?>
@@ -105,7 +105,7 @@ $chiffres_i = lignes_colonnes($i['chiffres'], 2);
 <section class="bg-gris py-14 sm:py-16" aria-labelledby="titre-autres">
   <div class="conteneur">
     <div class="flex items-end justify-between gap-4">
-      <h2 id="titre-autres" class="titre-section">Autres initiatives.</h2>
+      <h2 id="titre-autres" class="titre-section">Autres initiatives</h2>
       <a href="<?= url('/initiatives') ?>" class="btn btn-contour hidden sm:inline-flex">Toutes les initiatives</a>
       <a href="<?= url('/initiatives') ?>" class="btn-tout-voir sm:hidden">Tout voir</a>
     </div>

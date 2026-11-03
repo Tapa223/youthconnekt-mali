@@ -6,8 +6,8 @@
   <div class="relative border-b border-white/15">
     <div id="newsletter" class="conteneur sans-apparition grid scroll-mt-24 gap-4 py-8 sm:gap-5 sm:py-9 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] md:items-center md:gap-10 lg:py-10">
       <div>
-        <p class="text-xl font-bold text-white sm:text-2xl">Restez connecté au chapitre.</p>
-        <p class="mt-1 text-sm text-white/80 sm:text-base">Les opportunités, les initiatives et les événements de YouthConnekt Mali, directement par e-mail.</p>
+        <p class="text-xl font-bold text-white sm:text-2xl">Abonnez-vous à la newsletter</p>
+        <p class="mt-1 text-sm text-white/80 sm:text-base">Opportunités, initiatives et événements de YouthConnekt Mali, directement par e-mail.</p>
       </div>
       <form action="<?= url('/newsletter') ?>" method="post" class="flex flex-col gap-2.5 sm:flex-row" novalidate>
         <?= csrf() ?>

@@ -7,6 +7,13 @@ SET NAMES utf8mb4;
 
 -- Fiches uniques
 INSERT IGNORE INTO parametres (id) VALUES (1);
+-- Coordonnées provisoires du chapitre, à confirmer et modifier dans Administration > Paramètres
+UPDATE parametres SET
+  email_contact = IF(email_contact = '', 'contact@youthconnektmali.org', email_contact),
+  telephone = IF(telephone = '', '+223 00 00 00 00', telephone),
+  adresse = IF(adresse = '', 'Bamako, Mali', adresse),
+  horaires = IF(horaires = '', 'Du lundi au vendredi, de 8 h à 17 h', horaires)
+WHERE id = 1;
 INSERT IGNORE INTO mot_ministre (id, nom, titre_officiel) VALUES
   (1, 'M. Abdoul Kassim Ibrahim Fomba', 'Ministre de la Jeunesse et des Sports, chargé de l''Instruction civique et de la Construction citoyenne');
 

@@ -8,7 +8,7 @@ $rotations = ['md:z-[1] md:translate-x-[30px] md:translate-y-10 md:-rotate-[4deg
   <?php partiel('partials/reseau_deco') ?>
   <div class="conteneur relative">
     <p class="surtitre text-white/85 sm:flex sm:justify-center">Témoignages</p>
-    <h2 id="titre-temoignages" class="titre-section text-white sm:text-center">Ils en parlent mieux que nous.</h2>
+    <h2 id="titre-temoignages" class="titre-section text-white sm:text-center">Ils en parlent mieux que nous</h2>
     <ul class="mt-4 grid md:mt-14 md:grid-cols-3 md:gap-0 md:px-5">
       <?php foreach (array_values($temoignages) as $i => $t): ?>
       <li class="relative <?= cycle($rotations_tel, $i) ?> <?= cycle($rotations, $i) ?>">

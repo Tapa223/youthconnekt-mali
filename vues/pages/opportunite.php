@@ -56,7 +56,7 @@ $etapes = lignes_texte($o['etapes']);
 <section class="bg-gris py-14 sm:py-16" aria-labelledby="titre-similaires">
   <div class="conteneur">
     <div class="flex items-end justify-between gap-4">
-      <h2 id="titre-similaires" class="titre-section">Vous aimerez aussi.</h2>
+      <h2 id="titre-similaires" class="titre-section">Vous aimerez aussi</h2>
       <a href="<?= url('/opportunites') ?>" class="btn btn-contour hidden sm:inline-flex">Toutes les opportunités</a>
       <a href="<?= url('/opportunites') ?>" class="btn-tout-voir sm:hidden">Tout voir</a>
     </div>

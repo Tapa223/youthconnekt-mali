@@ -5,7 +5,7 @@
   </svg>
   <div class="conteneur anim-entree relative py-14 sm:py-16">
     <p class="surtitre surtitre-trait">Sur le terrain</p>
-    <h1 class="mt-3 text-5xl leading-none font-bold sm:text-7xl">Nos initiatives.</h1>
+    <h1 class="mt-3 text-5xl leading-none font-bold sm:text-7xl">Nos initiatives</h1>
     <p class="mt-5 max-w-xl text-base sm:text-lg">Formations, rencontres, prix : ce que le chapitre organise avec et pour les jeunes, partout au Mali.</p>
     <nav class="mt-7 flex flex-wrap gap-2" aria-label="Filtrer par axe d'action">
       <a href="<?= url('/initiatives') ?>" class="survol-orange inline-flex min-h-10 items-center rounded-full border-2 px-4 text-sm font-bold transition-colors <?= !$axe_actif ? 'border-orange bg-orange text-white' : 'border-vert bg-white text-vert hover:bg-vert-clair' ?>" <?= !$axe_actif ? 'aria-current="true"' : '' ?>>Toutes</a>

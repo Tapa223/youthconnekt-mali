@@ -269,3 +269,19 @@ a.text-orange:not(.btn):not([class*="hover:bg-"]):hover { color: var(--color-ver
   scrollbar-width: none;
   &::-webkit-scrollbar { display: none; }
 }
+
+/* Bandeau défilant des communautés (accueil) */
+@keyframes yc-defile { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.bandeau-piste { animation: yc-defile 40s linear infinite; }
+.bandeau-defilant:hover .bandeau-piste { animation-play-state: paused; }
+
+/* Bulle d'aide */
+.aide[data-ouvert] .aide-icone { display: none; }
+.aide[data-ouvert] .aide-croix { display: block; }
+.aide[data-ouvert] .aide-bouton { background: var(--color-vert); box-shadow: none; }
+@keyframes yc-aide { from { opacity: 0; transform: translateY(10px) scale(.97); } to { opacity: 1; transform: none; } }
+.aide-panneau:not([hidden]) { animation: yc-aide .18s ease-out; transform-origin: bottom right; }
+
+@media (prefers-reduced-motion: reduce) {
+  .bandeau-piste { animation: none; }
+}

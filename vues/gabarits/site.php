@@ -45,6 +45,8 @@ $messages = flashs();
 
   <?php partiel('partials/pied') ?>
 
+  <?php partiel('partials/aide') ?>
+
   <script src="<?= asset('js/site.js') ?>" defer></script>
 </body>
 </html>

@@ -36,8 +36,8 @@ $navigation = [
           <?= est_membre($u) ? 'Mon espace' : 'Administration' ?>
         </a>
       <?php else: ?>
-        <a href="<?= url('/compte/connexion') ?>" class="btn btn-contour">Se connecter</a>
-        <a href="<?= url('/compte/inscription') ?>" class="btn btn-vert">S'inscrire</a>
+        <a href="<?= url('/compte/connexion') ?>" class="btn btn-contour w-36 px-3">Se connecter</a>
+        <a href="<?= url('/compte/inscription') ?>" class="btn btn-vert w-36 px-3">S'inscrire</a>
       <?php endif ?>
     </div>
 

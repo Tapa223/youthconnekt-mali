@@ -300,3 +300,33 @@ document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
     });
   });
 })();
+
+/* Compte à rebours du prochain événement (accueil) et bulle d'aide. */
+(function () {
+  "use strict";
+  document.querySelectorAll("[data-rebours]").forEach(function (bloc) {
+    var cible = new Date(bloc.getAttribute("data-rebours")).getTime();
+    var j = bloc.querySelector("[data-jours]"), h = bloc.querySelector("[data-heures]"), m = bloc.querySelector("[data-minutes]");
+    function maj() {
+      var reste = Math.max(0, cible - Date.now());
+      j.textContent = Math.floor(reste / 86400000);
+      h.textContent = Math.floor(reste % 86400000 / 3600000);
+      m.textContent = Math.floor(reste % 3600000 / 60000);
+    }
+    maj();
+    setInterval(maj, 30000);
+  });
+
+  var aide = document.querySelector("[data-aide]");
+  if (!aide) return;
+  var bouton = aide.querySelector("[data-ouvrir-aide]");
+  var panneau = aide.querySelector(".aide-panneau");
+  function basculer(ouvrir) {
+    panneau.hidden = !ouvrir;
+    bouton.setAttribute("aria-expanded", ouvrir ? "true" : "false");
+    if (ouvrir) aide.setAttribute("data-ouvert", ""); else aide.removeAttribute("data-ouvert");
+  }
+  bouton.addEventListener("click", function () { basculer(panneau.hidden); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !panneau.hidden) { basculer(false); bouton.focus(); } });
+  document.addEventListener("click", function (e) { if (!panneau.hidden && !aide.contains(e.target)) basculer(false); });
+})();

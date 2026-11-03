@@ -4,7 +4,7 @@
   <div class="conteneur relative grid items-center gap-10 py-12 sm:py-16 lg:grid-cols-2">
     <div class="anim-entree">
       <p class="surtitre surtitre-trait text-white/85">À propos</p>
-      <h1 class="mt-3 text-4xl leading-[1.05] font-bold text-white sm:text-6xl">Un chapitre, une jeunesse, un même élan.</h1>
+      <h1 class="mt-3 text-4xl leading-[1.05] font-bold text-white sm:text-6xl">Un chapitre, une jeunesse, un même élan</h1>
       <p class="mt-5 max-w-lg text-base text-white/90 sm:text-lg">YouthConnekt Mali est le chapitre national de YouthConnekt Africa. Il relie les jeunes du pays aux opportunités, aux décideurs et entre eux.</p>
       <nav class="mt-6 flex flex-wrap gap-2" aria-label="Sur cette page">
         <?php foreach (['pourquoi' => 'Pourquoi nous', 'qui-sommes-nous' => 'Qui sommes-nous', 'mission' => 'Mission et valeurs', 'axes' => 'Nos axes', 'parcours' => 'Notre parcours'] as $ancre => $libelle): ?>
@@ -28,7 +28,7 @@
 <section id="pourquoi" class="conteneur grid scroll-mt-24 gap-10 py-16 sm:py-20 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-14">
   <div>
     <p class="surtitre surtitre-trait">Pourquoi YouthConnekt Mali</p>
-    <h2 class="titre-section">Une jeunesse pleine d'énergie, qui mérite d'être connectée.</h2>
+    <h2 class="titre-section">Une jeunesse pleine d'énergie, qui mérite d'être connectée</h2>
     <p class="mt-5 text-base leading-relaxed sm:text-lg">Le Mali est l'un des pays les plus jeunes du monde. Chaque année, des milliers de jeunes arrivent sur le marché du travail avec des idées, du talent et de l'ambition. Trois obstacles reviennent souvent :</p>
   </div>
   <div>
@@ -48,7 +48,7 @@
   <div class="grid items-center gap-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-14">
     <div>
       <p class="surtitre surtitre-trait">Qui sommes-nous</p>
-      <h2 class="titre-section">Une plateforme nationale au service de la jeunesse malienne.</h2>
+      <h2 class="titre-section">Une plateforme nationale au service de la jeunesse malienne</h2>
       <div class="mt-5 space-y-4 text-base leading-relaxed sm:text-[17px]">
         <p>YouthConnekt Mali rassemble les jeunes, les étudiants, les entrepreneurs et les organisations qui veulent faire avancer le pays. Le chapitre relaie des opportunités, organise des rencontres et met en valeur les initiatives des jeunes, partout au Mali.</p>
         <p>Notre conviction est simple : les jeunes Maliens ont des idées, de l'énergie et du talent, mais l'information et les réseaux leur manquent souvent. Le chapitre est là pour combler ce manque, en mettant au même endroit les jeunes, les organisations qui les accompagnent et les institutions qui décident.</p>
@@ -78,7 +78,7 @@
 
 <section id="mission" class="conteneur scroll-mt-24 pb-16 sm:pb-20">
   <p class="surtitre surtitre-trait">Mission et valeurs</p>
-  <h2 class="titre-section">Ce qui nous guide.</h2>
+  <h2 class="titre-section">Ce qui nous guide</h2>
   <div class="mt-8 grid gap-4 md:grid-cols-3 md:items-start md:gap-5">
     <div class="survol-leve rounded-2xl bg-vert p-7 text-white">
       <span class="grid size-11 place-items-center rounded-full bg-orange" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></span>
@@ -102,7 +102,7 @@
   <?php partiel('partials/reseau_deco') ?>
   <div class="conteneur relative">
     <p class="surtitre surtitre-trait text-white/85">Notre approche</p>
-    <h2 class="titre-section text-white">Comment nous travaillons.</h2>
+    <h2 class="titre-section text-white">Comment nous travaillons</h2>
     <ol class="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
       <?php foreach ($approche as $k => [$t, $texte]): ?>
       <li>
@@ -150,7 +150,7 @@
 
 <section id="parcours" class="conteneur scroll-mt-24 py-16 sm:py-20">
   <p class="surtitre surtitre-trait">Notre parcours</p>
-  <h2 class="titre-section">De la naissance du chapitre à aujourd'hui.</h2>
+  <h2 class="titre-section">De la naissance du chapitre à aujourd'hui</h2>
   <ol class="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
     <?php foreach ($parcours as $k => [$annee, $t, $texte]): ?>
     <li>
