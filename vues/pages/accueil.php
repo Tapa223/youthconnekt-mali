@@ -414,28 +414,33 @@ $points = [
           <circle cx="20" cy="150" r="6" fill="#F1592A"/><circle cx="95" cy="55" r="8" fill="#04B2B1"/><circle cx="170" cy="15" r="6" fill="#F1592A"/>
         </svg>
       </div>
-      <div class="flex flex-col justify-center border-[1.5px] border-t-0 border-ligne bg-white p-4 sm:border-0 sm:p-8 lg:p-10">
-        <?php
-        $cartes_contact = array_filter([
-            $p['email_contact'] ? ['Écrire un e-mail', $p['email_contact'], 'mailto:' . $p['email_contact'], 'mail', 'bg-orange'] : null,
-            $p['telephone'] ? ['Appeler', $p['telephone'], 'tel:' . str_replace(' ', '', $p['telephone']), 'tel', 'bg-turquoise'] : null,
-            ['Nous trouver', $p['adresse'] ?: 'Bamako, Mali', url('/contact'), 'lieu', 'bg-vert'],
-            $p['horaires'] ? ['Horaires', $p['horaires'], url('/contact'), 'heure', 'bg-bleu'] : null,
-        ]);
-        $icones_contact = ['mail' => '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>', 'tel' => '<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>', 'lieu' => '<path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/>', 'heure' => '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'];
-        ?>
-        <ul class="grid gap-3 sm:grid-cols-2 sm:gap-4">
-          <?php foreach ($cartes_contact as [$titre_carte, $valeur_carte, $lien_carte, $icone_carte, $fond_carte]): ?>
-          <li>
-            <a href="<?= e($lien_carte) ?>" class="survol-leve group flex h-full items-center gap-3.5 rounded-2xl border border-ligne bg-white p-4 transition-colors hover:border-orange sm:flex-col sm:items-start sm:gap-3 sm:p-5">
-              <span class="grid size-11 shrink-0 place-items-center rounded-xl text-white <?= $fond_carte ?>" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><?= $icones_contact[$icone_carte] ?></svg></span>
-              <span class="min-w-0"><strong class="block text-[15px] text-vert group-hover:text-orange"><?= e($titre_carte) ?></strong><span class="mt-0.5 block text-sm break-words text-encre"><?= e($valeur_carte) ?></span></span>
-            </a>
+      <div class="flex flex-col justify-center border-[1.5px] border-t-0 border-ligne bg-white p-5 sm:border-0 sm:p-10">
+        <ul class="grid gap-3 text-sm text-encre sm:gap-4 sm:text-[15px]">
+          <?php if ($p['email_contact']): ?>
+          <li class="flex items-center gap-3">
+            <span class="grid size-9 shrink-0 place-items-center rounded-full bg-gris text-vert sm:size-10" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>
+            <a href="mailto:<?= e($p['email_contact']) ?>" class="break-all hover:text-orange"><?= e($p['email_contact']) ?></a>
           </li>
-          <?php endforeach ?>
+          <?php endif ?>
+          <?php if ($p['telephone']): ?>
+          <li class="flex items-center gap-3">
+            <span class="grid size-9 shrink-0 place-items-center rounded-full bg-gris text-vert sm:size-10" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></span>
+            <a href="tel:<?= e(str_replace(' ', '', $p['telephone'])) ?>" class="hover:text-orange"><?= e($p['telephone']) ?></a>
+          </li>
+          <?php endif ?>
+          <li class="flex items-center gap-3">
+            <span class="grid size-9 shrink-0 place-items-center rounded-full bg-gris text-vert sm:size-10" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span>
+            <?= e($p['adresse'] ?: 'Bamako, Mali') ?>
+          </li>
+          <?php if ($p['horaires']): ?>
+          <li class="flex items-center gap-3">
+            <span class="grid size-9 shrink-0 place-items-center rounded-full bg-gris text-vert sm:size-10" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+            <?= e($p['horaires']) ?>
+          </li>
+          <?php endif ?>
         </ul>
         <?php if (reseaux_sociaux()): ?>
-        <p class="mt-6 text-xs font-bold tracking-[0.14em] text-vert uppercase">Suivez le chapitre</p>
+        <p class="mt-6 text-xs font-bold tracking-[0.14em] text-vert uppercase sm:mt-7">Suivez le chapitre</p>
         <?php partiel('partials/reseaux') ?>
         <?php endif ?>
       </div>
