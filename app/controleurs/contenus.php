@@ -15,17 +15,30 @@ function initiatives(): void
     $filtre = $axe_actif ? 'AND a.slug = ?' : '';
     $params = $axe_actif ? [$axe_actif] : [];
 
+    // L'initiative à la une (page 1) n'est pas répétée dans la liste en dessous
+    $une = initiatives_publiees("$filtre ORDER BY i.mis_en_avant DESC, i.publie_le DESC LIMIT 1", $params)[0] ?? null;
+    if ($une) {
+        $filtre .= ' AND i.id <> ?';
+        $params[] = (int) $une['id'];
+    }
     $total = (int) valeur("SELECT COUNT(*) FROM initiatives i LEFT JOIN axes a ON a.id = i.axe_id WHERE i.statut = 'publie' AND i.publie_le <= NOW() $filtre", $params);
     $pagination = paginer($total, 9);
     $liste = initiatives_publiees("$filtre ORDER BY i.publie_le DESC LIMIT {$pagination['par_page']} OFFSET {$pagination['decalage']}", $params);
-    $une = initiatives_publiees("$filtre ORDER BY i.mis_en_avant DESC, i.publie_le DESC LIMIT 1", $params)[0] ?? null;
+
+    // Nombre d'initiatives publiées par axe, affiché sur les filtres
+    $nombres = ['' => 0];
+    foreach (lignes("SELECT a.slug, COUNT(*) AS n FROM initiatives i LEFT JOIN axes a ON a.id = i.axe_id WHERE i.statut = 'publie' AND i.publie_le <= NOW() GROUP BY a.slug") as $l) {
+        $nombres[(string) $l['slug']] = (int) $l['n'];
+        $nombres[''] += (int) $l['n'];
+    }
 
     afficher(vue('pages/initiatives', [
         'titre' => 'Initiatives | YouthConnekt Mali',
         'description' => 'Formations, rencontres, prix : ce que le chapitre YouthConnekt Mali organise avec et pour les jeunes.',
         'axes' => $axes,
         'axe_actif' => $axe_actif,
-        'une' => $pagination['page'] === 1 ? $une : null,
+        'une' => $une,
+        'nombres' => $nombres,
         'liste' => $liste,
         'pagination' => $pagination,
     ]));
