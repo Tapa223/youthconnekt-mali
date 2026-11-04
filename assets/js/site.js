@@ -115,12 +115,43 @@
   });
 })();
 
-/* Confirmation avant une action sensible (quitter une communauté, supprimer son compte) */
-document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
-  form.addEventListener("submit", function (e) {
-    if (!window.confirm(form.getAttribute("data-confirmer"))) e.preventDefault();
+/* Confirmation avant chaque action sensible (se déconnecter, quitter une communauté, rendre son profil visible…) :
+   une petite fenêtre aux couleurs du site. Attributs : data-confirmer (question), data-confirmer-oui (bouton),
+   data-confirmer-texte (précision facultative). Sans fenêtre possible, on retombe sur la confirmation du navigateur. */
+(function () {
+  "use strict";
+  var boite = null;
+  function fenetre() {
+    if (boite) return boite;
+    boite = document.createElement("dialog");
+    boite.className = "dialogue confirmation m-auto w-[min(26rem,calc(100vw-2rem))] rounded-3xl border-0 bg-white p-0 shadow-2xl";
+    boite.innerHTML = '<div class="p-6"><p class="text-lg leading-snug font-bold text-vert" data-question></p><p class="mt-2 hidden text-sm" data-precision></p>'
+      + '<div class="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end"><button type="button" class="btn btn-contour min-h-11" data-non>Annuler</button>'
+      + '<button type="button" class="btn btn-orange min-h-11" data-oui>Confirmer</button></div></div>';
+    document.body.appendChild(boite);
+    boite.addEventListener("click", function (e) { if (e.target === boite) boite.close(); });
+    boite.querySelector("[data-non]").addEventListener("click", function () { boite.close(); });
+    return boite;
+  }
+  document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
+    form.addEventListener("submit", function (e) {
+      if (form.dataset.confirme === "1") return;
+      e.preventDefault();
+      var question = form.getAttribute("data-confirmer");
+      if (!window.HTMLDialogElement) { if (window.confirm(question)) { form.dataset.confirme = "1"; form.submit(); } return; }
+      var b = fenetre();
+      b.querySelector("[data-question]").textContent = question;
+      var precision = b.querySelector("[data-precision]");
+      precision.textContent = form.getAttribute("data-confirmer-texte") || "";
+      precision.classList.toggle("hidden", !precision.textContent);
+      var oui = b.querySelector("[data-oui]");
+      oui.textContent = form.getAttribute("data-confirmer-oui") || "Confirmer";
+      oui.onclick = function () { form.dataset.confirme = "1"; b.close(); form.submit(); };
+      b.showModal();
+      oui.focus();
+    });
   });
-});
+})();
 
 /* ------------------------------------------------------------------------
    Animations de la maquette : diaporamas et compteurs
@@ -511,7 +542,11 @@ document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
       fetch(form.action, { method: "POST", body: new FormData(form), headers: { "X-Requested-With": "fetch" }, credentials: "same-origin" })
         .then(function (r) { return r.json(); })
         .then(function (d) {
-          if (d.ok) { form.reset(); form.classList.add("hidden"); merci.classList.remove("hidden"); }
+          if (d.ok) {
+            form.reset(); form.classList.add("hidden"); merci.classList.remove("hidden");
+            // Espace membre : la liste « Mes propositions » se met à jour quand on ferme la fenêtre
+            if (document.querySelector("[data-recharger-apres-envoi]")) boite.addEventListener("close", function () { location.reload(); }, { once: true });
+          }
           else { erreur.textContent = Object.keys(d.erreurs || {}).map(function (k) { return d.erreurs[k]; }).join(" "); erreur.classList.remove("hidden"); erreur.scrollIntoView({ block: "nearest" }); }
         })
         .catch(function () { erreur.textContent = "L'envoi n'a pas abouti. Rechargez la page puis réessayez."; erreur.classList.remove("hidden"); })
@@ -622,6 +657,47 @@ document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
         apercu.replaceWith(img);
         apercu = img;
       }
+    });
+  });
+})();
+
+/* Mon profil : liens (ajouter, retirer) et ouverture des blocs repliés (« Modifier mon profil », « Modifier le mot de passe ») */
+(function () {
+  "use strict";
+  document.querySelectorAll("[data-liens]").forEach(function (bloc) {
+    var liste = bloc.querySelector("[data-liste-liens]");
+    var ajouter = bloc.querySelector("[data-ajouter-lien]");
+    function majBouton() { ajouter.classList.toggle("hidden", liste.children.length >= 8); }
+    ajouter.addEventListener("click", function () {
+      var modele = liste.querySelector("[data-ligne-lien]");
+      var ligne = modele.cloneNode(true);
+      ligne.querySelector("input").value = "";
+      var choix = ligne.querySelector("select");
+      // Propose un réseau pas encore utilisé
+      var pris = Array.prototype.map.call(liste.querySelectorAll("select"), function (s) { return s.value; });
+      for (var i = 0; i < choix.options.length; i++) { if (pris.indexOf(choix.options[i].value) === -1) { choix.selectedIndex = i; break; } }
+      liste.appendChild(ligne);
+      ligne.querySelector("input").focus();
+      majBouton();
+    });
+    liste.addEventListener("click", function (e) {
+      var bouton = e.target.closest("[data-retirer-lien]");
+      if (!bouton) return;
+      var ligne = bouton.closest("[data-ligne-lien]");
+      if (liste.children.length > 1) ligne.remove(); else ligne.querySelector("input").value = "";
+      majBouton();
+    });
+    majBouton();
+  });
+  document.querySelectorAll("[data-ouvrir-details]").forEach(function (lien) {
+    lien.addEventListener("click", function (e) {
+      var bloc = document.getElementById(lien.getAttribute("data-ouvrir-details"));
+      if (!bloc) return;
+      e.preventDefault();
+      bloc.open = true;
+      bloc.scrollIntoView({ behavior: "smooth", block: "start" });
+      var premier = bloc.querySelector("input:not([type=hidden]):not(.sr-only), select, textarea");
+      if (premier) setTimeout(function () { premier.focus({ preventScroll: true }); }, 350);
     });
   });
 })();

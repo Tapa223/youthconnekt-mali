@@ -7,7 +7,7 @@ $infos = array_filter([
     $organisation ? $p['secteur'] : $p['domaine'],
     trim(($p['ville'] ? $p['ville'] . ', ' : '') . (REGIONS[$p['region']] ?? ''), ', '),
 ]);
-$liens = array_filter(['LinkedIn' => $p['lien_linkedin'], 'Site web' => $p['site_web']]);
+$liens = liens_profil((int) $m['id']);
 $mail_public = $p['email_contact_public'] ?? '';
 $presentation = trim((string) $p['presentation']);
 ?>
@@ -44,7 +44,7 @@ $presentation = trim((string) $p['presentation']);
 
         <?php if ($liens || $mail_public): ?>
         <ul class="mt-6 flex flex-wrap gap-2">
-          <?php foreach ($liens as $nom => $lien): ?><li><a href="<?= e($lien) ?>" target="_blank" rel="noopener nofollow" class="btn-lien min-h-10"><?= $nom ?></a></li><?php endforeach ?>
+          <?php foreach ($liens as $l): ?><li><a href="<?= e($l['url']) ?>" target="_blank" rel="noopener nofollow" class="inline-flex min-h-10 items-center gap-2 rounded-full border-2 border-vert px-4 text-sm font-bold text-vert transition-colors hover:border-orange hover:bg-orange hover:text-white"><svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><?= $l['trace'] ?></svg><?= e($l['nom']) ?></a></li><?php endforeach ?>
           <?php if ($mail_public): ?><li><a href="mailto:<?= e($mail_public) ?>" class="btn-lien min-h-10">Écrire à l'organisation</a></li><?php endif ?>
         </ul>
         <?php endif ?>

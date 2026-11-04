@@ -12,7 +12,7 @@ if (($contexte ?? 'liste') === 'liste'): ?>
 <?php elseif ($statut === 'acceptee'): ?>
   <span class="inline-flex min-h-12 items-center rounded-full bg-white px-6 text-base font-bold text-vert">Vous êtes membre</span>
 <?php elseif ($statut === 'en_attente'): ?>
-  <form method="post" action="<?= url('/communaute/' . $c['slug'] . '/quitter') ?>" class="flex flex-wrap items-center gap-2"><?= csrf() ?>
+  <form method="post" action="<?= url('/communaute/' . $c['slug'] . '/quitter') ?>" class="flex flex-wrap items-center gap-2" data-confirmer="Annuler votre demande pour <?= e($c['nom']) ?> ?" data-confirmer-oui="Annuler la demande"><?= csrf() ?>
     <input type="hidden" name="suivant" value="<?= e(adresse_actuelle()) ?>">
     <span class="inline-flex min-h-12 items-center rounded-full bg-white px-6 text-base font-bold text-vert">Demande en cours de traitement</span>
     <button type="submit" class="inline-flex min-h-10 items-center rounded-full bg-white/15 px-4 text-sm font-bold text-white transition-colors hover:bg-orange">Annuler la demande</button>

@@ -65,6 +65,7 @@ function tableau_de_bord(): void
 
     vue_espace('tableau_de_bord', 'tableau', 'Mon espace', [
         'nouveautes' => nouveautes_membre($u, $demandes),
+        'types' => types_opportunite(),
         'completion' => taux_completion($u['profil'], $u['type_compte']),
         'mes_communautes' => $mes_communautes,
         'demandes_en_attente' => array_values(array_filter($demandes, fn ($d) => $d['statut'] === 'en_attente')),
@@ -107,7 +108,12 @@ function nouveautes_membre(array $u, array $demandes): array
 function mes_propositions(): void
 {
     $u = exiger_membre();
-    vue_espace('propositions', 'propositions', 'Mes propositions', ['propositions' => mes_propositions_liste($u)], $u);
+    $initiatives = lignes("SELECT * FROM messages_contact WHERE email = ? AND objet LIKE 'Proposition d''initiative%' ORDER BY recu_le DESC", [$u['email']]);
+    vue_espace('propositions', 'propositions', 'Mes propositions', [
+        'propositions' => mes_propositions_liste($u),
+        'initiatives' => $initiatives,
+        'types' => types_opportunite(),
+    ], $u);
 }
 
 function mes_communautes(): void
@@ -121,7 +127,7 @@ function mes_opportunites(): void
 {
     $u = exiger_membre();
     [, $ids, $opportunites] = donnees_membre($u);
-    vue_espace('opportunites', 'opportunites', 'Mes opportunités', ['opportunites' => $opportunites, 'a_des_communautes' => (bool) $ids], $u);
+    vue_espace('opportunites', 'opportunites', 'Mes opportunités', ['opportunites' => $opportunites, 'a_des_communautes' => (bool) $ids, 'types' => types_opportunite()], $u);
 }
 
 function mon_profil(): void
@@ -132,23 +138,55 @@ function mon_profil(): void
     $champ_image = $organisation ? 'logo' : 'photo';
     $profil = $u['profil'] ?? [];
     $champs = $organisation
-        ? ['nom_structure', 'type_structure', 'secteur', 'region', 'ville', 'presentation', 'site_web', 'lien_linkedin', 'email_contact_public', 'personne_contact']
-        : ['prenom', 'nom', 'categorie', 'domaine', 'region', 'ville', 'presentation', 'lien_linkedin', 'site_web', 'telephone'];
+        ? ['nom_structure', 'type_structure', 'secteur', 'region', 'ville', 'presentation', 'email_contact_public', 'personne_contact']
+        : ['prenom', 'nom', 'categorie', 'domaine', 'region', 'ville', 'presentation', 'telephone'];
     $valeurs = [];
     foreach ($champs as $c) {
         $valeurs[$c] = (string) ($profil[$c] ?? '');
     }
-    $valeurs['visible'] = $profil ? (string) $profil['visible'] : '1';
     if (!$valeurs['region']) {
         $valeurs['region'] = 'bamako';
     }
+    $liens = array_map(fn ($l) => ['reseau' => $l['reseau'], 'url' => $l['url']], liens_profil((int) $u['id']));
     $erreurs = [];
+
+    // Rendre le profil visible ou le masquer (action séparée, confirmée par le membre)
+    if (est_post() && post('action') === 'visibilite') {
+        if ($profil) {
+            $visible = post('visible') === '1' ? 1 : 0;
+            mettre_a_jour($table, ['visible' => $visible, 'modifie_le' => maintenant()], (int) $profil['id']);
+            flash('succes', $visible ? 'Votre profil est maintenant visible des membres de vos communautés.' : "Votre profil est masqué : il n'apparaît plus dans les communautés.");
+        }
+        rediriger(url('/compte/mon-espace/profil'));
+    }
 
     if (est_post()) {
         foreach ($champs as $c) {
             $valeurs[$c] = post($c);
         }
-        $valeurs['visible'] = post('visible') !== '' ? '1' : '0';
+        // Liens : un réseau et une adresse par ligne, 8 au plus
+        $liens = [];
+        $reseaux = (array) ($_POST['lien_reseau'] ?? []);
+        foreach ((array) ($_POST['lien_url'] ?? []) as $k => $adresse) {
+            $adresse = trim((string) $adresse);
+            if ($adresse === '') {
+                continue;
+            }
+            $reseau = (string) ($reseaux[$k] ?? 'autre');
+            if (!isset(RESEAUX_PROFIL[$reseau])) {
+                $reseau = 'autre';
+            }
+            if (!preg_match('#^https?://#i', $adresse)) {
+                $adresse = 'https://' . $adresse;
+            }
+            if (!filter_var($adresse, FILTER_VALIDATE_URL) || mb_strlen($adresse) > 255) {
+                $erreurs['liens'] = "L'adresse « " . mb_substr($adresse, 0, 60) . " » n'est pas valide.";
+            }
+            $liens[] = ['reseau' => $reseau, 'url' => $adresse];
+        }
+        if (count($liens) > 8) {
+            $erreurs['liens'] = '8 liens au maximum.';
+        }
         $limites = ['prenom' => 80, 'nom' => 80, 'domaine' => 150, 'ville' => 100, 'presentation' => 1500, 'telephone' => 30,
             'nom_structure' => 150, 'secteur' => 150, 'personne_contact' => 120];
         foreach ($limites as $c => $max) {
@@ -168,16 +206,6 @@ function mon_profil(): void
             if (!isset(CATEGORIES_INDIVIDUELLES[$valeurs['categorie']])) $erreurs['categorie'] = 'Choisissez votre profil.';
         }
         if (!isset(REGIONS[$valeurs['region']])) $erreurs['region'] = 'Choisissez votre région.';
-        foreach (['site_web', 'lien_linkedin'] as $c) {
-            if ($valeurs[$c] !== '') {
-                if (!preg_match('#^https?://#i', $valeurs[$c])) {
-                    $valeurs[$c] = 'https://' . $valeurs[$c];
-                }
-                if (!filter_var($valeurs[$c], FILTER_VALIDATE_URL)) {
-                    $erreurs[$c] = "Cette adresse web n'est pas valide.";
-                }
-            }
-        }
         $nouvelle_image = null;
         if (!$erreurs) {
             try {
@@ -197,7 +225,11 @@ function mon_profil(): void
             if ($profil) {
                 mettre_a_jour($table, $donnees, (int) $profil['id']);
             } else {
-                inserer($table, $donnees + ['utilisateur_id' => $u['id'], 'cree_le' => maintenant()]);
+                inserer($table, $donnees + ['utilisateur_id' => $u['id'], 'visible' => 0, 'cree_le' => maintenant()]);
+            }
+            requete('DELETE FROM liens_profil WHERE utilisateur_id = ?', [$u['id']]);
+            foreach ($liens as $k => $l) {
+                inserer('liens_profil', ['utilisateur_id' => $u['id'], 'reseau' => $l['reseau'], 'url' => $l['url'], 'ordre' => $k + 1]);
             }
             if ($ancienne && isset($donnees[$champ_image]) && $donnees[$champ_image] !== $ancienne) {
                 supprimer_image($ancienne);
@@ -209,6 +241,8 @@ function mon_profil(): void
 
     vue_espace('profil', 'profil', 'Mon profil', [
         'organisation' => $organisation,
+        'liens' => $liens,
+        'visible' => (bool) ($profil['visible'] ?? false),
         'valeurs' => $valeurs,
         'erreurs' => $erreurs,
         'champ_image' => $champ_image,

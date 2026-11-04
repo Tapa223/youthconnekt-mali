@@ -324,18 +324,33 @@ function taux_completion(?array $profil, string $type): int
         return 0;
     }
     $champs = $type === 'organisation'
-        ? ['nom_structure', 'logo', 'type_structure', 'region', 'ville', 'secteur', 'presentation', 'site_web', 'personne_contact', 'email_contact_public']
-        : ['prenom', 'nom', 'photo', 'categorie', 'region', 'ville', 'domaine', 'presentation', 'lien_linkedin', 'telephone'];
+        ? ['nom_structure', 'logo', 'type_structure', 'region', 'ville', 'secteur', 'presentation', 'personne_contact', 'email_contact_public']
+        : ['prenom', 'nom', 'photo', 'categorie', 'region', 'ville', 'domaine', 'presentation', 'telephone'];
     $remplis = 0;
     foreach ($champs as $c) {
         if (trim((string) ($profil[$c] ?? '')) !== '') {
             $remplis++;
         }
     }
-    return (int) round(100 * $remplis / count($champs));
+    // Au moins un lien (réseau social, site…) compte comme un champ rempli
+    if (!empty($profil['utilisateur_id']) && liens_profil((int) $profil['utilisateur_id'])) {
+        $remplis++;
+    }
+    return (int) round(100 * $remplis / (count($champs) + 1));
 }
 
 /** Libellé court du profil : « Étudiant », « Association »... */
+/** Liens publics d'un membre : [['reseau' => …, 'url' => …, 'nom' => …, 'trace' => …], …] */
+function liens_profil(int $utilisateur_id): array
+{
+    try {
+        $lignes = lignes('SELECT reseau, url FROM liens_profil WHERE utilisateur_id = ? ORDER BY ordre, id', [$utilisateur_id]);
+    } catch (Throwable $e) {
+        return [];
+    }
+    return array_map(fn ($l) => $l + ['nom' => RESEAUX_PROFIL[$l['reseau']][0] ?? 'Lien', 'trace' => RESEAUX_PROFIL[$l['reseau']][1] ?? RESEAUX_PROFIL['autre'][1]], $lignes);
+}
+
 function libelle_profil(?array $profil, string $type): string
 {
     if (!$profil) {

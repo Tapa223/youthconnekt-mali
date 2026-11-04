@@ -43,7 +43,7 @@ $ariane = $ariane ?? [];
         <?php endforeach ?>
       </ul>
     <?php endforeach ?>
-    <form method="post" action="<?= url('/compte/deconnexion') ?>" class="ycm-menu-sortie">
+    <form method="post" action="<?= url('/compte/deconnexion') ?>" class="ycm-menu-sortie" data-confirmer="Voulez-vous vous déconnecter ?" data-confirmer-oui="Se déconnecter">
       <?= csrf() ?>
       <button type="submit">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l-5-5 5-5M5 12h11"/></svg>
@@ -108,7 +108,7 @@ $ariane = $ariane ?? [];
           </summary>
           <div class="ycm-compte-menu">
             <a href="<?= url('/gestion/mon-compte') ?>">Mon compte et mot de passe</a>
-            <form method="post" action="<?= url('/compte/deconnexion') ?>"><?= csrf() ?><button type="submit">Se déconnecter</button></form>
+            <form method="post" action="<?= url('/compte/deconnexion') ?>" data-confirmer="Voulez-vous vous déconnecter ?" data-confirmer-oui="Se déconnecter"><?= csrf() ?><button type="submit">Se déconnecter</button></form>
           </div>
         </details>
       </div>

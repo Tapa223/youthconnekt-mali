@@ -73,7 +73,7 @@ $navigation = [
     <div class="space-y-3 border-t border-ligne p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
       <?php if ($u): ?>
         <a href="<?= url(est_membre($u) ? '/compte/mon-espace' : '/gestion') ?>" class="btn btn-vert w-full"><span class="grid size-7 place-items-center rounded-full bg-orange text-xs" aria-hidden="true"><?= e($u['initiales']) ?></span> <?= est_membre($u) ? 'Mon espace' : 'Administration' ?></a>
-        <form method="post" action="<?= url('/compte/deconnexion') ?>"><?= csrf() ?><button type="submit" class="btn btn-contour w-full">Se déconnecter</button></form>
+        <form method="post" action="<?= url('/compte/deconnexion') ?>" data-confirmer="Voulez-vous vous déconnecter ?" data-confirmer-oui="Se déconnecter"><?= csrf() ?><button type="submit" class="btn btn-contour w-full">Se déconnecter</button></form>
       <?php else: ?>
         <a href="<?= url('/compte/inscription') ?>" class="btn btn-vert w-full">Rejoindre le chapitre</a>
         <a href="<?= url('/compte/connexion') ?>" class="btn btn-contour w-full">Se connecter</a>

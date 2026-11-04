@@ -71,6 +71,18 @@ CREATE TABLE IF NOT EXISTS profils_organisations (
   CONSTRAINT fk_profil_org_utilisateur FOREIGN KEY (utilisateur_id) REFERENCES utilisateurs (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Liens publics d'un membre (réseaux sociaux, site…), affichés sur son profil
+CREATE TABLE IF NOT EXISTS liens_profil (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  utilisateur_id INT UNSIGNED NOT NULL,
+  reseau VARCHAR(20) NOT NULL,
+  url VARCHAR(255) NOT NULL,
+  ordre SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (id),
+  KEY ix_liens_profil_utilisateur (utilisateur_id),
+  CONSTRAINT fk_liens_profil_utilisateur FOREIGN KEY (utilisateur_id) REFERENCES utilisateurs (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Liens à usage unique : confirmation d'e-mail et nouveau mot de passe
 CREATE TABLE IF NOT EXISTS jetons (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,

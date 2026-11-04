@@ -9,7 +9,7 @@ $debutant = !$mes_communautes;
 $etapes = [
     [$completion >= 100, 'Complétez votre profil', 'Une photo et une courte présentation aident les autres membres à vous connaître.', url('/compte/mon-espace/profil'), 'Compléter'],
     [$nb_com > 0 || $demandes_en_attente, 'Rejoignez une communauté', 'Choisissez celles qui vous ressemblent : vous recevrez leurs opportunités ici.', url('/communaute'), 'Découvrir'],
-    [false, 'Explorez les opportunités', 'Formations, bourses, stages et appels à candidatures relayés par le chapitre.', url('/opportunites'), 'Explorer'],
+    [!empty($profil['visible']), 'Rendez votre profil visible', 'Apparaissez parmi les membres de vos communautés : vous le confirmez avant.', url('/compte/mon-espace/profil'), 'Voir'],
 ];
 $entete = fn (string $id, string $titre, string $lien, string $libelle) =>
     '<div class="flex items-center justify-between gap-3"><h2 id="' . $id . '" class="min-w-0 text-lg font-bold sm:text-xl">' . e($titre) . '</h2>'
@@ -18,9 +18,13 @@ $entete = fn (string $id, string $titre, string $lien, string $libelle) =>
 <section class="relative overflow-hidden rounded-2xl bg-vert p-5 text-white sm:p-7">
   <?php partiel('partials/reseau_deco', ['opacite' => 'opacity-50']) ?>
   <div class="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-    <div>
+    <div class="flex items-center gap-4">
+      <?php $photo_m = $profil['photo'] ?? $profil['logo'] ?? ''; if ($photo_m): ?><img src="<?= e(media($photo_m)) ?>" alt="" class="size-14 shrink-0 rounded-full border-2 border-white object-cover sm:size-16">
+      <?php else: ?><span class="grid size-14 shrink-0 place-items-center rounded-full border-2 border-white/80 bg-orange text-lg font-bold text-white sm:size-16" aria-hidden="true"><?= e($u['initiales']) ?></span><?php endif ?>
+      <div>
       <h1 class="text-2xl font-bold text-white sm:text-4xl">Bonjour<?= $u['prenom_affiche'] ? ', ' . e($u['prenom_affiche']) : '' ?></h1>
       <p class="mt-1 text-sm text-white/90 sm:text-base"><?= $debutant ? 'Bienvenue dans votre espace YouthConnekt Mali.' : 'Voici les nouveautés de vos communautés.' ?></p>
+      </div>
     </div>
     <?php if ($completion < 100): ?>
     <div class="w-full rounded-xl border border-white/20 bg-white/10 p-3.5 md:w-72">
@@ -31,6 +35,25 @@ $entete = fn (string $id, string $titre, string $lien, string $libelle) =>
     <?php endif ?>
   </div>
 </section>
+
+
+<?php /* Raccourcis : les actions principales, à portée de pouce sur téléphone */ ?>
+<span data-recharger-apres-envoi hidden></span>
+<ul class="grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-4" aria-label="Raccourcis">
+  <?php foreach ([
+      ['Proposer une opportunité', 'bg-vert text-white', 'dialogue-opportunite', '', '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M12 11v5M9.5 13.5h5"/>'],
+      ['Parler de mon initiative', 'bg-orange text-white', 'dialogue-initiative', '', '<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>'],
+      ['Trouver une communauté', 'bg-turquoise text-encre', '', url('/communaute'), '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5M16 4.8a3.5 3.5 0 0 1 0 6.4M18.5 14.8c1.7.8 2.7 2.6 3 5.2"/>'],
+      ['Explorer les opportunités', 'bg-bleu text-white', '', url('/opportunites'), '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>'],
+  ] as [$titre_r, $couleurs, $dialogue, $lien, $trace]): ?>
+  <li>
+    <<?= $dialogue ? 'button type="button" data-ouvrir-dialogue="' . $dialogue . '"' : 'a href="' . e($lien) . '"' ?> class="survol-leve flex h-full w-full flex-col items-start gap-3 rounded-2xl p-4 text-left <?= $couleurs ?>">
+      <span class="grid size-10 place-items-center rounded-full bg-white/20" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><?= $trace ?></svg></span>
+      <span class="text-[15px] leading-tight font-bold"><?= e($titre_r) ?></span>
+    </<?= $dialogue ? 'button' : 'a' ?>>
+  </li>
+  <?php endforeach ?>
+</ul>
 
 <?php if ($nouveautes): ?>
 <section class="bloc border-l-4 border-orange" aria-labelledby="titre-nouveau">
@@ -124,4 +147,6 @@ $entete = fn (string $id, string $titre, string $lien, string $libelle) =>
     <?php else: ?><p class="mt-3 text-sm">Aucun événement à venir pour le moment.</p><?php endif ?>
   </section>
 </div>
+<?php partiel('partials/proposer_opportunite', ['types' => $types]) ?>
+<?php partiel('partials/proposer_initiative') ?>
 <?php $espace = ob_get_clean(); partiel('espace/base', get_defined_vars());

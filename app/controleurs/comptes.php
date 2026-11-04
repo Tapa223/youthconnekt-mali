@@ -100,7 +100,8 @@ function inscription_formulaire(string $slug): void
                     'actif' => 1,
                     'inscrit_le' => maintenant(),
                 ]);
-                $commun = ['utilisateur_id' => $id, 'region' => $valeurs['region'], 'cree_le' => maintenant(), 'modifie_le' => maintenant()];
+                // Le profil reste masqué tant que le membre n'a pas choisi de le rendre visible (Mon profil)
+                $commun = ['utilisateur_id' => $id, 'region' => $valeurs['region'], 'visible' => 0, 'cree_le' => maintenant(), 'modifie_le' => maintenant()];
                 if ($organisation) {
                     inserer('profils_organisations', $commun + [
                         'nom_structure' => mb_substr($valeurs['nom_structure'], 0, 150),
@@ -108,6 +109,9 @@ function inscription_formulaire(string $slug): void
                         'personne_contact' => mb_substr($valeurs['personne_contact'], 0, 120),
                         'site_web' => mb_substr($valeurs['site_web'], 0, 255),
                     ]);
+                    if ($valeurs['site_web'] !== '') {
+                        inserer('liens_profil', ['utilisateur_id' => $id, 'reseau' => 'site', 'url' => mb_substr($valeurs['site_web'], 0, 255), 'ordre' => 1]);
+                    }
                 } else {
                     inserer('profils_individuels', $commun + [
                         'prenom' => mb_substr($valeurs['prenom'], 0, 80),

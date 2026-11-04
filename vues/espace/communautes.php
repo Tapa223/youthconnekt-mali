@@ -16,7 +16,7 @@
       <?php elseif ($d['statut'] === 'en_attente'): ?><span class="rounded-full bg-orange/15 px-3 py-1 text-xs font-bold text-orange-fonce">En cours de traitement</span>
       <?php else: ?><span class="rounded-full bg-rouge/10 px-3 py-1 text-xs font-bold text-rouge">Non retenue</span><?php endif ?>
       <?php if ($d['statut'] !== 'refusee'): ?>
-      <form method="post" action="<?= url('/communaute/' . $d['communaute_slug'] . '/quitter') ?>" <?= $d['statut'] === 'acceptee' ? 'data-confirmer="Quitter la communauté ' . e($d['communaute_nom']) . ' ?"' : '' ?>><?= csrf() ?><input type="hidden" name="suivant" value="<?= e(adresse_actuelle()) ?>">
+      <form method="post" action="<?= url('/communaute/' . $d['communaute_slug'] . '/quitter') ?>" data-confirmer="<?= $d['statut'] === 'acceptee' ? 'Quitter la communauté ' . e($d['communaute_nom']) . ' ?' : 'Annuler votre demande pour ' . e($d['communaute_nom']) . ' ?' ?>" data-confirmer-oui="<?= $d['statut'] === 'acceptee' ? 'Quitter' : 'Annuler la demande' ?>"><?= csrf() ?><input type="hidden" name="suivant" value="<?= e(adresse_actuelle()) ?>">
         <button type="submit" class="btn-discret"><?= $d['statut'] === 'acceptee' ? 'Quitter' : 'Annuler la demande' ?></button></form>
       <?php endif ?>
     </li>

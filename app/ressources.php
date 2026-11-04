@@ -349,8 +349,7 @@ function ressources(): array
                 ]],
                 ['Présentation', 'champs' => [
                     'presentation' => ['type' => 'zone', 'libelle' => 'Présentation', 'requis' => false, 'max' => 1500, 'lignes' => 4],
-                    'site_web' => ['type' => 'url', 'libelle' => 'Site web', 'requis' => false, 'largeur' => 'demi'],
-                    'lien_linkedin' => ['type' => 'url', 'libelle' => 'LinkedIn', 'requis' => false, 'largeur' => 'demi'],
+                    'liens' => ['type' => 'lecture', 'libelle' => 'Liens publics', 'html' => fn ($l) => implode('<br>', array_map(fn ($k) => e($k['nom']) . ' : <a class="ycm-lien" href="' . e($k['url']) . '" target="_blank" rel="noopener">' . e($k['url']) . '</a>', liens_profil((int) $l['utilisateur_id']))) ?: 'Aucun (le membre les ajoute depuis son espace)'],
                 ]],
                 ['Compte', 'cote' => true, 'champs' => [
                     'lien_compte' => ['type' => 'lecture', 'libelle' => 'Compte de connexion', 'html' => fn ($l) => '<a class="ycm-lien" href="' . url('/gestion/comptes/' . $l['utilisateur_id']) . '">' . e($l['email']) . '</a>'],
@@ -398,8 +397,7 @@ function ressources(): array
                 ]],
                 ['Présentation', 'champs' => [
                     'presentation' => ['type' => 'zone', 'libelle' => 'Présentation', 'requis' => false, 'max' => 1500, 'lignes' => 4],
-                    'site_web' => ['type' => 'url', 'libelle' => 'Site web', 'requis' => false, 'largeur' => 'demi'],
-                    'lien_linkedin' => ['type' => 'url', 'libelle' => 'LinkedIn', 'requis' => false, 'largeur' => 'demi'],
+                    'liens' => ['type' => 'lecture', 'libelle' => 'Liens publics', 'html' => fn ($l) => implode('<br>', array_map(fn ($k) => e($k['nom']) . ' : <a class="ycm-lien" href="' . e($k['url']) . '" target="_blank" rel="noopener">' . e($k['url']) . '</a>', liens_profil((int) $l['utilisateur_id']))) ?: 'Aucun (le membre les ajoute depuis son espace)'],
                 ]],
                 ['Compte', 'cote' => true, 'champs' => [
                     'lien_compte' => ['type' => 'lecture', 'libelle' => 'Compte de connexion', 'html' => fn ($l) => '<a class="ycm-lien" href="' . url('/gestion/comptes/' . $l['utilisateur_id']) . '">' . e($l['email']) . '</a>'],
