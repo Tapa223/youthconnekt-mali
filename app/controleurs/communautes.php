@@ -63,7 +63,38 @@ function detail(string $slug): void
         'compte_admin' => !est_membre($u),
         'opportunites' => opportunites_ouvertes('AND id IN (SELECT opportunite_id FROM opportunite_communaute WHERE communaute_id = ?) ORDER BY date_limite IS NULL, date_limite LIMIT 4', [$c['id']]),
         'activites_recentes' => actualites_publiees('AND id IN (SELECT actualite_id FROM actualite_communaute WHERE communaute_id = ?) ORDER BY publie_le DESC LIMIT 4', [$c['id']]),
+        'membres' => membres_visibles($c),
     ]));
+}
+
+/**
+ * Membres de la communauté qui ont choisi de rendre leur profil visible (« Visible dans la communauté »).
+ * Chacun mène à son profil.
+ */
+function membres_visibles(array $c): array
+{
+    $membres = [];
+    $lignes = lignes(
+        "SELECT u.* FROM utilisateurs u JOIN demandes_adhesion d ON d.utilisateur_id = u.id
+         WHERE d.communaute_id = ? AND d.statut = 'acceptee' AND u.actif = 1 ORDER BY d.traitee_le DESC, d.id DESC",
+        [$c['id']]
+    );
+    foreach ($lignes as $l) {
+        $m = completer_utilisateur($l);
+        $p = $m['profil'];
+        if (!$p || !$p['visible']) {
+            continue;
+        }
+        $organisation = $m['type_compte'] === 'organisation';
+        $membres[] = [
+            'url' => url('/compte/membres/' . $m['id']),
+            'nom' => $m['nom_affiche'],
+            'initiales' => $m['initiales'],
+            'photo' => $organisation ? ($p['logo'] ?? '') : ($p['photo'] ?? ''),
+            'detail' => $organisation ? ($p['secteur'] ?: (TYPES_STRUCTURE[$p['type_structure']] ?? '')) : (($p['domaine'] ?? '') !== '' ? $p['domaine'] : (CATEGORIES_INDIVIDUELLES[$p['categorie']] ?? '')),
+        ];
+    }
+    return $membres;
 }
 
 /** Formulaire « Intégrer la communauté » : motivation, apport, accord. */
