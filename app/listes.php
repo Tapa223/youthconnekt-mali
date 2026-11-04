@@ -75,11 +75,19 @@ const COULEURS_HEX = [
     'rouge' => '#7C0D02',
 ];
 
+/** Pictogrammes des coordonnées (page Contact) */
+const ICONES_CONTACT = [
+    'mail' => '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+    'tel' => '<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',
+    'lieu' => '<path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/>',
+    'heure' => '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+];
+
 const PROFILS_CONTACT = [
-    'jeune' => 'Un jeune',
-    'organisation' => 'Une organisation ou une entreprise',
-    'partenaire' => 'Un partenaire ou une institution',
-    'media' => 'Un média',
+    'jeune' => 'Particulier',
+    'organisation' => 'Organisation ou entreprise',
+    'partenaire' => 'Partenaire ou institution',
+    'media' => 'Média',
     'autre' => 'Autre',
 ];
 
