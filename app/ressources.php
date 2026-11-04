@@ -275,7 +275,11 @@ function ressources(): array
             'table' => 'temoignages', 'titre' => 'Témoignages',
             'description' => 'Témoignages de jeunes et de partenaires, publiés avec leur accord.',
             'libelle_ajout' => 'Ajouter un témoignage', 'vue_liste' => 'admin/liste_temoignages',
-            'ordre' => 't.ordre, t.id DESC', 'par_page' => 60, 'recherche' => ['t.nom', 't.texte'],
+            'ordre' => 't.publie, t.ordre, t.id DESC', 'par_page' => 60, 'recherche' => ['t.nom', 't.texte'],
+            'onglets' => [
+                ['À valider', 't.publie = 0 AND t.utilisateur_id IS NOT NULL'],
+                ['Affichés', 't.publie = 1'],
+            ],
             'nom_element' => fn ($l) => $l['nom'],
             'groupes' => [
                 [null, 'champs' => [
@@ -284,8 +288,9 @@ function ressources(): array
                     'role' => ['type' => 'texte', 'libelle' => 'Rôle ou parcours', 'requis' => false, 'max' => 150, 'largeur' => 'demi'],
                 ]],
                 ['Photo', 'champs' => ['photo' => ['type' => 'image', 'libelle' => 'Photo', 'requis' => false, 'dossier' => 'temoignages', 'largeur_max' => 400]]],
-                ['Affichage', 'cote' => true, 'description' => "À publier uniquement avec l'accord de la personne.", 'champs' => [
+                ['Affichage', 'cote' => true, 'description' => "À publier uniquement avec l'accord de la personne. Les témoignages envoyés par les membres depuis leur espace arrivent ici, masqués.", 'champs' => [
                     'publie' => ['type' => 'case', 'libelle' => "Afficher sur l'accueil"],
+                    'origine' => ['type' => 'lecture', 'libelle' => 'Origine', 'html' => fn ($l) => empty($l['utilisateur_id']) ? "Ajouté dans l'administration" : 'Envoyé par le membre depuis son espace' . (!empty($l['envoye_le']) ? ', le ' . e(date_longue($l['envoye_le'])) : '') . ' · <a class="ycm-lien" href="' . url('/gestion/comptes/' . (int) $l['utilisateur_id']) . '">Voir le compte</a>'],
                     'ordre' => ['type' => 'nombre', 'libelle' => "Ordre d'affichage", 'defaut' => 0],
                 ]],
             ],

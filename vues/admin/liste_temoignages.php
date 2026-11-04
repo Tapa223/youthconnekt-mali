@@ -9,7 +9,7 @@
       <span><strong><?= e($t['nom']) ?></strong><?php if ($t['role']): ?><small><?= e($t['role']) ?></small><?php endif ?></span>
     </span>
     <div class="ycm-carte-pied">
-      <?= $t['publie'] ? badge("Affiché sur l'accueil", 'vert') : badge('Masqué', 'gris') ?>
+      <?= $t['publie'] ? badge("Affiché sur l'accueil", 'vert') : (!empty($t['utilisateur_id']) ? badge('À valider · envoyé par un membre', 'orange') : badge('Masqué', 'gris')) ?>
       <a href="<?= url('/gestion/temoignages/' . $t['id']) ?>">Modifier</a>
     </div>
   </article>

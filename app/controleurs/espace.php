@@ -105,11 +105,69 @@ function notifications(): void
     vue_espace('notifications', 'notifications', 'Notifications', ['notifications' => $liste, 'vues_le' => $vues_le], $u);
 }
 
+/** Le témoignage du membre (un seul, modifiable), ou null. */
+function mon_temoignage(array $u): ?array
+{
+    try {
+        return ligne('SELECT * FROM temoignages WHERE utilisateur_id = ? ORDER BY id DESC LIMIT 1', [$u['id']]);
+    } catch (Throwable $e) {
+        return null; // mise à jour 10 pas encore importée
+    }
+}
+
+/** Envoi ou modification du témoignage depuis « Mes propositions » : il repasse en relecture par l'équipe. */
+function envoyer_temoignage(): void
+{
+    $u = exiger_membre();
+    $texte = trim(post('texte'));
+    $retour = url('/compte/mon-espace/propositions') . '#temoignage';
+    if (mb_strlen($texte) < 20 || mb_strlen($texte) > 600) {
+        flash('erreur', mb_strlen($texte) < 20 ? 'Votre témoignage est trop court : quelques phrases suffisent (20 caractères au minimum).' : '600 caractères au maximum.');
+        $_SESSION['brouillon_temoignage'] = $texte;
+        rediriger($retour);
+    }
+    if (post('accord') === '') {
+        flash('erreur', 'Cochez la case pour accepter que votre témoignage soit publié.');
+        $_SESSION['brouillon_temoignage'] = $texte;
+        rediriger($retour);
+    }
+    $p = $u['profil'] ?? [];
+    $role = implode(', ', array_filter([
+        ($u['type_compte'] === 'organisation' ? ($p['secteur'] ?? '') : ($p['domaine'] ?? '')) ?: libelle_profil($p, $u['type_compte']),
+        ($p['ville'] ?? '') ?: (REGIONS[$p['region'] ?? ''] ?? ''),
+    ]));
+    // La photo du profil est recopiée : le témoignage la garde même si le membre change la sienne
+    $photo = '';
+    $source = $p['photo'] ?? $p['logo'] ?? '';
+    if ($source && is_file(RACINE . '/' . $source)) {
+        $dossier = RACINE . '/uploads/temoignages';
+        if (!is_dir($dossier)) @mkdir($dossier, 0775, true);
+        $nom = 'temoignage-' . $u['id'] . '-' . time() . '.' . pathinfo($source, PATHINFO_EXTENSION);
+        if (@copy(RACINE . '/' . $source, $dossier . '/' . $nom)) $photo = 'uploads/temoignages/' . $nom;
+    }
+    $donnees = ['texte' => mb_substr($texte, 0, 600), 'nom' => mb_substr($u['nom_affiche'], 0, 120), 'role' => mb_substr($role, 0, 150),
+        'photo' => $photo, 'publie' => 0, 'envoye_le' => maintenant()];
+    $ancien = mon_temoignage($u);
+    if ($ancien) {
+        mettre_a_jour('temoignages', $donnees, (int) $ancien['id']);
+        supprimer_image($ancien['photo']);
+    } else {
+        inserer('temoignages', $donnees + ['utilisateur_id' => $u['id'], 'ordre' => 0]);
+    }
+    unset($_SESSION['brouillon_temoignage']);
+    flash('succes', "Merci ! Votre témoignage a bien été envoyé. L'équipe le relit avant de l'afficher sur le site.");
+    rediriger($retour);
+}
+
 function mes_propositions(): void
 {
     $u = exiger_membre();
     $initiatives = lignes("SELECT * FROM messages_contact WHERE email = ? AND objet LIKE 'Proposition d''initiative%' ORDER BY recu_le DESC", [$u['email']]);
+    $brouillon = (string) ($_SESSION['brouillon_temoignage'] ?? '');
+    unset($_SESSION['brouillon_temoignage']);
     vue_espace('propositions', 'propositions', 'Mes propositions', [
+        'temoignage' => mon_temoignage($u),
+        'brouillon_temoignage' => $brouillon,
         'propositions' => mes_propositions_liste($u),
         'initiatives' => $initiatives,
         'types' => types_opportunite(),

@@ -66,6 +66,12 @@ function menu_admin(): array
     if (peut('opportunites')) {
         $pastilles['opportunites'] = (int) valeur("SELECT COUNT(*) FROM opportunites WHERE statut = 'propose'");
     }
+    if (peut('temoignages')) {
+        try {
+            $pastilles['temoignages'] = (int) valeur('SELECT COUNT(*) FROM temoignages WHERE publie = 0 AND utilisateur_id IS NOT NULL');
+        } catch (Throwable $e) {
+        }
+    }
     if (peut('communautes') || peut('demandes')) {
         $pastilles['communautes'] = (int) valeur("SELECT COUNT(*) FROM demandes_adhesion WHERE statut = 'en_attente'");
     }

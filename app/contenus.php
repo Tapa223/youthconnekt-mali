@@ -292,6 +292,12 @@ function notifications_membre(array $u): array
     foreach (lignes("SELECT titre, slug, publie_le FROM opportunites WHERE propose_par = ? AND statut = 'publie' AND publie_le >= ? AND publie_le <= NOW()", [$u['id'], $depuis]) as $o) {
         $liste[] = ['Votre opportunité « ' . $o['titre'] . ' » a été publiée.', url('/opportunites/' . $o['slug']), $o['publie_le'], 'vert'];
     }
+    try {
+        foreach (lignes('SELECT envoye_le FROM temoignages WHERE utilisateur_id = ? AND publie = 1 AND envoye_le >= ?', [$u['id'], $depuis]) as $t) {
+            $liste[] = ['Votre témoignage est maintenant affiché sur le site. Merci !', url('/temoignages'), $t['envoye_le'], 'vert'];
+        }
+    } catch (Throwable $e) {
+    }
     $ids = array_map('intval', array_column(lignes("SELECT communaute_id FROM demandes_adhesion WHERE utilisateur_id = ? AND statut = 'acceptee'", [$u['id']]), 'communaute_id'));
     if ($ids) {
         $opps = lignes(

@@ -29,6 +29,11 @@
     <?php else: ?>
     <p class="rounded-2xl bg-white p-6 text-center">Les premiers témoignages arrivent bientôt.</p>
     <?php endif ?>
+    <?php /* Invitation à témoigner : depuis l'espace membre (connexion demandée si besoin) */ $lien_t = url('/compte/mon-espace/propositions', ['temoigner' => 1]) . '#temoignage'; ?>
+    <div class="mt-6 flex flex-col items-start gap-3 rounded-2xl bg-white p-4 sm:mt-8 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+      <p class="text-sm text-encre sm:text-base"><strong class="block text-vert">Vous aussi, racontez votre expérience</strong>Membre du chapitre ? Partagez ce que YouthConnekt Mali vous a apporté.</p>
+      <a href="<?= est_connecte() ? $lien_t : url('/compte/connexion', ['suivant' => $lien_t]) ?>" class="btn btn-orange min-h-11 shrink-0 px-6">Témoigner</a>
+    </div>
   </div>
 </section>
 
