@@ -23,7 +23,7 @@ $pastille_menu = function (string $cle, bool $actif) use ($compteurs): string {
     return '<span class="ml-auto grid min-w-6 place-items-center rounded-full px-1.5 text-xs leading-6 font-bold ' . $couleur . '">' . ($n > 99 ? '99+' : $n) . '</span>';
 };
 $nb_notifs = $nb_notifs ?? 0;
-$cloche = '<svg class="size-[22px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9a6 6 0 1 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9zM10 20a2.2 2.2 0 0 0 4 0"/></svg>';
+$cloche = '<svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9a6 6 0 1 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9zM10 20a2.2 2.2 0 0 0 4 0"/></svg>';
 $badge = fn (string $classes = '') => $nb_notifs ? '<span class="grid min-w-5 place-items-center rounded-full bg-orange px-1.5 text-[11px] leading-5 font-bold text-white ' . $classes . '">' . ($nb_notifs > 9 ? '9+' : $nb_notifs) . '</span>' : '';
 $image = $profil['photo'] ?? $profil['logo'] ?? '';
 $detail = array_filter([libelle_profil($profil, $u['type_compte']), REGIONS[$profil['region'] ?? ''] ?? '']);
@@ -34,11 +34,9 @@ $titre_rubrique = $liens[$rubrique][1] ?? 'Mon espace';
 
     <?php /* Téléphone et tablette : sur une seule ligne, la flèche Retour (page précédente), le menu déroulant et la cloche */ ?>
     <div class="flex items-stretch gap-2 lg:hidden">
-    <a href="<?= $rubrique === 'tableau' ? url('/') : url('/compte/mon-espace') ?>" data-retour class="grid size-13 shrink-0 place-items-center rounded-2xl bg-white text-vert shadow-sm transition-colors hover:bg-orange hover:text-white" aria-label="Retour"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <a href="<?= $rubrique === 'tableau' ? url('/') : url('/compte/mon-espace') ?>" data-retour class="grid size-11 shrink-0 place-items-center rounded-xl bg-white text-vert shadow-sm transition-colors hover:bg-orange hover:text-white" aria-label="Retour"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a>
     <details class="menu-espace relative min-w-0 flex-1" data-choix-type>
-      <summary class="flex h-13 cursor-pointer list-none items-center gap-2.5 rounded-2xl bg-white pr-2.5 pl-3.5 shadow-sm min-[400px]:pl-2.5 [&::-webkit-details-marker]:hidden">
-        <?php if ($image): ?><img src="<?= e(media($image)) ?>" alt="" class="size-8 shrink-0 rounded-full max-[399px]:hidden <?= isset($profil['logo']) ? 'bg-white object-contain ring-1 ring-ligne' : 'object-cover' ?>">
-        <?php else: ?><span class="grid size-8 shrink-0 place-items-center rounded-full bg-orange text-xs font-bold text-white max-[399px]:hidden" aria-hidden="true"><?= e($u['initiales']) ?></span><?php endif ?>
+      <summary class="flex h-11 cursor-pointer list-none items-center gap-2.5 rounded-xl bg-white pr-1.5 pl-3.5 shadow-sm [&::-webkit-details-marker]:hidden">
         <span class="min-w-0 flex-1 truncate text-[15px] font-bold text-vert"><?= e($titre_rubrique) ?></span>
         <span class="flex shrink-0 items-center gap-1 rounded-full bg-vert-clair px-2 py-1.5 text-xs font-bold text-vert min-[480px]:px-3"><span class="hidden min-[480px]:inline">Menu</span><svg class="choix-fleche size-4 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span>
       </summary>
@@ -49,7 +47,7 @@ $titre_rubrique = $liens[$rubrique][1] ?? 'Mon espace';
         <form method="post" action="<?= url('/compte/deconnexion') ?>" class="mt-1 border-t border-ligne pt-1" data-confirmer="Êtes-vous sûr de vouloir vous déconnecter ?" data-confirmer-oui="Se déconnecter"><?= csrf() ?><button type="submit" class="flex min-h-11 w-full items-center rounded-xl px-3 text-[15px] font-bold text-rouge hover:bg-gris">Se déconnecter</button></form>
       </nav>
     </details>
-    <a href="<?= url('/compte/mon-espace/notifications') ?>" class="relative grid size-13 shrink-0 place-items-center rounded-2xl bg-white text-vert shadow-sm <?= $rubrique === 'notifications' ? 'ring-2 ring-orange' : '' ?>" aria-label="Notifications<?= $nb_notifs ? ' : ' . $nb_notifs . ' nouvelle' . pluriel($nb_notifs) : '' ?>"><?= $cloche ?><?= $badge('absolute top-1.5 right-1.5') ?></a>
+    <a href="<?= url('/compte/mon-espace/notifications') ?>" class="relative grid size-11 shrink-0 place-items-center rounded-xl bg-white text-vert shadow-sm <?= $rubrique === 'notifications' ? 'ring-2 ring-orange' : '' ?>" aria-label="Notifications<?= $nb_notifs ? ' : ' . $nb_notifs . ' nouvelle' . pluriel($nb_notifs) : '' ?>"><?= $cloche ?><?= $badge('absolute -top-1.5 -right-1.5') ?></a>
     </div>
 
     <?php /* Ordinateur : carte du membre et menu à gauche */ ?>
