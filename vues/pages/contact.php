@@ -11,26 +11,38 @@ $traces = ICONES_CONTACT;
 ?>
 <section class="bg-gris pb-8 sm:py-6 lg:py-5">
   <div class="conteneur anim-entree grid gap-4 max-sm:px-0 sm:gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
-    <div class="relative isolate overflow-hidden bg-vert px-4 pt-5 pb-6 text-white sm:rounded-3xl sm:p-8">
+    <div class="relative isolate overflow-hidden bg-vert px-4 pt-4 pb-4 text-white sm:rounded-3xl sm:p-8">
       <img src="<?= asset('img/bandeaux/lets-connekt.jpg') ?>" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover opacity-15">
       <?php partiel('partials/reseau_deco', ['opacite' => 'opacity-50']) ?>
       <div class="relative">
-        <h1 class="text-[2rem] leading-none font-bold text-white sm:text-5xl">Parlons-en</h1>
-        <p class="mt-2.5 text-[15px] text-white/90 sm:mt-3 sm:text-base">Une question, un projet, un partenariat ? L'équipe du chapitre vous répond.</p>
-        <ul class="mt-4 grid gap-1.5 sm:mt-7 sm:gap-3.5">
+        <h1 class="text-[1.7rem] leading-none font-bold whitespace-nowrap text-white sm:text-4xl xl:text-[2.75rem]">Contactez-nous</h1>
+        <p class="mt-2 text-sm text-white/90 sm:mt-3 sm:text-base">Une question, un projet, un partenariat ? L'équipe du chapitre vous répond.</p>
+        <?php /* Téléphone : les coordonnées en petites pastilles, pour laisser la place au formulaire */ ?>
+        <ul class="mt-3 flex flex-wrap gap-1.5 sm:hidden" aria-label="Nos coordonnées">
+          <?php foreach ($coordonnees as [$icone, $libelle, $valeur, $lien]): if ($icone === 'heure') continue; ?>
+          <li class="max-w-full">
+            <<?= $lien ? 'a href="' . e($lien) . '"' : 'span' ?> class="inline-flex min-h-9 max-w-full items-center gap-1.5 rounded-full bg-white/15 px-3 text-[13px] font-bold <?= $lien ? 'transition-colors hover:bg-white hover:text-vert' : '' ?>">
+              <svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><?= $traces[$icone] ?></svg>
+              <span class="sr-only"><?= $libelle ?> :</span><span class="truncate"><?= e($valeur) ?></span>
+            </<?= $lien ? 'a' : 'span' ?>>
+          </li>
+          <?php endforeach ?>
+        </ul>
+        <?php if ($p['horaires']): ?><p class="mt-2 flex items-center gap-1.5 text-xs text-white/85 sm:hidden"><svg class="size-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><?= $traces['heure'] ?></svg><?= e($p['horaires']) ?></p><?php endif ?>
+        <ul class="mt-7 hidden gap-3.5 sm:grid">
           <?php foreach ($coordonnees as [$icone, $libelle, $valeur, $lien]): ?>
-          <li class="flex items-center gap-2 rounded-2xl bg-white/10 p-2 sm:gap-3 sm:bg-transparent sm:p-0">
-            <span class="grid size-8 shrink-0 place-items-center rounded-full bg-white/15 sm:size-10" aria-hidden="true"><svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><?= $traces[$icone] ?></svg></span>
-            <span class="min-w-0"><span class="block text-[11px] text-white/75 sm:text-xs"><?= $libelle ?></span>
-              <?php if ($lien): ?><a href="<?= e($lien) ?>" class="block truncate text-[13px] font-bold hover:text-orange sm:text-[15px]"><?= e($valeur) ?></a>
-              <?php else: ?><span class="block text-[13px] leading-snug font-bold sm:text-[15px]"><?= e($valeur) ?></span><?php endif ?>
+          <li class="flex items-center gap-3">
+            <span class="grid size-10 shrink-0 place-items-center rounded-full bg-white/15" aria-hidden="true"><svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><?= $traces[$icone] ?></svg></span>
+            <span class="min-w-0"><span class="block text-xs text-white/75"><?= $libelle ?></span>
+              <?php if ($lien): ?><a href="<?= e($lien) ?>" class="block truncate text-[15px] font-bold hover:text-orange"><?= e($valeur) ?></a>
+              <?php else: ?><span class="block text-[15px] leading-snug font-bold"><?= e($valeur) ?></span><?php endif ?>
             </span>
           </li>
           <?php endforeach ?>
         </ul>
         <?php if ($reseaux): ?>
-        <p class="mt-6 text-xs font-bold tracking-[0.14em] uppercase">Suivez le chapitre</p>
-        <div class="[&_a]:border-white [&_a]:bg-white [&_a]:text-vert"><?php partiel('partials/reseaux') ?></div>
+        <p class="mt-6 hidden text-xs sm:block font-bold tracking-[0.14em] uppercase">Suivez le chapitre</p>
+        <div class="hidden sm:block [&_a]:border-white [&_a]:bg-white [&_a]:text-vert"><?php partiel('partials/reseaux') ?></div>
         <?php endif ?>
       </div>
     </div>
