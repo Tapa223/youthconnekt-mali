@@ -398,7 +398,7 @@
   bouton.addEventListener("click", function () { basculer(panneau.hidden); });
   // Espace membre : la bulle est cachée, l'assistant s'ouvre depuis le tableau de bord
   document.querySelectorAll("[data-ouvrir-assistant]").forEach(function (b) {
-    b.addEventListener("click", function (e) { e.stopPropagation(); basculer(true); var c = panneau.querySelector("button, textarea"); if (c) c.focus(); });
+    b.addEventListener("click", function (e) { e.stopPropagation(); var menu = b.closest("details"); if (menu) menu.open = false; basculer(true); var c = panneau.querySelector("button, textarea"); if (c) c.focus(); });
   });
   aide.querySelector("[data-fermer-aide]").addEventListener("click", function () { basculer(false); bouton.focus(); });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !panneau.hidden) { basculer(false); bouton.focus(); } });

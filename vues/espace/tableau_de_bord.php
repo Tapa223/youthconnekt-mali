@@ -38,7 +38,7 @@ $actions = [
       <span class="flex items-center justify-between text-sm text-white/90"><span>Profil complété à <strong class="text-white"><?= $completion ?> %</strong></span><span class="font-bold text-white underline-offset-2 group-hover:underline">Compléter</span></span>
       <span class="mt-1.5 block h-1.5 rounded-full bg-white/25" role="progressbar" aria-valuenow="<?= $completion ?>" aria-valuemin="0" aria-valuemax="100" aria-label="Profil complété"><span class="block h-1.5 rounded-full bg-orange" style="width: <?= $completion ?>%"></span></span>
     </a>
-    <?php else: ?><p class="mt-1 text-sm text-white/90">Heureux de vous revoir.</p><?php endif ?>
+    <?php else: ?><p class="mt-1 text-sm text-white/90">Voici vos opportunités du moment.</p><?php endif ?>
   </div>
 </section>
 
@@ -61,11 +61,6 @@ $actions = [
   </li>
   <?php endforeach ?>
 </ul>
-<?php /* L'assistant (questions, suggestions) : ici plutôt qu'en bulle flottante dans l'espace */ ?>
-<button type="button" class="flex w-full items-center gap-3 rounded-xl bg-white p-2.5 text-left transition-shadow hover:shadow-md sm:p-3" data-ouvrir-assistant>
-  <span class="grid size-8 shrink-0 place-items-center rounded-full bg-vert-clair text-vert" aria-hidden="true"><svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/><path d="M8.5 10.5h.01M12 10.5h.01M15.5 10.5h.01"/></svg></span>
-  <span class="min-w-0 flex-1"><span class="block text-[13px] font-bold text-encre sm:text-sm">Une question ou une suggestion ?</span><span class="block text-xs text-texte">Écrivez à l'équipe du chapitre</span></span>
-</button>
 
 <section class="bloc" aria-labelledby="titre-opp">
   <div class="flex items-center justify-between gap-3">
