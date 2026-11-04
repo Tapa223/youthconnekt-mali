@@ -177,10 +177,10 @@ $points = [
 </section>
 <?php endif ?>
 
-<?php /* 4. Mot du ministre : message complet affiché directement (maquette validée) */ ?>
-<section class="py-10 sm:py-20 lg:py-24" aria-labelledby="titre-ministre">
-  <div class="conteneur grid items-center gap-8 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
-    <div class="mx-auto hidden w-full md:block md:max-w-sm">
+<?php /* 4. Mot du ministre : tient sur un écran d'ordinateur ; replié sur téléphone avec « Voir plus » */ ?>
+<section class="py-10 sm:py-14 lg:py-16" aria-labelledby="titre-ministre">
+  <div class="conteneur grid items-center gap-8 md:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:gap-14">
+    <div class="mx-auto hidden w-full md:block md:max-w-[19rem]">
       <div class="apparition aspect-[4/5] overflow-hidden rounded-2xl border-t-[6px] border-orange bg-white shadow-xl shadow-vert/10">
         <?php partiel('partials/photo', ['image' => $mot['photo'], 'alt' => $nom_ministre, 'mention' => 'Photo officielle du ministre à fournir, format portrait']) ?>
       </div>
@@ -197,7 +197,7 @@ $points = [
           <span class="mt-1 block text-xs text-texte"><?= e($titre_ministre) ?></span>
         </p>
       </div>
-      <blockquote class="mt-5 space-y-2.5 text-base leading-relaxed text-vert sm:space-y-4 sm:text-xl">
+      <blockquote id="texte-ministre" class="repliable mt-5 space-y-2.5 text-base leading-relaxed text-vert sm:space-y-3 sm:text-lg lg:text-[1.15rem]" data-repliable>
         <?php if ($ministre_publie && trim((string) $mot['message']) !== ''): ?><?= paragraphes($mot['message']) ?>
         <?php elseif ($ministre_publie && trim((string) $mot['extrait']) !== ''): ?><p>« <?= e($mot['extrait']) ?> »</p>
         <?php else: ?>
@@ -206,7 +206,8 @@ $points = [
         <p>J'invite chaque jeune, chaque association et chaque entreprise à rejoindre le chapitre. Ensemble, faisons de cette plateforme un lieu d'échanges, de solidarité et de réussite pour le Mali. »</p>
         <?php endif ?>
       </blockquote>
-      <p class="mt-6 hidden border-l-[3px] border-orange pl-4 md:block">
+      <?php partiel('partials/voir_plus', ['cible' => 'texte-ministre']) ?>
+      <p class="mt-5 hidden border-l-[3px] border-orange pl-4 md:block">
         <span class="block font-bold text-encre"><?= e($nom_ministre) ?></span>
         <span class="mt-1 block text-sm text-texte"><?= e($titre_ministre) ?></span>
       </p>
