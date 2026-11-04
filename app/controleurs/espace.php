@@ -36,6 +36,7 @@ function vue_espace(string $nom, string $rubrique, string $titre, array $donnees
         'titre' => $titre . ' | YouthConnekt Mali',
         'noindex' => true,
         'rubrique' => $rubrique,
+        'nb_notifs' => nb_notifications_non_lues($u),
         'u' => $u,
         'profil' => $u['profil'],
     ]));
@@ -64,7 +65,6 @@ function tableau_de_bord(): void
     $evenements = actualites_publiees("AND date_evenement >= CURDATE() ORDER BY date_evenement");
 
     vue_espace('tableau_de_bord', 'tableau', 'Mon espace', [
-        'nouveautes' => nouveautes_membre($u, $demandes),
         'types' => types_opportunite(),
         'completion' => taux_completion($u['profil'], $u['type_compte']),
         'mes_communautes' => $mes_communautes,
@@ -83,26 +83,18 @@ function mes_propositions_liste(array $u): array
     return array_map('opportunite_preparer', lignes('SELECT * FROM opportunites WHERE propose_par = ? ORDER BY cree_le DESC', [$u['id']]));
 }
 
-/**
- * Ce qui a changé pour le membre ces 15 derniers jours : demandes d'intégration traitées,
- * opportunités qu'il a proposées et qui ont été publiées. [texte, lien, date, ton (vert/rouge)]
- */
-function nouveautes_membre(array $u, array $demandes): array
+/** Notifications : la liste complète ; les ouvrir les marque comme lues. */
+function notifications(): void
 {
-    $depuis = date('Y-m-d H:i:s', strtotime('-15 days'));
-    $liste = [];
-    foreach ($demandes as $d) {
-        if ($d['traitee_le'] && $d['traitee_le'] >= $depuis && $d['statut'] !== 'en_attente') {
-            $liste[] = $d['statut'] === 'acceptee'
-                ? ['Vous faites maintenant partie de la communauté ' . $d['communaute_nom'] . '.', url('/communaute/' . $d['communaute_slug']), $d['traitee_le'], 'vert']
-                : ["Votre demande pour la communauté " . $d['communaute_nom'] . " n'a pas été retenue.", url('/compte/mon-espace/communautes'), $d['traitee_le'], 'rouge'];
-        }
+    $u = exiger_membre();
+    $liste = notifications_membre($u);
+    $vues_le = notifications_vues_le($u);
+    try {
+        requete('UPDATE utilisateurs SET notifications_vues_le = ? WHERE id = ?', [maintenant(), $u['id']]);
+    } catch (Throwable $e) {
+        // Colonne absente tant que la mise à jour 9 n'est pas importée : la liste s'affiche quand même
     }
-    foreach (lignes("SELECT titre, slug, publie_le FROM opportunites WHERE propose_par = ? AND statut = 'publie' AND publie_le >= ? AND publie_le <= NOW()", [$u['id'], $depuis]) as $o) {
-        $liste[] = ['Votre opportunité « ' . $o['titre'] . ' » a été publiée.', url('/opportunites/' . $o['slug']), $o['publie_le'], 'vert'];
-    }
-    usort($liste, fn ($a, $b) => strcmp($b[2], $a[2]));
-    return array_slice($liste, 0, 4);
+    vue_espace('notifications', 'notifications', 'Notifications', ['notifications' => $liste, 'vues_le' => $vues_le], $u);
 }
 
 function mes_propositions(): void

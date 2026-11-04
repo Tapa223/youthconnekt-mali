@@ -44,6 +44,7 @@ const ROUTES = [
     ['GET', '/compte/mon-espace/communautes', 'espace', 'mes_communautes'],
     ['GET', '/compte/mon-espace/opportunites', 'espace', 'mes_opportunites'],
     ['GET', '/compte/mon-espace/propositions', 'espace', 'mes_propositions'],
+    ['GET', '/compte/mon-espace/notifications', 'espace', 'notifications'],
     ['GET|POST', '/compte/mon-espace/profil', 'espace', 'mon_profil'],
     ['GET|POST', '/compte/mon-espace/parametres', 'espace', 'parametres_compte'],
     ['GET', '/compte/membres/{id}', 'espace', 'profil_public'],

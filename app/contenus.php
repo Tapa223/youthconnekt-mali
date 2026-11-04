@@ -256,3 +256,72 @@ function avec_parametres(array $changements): string
     $chemin = strtok(adresse_actuelle(), '?');
     return $chemin . ($params ? '?' . http_build_query($params) : '');
 }
+
+// ---------------------------------------------------------------------------
+// Notifications du membre
+// ---------------------------------------------------------------------------
+
+/** Date à partir de laquelle une notification est « nouvelle » (dernière ouverture de la liste, sinon l'inscription). */
+function notifications_vues_le(array $u): string
+{
+    return (string) (($u['notifications_vues_le'] ?? null) ?: $u['inscrit_le']);
+}
+
+/**
+ * Notifications des 60 derniers jours : demandes d'intégration traitées, opportunités proposées puis publiées,
+ * nouvelles opportunités dans les communautés du membre. Chaque élément : [texte, lien, date, ton].
+ */
+function notifications_membre(array $u): array
+{
+    static $cache = [];
+    if (isset($cache[$u['id']])) {
+        return $cache[$u['id']];
+    }
+    $depuis = date('Y-m-d H:i:s', strtotime('-60 days'));
+    $liste = [];
+    $demandes = lignes(
+        "SELECT d.statut, d.traitee_le, d.communaute_id, c.nom, c.slug FROM demandes_adhesion d JOIN communautes c ON c.id = d.communaute_id
+         WHERE d.utilisateur_id = ? AND d.statut <> 'en_attente' AND d.traitee_le >= ?",
+        [$u['id'], $depuis]
+    );
+    foreach ($demandes as $d) {
+        $liste[] = $d['statut'] === 'acceptee'
+            ? ['Vous faites maintenant partie de la communauté ' . $d['nom'] . '.', url('/communaute/' . $d['slug']), $d['traitee_le'], 'vert']
+            : ['Votre demande pour la communauté ' . $d['nom'] . " n'a pas été retenue.", url('/compte/mon-espace/communautes'), $d['traitee_le'], 'rouge'];
+    }
+    foreach (lignes("SELECT titre, slug, publie_le FROM opportunites WHERE propose_par = ? AND statut = 'publie' AND publie_le >= ? AND publie_le <= NOW()", [$u['id'], $depuis]) as $o) {
+        $liste[] = ['Votre opportunité « ' . $o['titre'] . ' » a été publiée.', url('/opportunites/' . $o['slug']), $o['publie_le'], 'vert'];
+    }
+    $ids = array_map('intval', array_column(lignes("SELECT communaute_id FROM demandes_adhesion WHERE utilisateur_id = ? AND statut = 'acceptee'", [$u['id']]), 'communaute_id'));
+    if ($ids) {
+        $opps = lignes(
+            "SELECT DISTINCT o.titre, o.slug, o.publie_le, c.nom FROM opportunites o
+             JOIN opportunite_communaute oc ON oc.opportunite_id = o.id JOIN communautes c ON c.id = oc.communaute_id
+             WHERE oc.communaute_id IN (" . marqueurs($ids) . ") AND o.statut = 'publie' AND o.publie_le >= ? AND o.publie_le <= NOW()
+               AND (o.propose_par IS NULL OR o.propose_par <> ?) AND (o.date_limite IS NULL OR o.date_limite >= CURDATE())",
+            array_merge($ids, [max($depuis, (string) $u['inscrit_le']), $u['id']])
+        );
+        $vus = [];
+        foreach ($opps as $o) {
+            if (isset($vus[$o['slug']])) continue;
+            $vus[$o['slug']] = true;
+            $liste[] = ['Nouvelle opportunité dans ' . $o['nom'] . ' : ' . $o['titre'] . '.', url('/opportunites/' . $o['slug']), $o['publie_le'], 'orange'];
+        }
+    }
+    usort($liste, fn ($a, $b) => strcmp($b[2], $a[2]));
+    return $cache[$u['id']] = $liste;
+}
+
+function nb_notifications_non_lues(array $u): int
+{
+    if (!est_membre($u)) {
+        return 0;
+    }
+    try {
+        $depuis = notifications_vues_le($u);
+        return count(array_filter(notifications_membre($u), fn ($n) => $n[2] > $depuis));
+    } catch (Throwable $e) {
+        return 0;
+    }
+}
+

@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS utilisateurs (
   prenom_admin VARCHAR(80) NOT NULL DEFAULT '',
   nom_admin VARCHAR(80) NOT NULL DEFAULT '',
   derniere_connexion DATETIME NULL,
+  notifications_vues_le DATETIME NULL,
   inscrit_le DATETIME NOT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY uk_utilisateurs_email (email),

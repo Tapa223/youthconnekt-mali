@@ -1,6 +1,7 @@
 <?php
 $u = utilisateur();
 $photo_membre = $u ? ($u['profil']['photo'] ?? $u['profil']['logo'] ?? '') : '';
+$nb_notifs_entete = $u ? nb_notifications_non_lues($u) : 0;
 $pastille = fn (string $taille) => $photo_membre
     ? '<img src="' . e(media($photo_membre)) . '" alt="" class="' . $taille . ' shrink-0 rounded-full bg-white object-cover">'
     : '<span class="grid ' . $taille . ' shrink-0 place-items-center rounded-full bg-orange text-xs" aria-hidden="true">' . e($u['initiales']) . '</span>';
@@ -36,7 +37,7 @@ $navigation = [
     <div class="hidden items-center gap-2.5 xl:flex">
       <?php if ($u): ?>
         <a href="<?= url(est_membre($u) ? '/compte/mon-espace' : '/gestion') ?>" class="inline-flex min-h-11 items-center gap-2.5 rounded-full bg-vert py-1.5 pr-5 pl-1.5 text-[15px] font-bold text-white hover:bg-vert-fonce">
-          <?= $pastille('size-8') ?>
+          <span class="relative"><?= $pastille('size-8') ?><?php if ($nb_notifs_entete): ?><span class="absolute -top-1.5 -right-1.5 grid min-w-[18px] place-items-center rounded-full bg-orange px-1 text-[10px] leading-[18px] font-bold text-white ring-2 ring-vert" aria-label="<?= $nb_notifs_entete ?> notification<?= pluriel($nb_notifs_entete) ?>"><?= $nb_notifs_entete > 9 ? '9+' : $nb_notifs_entete ?></span><?php endif ?></span>
           <?= est_membre($u) ? 'Mon espace' : 'Administration' ?>
         </a>
       <?php else: ?>
@@ -45,8 +46,9 @@ $navigation = [
       <?php endif ?>
     </div>
 
-    <button type="button" class="-mr-2 grid size-12 place-items-center rounded-lg text-vert hover:bg-vert-clair xl:hidden" aria-controls="menu-mobile" aria-expanded="false" data-ouvrir-menu>
+    <button type="button" class="relative -mr-2 grid size-12 place-items-center rounded-lg text-vert hover:bg-vert-clair xl:hidden" aria-controls="menu-mobile" aria-expanded="false" data-ouvrir-menu>
       <span class="sr-only">Ouvrir le menu</span>
+      <?php if ($nb_notifs_entete): ?><span class="absolute top-2.5 right-2 size-2.5 rounded-full bg-orange ring-2 ring-white" aria-hidden="true"></span><?php endif ?>
       <svg class="size-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
     </button>
   </div>
@@ -76,7 +78,7 @@ $navigation = [
     </nav>
     <div class="space-y-3 border-t border-ligne p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
       <?php if ($u): ?>
-        <a href="<?= url(est_membre($u) ? '/compte/mon-espace' : '/gestion') ?>" class="btn btn-vert w-full"><?= $pastille('size-7') ?> <?= est_membre($u) ? 'Mon espace' : 'Administration' ?></a>
+        <a href="<?= url(est_membre($u) ? '/compte/mon-espace' : '/gestion') ?>" class="btn btn-vert w-full"><?= $pastille('size-7') ?> <?= est_membre($u) ? 'Mon espace' : 'Administration' ?><?php if ($nb_notifs_entete): ?> <span class="rounded-full bg-orange px-2 text-xs leading-5"><?= $nb_notifs_entete ?></span><?php endif ?></a>
         <form method="post" action="<?= url('/compte/deconnexion') ?>" data-confirmer="Êtes-vous sûr de vouloir vous déconnecter ?" data-confirmer-oui="Se déconnecter"><?= csrf() ?><button type="submit" class="btn btn-contour w-full">Se déconnecter</button></form>
       <?php else: ?>
         <a href="<?= url('/compte/inscription') ?>" class="btn btn-vert w-full">Rejoindre le chapitre</a>
