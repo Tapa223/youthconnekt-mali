@@ -34,11 +34,11 @@ $id_form = 'liste-' . $r['slug'];
             if ($voir && isset($l['statut']) && $l['statut'] !== 'publie') $voir = null; ?>
         <tr>
           <?php if ($avec_actions): ?><td class="ycm-case"><input type="checkbox" name="ids[]" value="<?= (int) $l['id'] ?>" aria-label="Sélectionner"></td><?php endif ?>
-          <?php foreach ($r['colonnes'] as $col): ?>
-          <td class="<?= e($col['classe'] ?? '') ?>"><?php if (!empty($col['lien'])): ?><a href="<?= e($url_modifier) ?>" class="ycm-lien-ligne"><?= ($col[1])($l) ?></a><?php else: ?><?= ($col[1])($l) ?><?php endif ?></td>
+          <?php foreach ($r['colonnes'] as $i_col => $col): ?>
+          <td class="<?= e($col['classe'] ?? '') ?>" data-label="<?= $i_col ? e($col[0]) : '' ?>"><?php if (!empty($col['lien'])): ?><a href="<?= e($url_modifier) ?>" class="ycm-lien-ligne"><?= ($col[1])($l) ?></a><?php else: ?><?= ($col[1])($l) ?><?php endif ?></td>
           <?php endforeach ?>
           <?php if (empty($r['pas_de_lien_modifier'])): ?>
-          <td class="ycm-droite"><?= liens_ligne(array_filter(['Voir' => $voir, 'Modifier' => $url_modifier])) ?></td>
+          <td class="ycm-droite ycm-td-actions"><?= liens_ligne(array_filter(['Voir' => $voir, 'Modifier' => $url_modifier])) ?></td>
           <?php endif ?>
         </tr>
         <?php endforeach ?>

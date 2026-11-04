@@ -29,6 +29,7 @@ const MENU_ADMIN = [
     [null, [['Tableau de bord', '', 'tableau', null]]],
     ['Contenus', [
         ['Opportunités', 'opportunites', 'mallette', 'opportunites'],
+        ['Propositions des membres', 'propositions', 'bulle', 'opportunites'],
         ["Types d'opportunités", 'types-opportunites', 'etiquette', 'opportunites'],
         ['Actualités et événements', 'actualites', 'journal', 'actualites'],
         ["Catégories d'actualités", 'categories-actualites', 'etiquette', 'actualites'],
@@ -64,7 +65,7 @@ function menu_admin(): array
         $pastilles['messages'] = (int) valeur('SELECT COUNT(*) FROM messages_contact WHERE traite = 0');
     }
     if (peut('opportunites')) {
-        $pastilles['opportunites'] = (int) valeur("SELECT COUNT(*) FROM opportunites WHERE statut = 'propose'");
+        $pastilles['propositions'] = (int) valeur("SELECT COUNT(*) FROM opportunites WHERE statut = 'propose'");
     }
     if (peut('temoignages')) {
         try {

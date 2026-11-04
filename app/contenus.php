@@ -186,6 +186,20 @@ function types_communaute(): array
     return $types;
 }
 
+/** Délai de réponse aux demandes d'intégration : passé ce délai sans décision de l'équipe, la demande est acceptée. */
+const DELAI_ADHESION_HEURES = 24;
+
+/** Accepte automatiquement les demandes d'intégration restées sans réponse plus de 24 heures. */
+function valider_demandes_en_retard(): void
+{
+    try {
+        requete("UPDATE demandes_adhesion SET statut = 'acceptee', traitee_le = NOW(), traitee_par = NULL
+                 WHERE statut = 'en_attente' AND demandee_le <= NOW() - INTERVAL " . DELAI_ADHESION_HEURES . ' HOUR');
+    } catch (Throwable $e) {
+        journaliser('erreurs.log', 'Validation automatique des demandes : ' . $e->getMessage());
+    }
+}
+
 function communaute_preparer(array $c): array
 {
     $c['url'] = url('/communaute/' . $c['slug']);

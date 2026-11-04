@@ -143,6 +143,7 @@ CREATE TABLE IF NOT EXISTS demandes_adhesion (
   statut ENUM('en_attente','acceptee','refusee') NOT NULL DEFAULT 'en_attente',
   motivation TEXT NULL,
   apport TEXT NULL,
+  projet TEXT NULL,
   demandee_le DATETIME NOT NULL,
   traitee_le DATETIME NULL,
   traitee_par INT UNSIGNED NULL,

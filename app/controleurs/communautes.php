@@ -109,19 +109,21 @@ function integrer(string $slug): void
         rediriger($c['url']);
     }
 
-    $valeurs = ['motivation' => '', 'apport' => '', 'accord' => ''];
+    $valeurs = ['motivation' => '', 'projet' => '', 'apport' => '', 'accord' => ''];
     $erreurs = [];
     if (est_post()) {
         foreach (array_keys($valeurs) as $k) {
             $valeurs[$k] = post($k);
         }
         if (mb_strlen($valeurs['motivation']) < 20) {
-            $erreurs['motivation'] = $valeurs['motivation'] === '' ? 'Dites en quelques mots pourquoi vous souhaitez intégrer cette communauté.' : 'Développez un peu plus (20 caractères au minimum).';
+            $erreurs['motivation'] = $valeurs['motivation'] === '' ? 'Dites en quelques mots ce qui vous amène dans cette communauté.' : 'Développez un peu plus (20 caractères au minimum).';
         } elseif (mb_strlen($valeurs['motivation']) > 1000) {
             $erreurs['motivation'] = '1 000 caractères au maximum.';
         }
-        if (mb_strlen($valeurs['apport']) > 1000) {
-            $erreurs['apport'] = '1 000 caractères au maximum.';
+        foreach (['apport', 'projet'] as $champ) {
+            if (mb_strlen($valeurs[$champ]) > 1000) {
+                $erreurs[$champ] = '1 000 caractères au maximum.';
+            }
         }
         if ($valeurs['accord'] === '') {
             $erreurs['accord'] = 'Cochez cette case pour envoyer votre demande.';
@@ -132,6 +134,7 @@ function integrer(string $slug): void
                 'statut' => $automatique ? 'acceptee' : 'en_attente',
                 'motivation' => $valeurs['motivation'],
                 'apport' => $valeurs['apport'],
+                'projet' => $valeurs['projet'],
                 'demandee_le' => maintenant(),
                 'traitee_le' => $automatique ? maintenant() : null,
                 'traitee_par' => null,
@@ -143,7 +146,7 @@ function integrer(string $slug): void
             }
             flash('succes', $automatique
                 ? 'Bienvenue dans la communauté ' . $c['nom'] . '.'
-                : 'Votre demande pour intégrer ' . $c['nom'] . ' a bien été envoyée. Vous la suivez dans votre espace.');
+                : 'Votre demande pour intégrer ' . $c['nom'] . " a bien été envoyée. L'équipe répond sous 24 heures ; sans réponse, vous êtes intégré automatiquement.");
             rediriger($c['url']);
         }
     }

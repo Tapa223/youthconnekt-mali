@@ -103,8 +103,40 @@ function tableau_de_bord(): void
         }
     }
 
+    // Participation des jeunes : ce que les membres apportent eux-mêmes au chapitre
+    $participation = [];
+    $contributeurs = [];
+    if (peut('opportunites') || peut('messages') || peut('temoignages')) {
+        $nb = fn (string $sql) => (int) (function () use ($sql) { try { return valeur($sql); } catch (Throwable $e) { return 0; } })();
+        $opp = $nb('SELECT COUNT(*) FROM opportunites WHERE propose_par IS NOT NULL');
+        $opp_pub = $nb("SELECT COUNT(*) FROM opportunites WHERE propose_par IS NOT NULL AND statut = 'publie'");
+        $init = $nb("SELECT COUNT(*) FROM messages_contact WHERE objet LIKE 'Proposition d''initiative%'");
+        $tem = $nb('SELECT COUNT(*) FROM temoignages WHERE utilisateur_id IS NOT NULL');
+        $tem_pub = $nb('SELECT COUNT(*) FROM temoignages WHERE utilisateur_id IS NOT NULL AND publie = 1');
+        $adh = $nb("SELECT COUNT(*) FROM demandes_adhesion WHERE statut = 'acceptee'");
+        $participation = [
+            ['Opportunités proposées', $opp, $opp_pub . ' publiée' . pluriel($opp_pub), url('/gestion/propositions')],
+            ['Initiatives présentées', $init, 'par les jeunes et les organisations', url('/gestion/messages', ['q' => "Proposition d'initiative"])],
+            ['Témoignages envoyés', $tem, $tem_pub . ' affiché' . pluriel($tem_pub), url('/gestion/temoignages')],
+            ['Adhésions aux communautés', $adh, 'membres acceptés', url('/gestion/communautes')],
+        ];
+        try {
+            $contributeurs = lignes(
+                "SELECT u.*, (SELECT COUNT(*) FROM opportunites o WHERE o.propose_par = u.id)
+                   + (SELECT COUNT(*) FROM temoignages t WHERE t.utilisateur_id = u.id)
+                   + (SELECT COUNT(*) FROM messages_contact m WHERE m.email = u.email AND m.objet LIKE 'Proposition d''initiative%') AS nb
+                 FROM utilisateurs u WHERE u.type_compte <> 'administration' HAVING nb > 0 ORDER BY nb DESC LIMIT 5"
+            );
+            $contributeurs = array_map(fn ($m) => completer_utilisateur($m) + ['nb' => (int) $m['nb']], $contributeurs);
+        } catch (Throwable $e) {
+            $contributeurs = [];
+        }
+    }
+
     vue_admin('admin/tableau_de_bord', [
         'titre_page' => 'Tableau de bord',
+        'participation' => $participation,
+        'contributeurs' => $contributeurs,
         'ariane' => [],
         'cartes' => $cartes,
         'inscriptions' => $inscriptions,
@@ -269,7 +301,7 @@ function liste(string $slug): void
     }
 
     // Conditions : onglet, filtres, recherche
-    $conditions = ['1=1'];
+    $conditions = [$r['condition']];
     $params = [];
     $onglet = (int) get('onglet');
     if ($onglet > 0 && isset($r['onglets'][$onglet - 1])) {
@@ -309,11 +341,11 @@ function liste(string $slug): void
     // Onglets avec leur nombre d'éléments
     $onglets = [];
     if ($r['onglets']) {
-        $onglets[] = ['libelle' => $r['libelle_tous'], 'nombre' => (int) valeur("SELECT COUNT(*) {$r['depuis']}"), 'url' => url('/gestion/' . $slug), 'actif' => $onglet === 0];
+        $onglets[] = ['libelle' => $r['libelle_tous'], 'nombre' => (int) valeur("SELECT COUNT(*) {$r['depuis']} WHERE {$r['condition']}"), 'url' => url('/gestion/' . $slug), 'actif' => $onglet === 0];
         foreach ($r['onglets'] as $i => [$libelle, $condition]) {
             $onglets[] = [
                 'libelle' => $libelle,
-                'nombre' => (int) valeur("SELECT COUNT(*) {$r['depuis']} WHERE $condition"),
+                'nombre' => (int) valeur("SELECT COUNT(*) {$r['depuis']} WHERE {$r['condition']} AND $condition"),
                 'url' => url('/gestion/' . $slug, ['onglet' => $i + 1]),
                 'actif' => $onglet === $i + 1,
             ];

@@ -14,8 +14,9 @@
         <div><dt>Type de compte</dt><dd><?= e(TYPES_COMPTE[$membre['type_compte']] ?? '') ?><?= $p ? ' · ' . e(libelle_profil($p, $membre['type_compte'])) : '' ?></dd></div>
         <?php if ($p): ?><div><dt>Région</dt><dd><?= e(($p['ville'] ? $p['ville'] . ', ' : '') . (REGIONS[$p['region']] ?? '')) ?></dd></div><?php endif ?>
         <?php if ($p && trim((string) $p['presentation']) !== ''): ?><div><dt>Présentation</dt><dd><?= nl2br(e($p['presentation'])) ?></dd></div><?php endif ?>
-        <div><dt>Motivation</dt><dd><?= trim((string) ($d['motivation'] ?? '')) !== '' ? nl2br(e($d['motivation'])) : '<span class="ycm-discret">Non renseignée (demande envoyée avant le formulaire)</span>' ?></dd></div>
-        <?php if (trim((string) ($d['apport'] ?? '')) !== ''): ?><div><dt>Ce qu'il peut apporter</dt><dd><?= nl2br(e($d['apport'])) ?></dd></div><?php endif ?>
+        <div><dt>Ce qui l'amène</dt><dd><?= trim((string) ($d['motivation'] ?? '')) !== '' ? nl2br(e($d['motivation'])) : '<span class="ycm-discret">Non renseignée (demande envoyée avant le formulaire)</span>' ?></dd></div>
+        <?php if (trim((string) ($d['projet'] ?? '')) !== ''): ?><div><dt>Son initiative ou projet</dt><dd><?= nl2br(e($d['projet'])) ?></dd></div><?php endif ?>
+        <?php if (trim((string) ($d['apport'] ?? '')) !== ''): ?><div><dt>Ce qu'il peut partager</dt><dd><?= nl2br(e($d['apport'])) ?></dd></div><?php endif ?>
         <div><dt>Communauté demandée</dt><dd><strong style="color:var(--ycm-vert)"><?= e($d['communaute_nom']) ?></strong></dd></div>
         <div><dt>Demandée le</dt><dd><?= e(date_longue($d['demandee_le'])) ?></dd></div>
       </dl>

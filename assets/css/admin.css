@@ -663,3 +663,47 @@ input[type=file]::file-selector-button {
 }
 .ycm-menu-sortie button:hover { background: var(--ycm-orange); }
 .ycm-menu-sortie svg { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Participation des jeunes (tableau de bord) */
+.ycm-participation { margin-bottom: 26px; }
+.ycm-participation .ycm-sous-titre { margin: 2px 0 16px; }
+.ycm-participation-grille { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.ycm-participation-chiffre { display: flex; flex-direction: column; gap: 2px; padding: 14px 16px; border-radius: 14px; background: var(--ycm-gris, #f3f4f3); color: var(--ycm-encre); text-decoration: none; border-left: 4px solid var(--ycm-orange); }
+.ycm-participation-chiffre:hover { background: #fff; box-shadow: 0 6px 18px rgb(3 94 77 / .08); }
+.ycm-participation-chiffre strong { font-size: 28px; line-height: 1.1; color: var(--ycm-vert); }
+.ycm-participation-chiffre span { font-weight: 700; font-size: 14px; }
+.ycm-participation-chiffre small { color: var(--ycm-texte); font-size: 12.5px; }
+.ycm-participation-titre { margin: 20px 0 8px; font-size: 15px; color: var(--ycm-vert); }
+.ycm-participation-liste { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 0; padding: 0; }
+.ycm-participation-liste a { display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 6px; border: 1px solid var(--ycm-ligne, #e3e6e4); border-radius: 999px; color: var(--ycm-encre); text-decoration: none; font-weight: 700; font-size: 14px; }
+.ycm-participation-liste a:hover { border-color: var(--ycm-orange); }
+.ycm-participation-liste small { color: var(--ycm-texte); font-weight: 400; }
+@media (max-width: 900px) { .ycm-participation-grille { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Téléphone : chaque ligne d'une liste devient une petite carte (plus de défilement de côté) */
+@media (max-width: 767px) {
+  .ycm-liste .ycm-resultats { overflow: visible; background: transparent; border: 0; }
+  .ycm-liste .ycm-tableau thead { display: none; }
+  .ycm-liste .ycm-tableau, .ycm-liste .ycm-tableau tbody { display: block; }
+  .ycm-liste .ycm-tableau tr { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 10px; row-gap: 2px; align-items: center; padding: 12px 14px; margin-bottom: 10px; background: #fff; border: 1px solid var(--ycm-ligne); border-radius: 16px; }
+  .ycm-liste .ycm-tableau td { display: flex; gap: 8px; align-items: center; justify-content: space-between; padding: 3px 0; border: 0; grid-column: 1 / -1; font-size: 14px; min-width: 0; }
+  .ycm-liste .ycm-tableau td.ycm-case { grid-column: 1; grid-row: 1; padding: 0; }
+  .ycm-liste .ycm-tableau td.ycm-case + td { grid-column: 2; grid-row: 1; }
+  .ycm-liste .ycm-tableau td[data-label]:not([data-label=""])::before { content: attr(data-label); color: var(--ycm-texte); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; flex-shrink: 0; }
+  .ycm-liste .ycm-tableau td[data-label=""] { display: block; }
+  .ycm-liste .ycm-tableau td.ycm-td-actions { justify-content: flex-end; padding-top: 8px; margin-top: 4px; border-top: 1px solid var(--ycm-ligne); }
+  .ycm-liste .ycm-tableau tbody tr:hover td { background: transparent; }
+  .ycm-liste .ycm-tableau tbody tr:has(input:checked) { border-color: var(--ycm-orange); background: var(--ycm-orange-clair, #fff4ef); }
+  .ycm-liste .ycm-tableau tbody tr:has(input:checked) td { background: transparent; }
+  .ycm-actions-groupees { flex-wrap: wrap; border-radius: 16px; margin-bottom: 10px; }
+}
+@media (max-width: 767px) {
+  /* Onglets et filtres : sur plusieurs lignes, jamais plus larges que l'écran */
+  .ycm-onglets { flex-wrap: wrap; overflow: visible; min-width: 0; max-width: 100%; }
+  .ycm-onglets a { padding-left: 12px; padding-right: 12px; font-size: 13px; }
+  .ycm-filtres-droite { width: 100%; min-width: 0; }
+  .ycm-filtres-droite select { flex: 1 1 0; min-width: 0; }
+}
+@media (max-width: 767px) {
+  .ycm-liste .ycm-tableau td.ycm-case { width: auto; display: block; align-self: start; padding-top: 2px; }
+}

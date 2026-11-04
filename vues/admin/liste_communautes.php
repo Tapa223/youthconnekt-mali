@@ -14,7 +14,7 @@
           <td><?= nom_et_detail($d['membre_nom'], implode(' · ', $detail), '<span class="ycm-avatar ycm-avatar--' . $av[$k % 4] . '" aria-hidden="true">' . e(initiales($d['membre_nom'])) . '</span>') ?></td>
           <td><strong style="color:var(--ycm-vert)"><?= e($d['communaute_nom']) ?></strong></td>
           <td><?= e(date_courte($d['demandee_le'])) ?></td>
-          <td><?= badge('En attente', 'orange') ?></td>
+          <td><?= badge('En attente', 'orange') ?><?php $reste = (int) ceil((strtotime($d['demandee_le']) + DELAI_ADHESION_HEURES * 3600 - time()) / 3600); ?><br><small class="ycm-discret">Acceptée automatiquement dans <?= max(1, $reste) ?> h</small></td>
           <td class="ycm-droite"><?= liens_ligne(['Voir la demande' => url('/gestion/demandes/' . $d['id'])]) ?></td>
         </tr>
       <?php endforeach ?>

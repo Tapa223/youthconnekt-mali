@@ -25,11 +25,12 @@ $infos = array_filter([
     <form method="post" class="rounded-3xl bg-white p-6 sm:p-9" novalidate>
       <?= csrf() ?>
       <h2 class="text-2xl font-bold">Votre demande</h2>
-      <p class="mt-1 text-[15px]"><?= $refusee ? 'Votre précédente demande n\'a pas été retenue : vous pouvez en envoyer une nouvelle.' : 'Quelques mots suffisent. L\'équipe de la communauté étudie chaque demande.' ?></p>
+      <p class="mt-1 text-[15px]"><?= $refusee ? 'Votre précédente demande n\'a pas été retenue : vous pouvez en envoyer une nouvelle.' : 'Quelques mots suffisent. Réponse sous 24 heures : sans réponse de l\'équipe, vous êtes intégré automatiquement.' ?></p>
       <?php if ($erreurs): ?><p class="mt-5 rounded-xl border border-rouge/30 bg-rouge/5 px-4 py-3 text-sm text-rouge" role="alert">Certaines informations sont à compléter.</p><?php endif ?>
       <div class="mt-6 grid gap-5">
-        <?php partiel('partials/champ', ['nom' => 'motivation', 'libelle' => 'Pourquoi souhaitez-vous intégrer cette communauté ?', 'type' => 'textarea', 'valeur' => $valeurs['motivation'], 'erreur' => $erreurs['motivation'] ?? '', 'attributs' => ['rows' => 5, 'maxlength' => 1000, 'placeholder' => 'Votre projet, vos attentes, ce qui vous intéresse dans cette communauté…']]) ?>
-        <?php partiel('partials/champ', ['nom' => 'apport', 'libelle' => 'Ce que vous pouvez apporter à la communauté', 'type' => 'textarea', 'requis' => false, 'valeur' => $valeurs['apport'], 'erreur' => $erreurs['apport'] ?? '', 'attributs' => ['rows' => 3, 'maxlength' => 1000, 'placeholder' => 'Compétences, expérience, temps, réseau…']]) ?>
+        <?php partiel('partials/champ', ['nom' => 'motivation', 'libelle' => "Qu'est-ce qui vous amène dans cette communauté ?", 'type' => 'textarea', 'valeur' => $valeurs['motivation'], 'erreur' => $erreurs['motivation'] ?? '', 'attributs' => ['rows' => 4, 'maxlength' => 1000, 'placeholder' => 'Ce qui vous intéresse, ce que vous espérez y trouver ou y apprendre…']]) ?>
+        <?php partiel('partials/champ', ['nom' => 'projet', 'libelle' => 'Portez-vous déjà une initiative ou un projet dans ce domaine ?', 'type' => 'textarea', 'requis' => false, 'aide' => 'Si oui, présentez-le en une ou deux phrases. Sinon, laissez vide.', 'valeur' => $valeurs['projet'], 'erreur' => $erreurs['projet'] ?? '', 'attributs' => ['rows' => 3, 'maxlength' => 1000, 'placeholder' => 'Exemple : un club de code au lycée de Kati, une petite exploitation maraîchère…']]) ?>
+        <?php partiel('partials/champ', ['nom' => 'apport', 'libelle' => 'Que pourriez-vous partager avec les autres membres ?', 'type' => 'textarea', 'requis' => false, 'valeur' => $valeurs['apport'], 'erreur' => $erreurs['apport'] ?? '', 'attributs' => ['rows' => 3, 'maxlength' => 1000, 'placeholder' => 'Une compétence, une expérience, du temps, un contact…']]) ?>
         <?php partiel('partials/case', ['nom' => 'accord', 'libelle' => "J'accepte que les informations de mon profil soient transmises à l'équipe qui anime la communauté.", 'coche' => $valeurs['accord'] !== '', 'erreur' => $erreurs['accord'] ?? '']) ?>
       </div>
       <div class="mt-7 flex flex-wrap items-center gap-3">

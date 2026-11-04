@@ -18,6 +18,26 @@
 </section>
 <?php endif ?>
 
+<?php if ($participation): ?>
+<section class="ycm-boite ycm-boite--pad ycm-participation" aria-labelledby="tdb-participation">
+  <div class="ycm-boite-tete ycm-boite-tete--nu"><h2 id="tdb-participation">Participation des jeunes</h2></div>
+  <p class="ycm-sous-titre">Ce que les membres apportent eux-mêmes au chapitre.</p>
+  <div class="ycm-participation-grille">
+    <?php foreach ($participation as [$libelle, $nombre, $detail, $lien]): ?>
+    <a href="<?= e($lien) ?>" class="ycm-participation-chiffre"><strong><?= $nombre ?></strong><span><?= e($libelle) ?></span><small><?= e($detail) ?></small></a>
+    <?php endforeach ?>
+  </div>
+  <?php if ($contributeurs): ?>
+  <h3 class="ycm-participation-titre">Les plus actifs</h3>
+  <ul class="ycm-participation-liste">
+    <?php foreach ($contributeurs as $k => $m): ?>
+    <li><a href="<?= url('/gestion/comptes/' . $m['id']) ?>"><span class="ycm-avatar ycm-avatar--<?= ['orange', 'turquoise', 'bleu', 'vert'][$k % 4] ?>" aria-hidden="true"><?= e($m['initiales']) ?></span><span><?= e($m['nom_affiche']) ?></span><small><?= $m['nb'] ?> contribution<?= pluriel($m['nb']) ?></small></a></li>
+    <?php endforeach ?>
+  </ul>
+  <?php endif ?>
+</section>
+<?php endif ?>
+
 <div class="ycm-tdb-grille">
   <div class="ycm-tdb-principal">
     <?php if ($url_membres): ?>

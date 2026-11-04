@@ -94,7 +94,7 @@ function ressource(string $slug): ?array
             'recherche' => [], 'actions' => [], 'export' => [], 'par_page' => 25, 'peut_ajouter' => true,
             'peut_supprimer' => true, 'groupes' => [], 'vue_liste' => 'admin/liste', 'url_voir' => null,
             'aide_cote' => '', 'fiche_unique' => false, 'galerie' => null, 'liaison' => null,
-            'avant' => null, 'apres' => null, 'champs_select' => 't.*', 'depuis' => 'FROM `' . $r['table'] . '` t',
+            'avant' => null, 'apres' => null, 'condition' => '1=1', 'champs_select' => 't.*', 'depuis' => 'FROM `' . $r['table'] . '` t',
             'titre_ajout' => $r['libelle_ajout'] ?? 'Ajouter', 'nom_element' => fn ($l) => (string) ($l['titre'] ?? $l['nom'] ?? ''),
         ];
     }
@@ -103,8 +103,12 @@ function ressource(string $slug): ?array
 
 function ressources(): array
 {
+    static $cache = null;
+    if ($cache !== null) {
+        return $cache;
+    }
     $aujourdhui = aujourdhui();
-    return [
+    $liste = [
 
         // ------------------------------------------------------------------
         'opportunites' => [
@@ -161,7 +165,7 @@ function ressources(): array
                 ['Ciblage', 'description' => "Les membres de ces communautés verront l'opportunité dans leur espace.", 'champs' => [
                     'communautes' => ['type' => 'communautes', 'libelle' => 'Communautés concernées', 'requis' => false],
                 ]],
-                groupe_publication(true),
+                groupe_publication(),
                 ['Origine', 'cote' => true, 'champs' => [
                     'propose_par' => ['type' => 'lecture', 'libelle' => 'Proposée par', 'html' => function ($l) {
                         if (empty($l['propose_par'])) return "L'équipe (ajoutée dans l'administration)";
@@ -737,6 +741,45 @@ function ressources(): array
             'avant' => 'avant_compte',
         ],
     ];
+
+    // Propositions des membres : mêmes fiches que les opportunités, dans une rubrique à part.
+    // L'administrateur relit, corrige si besoin, puis publie (ou ne retient pas).
+    $opp = $liste['opportunites'];
+    $liste['opportunites']['condition'] = 't.propose_par IS NULL';
+    $liste['opportunites']['onglets'] = [
+        ['Publiées', "t.statut = 'publie'"],
+        ['Brouillons', "t.statut = 'brouillon'"],
+        ['Clôturées', 't.date_limite < CURDATE()'],
+    ];
+    $liste['opportunites']['description'] = "Les opportunités créées par l'équipe. Celles des membres sont dans « Propositions des membres ».";
+    $groupes = array_values(array_filter($opp['groupes'], fn ($g) => !in_array($g[0], ['Publication', 'Origine'], true)));
+    array_unshift($groupes, ['Membre', 'cote' => true, 'champs' => $opp['groupes'][array_key_last($opp['groupes'])]['champs']]);
+    $groupes[] = ['Décision', 'cote' => true, 'description' => "Relisez et corrigez si besoin, puis choisissez « Validée et publiée ».", 'champs' => [
+        'statut' => ['type' => 'select', 'libelle' => 'Décision', 'options' => ['propose' => 'À valider', 'publie' => 'Validée et publiée', 'brouillon' => 'Non retenue'], 'defaut' => 'propose'],
+        'publie_le' => ['type' => 'datetime', 'libelle' => 'Date de publication', 'requis' => false, 'aide' => 'Vide : maintenant.', 'defaut' => 'maintenant'],
+        'slug' => ['type' => 'slug', 'libelle' => 'Adresse (URL)', 'requis' => false, 'max' => 200],
+    ]];
+    $liste['propositions'] = array_merge($opp, [
+        'titre' => 'Propositions des membres', 'rubrique' => 'opportunites', 'condition' => 't.propose_par IS NOT NULL',
+        'description' => "Les opportunités envoyées par les membres depuis leur espace. Relisez-les, corrigez-les si besoin, puis publiez-les.",
+        'peut_ajouter' => false, 'libelle_tous' => 'Toutes', 'ordre' => "t.statut = 'propose' DESC, t.cree_le DESC",
+        'onglets' => [
+            ['À valider', "t.statut = 'propose'"],
+            ['Publiées', "t.statut = 'publie'"],
+            ['Non retenues', "t.statut = 'brouillon'"],
+        ],
+        'colonnes' => [
+            ['Opportunité', fn ($l) => nom_et_detail($l['titre'], 'Proposée par ' . ($l['propose_par_nom'] ?? '') . ' le ' . date_chiffres($l['cree_le'])), 'lien' => true],
+            $opp['colonnes'][1], $opp['colonnes'][2],
+            ['Décision', fn ($l) => ['propose' => badge('À valider', 'orange'), 'publie' => badge('Publiée', 'vert'), 'brouillon' => badge('Non retenue', 'gris')][$l['statut']] ?? ''],
+        ],
+        'actions' => [
+            'publier' => ['Valider et publier', fn ($ids) => requete("UPDATE opportunites SET statut = 'publie', publie_le = LEAST(publie_le, NOW()) WHERE propose_par IS NOT NULL AND id IN (" . marqueurs($ids) . ')', $ids)->rowCount() . ' proposition(s) publiée(s).'],
+            'refuser' => ['Ne pas retenir', fn ($ids) => requete("UPDATE opportunites SET statut = 'brouillon' WHERE propose_par IS NOT NULL AND id IN (" . marqueurs($ids) . ')', $ids)->rowCount() . ' proposition(s) non retenue(s).'],
+        ],
+        'groupes' => $groupes,
+    ]);
+    return $cache = $liste;
 }
 
 /** Formulaire d'un compte : les droits d'administration ne sont modifiables que par un administrateur principal. */

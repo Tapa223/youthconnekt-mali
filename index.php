@@ -35,4 +35,9 @@ if ($chemin !== '/installation' && !base_installee()) {
     rediriger(url('/installation'));
 }
 
+// Demandes d'intégration sans réponse depuis 24 heures : acceptées automatiquement
+if ($chemin !== '/installation') {
+    valider_demandes_en_retard();
+}
+
 router($chemin, $_SERVER['REQUEST_METHOD'] ?? 'GET');
