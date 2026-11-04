@@ -3,7 +3,7 @@
 $tons = ['vert' => 'bg-vert', 'rouge' => 'bg-rouge', 'orange' => 'bg-orange'];
 ?>
 <section class="bloc">
-  <h1 class="text-2xl font-bold sm:text-3xl">Notifications</h1>
+  <h1 class="text-xl font-bold sm:text-3xl">Notifications</h1>
   <?php if ($notifications): ?>
   <ul class="mt-4 divide-y divide-ligne">
     <?php foreach ($notifications as [$texte, $lien, $date, $ton]): $nouvelle = $date > $vues_le; ?>

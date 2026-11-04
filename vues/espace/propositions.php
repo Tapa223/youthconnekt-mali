@@ -11,7 +11,7 @@ $etats = [
 ?>
 <span data-recharger-apres-envoi hidden></span>
 <section class="bloc">
-  <h1 class="text-2xl font-bold sm:text-3xl">Mes propositions</h1>
+  <h1 class="text-xl font-bold sm:text-3xl">Mes propositions</h1>
   <p class="mt-1 text-sm">Partagez une opportunité ou présentez votre initiative : l'équipe du chapitre la relit, puis vous répond.</p>
   <div class="mt-4 grid gap-2.5 sm:grid-cols-2">
     <button type="button" class="group flex items-center gap-3 rounded-2xl bg-vert p-4 text-left text-white transition-colors hover:bg-vert-fonce" data-ouvrir-dialogue="dialogue-opportunite">

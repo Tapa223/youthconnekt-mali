@@ -2,7 +2,7 @@
 <span data-recharger-apres-envoi hidden></span>
 <section class="bloc">
   <div class="flex items-center justify-between gap-3">
-    <h1 class="text-2xl font-bold sm:text-3xl">Mes opportunités</h1>
+    <h1 class="text-xl font-bold sm:text-3xl">Mes opportunités</h1>
     <button type="button" class="btn btn-orange min-h-10 px-4 text-sm" data-ouvrir-dialogue="dialogue-opportunite">Proposer<span class="hidden sm:inline">&nbsp;une opportunité</span></button>
   </div>
   <p class="mt-1 text-sm">Les opportunités ouvertes dans vos communautés, de la plus proche de sa date limite à la plus lointaine.</p>

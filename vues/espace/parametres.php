@@ -1,6 +1,6 @@
 <?php ob_start(); ?>
 <section class="bloc">
-  <h1 class="text-2xl font-bold sm:text-3xl">Paramètres</h1>
+  <h1 class="text-xl font-bold sm:text-3xl">Paramètres</h1>
   <dl class="mt-5 grid gap-3 text-sm sm:grid-cols-2">
     <div class="rounded-xl bg-gris p-4"><dt>Adresse e-mail de connexion</dt><dd class="mt-0.5 font-bold break-all text-encre"><?= e($u['email']) ?></dd></div>
     <div class="rounded-xl bg-gris p-4"><dt>Type de compte</dt><dd class="mt-0.5 font-bold text-encre"><?= $u['type_compte'] === 'organisation' ? 'Organisation ou entreprise' : 'Compte personnel' ?></dd></div>

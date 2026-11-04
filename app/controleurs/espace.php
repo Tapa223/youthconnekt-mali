@@ -30,6 +30,13 @@ function donnees_membre(array $u): array
     return [$demandes, $ids, $opportunites];
 }
 
+/** Chiffres affichés en pastille dans le menu de l'espace : communautés, opportunités ouvertes, notifications non lues. */
+function compteurs_espace(array $u): array
+{
+    [, $ids, $opportunites] = donnees_membre($u);
+    return ['communautes' => count($ids), 'opportunites' => count($opportunites), 'notifications' => nb_notifications_non_lues($u)];
+}
+
 function vue_espace(string $nom, string $rubrique, string $titre, array $donnees, array $u): never
 {
     afficher(vue('espace/' . $nom, $donnees + [
@@ -37,6 +44,7 @@ function vue_espace(string $nom, string $rubrique, string $titre, array $donnees
         'noindex' => true,
         'rubrique' => $rubrique,
         'nb_notifs' => nb_notifications_non_lues($u),
+        'compteurs' => compteurs_espace($u),
         'u' => $u,
         'profil' => $u['profil'],
     ]));
