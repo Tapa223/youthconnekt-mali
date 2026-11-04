@@ -33,7 +33,7 @@ function accueil(): void
         'actualite_une' => $actualites[0] ?? null,
         'actualites' => array_slice($actualites, 1, 3),
         'partenaires' => $partenaires,
-        'temoignages' => lignes('SELECT * FROM temoignages WHERE publie = 1 ORDER BY ordre, id DESC LIMIT 3'),
+        'temoignages' => temoignages_accueil(),
     ]));
 }
 
@@ -73,7 +73,7 @@ function a_propos(): void
             'communautes' => (int) valeur('SELECT COUNT(*) FROM communautes WHERE active = 1'),
         ],
         'partenaires' => lignes('SELECT * FROM partenaires WHERE actif = 1 ORDER BY ordre, nom'),
-        'temoignages' => lignes('SELECT * FROM temoignages WHERE publie = 1 ORDER BY ordre, id DESC LIMIT 3'),
+        'temoignages' => temoignages_accueil(),
     ]));
 }
 
@@ -254,6 +254,16 @@ function message_rapide(): void
 }
 
 /** Tous les témoignages publiés (page accessible depuis la section Témoignages, pas depuis le menu) */
+/** Les trois témoignages de l'accueil : ceux choisis par l'équipe, complétés par les plus récents affichés. */
+function temoignages_accueil(): array
+{
+    try {
+        return lignes('SELECT * FROM temoignages WHERE publie = 1 ORDER BY a_la_une DESC, ordre, id DESC LIMIT 3');
+    } catch (Throwable $e) {
+        return lignes('SELECT * FROM temoignages WHERE publie = 1 ORDER BY ordre, id DESC LIMIT 3');
+    }
+}
+
 function temoignages(): void
 {
     afficher(vue('pages/temoignages', [

@@ -359,7 +359,7 @@ function liste(string $slug): void
 
     $donnees = [
         'titre_page' => $r['titre'],
-        'ariane' => [[$r['titre'], null]],
+        'ariane' => array_merge($r['parent'] ? [$r['parent']] : [], [[$r['titre'], null]]),
         'r' => $r,
         'lignes' => $lignes,
         'onglets' => $onglets,
@@ -478,6 +478,16 @@ function formulaire(string $slug, ?int $id = null): void
     } elseif (!$r['peut_ajouter'] || !$peut_modifier) {
         page_erreur(403, 'Accès réservé', 'Cette rubrique ne permet pas d\'ajouter un élément.');
     }
+    // Champs en lecture seule selon la fiche (ex. texte d'un témoignage envoyé par un membre)
+    foreach ($r['groupes'] as &$g) {
+        foreach ($g['champs'] as &$def) {
+            if (($def['lecture_seule'] ?? null) instanceof Closure) {
+                $def['lecture_seule'] = (bool) ($def['lecture_seule'])($ligne);
+            }
+        }
+        unset($def);
+    }
+    unset($g);
 
     $groupes = groupes_de($r, $ligne);
     $champs = champs_de($groupes);
@@ -569,7 +579,7 @@ function formulaire(string $slug, ?int $id = null): void
     $titre = $r['fiche_unique'] ? $r['titre'] : ($ligne ? couper(($r['nom_element'])($ligne), 70) : $r['titre_ajout']);
     $donnees_vue = [
         'titre_page' => $titre,
-        'ariane' => $r['fiche_unique'] ? [[$r['titre'], null]] : [[$r['titre'], url('/gestion/' . $slug)], [$ligne ? couper(($r['nom_element'])($ligne), 40) : 'Ajouter', null]],
+        'ariane' => array_merge($r['parent'] ? [$r['parent']] : [], $r['fiche_unique'] ? [[$r['titre'], null]] : [[$r['titre'], url('/gestion/' . $slug)], [$ligne ? couper(($r['nom_element'])($ligne), 40) : 'Ajouter', null]]),
         'r' => $r,
         'ligne' => $ligne,
         'groupes' => $groupes,

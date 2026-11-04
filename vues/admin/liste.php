@@ -7,13 +7,7 @@ $id_form = 'liste-' . $r['slug'];
 <?php if ($lignes): ?>
 <form method="post" action="<?= url('/gestion/' . $r['slug'] . '/action') ?>" id="<?= $id_form ?>" class="ycm-liste" data-liste>
   <?= csrf() ?><input type="hidden" name="suivant" value="<?= e(adresse_actuelle()) ?>">
-  <?php if ($avec_actions): /* Cases à cocher masquées : « Sélectionner » les fait apparaître avec les actions groupées */ ?>
-  <div class="ycm-liste-outils">
-    <button type="button" class="ycm-bouton-selection" data-basculer-selection aria-pressed="false">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>
-      <span data-libelle-selection>Sélectionner</span>
-    </button>
-  </div>
+  <?php if ($avec_actions): ?>
   <div class="ycm-actions-groupees">
     <label for="action-<?= $r['slug'] ?>">Action :</label>
     <select name="action" id="action-<?= $r['slug'] ?>">
@@ -22,6 +16,7 @@ $id_form = 'liste-' . $r['slug'];
     </select>
     <button type="submit" class="ycm-bouton-vert ycm-petit">Appliquer</button>
     <span class="ycm-selection" data-compte-selection>0 sur <?= count($lignes) ?> sélectionné</span>
+    <button type="button" class="ycm-lien ycm-annuler-selection" data-basculer-selection>Annuler</button>
   </div>
   <?php endif ?>
   <div class="ycm-resultats<?= $avec_actions ? ' ycm-resultats--actions' : '' ?>">

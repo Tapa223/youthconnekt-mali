@@ -75,6 +75,15 @@ const COULEURS_HEX = [
     'rouge' => '#7C0D02',
 ];
 
+/** Profil de la personne qui témoigne (tri des témoignages dans l'administration) */
+const PROFILS_TEMOIGNAGE = [
+    'jeune_femme' => 'Jeune femme',
+    'jeune_homme' => 'Jeune homme',
+    'organisation' => 'Organisation ou association',
+    'entreprise' => 'Entreprise',
+    'partenaire' => 'Partenaire ou institution',
+];
+
 /** Liens qu'un membre peut ajouter à son profil : [libellé, tracé de l'icône] */
 const RESEAUX_PROFIL = [
     'linkedin' => ['LinkedIn', '<path d="M6.9 9.3H3.6V20h3.3V9.3zM5.2 4a1.9 1.9 0 1 0 0 3.8 1.9 1.9 0 0 0 0-3.8zM20.4 13.9c0-3-1.6-4.9-4.2-4.9-1.4 0-2.4.8-2.8 1.5V9.3h-3.2V20h3.3v-5.6c0-1.4.6-2.4 1.9-2.4 1.2 0 1.7.9 1.7 2.4V20h3.3v-6.1z" fill="currentColor" stroke="none"/>'],

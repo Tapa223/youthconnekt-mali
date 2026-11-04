@@ -94,7 +94,7 @@ function ressource(string $slug): ?array
             'recherche' => [], 'actions' => [], 'export' => [], 'par_page' => 25, 'peut_ajouter' => true,
             'peut_supprimer' => true, 'groupes' => [], 'vue_liste' => 'admin/liste', 'url_voir' => null,
             'aide_cote' => '', 'fiche_unique' => false, 'galerie' => null, 'liaison' => null,
-            'avant' => null, 'apres' => null, 'condition' => '1=1', 'champs_select' => 't.*', 'depuis' => 'FROM `' . $r['table'] . '` t',
+            'avant' => null, 'apres' => null, 'condition' => '1=1', 'parent' => null, 'menu_liste' => [], 'ajout_discret' => false, 'champs_select' => 't.*', 'depuis' => 'FROM `' . $r['table'] . '` t',
             'titre_ajout' => $r['libelle_ajout'] ?? 'Ajouter', 'nom_element' => fn ($l) => (string) ($l['titre'] ?? $l['nom'] ?? ''),
         ];
     }
@@ -279,21 +279,33 @@ function ressources(): array
             'table' => 'temoignages', 'titre' => 'Témoignages',
             'description' => 'Témoignages de jeunes et de partenaires, publiés avec leur accord.',
             'libelle_ajout' => 'Ajouter un témoignage', 'vue_liste' => 'admin/liste_temoignages',
-            'ordre' => 't.publie, t.ordre, t.id DESC', 'par_page' => 60, 'recherche' => ['t.nom', 't.texte'],
+            'ordre' => 't.publie, t.a_la_une DESC, t.ordre, t.id DESC', 'par_page' => 60, 'recherche' => ['t.nom', 't.texte', 't.role'],
             'onglets' => [
                 ['À valider', 't.publie = 0 AND t.utilisateur_id IS NOT NULL'],
+                ["Sur l'accueil", 't.publie = 1 AND t.a_la_une = 1'],
                 ['Affichés', 't.publie = 1'],
+                ['Masqués', 't.publie = 0'],
+            ],
+            'filtres' => [['profil', 'Tous les profils', PROFILS_TEMOIGNAGE, 't.categorie']],
+            'actions' => [
+                'afficher' => ['Afficher sur le site', fn ($ids) => requete('UPDATE temoignages SET publie = 1 WHERE id IN (' . marqueurs($ids) . ')', $ids)->rowCount() . ' témoignage(s) affiché(s).'],
+                'retirer' => ['Retirer du site', fn ($ids) => requete('UPDATE temoignages SET publie = 0, a_la_une = 0 WHERE id IN (' . marqueurs($ids) . ')', $ids)->rowCount() . ' témoignage(s) retiré(s).'],
+                'une' => ["Mettre sur l'accueil", fn ($ids) => requete('UPDATE temoignages SET a_la_une = 1, publie = 1 WHERE id IN (' . marqueurs($ids) . ')', $ids)->rowCount() . " témoignage(s) sur l'accueil (les trois plus récents s'affichent)."],
+                'pas_une' => ["Retirer de l'accueil", fn ($ids) => requete('UPDATE temoignages SET a_la_une = 0 WHERE id IN (' . marqueurs($ids) . ')', $ids)->rowCount() . " témoignage(s) retiré(s) de l'accueil."],
             ],
             'nom_element' => fn ($l) => $l['nom'],
             'groupes' => [
                 [null, 'champs' => [
-                    'texte' => ['type' => 'zone', 'libelle' => 'Témoignage', 'max' => 800, 'lignes' => 5],
-                    'nom' => ['type' => 'texte', 'libelle' => 'Nom', 'max' => 120, 'largeur' => 'demi'],
-                    'role' => ['type' => 'texte', 'libelle' => 'Rôle ou parcours', 'requis' => false, 'max' => 150, 'largeur' => 'demi'],
+                    // Témoignage envoyé par un membre : ses mots restent les siens (lecture seule)
+                    'texte' => ['type' => 'zone', 'libelle' => 'Témoignage', 'max' => 800, 'lignes' => 5, 'lecture_seule' => fn ($l) => !empty($l['utilisateur_id']), 'aide' => "Un témoignage envoyé par un membre ne se modifie pas : vous pouvez l'afficher, le retirer ou le mettre sur l'accueil."],
+                    'nom' => ['type' => 'texte', 'libelle' => 'Nom', 'max' => 120, 'largeur' => 'demi', 'lecture_seule' => fn ($l) => !empty($l['utilisateur_id'])],
+                    'role' => ['type' => 'texte', 'libelle' => 'Rôle ou parcours', 'requis' => false, 'max' => 150, 'largeur' => 'demi', 'lecture_seule' => fn ($l) => !empty($l['utilisateur_id'])],
+                    'categorie' => ['type' => 'select', 'libelle' => 'Profil', 'requis' => false, 'options' => ['' => 'Non précisé'] + PROFILS_TEMOIGNAGE, 'aide' => 'Sert au tri des témoignages.'],
                 ]],
                 ['Photo', 'champs' => ['photo' => ['type' => 'image', 'libelle' => 'Photo', 'requis' => false, 'dossier' => 'temoignages', 'largeur_max' => 400]]],
                 ['Affichage', 'cote' => true, 'description' => "À publier uniquement avec l'accord de la personne. Les témoignages envoyés par les membres depuis leur espace arrivent ici, masqués.", 'champs' => [
-                    'publie' => ['type' => 'case', 'libelle' => "Afficher sur l'accueil"],
+                    'publie' => ['type' => 'case', 'libelle' => 'Afficher sur le site (page Témoignages)'],
+                    'a_la_une' => ['type' => 'case', 'libelle' => "Mettre sur l'accueil", 'aide' => "L'accueil montre trois témoignages : ceux cochés ici, les plus récents d'abord."],
                     'origine' => ['type' => 'lecture', 'libelle' => 'Origine', 'html' => fn ($l) => empty($l['utilisateur_id']) ? "Ajouté dans l'administration" : 'Envoyé par le membre depuis son espace' . (!empty($l['envoye_le']) ? ', le ' . e(date_longue($l['envoye_le'])) : '') . ' · <a class="ycm-lien" href="' . url('/gestion/comptes/' . (int) $l['utilisateur_id']) . '">Voir le compte</a>'],
                     'ordre' => ['type' => 'nombre', 'libelle' => "Ordre d'affichage", 'defaut' => 0],
                 ]],
@@ -694,29 +706,30 @@ function ressources(): array
         'comptes' => [
             'table' => 'utilisateurs', 'titre' => 'Comptes et connexions',
             'description' => "Les comptes des membres et des organisations, et à part les comptes de l'équipe d'administration.",
-            'libelle_ajout' => "Créer un compte d'administration",
-            'champs_select' => "t.*, COALESCE(CONCAT(pi.prenom, ' ', pi.nom), po.nom_structure, NULLIF(TRIM(CONCAT(t.prenom_admin, ' ', t.nom_admin)), ''), t.email) AS nom_affiche",
+            'libelle_ajout' => "Créer un compte d'administration", 'ajout_discret' => true,
+            'champs_select' => "t.*, pi.id AS profil_ind_id, po.id AS profil_org_id, COALESCE(CONCAT(pi.prenom, ' ', pi.nom), po.nom_structure, NULLIF(TRIM(CONCAT(t.prenom_admin, ' ', t.nom_admin)), ''), t.email) AS nom_affiche",
             'depuis' => 'FROM utilisateurs t LEFT JOIN profils_individuels pi ON pi.utilisateur_id = t.id LEFT JOIN profils_organisations po ON po.utilisateur_id = t.id',
             'ordre' => 't.inscrit_le DESC', 'par_page' => 50,
             'onglets' => [
-                ['Membres et organisations', "t.type_compte <> 'administration'"],
+                ['Jeunes', "t.type_compte = 'individuel'"],
+                ['Organisations', "t.type_compte = 'organisation'"],
                 ["Équipe d'administration", "t.type_compte = 'administration'"],
                 ['E-mail à confirmer', 't.email_confirme = 0'],
                 ['Désactivés', 't.actif = 0'],
             ],
-            'filtres' => [['type_compte', 'Tous les types de compte', TYPES_COMPTE, 't.type_compte']],
             'recherche' => ['t.email', 'pi.prenom', 'pi.nom', 'po.nom_structure', 't.nom_admin', 't.prenom_admin'],
             'nom_element' => fn ($l) => $l['nom_affiche'],
             'colonnes' => [
                 ['Compte', fn ($l) => nom_et_detail($l['nom_affiche'], $l['email'], avatar(initiales($l['nom_affiche']), (int) $l['id'])), 'lien' => true],
-                ['Type', fn ($l) => e(TYPES_COMPTE[$l['type_compte']] ?? '')],
-                ['E-mail', fn ($l) => $l['email_confirme'] ? badge('Confirmé', 'vert') : badge('À confirmer', 'orange')],
-                ['Compte', function ($l) {
+                ['Type', fn ($l) => ['individuel' => badge('Jeune', 'turquoise'), 'organisation' => badge('Organisation', 'bleu'), 'administration' => badge('Administration', 'vert')][$l['type_compte']] ?? ''],
+                ['Statut', function ($l) {
                     if (!$l['actif']) return badge('Désactivé', 'rouge');
+                    if (!$l['email_confirme']) return badge('E-mail à confirmer', 'orange');
                     if ($l['type_compte'] === 'administration') return badge(ROLES_ADMIN[$l['role_admin']] ?? 'Administrateur', 'vert');
-                    return badge('Membre', 'gris');
+                    return badge('Actif', 'gris');
                 }],
                 ['Inscription', fn ($l) => e(date_chiffres($l['inscrit_le']))],
+                ['Profil', fn ($l) => $l['profil_ind_id'] ? '<a class="ycm-lien" href="' . url('/gestion/membres/' . $l['profil_ind_id']) . '">Voir le profil</a>' : ($l['profil_org_id'] ? '<a class="ycm-lien" href="' . url('/gestion/organisations/' . $l['profil_org_id']) . '">Voir la fiche</a>' : '—')],
             ],
             'actions' => [
                 'renvoyer' => ["Renvoyer l'e-mail de confirmation", function ($ids) {
@@ -779,6 +792,11 @@ function ressources(): array
         ],
         'groupes' => $groupes,
     ]);
+    $liste['opportunites']['menu_liste'] = [["Gérer les types d'opportunités", url('/gestion/types-opportunites')]];
+    $liste['actualites']['menu_liste'] = [["Gérer les catégories d'actualités", url('/gestion/categories-actualites')]];
+    $liste['types-opportunites']['parent'] = ['Opportunités', url('/gestion/opportunites')];
+    $liste['categories-actualites']['parent'] = ['Actualités et événements', url('/gestion/actualites')];
+    $liste['propositions']['menu_liste'] = [];
     return $cache = $liste;
 }
 

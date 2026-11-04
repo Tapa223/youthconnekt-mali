@@ -147,6 +147,9 @@ function envoyer_temoignage(): void
     }
     $donnees = ['texte' => mb_substr($texte, 0, 600), 'nom' => mb_substr($u['nom_affiche'], 0, 120), 'role' => mb_substr($role, 0, 150),
         'photo' => $photo, 'publie' => 0, 'envoye_le' => maintenant()];
+    if ($u['type_compte'] === 'organisation') {
+        $donnees['categorie'] = 'organisation';
+    }
     $ancien = mon_temoignage($u);
     if ($ancien) {
         mettre_a_jour('temoignages', $donnees, (int) $ancien['id']);

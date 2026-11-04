@@ -737,3 +737,41 @@ input[type=file]::file-selector-button {
   .ycm-confirmation-boutons { flex-direction: column-reverse; }
   .ycm-confirmation-boutons > * { width: 100%; }
 }
+
+/* Bouton Retour (barre du haut) : flèche et mot sur ordinateur, flèche seule sur téléphone */
+.ycm-retour { display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; min-height: 40px; padding: 0 14px 0 10px; border: 1px solid var(--ycm-ligne); border-radius: 999px; background: #fff; color: var(--ycm-vert); font-size: 14px; font-weight: 700; text-decoration: none; }
+.ycm-retour svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.ycm-retour:hover { border-color: var(--ycm-orange); background: var(--ycm-orange); color: #fff; }
+@media (max-width: 767px) {
+  .ycm-barre .ycm-retour { grid-column: 1; grid-row: 2; width: 36px; height: 36px; min-height: 0; padding: 0; justify-content: center; }
+  .ycm-barre .ycm-retour span { display: none; }
+  .ycm-barre .ycm-retour + .ycm-ariane { grid-column: 2; }
+}
+
+/* Menu « ⋯ » des listes (sélectionner, exporter, réglages liés) */
+.ycm-barre-liste .ycm-filtres-droite { margin-left: auto; }
+.ycm-plus { position: relative; }
+.ycm-plus summary { display: grid; place-items: center; width: 42px; height: 42px; border: 1px solid var(--ycm-ligne); border-radius: 999px; background: #fff; color: var(--ycm-vert); cursor: pointer; list-style: none; }
+.ycm-plus summary::-webkit-details-marker { display: none; }
+.ycm-plus summary svg { width: 20px; height: 20px; fill: currentColor; }
+.ycm-plus[open] summary, .ycm-plus summary:hover { border-color: var(--ycm-orange); color: var(--ycm-orange); }
+.ycm-plus-menu { position: absolute; right: 0; top: calc(100% + 6px); z-index: 20; min-width: 240px; padding: 6px; background: #fff; border: 1px solid var(--ycm-ligne); border-radius: 14px; box-shadow: 0 16px 40px rgb(3 40 33 / .14); }
+.ycm-plus-menu > * { display: flex; align-items: center; width: 100%; min-height: 42px; padding: 0 12px; border: 0; border-radius: 10px; background: none; color: var(--ycm-encre); font-size: 14px; font-weight: 700; text-align: left; text-decoration: none; cursor: pointer; }
+.ycm-plus-menu > *:hover { background: var(--ycm-fond); color: var(--ycm-vert); }
+.ycm-actions-groupees .ycm-annuler-selection { margin-left: auto; border: 0; background: none; cursor: pointer; }
+.ycm-liste:not(.ycm-selection-active) .ycm-temoignage-case { display: none !important; }
+
+/* Témoignages : cartes compactes, trois par ligne */
+.ycm-actions-groupees--seules { border-bottom: 1px solid var(--ycm-ligne); border-radius: 16px; margin-bottom: 14px; }
+.ycm-temoignages { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.ycm-temoignage { position: relative; display: flex; flex-direction: column; gap: 10px; padding: 16px; background: #fff; border: 1px solid var(--ycm-ligne); border-radius: 16px; }
+.ycm-temoignage:has(input:checked) { border-color: var(--ycm-orange); background: var(--ycm-orange-clair, #fff4ef); }
+.ycm-temoignage-case { position: absolute; top: 14px; right: 14px; }
+.ycm-temoignage-case input { width: 18px; height: 18px; accent-color: var(--ycm-orange); }
+.ycm-temoignage-etats { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding-right: 26px; }
+.ycm-temoignage-profil { font-size: 12px; font-weight: 700; color: var(--ycm-texte); }
+.ycm-temoignage blockquote { margin: 0; font-size: 14px; line-height: 1.5; color: var(--ycm-encre); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.ycm-temoignage-pied { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 10px; border-top: 1px solid var(--ycm-ligne); }
+.ycm-temoignage-pied .ycm-personne small { display: block; }
+@media (max-width: 1180px) { .ycm-temoignages { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .ycm-temoignages { grid-template-columns: 1fr; } }

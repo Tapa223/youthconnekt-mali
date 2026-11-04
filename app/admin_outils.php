@@ -30,9 +30,7 @@ const MENU_ADMIN = [
     ['Contenus', [
         ['Opportunités', 'opportunites', 'mallette', 'opportunites'],
         ['Propositions des membres', 'propositions', 'bulle', 'opportunites'],
-        ["Types d'opportunités", 'types-opportunites', 'etiquette', 'opportunites'],
         ['Actualités et événements', 'actualites', 'journal', 'actualites'],
-        ["Catégories d'actualités", 'categories-actualites', 'etiquette', 'actualites'],
         ['Initiatives', 'initiatives', 'drapeau', 'initiatives'],
         ['Témoignages', 'temoignages', 'bulle', 'temoignages'],
         ['Partenaires', 'partenaires', 'batiment', 'partenaires'],
@@ -86,6 +84,10 @@ function menu_admin(): array
             $adresse = '/gestion' . ($slug ? '/' . $slug : '');
             $actif = $slug === '' ? $chemin === '/gestion' : (strpos($chemin . '/', $adresse . '/') === 0);
             if ($slug === 'communautes' && strpos($chemin, '/gestion/demandes') === 0) {
+                $actif = true;
+            }
+            // Types et catégories : rattachés à leur rubrique
+            if (($slug === 'opportunites' && strpos($chemin, '/gestion/types-opportunites') === 0) || ($slug === 'actualites' && strpos($chemin, '/gestion/categories-actualites') === 0)) {
                 $actif = true;
             }
             $liens[] = ['libelle' => $libelle, 'url' => url($adresse), 'icone' => ICONES[$icone], 'actif' => $actif, 'pastille' => $pastilles[$slug] ?? 0];

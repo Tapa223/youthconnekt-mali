@@ -340,10 +340,12 @@ CREATE TABLE IF NOT EXISTS temoignages (
   utilisateur_id INT UNSIGNED NULL,
   nom VARCHAR(120) NOT NULL,
   role VARCHAR(150) NOT NULL DEFAULT '',
+  categorie VARCHAR(20) NOT NULL DEFAULT '',
   photo VARCHAR(255) NOT NULL DEFAULT '',
   texte TEXT NOT NULL,
   ordre SMALLINT UNSIGNED NOT NULL DEFAULT 0,
   publie TINYINT(1) NOT NULL DEFAULT 0,
+  a_la_une TINYINT(1) NOT NULL DEFAULT 0,
   envoye_le DATETIME NULL,
   PRIMARY KEY (id),
   CONSTRAINT fk_temoignages_utilisateur FOREIGN KEY (utilisateur_id) REFERENCES utilisateurs (id) ON DELETE SET NULL

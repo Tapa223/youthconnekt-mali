@@ -79,6 +79,12 @@ $ariane = $ariane ?? [];
         <span class="ycm-cache">Ouvrir le menu</span>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
+      <?php if ($ariane):
+          // Retour : le niveau au-dessus dans le fil d'Ariane (liste depuis une fiche, rubrique depuis une liste)
+          $parent_retour = url('/gestion');
+          foreach ($ariane as [$lib_a, $lien_a]) { if ($lien_a) $parent_retour = $lien_a; } ?>
+      <a href="<?= e($parent_retour) ?>" class="ycm-retour" aria-label="Retour"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span>Retour</span></a>
+      <?php endif ?>
       <nav class="ycm-ariane" aria-label="Fil d'Ariane">
         <ol>
           <?php if ($ariane): ?><li><a href="<?= url('/gestion') ?>">Tableau de bord</a></li><?php else: ?><li aria-current="page">Tableau de bord</li><?php endif ?>

@@ -50,15 +50,20 @@
       });
     });
 
-    // ---- Mode sélection des listes : les cases n'apparaissent qu'après « Sélectionner »
+    // ---- Mode sélection des listes : le menu « ⋯ » > « Sélectionner » fait apparaître les cases et les actions
+    var listeSel = document.querySelector("form[data-liste]");
     document.querySelectorAll("[data-basculer-selection]").forEach(function (bouton) {
-      var liste = bouton.closest("[data-liste]");
       bouton.addEventListener("click", function () {
-        var actif = liste.classList.toggle("ycm-selection-active");
-        bouton.setAttribute("aria-pressed", actif ? "true" : "false");
-        bouton.querySelector("[data-libelle-selection]").textContent = actif ? "Terminer" : "Sélectionner";
-        if (!actif) liste.querySelectorAll("input[type=checkbox]").forEach(function (c) { c.checked = false; c.dispatchEvent(new Event("change")); });
+        if (!listeSel) return;
+        var actif = listeSel.classList.toggle("ycm-selection-active");
+        document.querySelectorAll(".ycm-plus [data-basculer-selection]").forEach(function (b) { b.textContent = actif ? "Annuler la sélection" : "Sélectionner"; });
+        var menu = bouton.closest("details"); if (menu) menu.open = false;
+        if (!actif) listeSel.querySelectorAll("input[type=checkbox]").forEach(function (c) { if (c.checked) { c.checked = false; c.dispatchEvent(new Event("change")); } });
       });
+    });
+    // Menu « ⋯ » : se referme quand on clique ailleurs
+    document.addEventListener("click", function (e) {
+      document.querySelectorAll("details.ycm-plus[open]").forEach(function (d) { if (!d.contains(e.target)) d.open = false; });
     });
 
     // ---- Confirmation avant d'enregistrer ou de supprimer : petite fenêtre « Annuler / Confirmer »
