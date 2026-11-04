@@ -157,7 +157,7 @@ function mon_profil(): void
             mettre_a_jour($table, ['visible' => $visible, 'modifie_le' => maintenant()], (int) $profil['id']);
             flash('succes', $visible ? 'Votre profil est maintenant visible des membres de vos communautés.' : "Votre profil est masqué : il n'apparaît plus dans les communautés.");
         }
-        rediriger(url('/compte/mon-espace/profil'));
+        rediriger(url('/compte/mon-espace/profil') . '#visibilite');
     }
 
     if (est_post()) {
@@ -234,8 +234,8 @@ function mon_profil(): void
             if ($ancienne && isset($donnees[$champ_image]) && $donnees[$champ_image] !== $ancienne) {
                 supprimer_image($ancienne);
             }
-            flash('succes', 'Votre profil a bien été mis à jour.');
-            rediriger(url('/compte/mon-espace/profil'));
+            // On revient sur l'aperçu du profil (et non en bas de page), formulaire refermé
+            rediriger(url('/compte/mon-espace/profil', ['enregistre' => 1]) . '#apercu');
         }
     }
 
@@ -271,7 +271,7 @@ function parametres_compte(): void
                 $u['mot_de_passe'] = $hash;
                 connecter($u);
                 flash('succes', 'Votre mot de passe a bien été modifié.');
-                rediriger(url('/compte/mon-espace/parametres'));
+                rediriger(url('/compte/mon-espace/parametres') . '#mot-de-passe');
             }
         } elseif ($action === 'supprimer') {
             if ($u['role_admin'] === 'super' && (int) valeur("SELECT COUNT(*) FROM utilisateurs WHERE role_admin = 'super' AND actif = 1") <= 1) {

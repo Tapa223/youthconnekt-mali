@@ -8,8 +8,8 @@
 </section>
 
 <?php $erreur_mdp = !empty($erreurs['mdp_actuel']) || !empty($erreurs['password1']) || !empty($erreurs['password2']); ?>
-<details class="bloc group/mdp" <?= $erreur_mdp ? 'open' : '' ?>>
-  <summary class="flex min-h-10 cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
+<details id="mot-de-passe" class="bloc group/mdp scroll-mt-20" <?= $erreur_mdp ? 'open' : '' ?>>
+  <summary class="flex min-h-10 cursor-pointer list-none flex-wrap items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
     <span><span class="block text-lg font-bold text-vert">Mot de passe</span><span class="text-sm text-texte">Changez-le quand vous le souhaitez.</span></span>
     <span class="btn-lien min-h-9 px-3.5 text-[13px] group-open/mdp:hidden">Modifier le mot de passe</span>
     <span class="hidden rounded-full bg-gris px-3 py-1.5 text-xs font-bold text-texte group-open/mdp:inline">Fermer</span>
@@ -22,6 +22,24 @@
     <div><button type="submit" class="btn btn-vert">Enregistrer le mot de passe</button></div>
   </form>
 </details>
+
+<?php $autre = $u['type_compte'] === 'organisation' ? 'individuel' : 'organisation'; ?>
+<section class="bloc" aria-labelledby="titre-comptes">
+  <h2 id="titre-comptes" class="text-lg font-bold text-vert">Changer de compte</h2>
+  <p class="mt-1 text-sm text-encre">Chaque compte a sa propre adresse e-mail. <?= $autre === 'organisation'
+      ? "Si vous représentez aussi une organisation ou une entreprise, créez-lui un compte avec l'adresse e-mail de la structure."
+      : 'Si vous voulez aussi participer à titre personnel, créez un compte personnel avec votre propre adresse e-mail.' ?>
+    Pour passer d'un compte à l'autre, déconnectez-vous puis reconnectez-vous avec l'autre adresse.</p>
+  <div class="mt-4 flex flex-wrap gap-2">
+    <form method="post" action="<?= url('/compte/deconnexion') ?>" data-confirmer="<?= $autre === 'organisation' ? 'Créer un compte organisation ?' : 'Créer un compte personnel ?' ?>" data-confirmer-texte="Vous serez déconnecté de ce compte, puis le formulaire d'inscription s'ouvrira. Vous pourrez revenir ici en vous reconnectant." data-confirmer-oui="Continuer">
+      <?= csrf() ?><input type="hidden" name="vers" value="<?= $autre ?>">
+      <button type="submit" class="btn btn-vert min-h-10 px-5 text-sm"><?= $autre === 'organisation' ? 'Ajouter un compte organisation' : 'Ajouter un compte personnel' ?></button>
+    </form>
+    <form method="post" action="<?= url('/compte/deconnexion') ?>" data-confirmer="Êtes-vous sûr de vouloir vous déconnecter ?" data-confirmer-texte="Vous pourrez ensuite vous connecter avec un autre compte." data-confirmer-oui="Se déconnecter">
+      <?= csrf() ?><button type="submit" class="btn-lien min-h-10">Se connecter avec un autre compte</button>
+    </form>
+  </div>
+</section>
 
 <?php /* Suppression du compte : repliée derrière un lien discret pour éviter un clic par erreur */ ?>
 <details class="px-1" <?= !empty($erreurs['supprimer_actuel']) ? 'open' : '' ?>>

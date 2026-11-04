@@ -689,6 +689,18 @@
     });
     majBouton();
   });
+  // « Annuler » : referme la fiche sans recharger et remonte à l'aperçu du profil
+  document.querySelectorAll("[data-fermer-details]").forEach(function (lien) {
+    lien.addEventListener("click", function (e) {
+      var bloc = lien.closest("details");
+      if (!bloc) return;
+      e.preventDefault();
+      bloc.querySelector("form").reset();
+      bloc.open = false;
+      var apercu = document.getElementById("apercu");
+      (apercu || bloc).scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
   document.querySelectorAll("[data-ouvrir-details]").forEach(function (lien) {
     lien.addEventListener("click", function (e) {
       var bloc = document.getElementById(lien.getAttribute("data-ouvrir-details"));
@@ -698,6 +710,23 @@
       bloc.scrollIntoView({ behavior: "smooth", block: "start" });
       var premier = bloc.querySelector("input:not([type=hidden]):not(.sr-only), select, textarea");
       if (premier) setTimeout(function () { premier.focus({ preventScroll: true }); }, 350);
+    });
+  });
+})();
+
+/* Bouton Retour : revient exactement à la page précédente (et à l'endroit où l'on était), si elle fait partie du site */
+(function () {
+  "use strict";
+  document.querySelectorAll("a[data-retour]").forEach(function (lien) {
+    lien.addEventListener("click", function (e) {
+      var precedente = document.referrer;
+      if (!precedente || window.history.length < 2) return;
+      try {
+        var u = new URL(precedente);
+        if (u.origin !== location.origin || u.href === location.href) return;
+      } catch (err) { return; }
+      e.preventDefault();
+      history.back();
     });
   });
 })();

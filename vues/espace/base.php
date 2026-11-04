@@ -32,7 +32,7 @@ $titre_rubrique = $liens[$rubrique][1] ?? 'Mon espace';
         <?php foreach ($liens as $cle => [$lien, $libelle]): ?>
         <a href="<?= url($lien) ?>" class="flex min-h-11 items-center rounded-xl px-3 text-[15px] font-bold <?= $rubrique === $cle ? 'bg-orange text-white' : 'text-encre hover:bg-gris' ?>" <?= $rubrique === $cle ? 'aria-current="page"' : '' ?>><?= e($libelle) ?></a>
         <?php endforeach ?>
-        <form method="post" action="<?= url('/compte/deconnexion') ?>" class="mt-1 border-t border-ligne pt-1" data-confirmer="Voulez-vous vous déconnecter ?" data-confirmer-oui="Se déconnecter"><?= csrf() ?><button type="submit" class="flex min-h-11 w-full items-center rounded-xl px-3 text-[15px] font-bold text-rouge hover:bg-gris">Se déconnecter</button></form>
+        <form method="post" action="<?= url('/compte/deconnexion') ?>" class="mt-1 border-t border-ligne pt-1" data-confirmer="Êtes-vous sûr de vouloir vous déconnecter ?" data-confirmer-oui="Se déconnecter"><?= csrf() ?><button type="submit" class="flex min-h-11 w-full items-center rounded-xl px-3 text-[15px] font-bold text-rouge hover:bg-gris">Se déconnecter</button></form>
       </nav>
     </details>
 
@@ -49,7 +49,7 @@ $titre_rubrique = $liens[$rubrique][1] ?? 'Mon espace';
         <?php foreach ($liens as $cle => [$lien, $libelle]): ?>
         <a href="<?= url($lien) ?>" class="lien-espace <?= $rubrique === $cle ? 'actif' : '' ?>" <?= $rubrique === $cle ? 'aria-current="page"' : '' ?>><?= e($libelle) ?></a>
         <?php endforeach ?>
-        <form method="post" action="<?= url('/compte/deconnexion') ?>" data-confirmer="Voulez-vous vous déconnecter ?" data-confirmer-oui="Se déconnecter"><?= csrf() ?><button type="submit" class="lien-espace text-rouge">Se déconnecter</button></form>
+        <form method="post" action="<?= url('/compte/deconnexion') ?>" data-confirmer="Êtes-vous sûr de vouloir vous déconnecter ?" data-confirmer-oui="Se déconnecter"><?= csrf() ?><button type="submit" class="lien-espace text-rouge">Se déconnecter</button></form>
       </nav>
     </aside>
     <div class="min-w-0 space-y-4 sm:space-y-5"><?= $espace ?></div>

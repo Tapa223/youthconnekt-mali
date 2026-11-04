@@ -269,6 +269,12 @@ function connexion(): void
 function deconnexion(): void
 {
     deconnecter();
+    // Passage vers la création d'un autre compte (Paramètres > Ajouter un compte)
+    $vers = post('vers');
+    if (in_array($vers, ['individuel', 'organisation'], true)) {
+        flash('succes', 'Vous êtes déconnecté. Créez maintenant votre ' . ($vers === 'organisation' ? 'compte organisation.' : 'compte personnel.'));
+        rediriger(url('/compte/inscription/' . $vers));
+    }
     flash('succes', 'Vous êtes déconnecté. À bientôt.');
     rediriger(url('/'));
 }

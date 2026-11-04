@@ -4,11 +4,12 @@ $c = fn ($nom) => ['nom' => $nom, 'valeur' => $valeurs[$nom] ?? '', 'erreur' => 
 <?php
 $groupe = fn (string $titre) => '<h2 class="border-t border-ligne pt-5 text-base font-bold text-vert sm:col-span-2">' . e($titre) . '</h2>';
 $infos = array_filter([libelle_profil($profil, $u['type_compte']), $organisation ? ($valeurs['secteur'] ?? '') : ($valeurs['domaine'] ?? ''), $valeurs['ville'] ?: (REGIONS[$valeurs['region']] ?? '')]);
-$ouvert = $erreurs || get('modifier') !== '' || !$profil;
+$ouvert = $erreurs || get('modifier') !== '';
 $lignes_liens = $liens ?: [['reseau' => 'linkedin', 'url' => '']];
 ?>
 <?php /* Aperçu du profil : ce que voient les autres membres */ ?>
-<section class="bloc">
+<section id="apercu" class="bloc scroll-mt-20">
+  <?php if (get('enregistre') !== '' && !$erreurs): ?><p class="mb-4 flex items-center gap-2 rounded-xl bg-vert-clair px-4 py-3 text-sm font-bold text-vert" role="status"><svg class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Vos modifications ont été enregistrées.</p><?php endif ?>
   <div class="flex items-start gap-4">
     <?php if ($image_actuelle): ?><img src="<?= e(media($image_actuelle)) ?>" alt="" class="size-16 shrink-0 rounded-full sm:size-20 <?= $organisation ? 'bg-white object-contain ring-1 ring-ligne' : 'object-cover' ?>">
     <?php else: ?><span class="grid size-16 shrink-0 place-items-center rounded-full bg-orange text-xl font-bold text-white sm:size-20 sm:text-2xl" aria-hidden="true"><?= e($u['initiales']) ?></span><?php endif ?>
@@ -31,7 +32,7 @@ $lignes_liens = $liens ?: [['reseau' => 'linkedin', 'url' => '']];
 
 <?php /* Visibilité : le membre décide, et confirme, avant que son profil apparaisse dans les communautés */ ?>
 <?php if ($profil): ?>
-<section class="bloc flex flex-col gap-3 border-l-4 sm:flex-row sm:items-center sm:justify-between <?= $visible ? 'border-vert' : 'border-orange' ?>">
+<section id="visibilite" class="bloc flex scroll-mt-20 flex-col gap-3 border-l-4 sm:flex-row sm:items-center sm:justify-between <?= $visible ? 'border-vert' : 'border-orange' ?>">
   <div>
     <p class="flex items-center gap-2 font-bold <?= $visible ? 'text-vert' : 'text-orange-fonce' ?>"><span class="size-2.5 rounded-full <?= $visible ? 'bg-vert' : 'bg-orange' ?>" aria-hidden="true"></span><?= $visible ? 'Votre profil est visible' : 'Votre profil est masqué' ?></p>
     <p class="mt-0.5 text-sm"><?= $visible ? 'Les membres de vos communautés peuvent vous voir et ouvrir votre profil.' : "Personne d'autre que vous ne le voit. Rendez-le visible pour apparaître parmi les membres de vos communautés." ?></p>
@@ -130,7 +131,7 @@ $lignes_liens = $liens ?: [['reseau' => 'linkedin', 'url' => '']];
     <?php /* Bouton toujours à portée de main : il reste collé en bas de l'écran pendant qu'on remplit */ ?>
     <div class="sticky bottom-0 z-10 -mx-5 mt-2 flex gap-2 border-t border-ligne bg-white/95 px-5 py-3 backdrop-blur sm:col-span-2 sm:-mx-6 sm:px-6">
       <button type="submit" class="btn btn-vert min-h-12 flex-1 px-8 sm:flex-none">Enregistrer</button>
-      <a href="<?= url('/compte/mon-espace/profil') ?>" class="btn btn-contour min-h-12">Annuler</a>
+      <a href="<?= url('/compte/mon-espace/profil') ?>#apercu" class="btn btn-contour min-h-12" data-fermer-details>Annuler</a>
     </div>
   </form>
 </details>

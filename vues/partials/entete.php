@@ -1,5 +1,9 @@
 <?php
 $u = utilisateur();
+$photo_membre = $u ? ($u['profil']['photo'] ?? $u['profil']['logo'] ?? '') : '';
+$pastille = fn (string $taille) => $photo_membre
+    ? '<img src="' . e(media($photo_membre)) . '" alt="" class="' . $taille . ' shrink-0 rounded-full bg-white object-cover">'
+    : '<span class="grid ' . $taille . ' shrink-0 place-items-center rounded-full bg-orange text-xs" aria-hidden="true">' . e($u['initiales']) . '</span>';
 $section = explode('/', trim(chemin_actuel(), '/'))[0];
 $navigation = [
     ['/', 'Accueil', ''],
@@ -32,7 +36,7 @@ $navigation = [
     <div class="hidden items-center gap-2.5 xl:flex">
       <?php if ($u): ?>
         <a href="<?= url(est_membre($u) ? '/compte/mon-espace' : '/gestion') ?>" class="inline-flex min-h-11 items-center gap-2.5 rounded-full bg-vert py-1.5 pr-5 pl-1.5 text-[15px] font-bold text-white hover:bg-vert-fonce">
-          <span class="grid size-8 place-items-center rounded-full bg-orange text-xs" aria-hidden="true"><?= e($u['initiales']) ?></span>
+          <?= $pastille('size-8') ?>
           <?= est_membre($u) ? 'Mon espace' : 'Administration' ?>
         </a>
       <?php else: ?>
@@ -72,8 +76,8 @@ $navigation = [
     </nav>
     <div class="space-y-3 border-t border-ligne p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
       <?php if ($u): ?>
-        <a href="<?= url(est_membre($u) ? '/compte/mon-espace' : '/gestion') ?>" class="btn btn-vert w-full"><span class="grid size-7 place-items-center rounded-full bg-orange text-xs" aria-hidden="true"><?= e($u['initiales']) ?></span> <?= est_membre($u) ? 'Mon espace' : 'Administration' ?></a>
-        <form method="post" action="<?= url('/compte/deconnexion') ?>" data-confirmer="Voulez-vous vous déconnecter ?" data-confirmer-oui="Se déconnecter"><?= csrf() ?><button type="submit" class="btn btn-contour w-full">Se déconnecter</button></form>
+        <a href="<?= url(est_membre($u) ? '/compte/mon-espace' : '/gestion') ?>" class="btn btn-vert w-full"><?= $pastille('size-7') ?> <?= est_membre($u) ? 'Mon espace' : 'Administration' ?></a>
+        <form method="post" action="<?= url('/compte/deconnexion') ?>" data-confirmer="Êtes-vous sûr de vouloir vous déconnecter ?" data-confirmer-oui="Se déconnecter"><?= csrf() ?><button type="submit" class="btn btn-contour w-full">Se déconnecter</button></form>
       <?php else: ?>
         <a href="<?= url('/compte/inscription') ?>" class="btn btn-vert w-full">Rejoindre le chapitre</a>
         <a href="<?= url('/compte/connexion') ?>" class="btn btn-contour w-full">Se connecter</a>
