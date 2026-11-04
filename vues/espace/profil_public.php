@@ -17,12 +17,12 @@ $presentation = trim((string) $p['presentation']);
     <?php if (!$p['visible']): ?><p class="mb-4 rounded-xl bg-orange/10 px-4 py-2.5 text-sm font-bold text-orange-fonce"><?= $est_moi ? 'Votre profil est masqué : vous seul le voyez. Vous pouvez le rendre visible dans « Mon profil ».' : 'Ce profil est masqué aux autres membres.' ?></p><?php endif ?>
 
     <div class="overflow-hidden rounded-3xl bg-white">
-      <div class="relative h-20 bg-vert sm:h-28"><?php partiel('partials/reseau_deco', ['opacite' => 'opacity-50']) ?></div>
+      <div class="relative h-12 bg-vert sm:h-28"><?php partiel('partials/reseau_deco', ['opacite' => 'opacity-50']) ?></div>
       <div class="px-5 pb-6 sm:px-9 sm:pb-9">
-        <div class="relative -mt-10 flex flex-col gap-4 sm:-mt-14 sm:flex-row sm:items-end sm:justify-between">
+        <div class="relative -mt-8 flex flex-col gap-4 sm:-mt-14 sm:flex-row sm:items-end sm:justify-between">
           <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-4">
-            <?php if ($image): ?><img src="<?= e(media($image)) ?>" alt="" class="size-20 shrink-0 rounded-full border-4 border-white sm:size-28 <?= $organisation ? 'bg-white object-contain' : 'object-cover' ?>">
-            <?php else: ?><span class="grid size-20 shrink-0 place-items-center rounded-full border-4 border-white bg-orange text-2xl font-bold text-white sm:size-28 sm:text-3xl" aria-hidden="true"><?= e($m['initiales']) ?></span><?php endif ?>
+            <?php if ($image): ?><img src="<?= e(media($image)) ?>" alt="" class="size-16 shrink-0 rounded-full border-4 border-white sm:size-28 <?= $organisation ? 'bg-white object-contain' : 'object-cover' ?>">
+            <?php else: ?><span class="grid size-16 shrink-0 place-items-center rounded-full border-4 border-white bg-orange text-xl font-bold text-white sm:size-28 sm:text-3xl" aria-hidden="true"><?= e($m['initiales']) ?></span><?php endif ?>
             <div class="min-w-0 pb-1">
               <h1 class="text-2xl leading-tight font-bold sm:text-3xl"><?= e($m['nom_affiche']) ?></h1>
               <p class="text-xs text-texte">Membre depuis <?= e(mois_annee($m['inscrit_le'])) ?></p>

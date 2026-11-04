@@ -12,8 +12,9 @@ $heure = (int) date('G');
 $salut = $heure >= 18 || $heure < 4 ? 'Bonsoir' : 'Bonjour';
 $evenements_lien = isset(categories_actualite()['evenement']) ? url('/actualites', ['categorie' => 'evenement']) : url('/actualites');
 $chiffres = [
-    [$nb_com, 'communauté' . pluriel($nb_com), url('/compte/mon-espace/communautes'), 'border-vert'],
-    [$nb_opportunites, 'opportunité' . pluriel($nb_opportunites), url('/compte/mon-espace/opportunites'), 'border-orange'],
+    // À zéro, une invitation remplace le chiffre
+    $nb_com ? [$nb_com, 'communauté' . pluriel($nb_com), url('/compte/mon-espace/communautes'), 'border-vert'] : ['Rejoindre', 'une communauté', url('/communaute'), 'border-vert'],
+    $nb_opportunites ? [$nb_opportunites, 'opportunité' . pluriel($nb_opportunites), url('/compte/mon-espace/opportunites'), 'border-orange'] : ['Explorer', 'les opportunités', url('/opportunites'), 'border-orange'],
     [$nb_evenements, 'événement' . pluriel($nb_evenements) . ' à venir', $evenements_lien, 'border-turquoise'],
 ];
 $actions = [
@@ -44,7 +45,7 @@ $actions = [
 <ul class="grid grid-cols-3 gap-2 sm:gap-4" aria-label="En chiffres">
   <?php foreach ($chiffres as [$nombre, $libelle, $lien, $bord]): ?>
   <li><a href="<?= e($lien) ?>" class="flex h-full flex-col rounded-2xl border-t-4 bg-white p-3 transition-shadow hover:shadow-md sm:p-4 <?= $bord ?>">
-    <span class="text-2xl leading-none font-bold text-vert sm:text-3xl"><?= $nombre ?></span>
+    <span class="<?= is_int($nombre) ? 'text-2xl sm:text-3xl' : 'text-base sm:text-xl' ?> leading-none font-bold text-vert"><?= e((string) $nombre) ?></span>
     <span class="mt-1 text-xs leading-tight text-encre sm:text-sm"><?= e($libelle) ?></span>
   </a></li>
   <?php endforeach ?>
@@ -60,6 +61,11 @@ $actions = [
   </li>
   <?php endforeach ?>
 </ul>
+<?php /* L'assistant (questions, suggestions) : ici plutôt qu'en bulle flottante dans l'espace */ ?>
+<button type="button" class="flex w-full items-center gap-3 rounded-xl bg-white p-2.5 text-left transition-shadow hover:shadow-md sm:p-3" data-ouvrir-assistant>
+  <span class="grid size-8 shrink-0 place-items-center rounded-full bg-vert-clair text-vert" aria-hidden="true"><svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/><path d="M8.5 10.5h.01M12 10.5h.01M15.5 10.5h.01"/></svg></span>
+  <span class="min-w-0 flex-1"><span class="block text-[13px] font-bold text-encre sm:text-sm">Une question ou une suggestion ?</span><span class="block text-xs text-texte">Écrivez à l'équipe du chapitre</span></span>
+</button>
 
 <section class="bloc" aria-labelledby="titre-opp">
   <div class="flex items-center justify-between gap-3">

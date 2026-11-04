@@ -1,11 +1,11 @@
 <?php ob_start(); ?>
 <section class="bloc">
-  <div class="flex items-center justify-between gap-3">
-    <h1 class="text-xl font-bold sm:text-3xl">Mes communautés</h1>
+  <div class="flex items-center justify-between gap-3 max-lg:justify-end">
+    <h1 class="text-xl font-bold max-lg:sr-only sm:text-3xl">Mes communautés</h1>
     <a href="<?= url('/communaute') ?>" class="btn-lien min-h-9 px-3.5 text-[13px]">Découvrir</a>
   </div>
   <?php if ($demandes): ?>
-  <ul class="mt-6 space-y-3">
+  <ul class="mt-3 space-y-3 lg:mt-6">
     <?php foreach ($demandes as $d): ?>
     <li class="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-xl border border-ligne p-3.5 sm:p-4">
       <div class="w-full min-w-0 sm:w-auto sm:flex-1">
@@ -23,7 +23,7 @@
     <?php endforeach ?>
   </ul>
   <?php else: ?>
-  <p class="mt-5 rounded-xl bg-gris p-4 text-sm sm:p-5 sm:text-base">Vous n'avez encore rejoint aucune communauté. Choisissez celles qui vous ressemblent pour recevoir les opportunités qui vous concernent.</p>
+  <p class="mt-3 text-sm text-encre lg:mt-5">Vous n'avez encore rejoint aucune communauté.</p>
   <?php endif ?>
 </section>
 <?php $espace = ob_get_clean(); partiel('espace/base', get_defined_vars());

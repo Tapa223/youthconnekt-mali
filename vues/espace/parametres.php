@@ -1,16 +1,16 @@
 <?php ob_start(); ?>
 <section class="bloc">
-  <h1 class="text-xl font-bold sm:text-3xl">Paramètres</h1>
-  <dl class="mt-5 grid gap-3 text-sm sm:grid-cols-2">
-    <div class="rounded-xl bg-gris p-4"><dt>Adresse e-mail de connexion</dt><dd class="mt-0.5 font-bold break-all text-encre"><?= e($u['email']) ?></dd></div>
-    <div class="rounded-xl bg-gris p-4"><dt>Type de compte</dt><dd class="mt-0.5 font-bold text-encre"><?= $u['type_compte'] === 'organisation' ? 'Organisation ou entreprise' : 'Compte personnel' ?></dd></div>
+  <h1 class="text-xl font-bold max-lg:sr-only sm:text-3xl">Paramètres</h1>
+  <dl class="divide-y divide-ligne text-sm lg:mt-3">
+    <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5 py-2.5 first:pt-0"><dt class="text-texte">E-mail de connexion</dt><dd class="font-bold break-all text-encre"><?= e($u['email']) ?></dd></div>
+    <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5 py-2.5 last:pb-0"><dt class="text-texte">Type de compte</dt><dd class="font-bold text-encre"><?= $u['type_compte'] === 'organisation' ? 'Organisation ou entreprise' : 'Compte personnel' ?></dd></div>
   </dl>
 </section>
 
 <?php $erreur_mdp = !empty($erreurs['mdp_actuel']) || !empty($erreurs['password1']) || !empty($erreurs['password2']); ?>
 <details id="mot-de-passe" class="bloc group/mdp scroll-mt-20" <?= $erreur_mdp ? 'open' : '' ?>>
   <summary class="flex min-h-10 cursor-pointer list-none flex-wrap items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
-    <span><span class="block text-lg font-bold text-vert">Mot de passe</span><span class="text-sm text-texte">Changez-le quand vous le souhaitez.</span></span>
+    <span class="text-lg font-bold text-vert">Mot de passe</span>
     <span class="btn-lien min-h-9 px-3.5 text-[13px] group-open/mdp:hidden">Modifier le mot de passe</span>
     <span class="hidden rounded-full bg-gris px-3 py-1.5 text-xs font-bold text-texte group-open/mdp:inline">Fermer</span>
   </summary>
@@ -26,17 +26,14 @@
 <?php $autre = $u['type_compte'] === 'organisation' ? 'individuel' : 'organisation'; ?>
 <section class="bloc" aria-labelledby="titre-comptes">
   <h2 id="titre-comptes" class="text-lg font-bold text-vert">Changer de compte</h2>
-  <p class="mt-1 text-sm text-encre">Chaque compte a sa propre adresse e-mail. <?= $autre === 'organisation'
-      ? "Si vous représentez aussi une organisation ou une entreprise, créez-lui un compte avec l'adresse e-mail de la structure."
-      : 'Si vous voulez aussi participer à titre personnel, créez un compte personnel avec votre propre adresse e-mail.' ?>
-    Pour passer d'un compte à l'autre, déconnectez-vous puis reconnectez-vous avec l'autre adresse.</p>
-  <div class="mt-4 flex flex-wrap gap-2">
-    <form method="post" action="<?= url('/compte/deconnexion') ?>" data-confirmer="<?= $autre === 'organisation' ? 'Créer un compte organisation ?' : 'Créer un compte personnel ?' ?>" data-confirmer-texte="Vous serez déconnecté de ce compte, puis le formulaire d'inscription s'ouvrira. Vous pourrez revenir ici en vous reconnectant." data-confirmer-oui="Continuer">
+  <p class="mt-1 text-sm text-encre">Un compte par adresse e-mail. <?= $autre === 'organisation' ? 'Vous représentez une structure ? Créez-lui son propre compte.' : 'Vous voulez aussi participer à titre personnel ? Créez un compte personnel.' ?></p>
+  <div class="mt-3 grid grid-cols-2 gap-2">
+    <form method="post" action="<?= url('/compte/deconnexion') ?>" data-confirmer="<?= $autre === 'organisation' ? 'Créer un compte organisation ?' : 'Créer un compte personnel ?' ?>" data-confirmer-texte="Vous serez déconnecté de ce compte, puis le formulaire d'inscription s'ouvrira." data-confirmer-oui="Continuer">
       <?= csrf() ?><input type="hidden" name="vers" value="<?= $autre ?>">
-      <button type="submit" class="btn btn-vert min-h-10 px-5 text-sm"><?= $autre === 'organisation' ? 'Ajouter un compte organisation' : 'Ajouter un compte personnel' ?></button>
+      <button type="submit" class="btn btn-vert min-h-11 w-full px-3 text-[13px] leading-tight whitespace-normal sm:text-sm"><?= $autre === 'organisation' ? 'Ajouter une organisation' : 'Ajouter un compte personnel' ?></button>
     </form>
     <form method="post" action="<?= url('/compte/deconnexion') ?>" data-confirmer="Êtes-vous sûr de vouloir vous déconnecter ?" data-confirmer-texte="Vous pourrez ensuite vous connecter avec un autre compte." data-confirmer-oui="Se déconnecter">
-      <?= csrf() ?><button type="submit" class="btn-lien min-h-10">Se connecter avec un autre compte</button>
+      <?= csrf() ?><button type="submit" class="btn btn-contour min-h-11 w-full px-3 text-[13px] leading-tight whitespace-normal sm:text-sm">Autre compte</button>
     </form>
   </div>
 </section>

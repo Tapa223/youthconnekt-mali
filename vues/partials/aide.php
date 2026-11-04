@@ -8,6 +8,7 @@
  */
 $u = utilisateur();
 $membre = $u && est_membre($u);
+$dans_espace = str_starts_with(chemin_actuel(), '/compte/mon-espace'); // bulle cachée : l'assistant s'ouvre depuis le tableau de bord
 $plus_haut = str_starts_with(chemin_actuel(), '/opportunites/'); // laisse la place à la barre « Postuler » sur téléphone
 $prenom = $u ? ($u['prenom_affiche'] ?? '') : '';
 $sujets = [
@@ -18,7 +19,7 @@ $sujets = [
 ];
 $champ = 'min-h-10 w-full rounded-lg border border-ligne bg-white px-3 text-sm text-encre placeholder:text-texte/60 focus:border-vert focus:ring-[3px] focus:ring-orange/35 focus:outline-none';
 ?>
-<div class="aide fixed right-4 z-40 sm:right-6 <?= $plus_haut ? 'bottom-24 lg:bottom-6' : 'bottom-4 sm:bottom-6' ?>" data-aide>
+<div class="aide fixed right-4 z-40 sm:right-6 <?= $dans_espace ? 'aide-espace' : '' ?> <?= $plus_haut ? 'bottom-24 lg:bottom-6' : 'bottom-4 sm:bottom-6' ?>" data-aide>
   <div id="panneau-aide" class="aide-panneau absolute right-0 bottom-[calc(100%+12px)] flex h-[min(34rem,calc(100dvh-7rem))] w-[min(23rem,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-ligne bg-white shadow-2xl shadow-vert/20" role="dialog" aria-labelledby="titre-aide" hidden>
     <div class="aide-tete flex shrink-0 items-center justify-between gap-3 px-4 py-3 text-white">
       <div>

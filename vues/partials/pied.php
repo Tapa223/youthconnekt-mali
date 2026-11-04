@@ -1,6 +1,38 @@
-<?php $p = parametres(); $u = utilisateur(); $reseaux = reseaux_sociaux(); ?>
+<?php $p = parametres(); $u = utilisateur(); $reseaux = reseaux_sociaux();
+// Espace membre : pied de page réduit (les trois logos, puis les mentions)
+$pied_compact = str_starts_with(chemin_actuel(), '/compte/mon-espace') || str_starts_with(chemin_actuel(), '/compte/membres');
+?>
 <footer class="relative isolate overflow-hidden bg-vert text-white" aria-labelledby="titre-pied">
   <h2 id="titre-pied" class="sr-only">Informations sur YouthConnekt Mali</h2>
+  <?php
+  /* Les trois logos (comme YouthConnekt Cameroon) : ministère à gauche, YouthConnekt Mali au centre, PNUD à droite.
+     Les logos officiels s'affichent dès qu'ils sont déposés dans assets/img/appui/ (ministere.png, pnud.png…). */
+  $logo_appui = function (string $fichier): string {
+      foreach (['svg', 'png', 'webp', 'jpg'] as $ext) {
+          if (is_file(RACINE . "/assets/img/appui/$fichier.$ext")) return asset("img/appui/$fichier.$ext");
+      }
+      return '';
+  };
+  $logo_ministere = $logo_appui('ministere');
+  $logo_pnud = $logo_appui('pnud');
+  ?>
+  <div class="relative bg-white text-encre">
+    <div class="conteneur sans-apparition grid grid-cols-[1fr_auto_1fr] items-center gap-3 py-4 sm:gap-6 sm:py-5">
+      <div class="flex min-w-0 items-center gap-2.5 sm:gap-3">
+        <?php if ($logo_ministere): ?><img src="<?= e($logo_ministere) ?>" alt="" class="h-10 w-auto shrink-0 sm:h-14" loading="lazy">
+        <?php else: ?><span class="flex h-10 w-7 shrink-0 overflow-hidden rounded-sm sm:h-12 sm:w-9" aria-hidden="true"><span class="flex-1 bg-[#14B53A]"></span><span class="flex-1 bg-[#FCD116]"></span><span class="flex-1 bg-[#CE1126]"></span></span><?php endif ?>
+        <span class="min-w-0 leading-tight"><span class="block text-[11px] font-bold tracking-wide text-vert uppercase sm:text-sm">République du Mali</span><span class="hidden text-xs text-texte sm:block">Ministère de la Jeunesse et des Sports</span></span>
+      </div>
+      <a href="<?= url('/') ?>" class="justify-self-center" aria-label="YouthConnekt Mali, retour à l'accueil"><?php partiel('partials/logo', ['classes' => 'h-10 w-auto sm:h-14']) ?></a>
+      <div class="flex min-w-0 items-center justify-end gap-2.5 text-right sm:gap-3">
+        <span class="min-w-0 leading-tight"><span class="block text-[11px] font-bold tracking-wide text-vert uppercase sm:text-sm">PNUD Mali</span><span class="hidden text-xs text-texte sm:block">Programme des Nations unies pour le développement</span></span>
+        <?php if ($logo_pnud): ?><img src="<?= e($logo_pnud) ?>" alt="" class="h-10 w-auto shrink-0 sm:h-14" loading="lazy">
+        <?php else: ?><span class="grid h-10 w-8 shrink-0 place-items-center rounded-sm bg-[#0468B1] text-[9px] font-bold text-white sm:h-12 sm:w-10 sm:text-[10px]" aria-hidden="true">PNUD</span><?php endif ?>
+      </div>
+    </div>
+  </div>
+
+<?php if (!$pied_compact): ?>
   <?php partiel('partials/reseau_deco', ['opacite' => 'opacity-40']) ?>
 
   <div class="conteneur sans-apparition relative grid grid-cols-2 gap-x-6 gap-y-9 py-10 sm:gap-10 lg:grid-cols-12 lg:gap-8 lg:py-14">
@@ -28,22 +60,7 @@
           'lien_tiktok' => ['TikTok', '<path d="M14 3.5v11.2a3.3 3.3 0 1 1-3.3-3.3M14 3.5c.5 2.6 2.3 4.2 4.8 4.4"/>'],
       ];
       ?>
-      <ul class="max-w-sm space-y-3 border-b border-white/15 pb-5 text-[13px] leading-snug text-white/80">
-        <li class="flex items-center gap-3">
-          <?php if (isset($logo_de['Ministère de la Jeunesse et des Sports'])): ?><img src="<?= e($logo_de['Ministère de la Jeunesse et des Sports']) ?>" alt="" class="size-9 shrink-0 rounded-full bg-white object-contain p-0.5" loading="lazy">
-          <?php else: ?><span class="flex h-9 w-1.5 shrink-0 flex-col overflow-hidden rounded-full" aria-hidden="true"><span class="flex-1 bg-[#14B53A]"></span><span class="flex-1 bg-[#FCD116]"></span><span class="flex-1 bg-[#CE1126]"></span></span><?php endif ?>
-          <span><strong class="font-bold text-white">Ministère de la Jeunesse et des Sports</strong>, chargé de l'Instruction civique et de la Construction citoyenne</span>
-        </li>
-        <li class="flex items-center gap-3">
-          <?php if (isset($logo_de['PNUD Mali'])): ?><img src="<?= e($logo_de['PNUD Mali']) ?>" alt="" class="h-9 w-auto shrink-0 rounded bg-white object-contain p-0.5" loading="lazy">
-          <?php else: ?><span class="h-9 w-1.5 shrink-0 rounded-full bg-[#0468B1]" aria-hidden="true"></span><?php endif ?>
-          <strong class="font-bold text-white">PNUD Mali</strong>
-        </li>
-      </ul>
-      <a href="<?= url('/') ?>" class="mt-6 inline-flex rounded-xl bg-white px-3 py-2" aria-label="YouthConnekt Mali, retour à l'accueil">
-        <?php partiel('partials/logo', ['classes' => 'h-11 w-auto']) ?>
-      </a>
-      <p class="mt-4 max-w-sm text-sm leading-relaxed text-white/85 sm:mt-5 sm:text-[15px]">Chapitre national de YouthConnekt Africa, YouthConnekt Mali relie les jeunes du pays aux opportunités, aux initiatives et aux organisations qui les accompagnent.</p>
+      <p class="max-w-sm text-sm leading-relaxed text-white/85 sm:text-[15px]">Chapitre national de YouthConnekt Africa, YouthConnekt Mali relie les jeunes du pays aux opportunités, aux initiatives et aux organisations qui les accompagnent.</p>
 
 
     </div>
@@ -126,7 +143,8 @@
     </div>
   </div>
 
-  <div class="relative border-t border-white/15">
+<?php endif ?>
+  <div class="relative <?= $pied_compact ? '' : 'border-t border-white/15' ?>">
     <div class="conteneur sans-apparition flex flex-col gap-3 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] text-[13px] text-white/75 sm:py-6 sm:text-sm md:flex-row md:items-center md:justify-between">
       <p>&copy; <?= date('Y') ?> YouthConnekt Mali · Un chapitre du réseau YouthConnekt Africa</p>
       <ul class="flex flex-wrap gap-x-5 gap-y-2">

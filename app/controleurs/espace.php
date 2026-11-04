@@ -157,7 +157,7 @@ function mon_profil(): void
             mettre_a_jour($table, ['visible' => $visible, 'modifie_le' => maintenant()], (int) $profil['id']);
             flash('succes', $visible ? 'Votre profil est maintenant visible des membres de vos communautés.' : "Votre profil est masqué : il n'apparaît plus dans les communautés.");
         }
-        rediriger(url('/compte/mon-espace/profil') . '#visibilite');
+        rediriger(url('/compte/mon-espace/profil') . '#apercu');
     }
 
     if (est_post()) {

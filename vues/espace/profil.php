@@ -24,25 +24,20 @@ $lignes_liens = $liens ?: [['reseau' => 'linkedin', 'url' => '']];
     </div>
   </div>
   <?php if (trim($valeurs['presentation']) !== ''): ?><p class="mt-4 line-clamp-3 text-[15px] leading-relaxed text-encre"><?= e($valeurs['presentation']) ?></p><?php endif ?>
-  <div class="mt-4 flex flex-wrap gap-2">
-    <a href="#modifier-profil" class="btn btn-vert min-h-10 px-5 text-sm" data-ouvrir-details="modifier-profil">Modifier mon profil</a>
-    <?php if ($profil): ?><a href="<?= url('/compte/membres/' . $u['id']) ?>" class="btn-lien min-h-10">Voir comme les autres</a><?php endif ?>
-  </div>
-</section>
-
-<?php /* Visibilité : le membre décide, et confirme, avant que son profil apparaisse dans les communautés */ ?>
-<?php if ($profil): ?>
-<section id="visibilite" class="bloc flex scroll-mt-20 flex-col gap-3 border-l-4 sm:flex-row sm:items-center sm:justify-between <?= $visible ? 'border-vert' : 'border-orange' ?>">
-  <div>
-    <p class="flex items-center gap-2 font-bold <?= $visible ? 'text-vert' : 'text-orange-fonce' ?>"><span class="size-2.5 rounded-full <?= $visible ? 'bg-vert' : 'bg-orange' ?>" aria-hidden="true"></span><?= $visible ? 'Votre profil est visible' : 'Votre profil est masqué' ?></p>
-    <p class="mt-0.5 text-sm"><?= $visible ? 'Les membres de vos communautés peuvent vous voir et ouvrir votre profil.' : "Personne d'autre que vous ne le voit. Rendez-le visible pour apparaître parmi les membres de vos communautés." ?></p>
-  </div>
-  <form method="post" class="shrink-0" data-confirmer="<?= $visible ? 'Masquer votre profil ?' : 'Rendre votre profil visible ?' ?>" data-confirmer-texte="<?= $visible ? "Vous n'apparaîtrez plus dans la liste des membres de vos communautés." : 'Votre nom, votre photo, votre présentation et vos liens seront visibles des membres de vos communautés. Votre e-mail et votre téléphone restent privés.' ?>" data-confirmer-oui="<?= $visible ? 'Masquer' : 'Rendre visible' ?>">
+  <?php if ($profil): /* Visibilité : interrupteur, confirmé avant d'être appliqué */ ?>
+  <form id="visibilite" method="post" class="mt-4 scroll-mt-20" data-confirmer="<?= $visible ? 'Masquer votre profil ?' : 'Rendre votre profil visible ?' ?>" data-confirmer-texte="<?= $visible ? "Vous n'apparaîtrez plus parmi les membres de vos communautés." : 'Votre nom, votre photo, votre présentation et vos liens seront visibles des membres de vos communautés. Votre e-mail et votre téléphone restent privés.' ?>" data-confirmer-oui="<?= $visible ? 'Masquer' : 'Rendre visible' ?>">
     <?= csrf() ?><input type="hidden" name="action" value="visibilite"><input type="hidden" name="visible" value="<?= $visible ? '0' : '1' ?>">
-    <button type="submit" class="<?= $visible ? 'btn-lien min-h-10' : 'btn btn-orange min-h-10 px-5 text-sm' ?>"><?= $visible ? 'Masquer mon profil' : 'Rendre mon profil visible' ?></button>
+    <button type="submit" role="switch" aria-checked="<?= $visible ? 'true' : 'false' ?>" class="flex w-full items-center gap-3 rounded-xl border border-ligne px-3.5 py-2.5 text-left transition-colors hover:border-vert">
+      <span class="min-w-0 flex-1"><span class="block text-sm font-bold <?= $visible ? 'text-vert' : 'text-orange-fonce' ?>"><?= $visible ? 'Profil visible' : 'Profil masqué' ?></span><span class="block text-xs text-texte"><?= $visible ? 'Les membres de vos communautés vous voient.' : "Personne d'autre que vous ne le voit." ?></span></span>
+      <span class="relative h-6 w-11 shrink-0 rounded-full transition-colors <?= $visible ? 'bg-vert' : 'bg-ligne' ?>" aria-hidden="true"><span class="absolute top-0.5 size-5 rounded-full bg-white shadow transition-all <?= $visible ? 'left-[22px]' : 'left-0.5' ?>"></span></span>
+    </button>
   </form>
+  <?php endif ?>
+  <div class="mt-3 grid grid-cols-2 gap-2">
+    <a href="#modifier-profil" class="btn btn-vert min-h-10 px-3 text-sm" data-ouvrir-details="modifier-profil">Modifier</a>
+    <?php if ($profil): ?><a href="<?= url('/compte/membres/' . $u['id']) ?>" class="btn btn-contour min-h-10 px-3 text-sm">Voir mon profil</a><?php endif ?>
+  </div>
 </section>
-<?php endif ?>
 
 <?php /* Formulaire : replié, il s'ouvre avec « Modifier mon profil » */ ?>
 <details id="modifier-profil" class="bloc group/modif scroll-mt-20" <?= $ouvert ? 'open' : '' ?>>

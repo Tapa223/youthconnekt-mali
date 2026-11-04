@@ -3,9 +3,9 @@
 $tons = ['vert' => 'bg-vert', 'rouge' => 'bg-rouge', 'orange' => 'bg-orange'];
 ?>
 <section class="bloc">
-  <h1 class="text-xl font-bold sm:text-3xl">Notifications</h1>
+  <h1 class="text-xl font-bold max-lg:sr-only sm:text-3xl">Notifications</h1>
   <?php if ($notifications): ?>
-  <ul class="mt-4 divide-y divide-ligne">
+  <ul class="divide-y divide-ligne lg:mt-4">
     <?php foreach ($notifications as [$texte, $lien, $date, $ton]): $nouvelle = $date > $vues_le; ?>
     <li>
       <a href="<?= e($lien) ?>" class="group -mx-2 flex items-start gap-3 rounded-xl px-2 py-3 hover:bg-gris">
@@ -20,7 +20,7 @@ $tons = ['vert' => 'bg-vert', 'rouge' => 'bg-rouge', 'orange' => 'bg-orange'];
     <?php endforeach ?>
   </ul>
   <?php else: ?>
-  <p class="mt-3 text-sm text-texte">Aucune notification pour le moment. Vous serez prévenu ici quand une demande sera traitée, quand une proposition sera publiée ou quand une opportunité arrivera dans vos communautés.</p>
+  <p class="text-sm text-encre lg:mt-3">Aucune notification pour le moment.</p>
   <?php endif ?>
 </section>
 <?php $espace = ob_get_clean(); partiel('espace/base', get_defined_vars());

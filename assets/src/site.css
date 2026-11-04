@@ -279,6 +279,7 @@ a.text-orange:not(.btn):not([class*="hover:bg-"]):hover { color: var(--color-ver
 }
 /* Le point d'interrogation bouge un peu, de temps en temps */
 @keyframes yc-aide-bouge { 0%, 70%, 100% { transform: none; } 75% { transform: rotate(-14deg) scale(1.08); } 82% { transform: rotate(12deg) scale(1.08); } 89% { transform: rotate(-8deg); } 95% { transform: rotate(4deg); } }
+.aide-espace .aide-bouton { display: none; }
 .aide-point { display: inline-block; animation: yc-aide-bouge 3s ease-in-out 1.5s infinite; }
 .aide-bouton[aria-expanded="true"] .aide-point { animation: none; }
 @media (prefers-reduced-motion: reduce) { .aide-point { animation: none; } }
