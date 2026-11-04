@@ -46,13 +46,52 @@
       form.addEventListener("submit", function (e) {
         var action = form.querySelector("select[name=action]");
         if (action && /supprimer/.test(action.value) && !window.confirm("Supprimer définitivement les éléments sélectionnés ?")) e.preventDefault();
+        if (action && !action.value) { e.preventDefault(); action.focus(); }
       });
     });
 
-    // ---- Confirmation avant une action irréversible
+    // ---- Mode sélection des listes : les cases n'apparaissent qu'après « Sélectionner »
+    document.querySelectorAll("[data-basculer-selection]").forEach(function (bouton) {
+      var liste = bouton.closest("[data-liste]");
+      bouton.addEventListener("click", function () {
+        var actif = liste.classList.toggle("ycm-selection-active");
+        bouton.setAttribute("aria-pressed", actif ? "true" : "false");
+        bouton.querySelector("[data-libelle-selection]").textContent = actif ? "Terminer" : "Sélectionner";
+        if (!actif) liste.querySelectorAll("input[type=checkbox]").forEach(function (c) { c.checked = false; c.dispatchEvent(new Event("change")); });
+      });
+    });
+
+    // ---- Confirmation avant d'enregistrer ou de supprimer : petite fenêtre « Annuler / Confirmer »
+    var boite = null;
+    function fenetre() {
+      if (boite) return boite;
+      boite = document.createElement("dialog");
+      boite.className = "ycm-confirmation";
+      boite.innerHTML = '<p class="ycm-confirmation-question" data-question></p><p class="ycm-confirmation-texte" data-texte hidden></p>'
+        + '<div class="ycm-confirmation-boutons"><button type="button" class="ycm-bouton-gris" data-non>Annuler</button><button type="button" class="ycm-bouton-vert" data-oui>Confirmer</button></div>';
+      document.body.appendChild(boite);
+      boite.querySelector("[data-non]").addEventListener("click", function () { boite.close(); });
+      boite.addEventListener("click", function (e) { if (e.target === boite) boite.close(); });
+      return boite;
+    }
     document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
       form.addEventListener("submit", function (e) {
-        if (!window.confirm(form.getAttribute("data-confirmer"))) e.preventDefault();
+        if (form.dataset.confirme === "1") return;
+        e.preventDefault();
+        var question = form.getAttribute("data-confirmer");
+        var soumettre = function () { form.dataset.confirme = "1"; if (form.requestSubmit) form.requestSubmit(e.submitter || undefined); else form.submit(); };
+        if (!window.HTMLDialogElement) { if (window.confirm(question)) soumettre(); return; }
+        var b = fenetre();
+        b.querySelector("[data-question]").textContent = question;
+        var texte = b.querySelector("[data-texte]");
+        texte.textContent = form.getAttribute("data-confirmer-texte") || "";
+        texte.hidden = !texte.textContent;
+        var oui = b.querySelector("[data-oui]");
+        oui.textContent = form.getAttribute("data-confirmer-oui") || "Confirmer";
+        oui.className = form.hasAttribute("data-confirmer-danger") ? "ycm-bouton-rouge" : "ycm-bouton-vert";
+        oui.onclick = function () { b.close(); soumettre(); };
+        b.showModal();
+        oui.focus();
       });
     });
 

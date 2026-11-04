@@ -17,7 +17,7 @@ $groupe = fn ($g) => partiel('admin/_groupe', ['g' => $g, 'valeurs' => $valeurs,
 </div>
 <?php if (!$peut_modifier): ?><p class="ycm-alerte">Votre rôle permet de consulter cette fiche, pas de la modifier.</p><?php endif ?>
 
-<form method="post" action="<?= e($action) ?>" enctype="multipart/form-data" novalidate>
+<form method="post" action="<?= e($action) ?>" enctype="multipart/form-data" novalidate data-confirmer="<?= $ajout ? 'Enregistrer ce nouvel élément ?' : 'Enregistrer les modifications ?' ?>" data-confirmer-oui="Enregistrer">
   <?= csrf() ?>
   <div class="ycm-form-grille">
     <div class="ycm-form-principal">
@@ -53,13 +53,9 @@ $groupe = fn ($g) => partiel('admin/_groupe', ['g' => $g, 'valeurs' => $valeurs,
       <?php if ($peut_modifier): ?>
       <div class="ycm-panneau-boutons">
         <button type="submit" name="_enregistrer" class="ycm-bouton-vert">Enregistrer</button>
-        <?php if (!$r['fiche_unique']): ?>
-        <button type="submit" name="_continuer" class="ycm-bouton-second">Enregistrer et continuer</button>
-        <?php if ($r['peut_ajouter']): ?><button type="submit" name="_autre" class="ycm-bouton-second">Enregistrer et ajouter un autre</button><?php endif ?>
-        <a href="<?= url('/gestion/' . $r['slug']) ?>" class="ycm-bouton-gris">Annuler</a>
-        <?php endif ?>
+        <?php if (!$r['fiche_unique']): ?><a href="<?= url('/gestion/' . $r['slug']) ?>" class="ycm-bouton-gris">Annuler</a><?php endif ?>
         <?php if (!$ajout && $r['peut_supprimer'] && !$r['fiche_unique']): ?>
-        <button type="submit" form="form-supprimer" class="ycm-bouton-supprimer">Supprimer</button>
+        <button type="submit" form="form-supprimer" class="ycm-lien-supprimer">Supprimer cet élément</button>
         <?php endif ?>
       </div>
       <?php endif ?>
@@ -68,7 +64,7 @@ $groupe = fn ($g) => partiel('admin/_groupe', ['g' => $g, 'valeurs' => $valeurs,
   </div>
 </form>
 <?php if (!$ajout && $r['peut_supprimer'] && !$r['fiche_unique'] && $peut_modifier): ?>
-<form id="form-supprimer" method="post" action="<?= url('/gestion/' . $r['slug'] . '/' . $ligne['id'] . '/supprimer') ?>" data-confirmer="Supprimer définitivement cet élément ? Cette action est irréversible." hidden><?= csrf() ?></form>
+<form id="form-supprimer" method="post" action="<?= url('/gestion/' . $r['slug'] . '/' . $ligne['id'] . '/supprimer') ?>" data-confirmer="Supprimer définitivement cet élément ?" data-confirmer-texte="Cette action est irréversible." data-confirmer-oui="Supprimer" data-confirmer-danger hidden><?= csrf() ?></form>
 <?php endif ?>
 <?php if ($r['slug'] === 'parametres' && ($admin['role_admin'] ?? '') === 'super'): ?>
 <form id="form-exemples-charger" method="post" action="<?= url('/gestion/exemples') ?>" hidden><?= csrf() ?><input type="hidden" name="quoi" value="charger"></form>
