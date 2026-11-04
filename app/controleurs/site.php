@@ -80,6 +80,13 @@ function a_propos(): void
 function contact(): void
 {
     $valeurs = ['nom' => '', 'email' => '', 'profil' => 'jeune', 'sujet' => '', 'message' => '', 'consentement' => ''];
+    // Membre connecté : nom, e-mail et profil déjà remplis (modifiables)
+    $u = utilisateur();
+    if ($u && est_membre($u)) {
+        $valeurs['nom'] = $u['nom_affiche'];
+        $valeurs['email'] = $u['email'];
+        $valeurs['profil'] = $u['type_compte'] === 'organisation' ? 'organisation' : 'jeune';
+    }
     $erreurs = [];
     $sujet = get('sujet');
     if (isset(SUJETS_CONTACT[$sujet])) {
