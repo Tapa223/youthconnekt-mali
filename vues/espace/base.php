@@ -32,15 +32,12 @@ $titre_rubrique = $liens[$rubrique][1] ?? 'Mon espace';
 <div class="bg-gris pt-3 pb-8 sm:py-8">
   <div class="conteneur grid grid-cols-1 gap-4 lg:grid-cols-[250px_minmax(0,1fr)] lg:gap-6 xl:max-w-7xl">
 
-    <?php /* Téléphone et tablette : menu déroulant */ ?>
+    <?php /* Téléphone et tablette : simple flèche Retour (page précédente), puis le menu déroulant */ ?>
+    <?php partiel('partials/retour', ['url' => $rubrique === 'tableau' ? url('/') : url('/compte/mon-espace'), 'classes' => '-mb-1 lg:hidden']) ?>
     <div class="flex gap-2 lg:hidden">
-    <?php if ($rubrique !== 'tableau'): /* Retour : page précédente, sinon le tableau de bord */ ?>
-    <a href="<?= url('/compte/mon-espace') ?>" data-retour class="grid size-13 shrink-0 place-items-center rounded-2xl bg-white text-vert shadow-sm" aria-label="Retour"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a>
-    <?php endif ?>
     <details class="menu-espace relative min-w-0 flex-1" data-choix-type>
       <summary class="flex min-h-13 cursor-pointer list-none items-center gap-3 rounded-2xl bg-white px-3 shadow-sm [&::-webkit-details-marker]:hidden">
-        <?php if ($rubrique !== 'tableau'): ?>
-        <?php elseif ($image): ?><img src="<?= e(media($image)) ?>" alt="" class="size-9 shrink-0 rounded-full <?= isset($profil['logo']) ? 'bg-white object-contain ring-1 ring-ligne' : 'object-cover' ?>">
+        <?php if ($image): ?><img src="<?= e(media($image)) ?>" alt="" class="size-9 shrink-0 rounded-full <?= isset($profil['logo']) ? 'bg-white object-contain ring-1 ring-ligne' : 'object-cover' ?>">
         <?php else: ?><span class="grid size-9 shrink-0 place-items-center rounded-full bg-orange text-sm font-bold text-white" aria-hidden="true"><?= e($u['initiales']) ?></span><?php endif ?>
         <span class="min-w-0 flex-1 truncate font-bold text-vert"><?= e($titre_rubrique) ?></span>
         <span class="flex shrink-0 items-center gap-1 rounded-full bg-vert-clair px-2 py-1.5 text-xs font-bold text-vert min-[400px]:px-3"><span class="hidden min-[400px]:inline">Menu</span><svg class="choix-fleche size-4 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span>
