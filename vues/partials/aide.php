@@ -16,6 +16,7 @@ $sujets = [
     ['Opportunités', 'Formations, bourses, stages et appels sont sur la page Opportunités, triés par date limite.', ['Voir les opportunités', url('/opportunites')]],
     ['Communautés', "Ouvrez une communauté et cliquez sur « Intégrer la communauté ».", ['Voir les communautés', url('/communaute')]],
     ['Événements', 'Les prochains événements du chapitre et les dernières nouvelles sont sur la page Actualités.', ['Voir les événements', url('/actualites')]],
+    ['Newsletter', "Recevez les opportunités, les initiatives et les événements du chapitre par e-mail : inscrivez votre adresse dans le formulaire en bas de page.", ['M\'abonner à la newsletter', ($dans_espace ? url('/') : '') . '#newsletter']],
 ];
 $champ = 'min-h-10 w-full rounded-lg border border-ligne bg-white px-3 text-sm text-encre placeholder:text-texte/60 focus:border-vert focus:ring-[3px] focus:ring-orange/35 focus:outline-none';
 ?>
