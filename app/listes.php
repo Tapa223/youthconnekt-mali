@@ -84,7 +84,7 @@ const ICONES_CONTACT = [
 ];
 
 const PROFILS_CONTACT = [
-    'jeune' => 'Particulier',
+    'jeune' => 'Jeune',
     'organisation' => 'Organisation ou entreprise',
     'partenaire' => 'Partenaire ou institution',
     'media' => 'Média',
