@@ -601,3 +601,27 @@ document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
     observateur.observe(zone);
   });
 })();
+
+/* Choix d'une photo (Mon profil) : nom du fichier et aperçu immédiat */
+(function () {
+  "use strict";
+  document.querySelectorAll("[data-choix-fichier]").forEach(function (champ) {
+    var bloc = champ.closest("div").parentElement;
+    var nom = bloc.querySelector("[data-nom-fichier]");
+    var apercu = bloc.querySelector("[data-apercu-image]");
+    champ.addEventListener("change", function () {
+      var f = champ.files && champ.files[0];
+      if (!f) return;
+      if (nom) nom.textContent = f.name;
+      if (apercu && window.URL) {
+        var img = document.createElement("img");
+        img.src = URL.createObjectURL(f);
+        img.alt = "";
+        img.className = "size-16 rounded-full object-cover";
+        img.setAttribute("data-apercu-image", "");
+        apercu.replaceWith(img);
+        apercu = img;
+      }
+    });
+  });
+})();

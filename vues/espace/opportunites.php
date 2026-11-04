@@ -1,9 +1,9 @@
 <?php ob_start(); ?>
 <section class="bloc">
-  <h1 class="text-2xl font-bold sm:text-3xl">Opportunités pour moi</h1>
+  <h1 class="text-2xl font-bold sm:text-3xl">Mes opportunités</h1>
   <p class="mt-1 text-sm">Les opportunités ouvertes dans vos communautés, de la plus proche de sa date limite à la plus lointaine.</p>
   <?php if ($opportunites): ?>
-  <ul class="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3"><?php foreach ($opportunites as $o): ?><li><?php partiel('cartes/opportunite', ['o' => $o, 'compacte' => true, 'via' => $o['via']]) ?></li><?php endforeach ?></ul>
+  <ul class="mt-5 grid grid-cols-2 gap-2.5 sm:gap-4 xl:grid-cols-3"><?php foreach ($opportunites as $o): ?><li><?php partiel('cartes/opportunite', ['o' => $o, 'compacte' => true, 'via' => $o['via']]) ?></li><?php endforeach ?></ul>
   <?php elseif ($a_des_communautes): ?>
   <p class="mt-5 rounded-xl bg-gris p-5">Aucune opportunité ouverte dans vos communautés pour le moment. <a href="<?= url('/opportunites') ?>" class="btn-lien mt-3 sm:mt-0 sm:ml-2">Voir toutes les opportunités</a></p>
   <?php else: ?>

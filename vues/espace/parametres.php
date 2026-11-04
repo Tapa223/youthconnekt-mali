@@ -3,7 +3,7 @@
   <h1 class="text-2xl font-bold sm:text-3xl">Paramètres</h1>
   <dl class="mt-5 grid gap-3 text-sm sm:grid-cols-2">
     <div class="rounded-xl bg-gris p-4"><dt>Adresse e-mail de connexion</dt><dd class="mt-0.5 font-bold break-all text-encre"><?= e($u['email']) ?></dd></div>
-    <div class="rounded-xl bg-gris p-4"><dt>Type de compte</dt><dd class="mt-0.5 font-bold text-encre"><?= e(TYPES_COMPTE[$u['type_compte']] ?? '') ?></dd></div>
+    <div class="rounded-xl bg-gris p-4"><dt>Type de compte</dt><dd class="mt-0.5 font-bold text-encre"><?= $u['type_compte'] === 'organisation' ? 'Organisation ou entreprise' : 'Compte personnel' ?></dd></div>
   </dl>
 </section>
 
@@ -18,13 +18,16 @@
   </form>
 </section>
 
-<section class="bloc border border-rouge/20" aria-labelledby="titre-suppr">
-  <h2 id="titre-suppr" class="text-xl font-bold text-rouge">Supprimer mon compte</h2>
-  <p class="mt-2 text-sm">Votre compte, votre profil et vos demandes d'intégration seront définitivement supprimés. Cette action est irréversible.</p>
-  <form method="post" class="mt-5 grid max-w-lg gap-4" novalidate data-confirmer="Supprimer définitivement votre compte ?">
-    <?= csrf() ?><input type="hidden" name="action" value="supprimer">
-    <?php partiel('partials/champ', ['nom' => 'mot_de_passe_actuel', 'libelle' => 'Votre mot de passe', 'type' => 'password', 'erreur' => $erreurs['supprimer_actuel'] ?? '', 'id' => 'champ-mdp-suppression', 'attributs' => ['autocomplete' => 'current-password']]) ?>
-    <div><button type="submit" class="btn border-rouge bg-rouge text-white hover:bg-white hover:text-rouge">Supprimer mon compte</button></div>
-  </form>
-</section>
+<?php /* Suppression du compte : repliée derrière un lien discret pour éviter un clic par erreur */ ?>
+<details class="px-1" <?= !empty($erreurs['supprimer_actuel']) ? 'open' : '' ?>>
+  <summary class="inline-flex min-h-10 cursor-pointer list-none items-center text-sm font-bold text-rouge hover:underline [&::-webkit-details-marker]:hidden">Supprimer mon compte</summary>
+  <section class="bloc mt-2 border border-rouge/20" aria-label="Supprimer mon compte">
+    <p class="text-sm">Votre compte, votre profil et vos demandes d'intégration seront définitivement supprimés. Cette action est irréversible.</p>
+    <form method="post" class="mt-4 grid max-w-lg gap-4" novalidate data-confirmer="Supprimer définitivement votre compte ?">
+      <?= csrf() ?><input type="hidden" name="action" value="supprimer">
+      <?php partiel('partials/champ', ['nom' => 'mot_de_passe_actuel', 'libelle' => 'Votre mot de passe', 'type' => 'password', 'erreur' => $erreurs['supprimer_actuel'] ?? '', 'id' => 'champ-mdp-suppression', 'attributs' => ['autocomplete' => 'current-password']]) ?>
+      <div><button type="submit" class="btn border-rouge bg-rouge text-white hover:bg-white hover:text-rouge">Supprimer définitivement</button></div>
+    </form>
+  </section>
+</details>
 <?php $espace = ob_get_clean(); partiel('espace/base', get_defined_vars());

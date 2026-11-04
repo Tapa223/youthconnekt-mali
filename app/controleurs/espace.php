@@ -64,6 +64,7 @@ function tableau_de_bord(): void
     $evenements = actualites_publiees("AND date_evenement >= CURDATE() ORDER BY date_evenement");
 
     vue_espace('tableau_de_bord', 'tableau', 'Mon espace', [
+        'nouveautes' => nouveautes_membre($u, $demandes),
         'completion' => taux_completion($u['profil'], $u['type_compte']),
         'mes_communautes' => $mes_communautes,
         'demandes_en_attente' => array_values(array_filter($demandes, fn ($d) => $d['statut'] === 'en_attente')),
@@ -73,6 +74,40 @@ function tableau_de_bord(): void
         'nb_evenements' => count($evenements),
         'suggestions' => array_slice($suggestions, 0, 3),
     ], $u);
+}
+
+/** Mes opportunités proposées et leur état (à valider, publiée, non publiée). */
+function mes_propositions_liste(array $u): array
+{
+    return array_map('opportunite_preparer', lignes('SELECT * FROM opportunites WHERE propose_par = ? ORDER BY cree_le DESC', [$u['id']]));
+}
+
+/**
+ * Ce qui a changé pour le membre ces 15 derniers jours : demandes d'intégration traitées,
+ * opportunités qu'il a proposées et qui ont été publiées. [texte, lien, date, ton (vert/rouge)]
+ */
+function nouveautes_membre(array $u, array $demandes): array
+{
+    $depuis = date('Y-m-d H:i:s', strtotime('-15 days'));
+    $liste = [];
+    foreach ($demandes as $d) {
+        if ($d['traitee_le'] && $d['traitee_le'] >= $depuis && $d['statut'] !== 'en_attente') {
+            $liste[] = $d['statut'] === 'acceptee'
+                ? ['Vous faites maintenant partie de la communauté ' . $d['communaute_nom'] . '.', url('/communaute/' . $d['communaute_slug']), $d['traitee_le'], 'vert']
+                : ["Votre demande pour la communauté " . $d['communaute_nom'] . " n'a pas été retenue.", url('/compte/mon-espace/communautes'), $d['traitee_le'], 'rouge'];
+        }
+    }
+    foreach (lignes("SELECT titre, slug, publie_le FROM opportunites WHERE propose_par = ? AND statut = 'publie' AND publie_le >= ? AND publie_le <= NOW()", [$u['id'], $depuis]) as $o) {
+        $liste[] = ['Votre opportunité « ' . $o['titre'] . ' » a été publiée.', url('/opportunites/' . $o['slug']), $o['publie_le'], 'vert'];
+    }
+    usort($liste, fn ($a, $b) => strcmp($b[2], $a[2]));
+    return array_slice($liste, 0, 4);
+}
+
+function mes_propositions(): void
+{
+    $u = exiger_membre();
+    vue_espace('propositions', 'propositions', 'Mes propositions', ['propositions' => mes_propositions_liste($u)], $u);
 }
 
 function mes_communautes(): void
@@ -86,7 +121,7 @@ function mes_opportunites(): void
 {
     $u = exiger_membre();
     [, $ids, $opportunites] = donnees_membre($u);
-    vue_espace('opportunites', 'opportunites', 'Opportunités pour moi', ['opportunites' => $opportunites, 'a_des_communautes' => (bool) $ids], $u);
+    vue_espace('opportunites', 'opportunites', 'Mes opportunités', ['opportunites' => $opportunites, 'a_des_communautes' => (bool) $ids], $u);
 }
 
 function mon_profil(): void

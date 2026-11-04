@@ -451,6 +451,13 @@ function date_longue(?string $date): string
     return $t ? date('j', $t) . ' ' . MOIS[(int) date('n', $t)] . ' ' . date('Y', $t) : '';
 }
 
+/** novembre 2026 */
+function mois_annee(?string $date): string
+{
+    $t = horodatage($date);
+    return $t ? MOIS[(int) date('n', $t)] . ' ' . date('Y', $t) : '';
+}
+
 /** 12 nov. 2026 */
 function date_courte(?string $date): string
 {
