@@ -775,3 +775,13 @@ input[type=file]::file-selector-button {
 .ycm-temoignage-pied .ycm-personne small { display: block; }
 @media (max-width: 1180px) { .ycm-temoignages { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 640px) { .ycm-temoignages { grid-template-columns: 1fr; } }
+
+/* Témoignages : actions directes sur chaque carte (pas de modification du texte) */
+.ycm-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.ycm-temoignage--avant { border-color: var(--ycm-bleu, #0468B1); box-shadow: inset 0 3px 0 var(--ycm-bleu, #0468B1); }
+.ycm-temoignage .ycm-personne { display: flex; align-items: center; gap: 10px; margin-top: auto; }
+.ycm-temoignage .ycm-personne small { display: block; color: var(--ycm-texte); font-size: 12.5px; }
+.ycm-temoignage-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding-top: 12px; border-top: 1px solid var(--ycm-ligne); }
+.ycm-temoignage-profil select { min-height: 36px; max-width: 12rem; padding: 0 28px 0 10px; border: 1px solid var(--ycm-ligne); border-radius: 999px; background-color: #fff; font-size: 13px; font-weight: 700; color: var(--ycm-encre); }
+.ycm-temoignage-boutons { display: flex; flex-wrap: wrap; gap: 6px; margin-left: auto; }
+.ycm-temoignage-boutons > * { min-height: 36px; }

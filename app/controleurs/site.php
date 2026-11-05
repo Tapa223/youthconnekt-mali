@@ -269,6 +269,6 @@ function temoignages(): void
     afficher(vue('pages/temoignages', [
         'titre' => 'Témoignages | YouthConnekt Mali',
         'description' => 'Ce que les jeunes, les organisations et les partenaires disent de YouthConnekt Mali.',
-        'temoignages' => lignes('SELECT * FROM temoignages WHERE publie = 1 ORDER BY ordre, id DESC'),
+        'temoignages' => lignes('SELECT * FROM temoignages WHERE publie = 1 ORDER BY a_la_une DESC, ordre, id DESC'),
     ]));
 }

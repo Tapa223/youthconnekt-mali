@@ -20,7 +20,7 @@
 
 <?php if ($participation): ?>
 <section class="ycm-boite ycm-boite--pad ycm-participation" aria-labelledby="tdb-participation">
-  <div class="ycm-boite-tete ycm-boite-tete--nu"><h2 id="tdb-participation">Participation des jeunes</h2></div>
+  <div class="ycm-boite-tete ycm-boite-tete--nu"><h2 id="tdb-participation">Participation des membres</h2></div>
   <p class="ycm-sous-titre">Ce que les membres apportent eux-mêmes au chapitre.</p>
   <div class="ycm-participation-grille">
     <?php foreach ($participation as [$libelle, $nombre, $detail, $lien]): ?>

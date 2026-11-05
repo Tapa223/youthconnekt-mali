@@ -103,7 +103,7 @@ function tableau_de_bord(): void
         }
     }
 
-    // Participation des jeunes : ce que les membres apportent eux-mêmes au chapitre
+    // Participation des membres : ce que les membres apportent eux-mêmes au chapitre
     $participation = [];
     $contributeurs = [];
     if (peut('opportunites') || peut('messages') || peut('temoignages')) {
@@ -116,7 +116,7 @@ function tableau_de_bord(): void
         $adh = $nb("SELECT COUNT(*) FROM demandes_adhesion WHERE statut = 'acceptee'");
         $participation = [
             ['Opportunités proposées', $opp, $opp_pub . ' publiée' . pluriel($opp_pub), url('/gestion/propositions')],
-            ['Initiatives présentées', $init, 'par les jeunes et les organisations', url('/gestion/messages', ['q' => "Proposition d'initiative"])],
+            ['Initiatives présentées', $init, 'par les membres et les organisations', url('/gestion/messages', ['q' => "Proposition d'initiative"])],
             ['Témoignages envoyés', $tem, $tem_pub . ' affiché' . pluriel($tem_pub), url('/gestion/temoignages')],
             ['Adhésions aux communautés', $adh, 'membres acceptés', url('/gestion/communautes')],
         ];
@@ -462,6 +462,10 @@ function formulaire(string $slug, ?int $id = null): void
         page_erreur(404);
     }
     exiger_droit($r['rubrique']);
+    // Rubriques sans fiche (témoignages : les mots des membres ne se modifient pas) : tout se fait depuis la liste
+    if ($r['sans_fiche']) {
+        rediriger(url('/gestion/' . $slug));
+    }
     $peut_modifier = peut($r['rubrique'], 'modifier');
     $table = $r['table'];
 

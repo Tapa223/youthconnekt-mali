@@ -66,6 +66,11 @@
       document.querySelectorAll("details.ycm-plus[open]").forEach(function (d) { if (!d.contains(e.target)) d.open = false; });
     });
 
+    // ---- Listes déroulantes qui s'appliquent dès qu'on choisit (profil d'un témoignage)
+    document.querySelectorAll("select[data-envoi-auto]").forEach(function (select) {
+      select.addEventListener("change", function () { var f = select.form; if (f) { if (f.requestSubmit) f.requestSubmit(); else f.submit(); } });
+    });
+
     // ---- Confirmation avant d'enregistrer ou de supprimer : petite fenêtre « Annuler / Confirmer »
     var boite = null;
     function fenetre() {

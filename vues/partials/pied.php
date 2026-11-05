@@ -32,45 +32,40 @@ $pied_compact = str_starts_with(chemin_actuel(), '/compte/mon-espace') || str_st
     </div>
   </div>
 
-<?php if (!$pied_compact): ?>
-  <?php partiel('partials/reseau_deco', ['opacite' => 'opacity-40']) ?>
-
-  <div class="conteneur sans-apparition relative grid grid-cols-2 gap-x-6 gap-y-9 py-10 sm:gap-10 lg:grid-cols-12 lg:gap-8 lg:py-14">
-    <div class="col-span-2 lg:col-span-4">
-      <?php
-      /* Institutions (ministère, puis PNUD Mali) : leurs logos s'affichent dès que les fichiers
-         sont déposés dans assets/img/appui/ (ministere, pnud) ; sinon un petit repère de couleur. */
-      $logos_appui = [];
-      foreach (['ministere' => 'Ministère de la Jeunesse et des Sports', 'pnud' => 'PNUD Mali'] as $fichier => $nom_appui) {
-          foreach (['svg', 'png', 'webp', 'jpg'] as $ext) {
-              if (is_file(RACINE . "/assets/img/appui/$fichier.$ext")) { $logos_appui[] = [asset("img/appui/$fichier.$ext"), $nom_appui]; break; }
-          }
-      }
-      ?>
-      <?php
-      $logo_de = [];
-      foreach ($logos_appui as [$src, $nom_appui]) { $logo_de[$nom_appui] = $src; }
-      // Réseaux sociaux du chapitre : un lien s'active dès qu'il est saisi dans Administration > Paramètres
-      $icones_reseaux = [
-          'lien_facebook' => ['Facebook', '<path d="M14 8.5V6.8c0-.8.5-1.3 1.3-1.3H17V2.3h-2.6C11.9 2.3 10.5 3.9 10.5 6.3v2.2H8v3.3h2.5v9.9H14v-9.9h2.6l.5-3.3H14z" fill="currentColor" stroke="none"/>'],
-          'lien_instagram' => ['Instagram', '<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".9" fill="currentColor" stroke="none"/>'],
-          'lien_linkedin' => ['LinkedIn', '<path d="M6.9 9.3H3.6V20h3.3V9.3zM5.2 4a1.9 1.9 0 1 0 0 3.8 1.9 1.9 0 0 0 0-3.8zM20.4 13.9c0-3-1.6-4.9-4.2-4.9-1.4 0-2.4.8-2.8 1.5V9.3h-3.2V20h3.3v-5.6c0-1.4.6-2.4 1.9-2.4 1.2 0 1.7.9 1.7 2.4V20h3.3v-6.1z" fill="currentColor" stroke="none"/>'],
-          'lien_x' => ['X', '<path d="M4 4l16 16M20 4L4 20"/>'],
-          'lien_youtube' => ['YouTube', '<rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10 9.3v5.4l4.6-2.7z" fill="currentColor" stroke="none"/>'],
-          'lien_tiktok' => ['TikTok', '<path d="M14 3.5v11.2a3.3 3.3 0 1 1-3.3-3.3M14 3.5c.5 2.6 2.3 4.2 4.8 4.4"/>'],
-      ];
-      ?>
+<?php if (!$pied_compact):
+  // Réseaux sociaux du chapitre : un lien s'active dès qu'il est saisi dans Administration > Paramètres
+  $icones_reseaux = [
+      'lien_facebook' => ['Facebook', '<path d="M14 8.5V6.8c0-.8.5-1.3 1.3-1.3H17V2.3h-2.6C11.9 2.3 10.5 3.9 10.5 6.3v2.2H8v3.3h2.5v9.9H14v-9.9h2.6l.5-3.3H14z" fill="currentColor" stroke="none"/>'],
+      'lien_instagram' => ['Instagram', '<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".9" fill="currentColor" stroke="none"/>'],
+      'lien_linkedin' => ['LinkedIn', '<path d="M6.9 9.3H3.6V20h3.3V9.3zM5.2 4a1.9 1.9 0 1 0 0 3.8 1.9 1.9 0 0 0 0-3.8zM20.4 13.9c0-3-1.6-4.9-4.2-4.9-1.4 0-2.4.8-2.8 1.5V9.3h-3.2V20h3.3v-5.6c0-1.4.6-2.4 1.9-2.4 1.2 0 1.7.9 1.7 2.4V20h3.3v-6.1z" fill="currentColor" stroke="none"/>'],
+      'lien_x' => ['X', '<path d="M4 4l16 16M20 4L4 20"/>'],
+      'lien_youtube' => ['YouTube', '<rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10 9.3v5.4l4.6-2.7z" fill="currentColor" stroke="none"/>'],
+      'lien_tiktok' => ['TikTok', '<path d="M14 3.5v11.2a3.3 3.3 0 1 1-3.3-3.3M14 3.5c.5 2.6 2.3 4.2 4.8 4.4"/>'],
+  ];
+  /* Pied allégé : à gauche la présentation et les réseaux ; à droite la newsletter puis trois courtes colonnes de liens */
+  ?>
+  <div class="conteneur sans-apparition relative grid gap-8 py-9 sm:py-12 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:gap-12">
+    <div>
       <p class="max-w-sm text-sm leading-relaxed text-white/85 sm:text-[15px]">Chapitre national de YouthConnekt Africa, YouthConnekt Mali relie les jeunes du pays aux opportunités, aux initiatives et aux organisations qui les accompagnent.</p>
-
-
+      <p class="mt-6 text-sm font-bold text-white">Suivez-nous</p>
+      <ul class="mt-3 flex flex-wrap gap-2" aria-label="Réseaux sociaux de YouthConnekt Mali">
+        <?php foreach ($icones_reseaux as $cle => [$nom_reseau, $trace]):
+            if ($cle === 'lien_tiktok' && empty($p[$cle])) continue;
+            $classe_icone = 'icone-reseau grid size-10 cursor-pointer place-items-center rounded-full border border-white/30 text-white'; ?>
+        <li>
+          <?php if (!empty($p[$cle])): ?>
+          <a href="<?= e($p[$cle]) ?>" target="_blank" rel="noopener" class="<?= $classe_icone ?>" aria-label="<?= e($nom_reseau) ?>"><svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><?= $trace ?></svg></a>
+          <?php else: ?>
+          <span class="<?= $classe_icone ?>" title="<?= e($nom_reseau) ?> : bientôt disponible"><svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><?= $trace ?></svg><span class="sr-only"><?= e($nom_reseau) ?></span></span>
+          <?php endif ?>
+        </li>
+        <?php endforeach ?>
+      </ul>
     </div>
 
-    <div class="col-span-2 lg:col-span-8">
-      <div id="newsletter" class="grid scroll-mt-24 gap-4 border-b border-white/15 pb-8 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-center md:gap-8">
-        <div>
-          <p class="text-2xl leading-tight font-bold text-white sm:text-[1.75rem]">Abonnez-vous à la newsletter</p>
-          <p class="mt-1.5 text-sm text-white/80">Opportunités, initiatives et événements, directement par e-mail.</p>
-        </div>
+    <div>
+      <div id="newsletter" class="grid scroll-mt-24 gap-4 border-b border-white/15 pb-7 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-center md:gap-8">
+        <p class="text-xl leading-tight font-bold text-white sm:text-2xl">Abonnez-vous à la newsletter</p>
         <form action="<?= url('/newsletter') ?>" method="post" novalidate data-form-newsletter>
           <?= csrf() ?>
           <input type="hidden" name="suivant" value="<?= e(adresse_actuelle()) ?>">
@@ -85,60 +80,40 @@ $pied_compact = str_starts_with(chemin_actuel(), '/compte/mon-espace') || str_st
           </div>
           <label class="mt-3 flex cursor-pointer items-start gap-2.5 text-[13px] leading-snug text-white/85">
             <input type="checkbox" name="accord" value="1" required class="mt-0.5 size-4 shrink-0 rounded accent-orange">
-            <span>J'accepte de recevoir la newsletter de YouthConnekt Mali et la <a href="<?= url('/confidentialite') ?>" class="font-bold text-white hover:text-orange">politique de confidentialité</a>.</span>
+            <span>J'accepte de recevoir la newsletter et la <a href="<?= url('/confidentialite') ?>" class="font-bold text-white hover:text-orange">politique de confidentialité</a>.</span>
           </label>
           <p class="mt-3 hidden items-start gap-2 rounded-xl px-3.5 py-2.5 text-sm font-medium" data-retour-newsletter role="status" aria-live="polite"></p>
         </form>
       </div>
-      <div class="grid grid-cols-2 gap-x-6 gap-y-9 pt-8 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)_minmax(0,3fr)] md:gap-8">
-    <nav aria-label="Le chapitre">
-      <p class="text-xs font-bold tracking-[0.16em] text-white uppercase"><span class="mb-3 block h-[3px] w-8 rounded-full bg-orange" aria-hidden="true"></span>Le chapitre</p>
-      <ul class="mt-4 space-y-1 text-[15px]">
-        <li><a href="<?= url('/a-propos') ?>" class="lien-pied">À propos</a></li>
-        <li><a href="<?= url('/a-propos') ?>#axes" class="lien-pied">Nos axes d'action</a></li>
-        <li><a href="<?= url('/initiatives') ?>" class="lien-pied">Initiatives</a></li>
-        <li><a href="<?= url('/actualites') ?>" class="lien-pied">Actualités</a></li>
-      </ul>
-    </nav>
-
-    <nav aria-label="Participer">
-      <p class="text-xs font-bold tracking-[0.16em] text-white uppercase"><span class="mb-3 block h-[3px] w-8 rounded-full bg-turquoise" aria-hidden="true"></span>Participer</p>
-      <ul class="mt-4 space-y-1 text-[15px]">
-        <li><a href="<?= url('/opportunites') ?>" class="lien-pied">Opportunités</a></li>
-        <li><a href="<?= url('/communaute') ?>" class="lien-pied">Communautés</a></li>
-        <?php if ($u): ?>
-        <li><a href="<?= url(est_membre($u) ? '/compte/mon-espace' : '/gestion') ?>" class="lien-pied"><?= est_membre($u) ? 'Mon espace' : 'Administration' ?></a></li>
-        <?php else: ?>
-        <li><a href="<?= url('/compte/inscription') ?>" class="lien-pied">Rejoindre le chapitre</a></li>
-        <li><a href="<?= url('/compte/connexion') ?>" class="lien-pied">Se connecter</a></li>
-        <?php endif ?>
-      </ul>
-    </nav>
-
-    <div class="col-span-2 md:col-span-1">
-      <p class="text-xs font-bold tracking-[0.16em] text-white uppercase"><span class="mb-3 block h-[3px] w-8 rounded-full bg-bleu" aria-hidden="true"></span>Nous joindre</p>
-      <ul class="mt-4 space-y-2.5 text-[15px] text-white/85">
-        <li><?= e($p['adresse'] ?: 'Bamako, Mali') ?></li>
-        <?php if ($p['email_contact']): ?><li><a href="mailto:<?= e($p['email_contact']) ?>" class="lien-pied break-all"><?= e($p['email_contact']) ?></a></li><?php endif ?>
-        <?php if ($p['telephone']): ?><li><a href="tel:<?= e(str_replace(' ', '', $p['telephone'])) ?>" class="lien-pied"><?= e($p['telephone']) ?></a></li><?php endif ?>
-        <?php if ($p['horaires']): ?><li><?= e($p['horaires']) ?></li><?php endif ?>
-      </ul>
-      <a href="<?= url('/contact') ?>" class="btn btn-blanc mt-5 min-h-11">Nous écrire</a>
-      <p class="mt-7 text-xs font-bold tracking-[0.16em] text-white uppercase">Suivez-nous</p>
-      <ul class="mt-3 flex flex-wrap gap-2" aria-label="Réseaux sociaux de YouthConnekt Mali">
-        <?php foreach ($icones_reseaux as $cle => [$nom_reseau, $trace]):
-            if ($cle === 'lien_tiktok' && empty($p[$cle])) continue;
-            $classe_icone = 'icone-reseau grid size-10 cursor-pointer place-items-center rounded-full border border-white/30 bg-white/5 text-white'; ?>
-        <li>
-          <?php if (!empty($p[$cle])): ?>
-          <a href="<?= e($p[$cle]) ?>" target="_blank" rel="noopener" class="<?= $classe_icone ?>" aria-label="<?= e($nom_reseau) ?>"><svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><?= $trace ?></svg></a>
-          <?php else: ?>
-          <span class="<?= $classe_icone ?>" title="<?= e($nom_reseau) ?> : bientôt disponible"><svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><?= $trace ?></svg><span class="sr-only"><?= e($nom_reseau) ?></span></span>
-          <?php endif ?>
-        </li>
-        <?php endforeach ?>
-      </ul>
-    </div>
+      <div class="grid grid-cols-2 gap-x-6 gap-y-7 pt-7 md:grid-cols-[minmax(0,2fr)_minmax(0,2fr)_minmax(0,3fr)] md:gap-8">
+        <nav aria-label="Le chapitre">
+          <p class="text-sm font-bold text-white">Le chapitre</p>
+          <ul class="mt-3 space-y-1 text-[15px]">
+            <li><a href="<?= url('/a-propos') ?>" class="lien-pied">À propos</a></li>
+            <li><a href="<?= url('/initiatives') ?>" class="lien-pied">Initiatives</a></li>
+            <li><a href="<?= url('/actualites') ?>" class="lien-pied">Actualités</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Participer">
+          <p class="text-sm font-bold text-white">Participer</p>
+          <ul class="mt-3 space-y-1 text-[15px]">
+            <li><a href="<?= url('/opportunites') ?>" class="lien-pied">Opportunités</a></li>
+            <li><a href="<?= url('/communaute') ?>" class="lien-pied">Communautés</a></li>
+            <?php if ($u): ?>
+            <li><a href="<?= url(est_membre($u) ? '/compte/mon-espace' : '/gestion') ?>" class="lien-pied"><?= est_membre($u) ? 'Mon espace' : 'Administration' ?></a></li>
+            <?php else: ?>
+            <li><a href="<?= url('/compte/inscription') ?>" class="lien-pied">Rejoindre le chapitre</a></li>
+            <?php endif ?>
+          </ul>
+        </nav>
+        <div class="col-span-2 md:col-span-1">
+          <p class="text-sm font-bold text-white">Nous joindre</p>
+          <ul class="mt-3 space-y-1 text-[15px] text-white/85 [&>li]:flex [&>li]:min-h-10 [&>li]:items-center">
+            <li><?= e($p['adresse'] ?: 'Bamako, Mali') ?></li>
+            <?php if ($p['email_contact']): ?><li><a href="mailto:<?= e($p['email_contact']) ?>" class="lien-pied [overflow-wrap:anywhere]"><?= e($p['email_contact']) ?></a></li><?php endif ?>
+            <?php if ($p['telephone']): ?><li><a href="tel:<?= e(str_replace(' ', '', $p['telephone'])) ?>" class="lien-pied"><?= e($p['telephone']) ?></a></li><?php endif ?>
+          </ul>
+        </div>
       </div>
     </div>
   </div>

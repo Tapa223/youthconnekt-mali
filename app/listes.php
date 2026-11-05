@@ -75,10 +75,16 @@ const COULEURS_HEX = [
     'rouge' => '#7C0D02',
 ];
 
+/** Famille d'un partenaire : deux blocs distincts dans la section Partenaires */
+const CATEGORIES_PARTENAIRE = [
+    'institutionnel' => 'Partenaire institutionnel ou technique',
+    'prive' => 'Partenaire du secteur privé',
+];
+
 /** Profil de la personne qui témoigne (tri des témoignages dans l'administration) */
 const PROFILS_TEMOIGNAGE = [
-    'jeune_femme' => 'Jeune femme',
-    'jeune_homme' => 'Jeune homme',
+    'jeune_femme' => 'Femme',
+    'jeune_homme' => 'Homme',
     'organisation' => 'Organisation ou association',
     'entreprise' => 'Entreprise',
     'partenaire' => 'Partenaire ou institution',
