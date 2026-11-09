@@ -321,3 +321,10 @@ a.text-orange:not(.btn):not([class*="hover:bg-"]):hover { color: var(--color-ver
 /* En-tête de l'assistant : couleur inverse du bouton (bouton vert : en-tête orange ; bouton orange : en-tête vert) */
 .aide-tete { background: var(--color-orange); }
 .aide[data-sur-vert] .aide-tete { background: var(--color-vert); }
+
+/* Billet : à l'impression, seul le billet apparaît */
+@media print {
+  body:has(.billet) * { visibility: hidden; }
+  body:has(.billet) .billet, body:has(.billet) .billet * { visibility: visible; }
+  .billet { position: absolute; top: 0; left: 0; right: 0; box-shadow: none; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

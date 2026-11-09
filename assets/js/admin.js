@@ -99,35 +99,48 @@
       form.addEventListener("change", avertir);
     });
 
-    // ---- Participations : ajout, retrait et ordre des rôles et des questions créés par l'administrateur
+    // ---- Participations : rôles (chacun avec ses questions) ajoutés, retirés et ordonnés par l'administrateur
     var compteurLignes = 0;
+    var aMoi = function (ligne, el) { return el && el.closest("[data-ligne]") === ligne; };
+    var premier = function (ligne, sel) {
+      var tous = ligne.querySelectorAll(sel);
+      for (var k = 0; k < tous.length; k++) if (aMoi(ligne, tous[k])) return tous[k];
+      return null;
+    };
     var brancherLigne = function (ligne) {
-      var type = ligne.querySelector("[data-type-champ]");
-      var opts = ligne.querySelector("[data-options]");
+      if (ligne.hasAttribute("data-branche")) return;
+      ligne.setAttribute("data-branche", "");
+      var type = premier(ligne, "[data-type-champ]"), opts = premier(ligne, "[data-options]");
       if (type && opts) type.addEventListener("change", function () { opts.hidden = !/^(choix|cases)$/.test(type.value); });
-      var m = ligne.querySelector("[data-monter]"), dsc = ligne.querySelector("[data-descendre]"), r = ligne.querySelector("[data-retirer]");
+      var m = premier(ligne, "[data-monter]"), dsc = premier(ligne, "[data-descendre]"), r = premier(ligne, "[data-retirer]");
       if (m) m.addEventListener("click", function () { var p = ligne.previousElementSibling; if (p) ligne.parentNode.insertBefore(ligne, p); });
       if (dsc) dsc.addEventListener("click", function () { var n = ligne.nextElementSibling; if (n) ligne.parentNode.insertBefore(n, ligne); });
-      if (r) r.addEventListener("click", function () { ligne.remove(); });
+      if (r) r.addEventListener("click", function () {
+        var q = r.getAttribute("data-retirer-question");
+        if (q && ligne.querySelector("[data-ligne]") && !window.confirm(q)) return;
+        ligne.remove();
+      });
     };
     document.querySelectorAll("[data-ligne]").forEach(brancherLigne);
-    document.querySelectorAll("[data-ajouter]").forEach(function (bouton) {
-      bouton.addEventListener("click", function () {
-        var nom = bouton.getAttribute("data-ajouter");
-        var modele = document.querySelector('template[data-modele="' + nom + '"]');
-        var zone = document.querySelector('[data-lignes="' + nom + '"]');
-        if (!modele || !zone) return;
-        var html = modele.innerHTML.replace(/__cle__/g, "n" + Date.now() + (compteurLignes++));
-        var tmp = document.createElement("div");
-        tmp.innerHTML = html.trim();
-        var ligne = tmp.firstElementChild;
-        zone.appendChild(ligne);
-        brancherLigne(ligne);
-        var vide = document.querySelector("[data-aucune-question]");
-        if (vide && nom === "champs") vide.remove();
-        var champ = ligne.querySelector("input[type=text]");
-        if (champ) champ.focus();
-      });
+    document.addEventListener("click", function (e) {
+      var bouton = e.target.closest ? e.target.closest("[data-ajouter]") : null;
+      if (!bouton) return;
+      var nom = bouton.getAttribute("data-ajouter");
+      var modele = document.querySelector('template[data-modele="' + nom + '"]');
+      var role = bouton.closest("[data-role-cle]");
+      var zone = nom === "champs" && role ? role.querySelector('[data-lignes="champs"]') : document.querySelector('[data-lignes="' + nom + '"]');
+      if (!modele || !zone) return;
+      var cle = "n" + Date.now() + (compteurLignes++);
+      var html = modele.innerHTML.replace(/__role__/g, nom === "champs" && role ? role.getAttribute("data-role-cle") : cle).replace(/__cle__/g, cle);
+      var tmp = document.createElement("div");
+      tmp.innerHTML = html.trim();
+      var ligne = tmp.firstElementChild;
+      zone.appendChild(ligne);
+      ligne.querySelectorAll("[data-ligne]").forEach(brancherLigne);
+      brancherLigne(ligne);
+      if (role) { var vide = role.querySelector("[data-aucune-question]"); if (vide && nom === "champs") vide.remove(); }
+      var champ = ligne.querySelector("input[type=text]");
+      if (champ) champ.focus();
     });
 
     // ---- Listes déroulantes qui s'appliquent dès qu'on choisit (profil d'un témoignage)

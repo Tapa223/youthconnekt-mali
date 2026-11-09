@@ -27,10 +27,12 @@ $a = age($c['date_naissance'] ?? null);
   </article>
   <?php if ($peut_modifier): ?>
   <aside class="ycm-boite ycm-boite--pad ycm-fiche-temoignage-actions">
-    <h2>Décision</h2>
-    <p><?= ['en_attente' => badge('En attente', 'orange'), 'retenue' => badge('Retenue', 'vert'), 'non_retenue' => badge('Non retenue', 'gris')][$c['statut']] ?? '' ?></p>
+    <h2><?= $c['statut'] === 'inscrit' ? 'Inscription' : 'Décision' ?></h2>
+    <p><?= ['inscrit' => badge('Inscrit', 'vert'), 'en_attente' => badge('En attente', 'orange'), 'retenue' => badge('Retenue', 'vert'), 'non_retenue' => badge('Non retenue', 'gris')][$c['statut']] ?? '' ?><?= $c['present_le'] ? ' ' . badge('Présent', 'bleu') : '' ?></p>
+    <?php if (billet_valable($c)): ?><p class="ycm-discret">Billet <strong><?= e((string) $c['code']) ?></strong></p><?php endif ?>
+    <?php if ($c['statut'] === 'inscrit'): ?><p class="ycm-discret">Inscription directe : pas de décision à prendre.</p><?php endif ?>
     <?php foreach (['retenue' => ['Retenir', 'ycm-bouton-vert', 'Retenir ' . $c['membre_nom'] . ' ?', ''], 'non_retenue' => ['Ne pas retenir', 'ycm-bouton-rouge-contour', 'Ne pas retenir ' . $c['membre_nom'] . ' ?', ' data-confirmer-danger'], 'en_attente' => ['Remettre en attente', 'ycm-bouton-gris', 'Remettre cette candidature en attente ?', '']] as $s => [$lib, $classe, $question, $danger]):
-        if ($s === $c['statut']) continue; ?>
+        if ($s === $c['statut'] || $c['statut'] === 'inscrit') continue; ?>
     <form method="post" action="<?= url('/gestion/participations/' . $c['id'] . '/decision') ?>" data-confirmer="<?= e($question) ?>" data-confirmer-texte="La personne en est prévenue dans son espace." data-confirmer-oui="<?= e($lib) ?>"<?= $danger ?>>
       <?= csrf() ?><input type="hidden" name="statut" value="<?= $s ?>"><input type="hidden" name="suivant" value="<?= e(adresse_actuelle()) ?>">
       <button type="submit" class="<?= $classe ?>" style="width:100%"><?= $lib ?></button>

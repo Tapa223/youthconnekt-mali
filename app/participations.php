@@ -18,10 +18,36 @@ const TYPES_CHAMP_PARTICIPATION = [
 ];
 
 const STATUTS_PARTICIPATION = [
+    'inscrit' => 'Inscrit',
     'en_attente' => 'En attente',
     'retenue' => 'Retenue',
     'non_retenue' => 'Non retenue',
 ];
+
+/** Inscription : validée tout de suite (billet immédiat). Candidature : étudiée par l'équipe. */
+const MODES_ROLE = [
+    'inscription' => 'Inscription (validée tout de suite)',
+    'candidature' => "Candidature (l'équipe choisit)",
+];
+
+/** Le billet est valable une fois l'inscription faite ou la candidature retenue. */
+function billet_valable(array $p): bool
+{
+    return in_array($p['statut'] ?? '', ['inscrit', 'retenue'], true);
+}
+
+/** Code de billet unique, facile à lire et à saisir (sans 0, O, 1, I). */
+function nouveau_code_billet(): string
+{
+    $lettres = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    do {
+        $code = 'YCM-';
+        for ($k = 0; $k < 5; $k++) {
+            $code .= $lettres[random_int(0, strlen($lettres) - 1)];
+        }
+    } while (valeur('SELECT COUNT(*) FROM participations WHERE code = ?', [$code]));
+    return $code;
+}
 
 /** Rôles d'une initiative, avec le nombre de personnes déjà proposées (hors non retenues) et les places restantes. */
 function roles_initiative(int $initiative_id): array
@@ -34,13 +60,25 @@ function roles_initiative(int $initiative_id): array
     foreach ($roles as &$r) {
         $r['restantes'] = $r['places'] === null ? null : max(0, (int) $r['places'] - (int) $r['nb']);
         $r['complet'] = $r['restantes'] === 0;
+        $r['champs'] = champs_role((int) $r['id']);
     }
     return $roles;
 }
 
+/** Questions d'un rôle (chaque rôle a les siennes). */
+function champs_role(int $role_id): array
+{
+    $champs = lignes('SELECT * FROM initiative_champs WHERE role_id = ? ORDER BY ordre, id', [$role_id]);
+    foreach ($champs as &$c) {
+        $c['choix'] = lignes_texte((string) $c['options']);
+    }
+    return $champs;
+}
+
+/** Toutes les questions d'une initiative, rôle par rôle (pour l'export et le tableau). */
 function champs_initiative(int $initiative_id): array
 {
-    $champs = lignes('SELECT * FROM initiative_champs WHERE initiative_id = ? ORDER BY ordre, id', [$initiative_id]);
+    $champs = lignes('SELECT c.*, r.nom AS role_nom FROM initiative_champs c JOIN initiative_roles r ON r.id = c.role_id WHERE c.initiative_id = ? ORDER BY r.ordre, r.id, c.ordre, c.id', [$initiative_id]);
     foreach ($champs as &$c) {
         $c['choix'] = lignes_texte((string) $c['options']);
     }

@@ -13,12 +13,18 @@ $chiffres_i = lignes_colonnes($i['chiffres'], 2);
     <h1 class="mt-3 text-[1.875rem] leading-[1.08] font-bold sm:text-5xl xl:text-[3.5rem]"><?= e($i['titre']) ?></h1>
     <p class="mt-4 text-base leading-relaxed sm:text-lg"><?= e($i['resume']) ?></p>
     <?php if ($ma_participation): ?>
-    <a href="<?= url('/compte/mon-espace/participations') ?>" class="mt-5 inline-flex min-h-11 items-center gap-2 rounded-full bg-vert-clair px-5 text-sm font-bold text-vert">Vous êtes candidat comme « <?= e($ma_participation['role_libelle']) ?> » · <?= e(STATUTS_PARTICIPATION[$ma_participation['statut']] ?? '') ?></a>
+    <div class="mt-5 flex flex-wrap items-center gap-2">
+      <span class="inline-flex min-h-11 items-center rounded-full bg-vert-clair px-5 text-sm font-bold text-vert"><?= $ma_participation['statut'] === 'inscrit' ? 'Vous êtes inscrit' : 'Votre candidature' ?> comme « <?= e($ma_participation['role_libelle']) ?> »<?= $ma_participation['statut'] !== 'inscrit' ? ' · ' . e(STATUTS_PARTICIPATION[$ma_participation['statut']] ?? '') : '' ?></span>
+      <?php if (billet_valable($ma_participation)): ?><a href="<?= url('/compte/mon-espace/participations/' . $ma_participation['id'] . '/billet') ?>" class="btn btn-orange min-h-11 px-5">Voir mon billet</a>
+      <?php else: ?><a href="<?= url('/compte/mon-espace/participations') ?>" class="btn-lien min-h-11">Mes participations</a><?php endif ?>
+    </div>
     <?php elseif ($ouvertes): ?>
     <div class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
       <a href="#prendre-part" class="btn btn-orange min-h-12 px-6">Prendre part à cette initiative</a>
       <?php if ($i['participations_fin']): ?><span class="text-sm text-texte">Jusqu'au <?= e(date_longue($i['participations_fin'])) ?></span><?php endif ?>
     </div>
+    <?php elseif ($roles && $i['participations_ouvertes']): ?>
+    <p class="mt-5 text-sm text-texte">Les participations à cette initiative sont closes.</p>
     <?php endif ?>
     <?php if ($a_infos) partiel('pages/infos_initiative', ['i' => $i, 'classes' => 'mt-6 hidden lg:grid']) ?>
   </div>
@@ -42,18 +48,18 @@ $chiffres_i = lignes_colonnes($i['chiffres'], 2);
   <div class="conteneur">
     <div class="rounded-3xl border-2 border-orange/30 bg-orange-clair/40 p-5 sm:p-8">
       <h2 id="titre-prendre-part" class="text-2xl font-bold sm:text-3xl">Prendre part</h2>
-      <p class="mt-2 max-w-2xl text-[15px] leading-relaxed text-encre sm:text-base"><?= trim((string) $i['participations_intro']) !== '' ? nl2br(e($i['participations_intro'])) : "L'équipe du chapitre recherche des jeunes pour faire vivre cette initiative. Choisissez votre rôle." ?></p>
+      <p class="mt-2 max-w-2xl text-[15px] leading-relaxed text-encre sm:text-base"><?= trim((string) $i['participations_intro']) !== '' ? nl2br(e($i['participations_intro'])) : 'Choisissez comment vous souhaitez participer.' ?></p>
       <ul class="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <?php foreach ($roles as $r): ?>
         <li class="flex flex-col rounded-2xl bg-white p-4 shadow-sm sm:p-5 <?= $r['complet'] ? 'opacity-60' : '' ?>">
           <span class="text-lg font-bold text-vert"><?= e($r['nom']) ?></span>
           <?php if ($r['description'] !== ''): ?><span class="mt-1 text-sm leading-snug"><?= e($r['description']) ?></span><?php endif ?>
-          <span class="mt-3 text-xs font-bold <?= $r['complet'] ? 'text-texte' : 'text-orange-fonce' ?>"><?= $r['complet'] ? 'Complet' : ($r['restantes'] !== null ? $r['restantes'] . ' place' . pluriel((int) $r['restantes']) . ' restante' . pluriel((int) $r['restantes']) : 'Places ouvertes') ?></span>
-          <?php if (!$r['complet']): ?><a href="<?= url('/initiatives/' . $i['slug'] . '/participer', ['role' => $r['id']]) ?>" class="btn btn-vert mt-3 min-h-11 w-full">Me proposer</a><?php endif ?>
+          <span class="mt-3 mb-3 text-xs font-bold <?= $r['complet'] ? 'text-texte' : 'text-orange-fonce' ?>"><?= $r['complet'] ? 'Complet' : ($r['mode'] === 'inscription' ? 'Inscription directe, billet aussitôt' : "Sur candidature : l'équipe choisit") . ($r['restantes'] !== null ? ' · ' . $r['restantes'] . ' place' . pluriel((int) $r['restantes']) . ' restante' . pluriel((int) $r['restantes']) : '') ?></span>
+          <?php if (!$r['complet']): ?><a href="<?= url('/initiatives/' . $i['slug'] . '/participer', ['role' => $r['id']]) ?>" class="btn btn-vert mt-auto min-h-11 w-full"><?= $r['mode'] === 'inscription' ? "Je m'inscris" : 'Me proposer' ?></a><?php endif ?>
         </li>
         <?php endforeach ?>
       </ul>
-      <?php if ($i['participations_fin']): ?><p class="mt-4 text-sm text-texte">Candidatures ouvertes jusqu'au <?= e(date_longue($i['participations_fin'])) ?>.</p><?php endif ?>
+      <?php if ($i['participations_fin']): ?><p class="mt-4 text-sm text-texte">Ouvert jusqu'au <?= e(date_longue($i['participations_fin'])) ?>.</p><?php endif ?>
     </div>
   </div>
 </section>

@@ -835,7 +835,7 @@ function ressources(): array
     // Candidatures aux initiatives : toutes au même endroit, triées par initiative et par rôle
     $liste['participations'] = array_merge($liste['participations'] ?? [], [
         'table' => 'participations', 'titre' => 'Participations aux initiatives', 'slug' => 'participations', 'rubrique' => 'initiatives',
-        'description' => "Les jeunes qui se sont proposés pour prendre part aux initiatives (bénévoles, intervenants, participants…).",
+        'description' => "Les membres inscrits ou candidats aux initiatives (participants, bénévoles, intervenants…).",
         'peut_ajouter' => false, 'peut_supprimer' => true, 'vue_fiche' => 'admin/fiche_participation', 'libelle_tous' => 'Toutes',
         'champs_select' => "t.*, i.titre AS initiative_titre, i.slug AS initiative_slug, u.email,
             COALESCE(CONCAT(pi.prenom, ' ', pi.nom), po.nom_structure, u.email) AS membre_nom, pi.genre, pi.date_naissance, pi.region AS region_i, pi.telephone,
@@ -846,7 +846,7 @@ function ressources(): array
         'ordre' => "t.statut = 'en_attente' DESC, t.cree_le DESC", 'par_page' => 50,
         'recherche' => ['pi.prenom', 'pi.nom', 'po.nom_structure', 'u.email', 'i.titre'],
         'nom_element' => fn ($l) => $l['membre_nom'],
-        'onglets' => [['En attente', "t.statut = 'en_attente'"], ['Retenues', "t.statut = 'retenue'"], ['Non retenues', "t.statut = 'non_retenue'"]],
+        'onglets' => [['Inscrits', "t.statut = 'inscrit'"], ['En attente', "t.statut = 'en_attente'"], ['Retenues', "t.statut = 'retenue'"], ['Non retenues', "t.statut = 'non_retenue'"], ['Présents', 't.present_le IS NOT NULL']],
         'filtres' => [
             ['initiative', 'Toutes les initiatives', fn () => array_column(lignes('SELECT DISTINCT i.id, i.titre FROM participations p JOIN initiatives i ON i.id = p.initiative_id ORDER BY i.titre'), 'titre', 'id'), 't.initiative_id'],
             ['role', 'Tous les rôles', fn () => array_column(lignes('SELECT DISTINCT r.id, CONCAT(r.nom, \' · \', i.titre) AS libelle FROM initiative_roles r JOIN initiatives i ON i.id = r.initiative_id ORDER BY i.titre, r.ordre'), 'libelle', 'id'), 't.role_id'],
@@ -856,16 +856,16 @@ function ressources(): array
             ['Rôle', fn ($l) => '<strong>' . e($l['role_libelle']) . '</strong>'],
             ['Initiative', fn ($l) => e(couper($l['initiative_titre'], 50))],
             ['Reçue le', fn ($l) => e(date_chiffres($l['cree_le']))],
-            ['Décision', fn ($l) => ['en_attente' => badge('En attente', 'orange'), 'retenue' => badge('Retenue', 'vert'), 'non_retenue' => badge('Non retenue', 'gris')][$l['statut']] ?? ''],
+            ['Décision', fn ($l) => (['inscrit' => badge('Inscrit', 'vert'), 'en_attente' => badge('En attente', 'orange'), 'retenue' => badge('Retenue', 'vert'), 'non_retenue' => badge('Non retenue', 'gris')][$l['statut']] ?? '') . ($l['present_le'] ? ' ' . badge('Présent', 'bleu') : '')],
         ],
         'actions' => [
-            'retenir' => ['Retenir', fn ($ids) => requete("UPDATE participations SET statut = 'retenue', traitee_le = NOW() WHERE id IN (" . marqueurs($ids) . ')', $ids)->rowCount() . ' participation(s) retenue(s).'],
-            'ne_pas_retenir' => ['Ne pas retenir', fn ($ids) => requete("UPDATE participations SET statut = 'non_retenue', traitee_le = NOW() WHERE id IN (" . marqueurs($ids) . ')', $ids)->rowCount() . ' participation(s) non retenue(s).'],
+            'retenir' => ['Retenir', fn ($ids) => requete("UPDATE participations SET statut = 'retenue', traitee_le = NOW() WHERE statut <> 'inscrit' AND id IN (" . marqueurs($ids) . ')', $ids)->rowCount() . ' participation(s) retenue(s).'],
+            'ne_pas_retenir' => ['Ne pas retenir', fn ($ids) => requete("UPDATE participations SET statut = 'non_retenue', traitee_le = NOW() WHERE statut <> 'inscrit' AND id IN (" . marqueurs($ids) . ')', $ids)->rowCount() . ' participation(s) non retenue(s).'],
         ],
         'export' => [
             'Initiative' => 'initiative_titre', 'Rôle' => 'role_libelle', 'Nom' => 'membre_nom', 'E-mail' => 'email', 'Téléphone' => 'telephone',
             'Genre' => fn ($l) => GENRES[$l['genre'] ?? ''] ?? '', 'Âge' => fn ($l) => age($l['date_naissance'] ?? null) ?? '', 'Région' => fn ($l) => REGIONS[$l['region_i'] ?? ''] ?? '',
-            'Décision' => fn ($l) => STATUTS_PARTICIPATION[$l['statut']] ?? '', 'Reçue le' => fn ($l) => date_chiffres($l['cree_le']),
+            'Décision' => fn ($l) => STATUTS_PARTICIPATION[$l['statut']] ?? '', 'Billet' => fn ($l) => billet_valable($l) ? $l['code'] : '', 'Présent' => fn ($l) => $l['present_le'] ? 'oui' : '', 'Reçue le' => fn ($l) => date_chiffres($l['cree_le']),
             'Réponses' => fn ($l) => implode(' | ', array_map(fn ($r) => $r['question'] . ' : ' . $r['reponse'], reponses_participation($l))),
         ],
         'groupes' => [[null, 'champs' => []]],

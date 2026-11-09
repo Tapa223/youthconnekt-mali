@@ -153,6 +153,28 @@
   });
 })();
 
+/* Prendre part : afficher les questions du rôle choisi et adapter le bouton (inscription ou candidature) */
+(function () {
+  "use strict";
+  document.querySelectorAll("form[data-participer]").forEach(function (form) {
+    var appliquer = function (radio) {
+      form.querySelectorAll("[data-questions-role]").forEach(function (bloc) {
+        var actif = bloc.getAttribute("data-questions-role") === radio.value;
+        bloc.hidden = !actif;
+        bloc.querySelectorAll("input, textarea, select").forEach(function (champ) { champ.disabled = !actif; });
+      });
+      var bouton = form.querySelector("[data-bouton-envoi]");
+      if (bouton) bouton.textContent = radio.getAttribute("data-bouton");
+      form.setAttribute("data-confirmer", radio.getAttribute("data-question"));
+      form.setAttribute("data-confirmer-texte", radio.getAttribute("data-precision"));
+      form.setAttribute("data-confirmer-oui", radio.getAttribute("data-oui"));
+    };
+    form.querySelectorAll("[data-role-choix]").forEach(function (radio) {
+      radio.addEventListener("change", function () { if (radio.checked) appliquer(radio); });
+    });
+  });
+})();
+
 /* ------------------------------------------------------------------------
    Animations de la maquette : diaporamas et compteurs
    ------------------------------------------------------------------------ */

@@ -1,10 +1,22 @@
 <?php
-/* Participations d'une initiative : onglet « Candidatures » (décisions) et onglet « Formulaire » (rôles, questions, ouverture). */
+/* Participations d'une initiative : onglet « Inscrits et candidatures » (tri, sélection, pointage) et onglet « Rôles et questions ». */
 $ici = url('/gestion/initiatives/' . $i['id'] . '/participations');
-$total = array_sum(array_map('intval', $compteurs));
 $err = fn ($c) => !empty($erreurs[$c]) ? '<p class="ycm-erreur">' . e($erreurs[$c]) . '</p>' : '';
 $d = $peut_modifier ? '' : ' disabled';
-$ouvertes = participations_ouvertes($i, array_map(fn ($r) => $r + ['complet' => false], $roles));
+$ouvertes = participations_ouvertes($i, $roles);
+// Adresse de la liste avec les filtres actuels, en changeant certains
+$base = ['statut' => $f['statut'], 'role' => $f['role'] ?: '', 'region' => $f['region'], 'age' => $f['age'], 'presence' => $f['presence'],
+    'tri' => $f['tri'] === 'recentes' ? '' : $f['tri'], 'affichage' => $f['affichage'] === 'cartes' ? '' : $f['affichage']];
+$lien = function (array $changes = []) use ($ici, $base, $f) {
+    $p = array_filter(array_merge($base, $changes), fn ($v) => $v !== '' && $v !== null);
+    if ($f['q'] && !array_key_exists('role', $changes)) {
+        $p['q'] = $f['q'];
+    }
+    return $ici . ($p ? '?' . http_build_query($p) : '');
+};
+$nb_billets = (int) ($compteurs['inscrit'] ?? 0) + (int) ($compteurs['retenue'] ?? 0);
+$filtres_actifs = $f['statut'] || $f['role'] || $f['region'] || $f['age'] || $f['presence'] || $f['q'];
+$badges = ['inscrit' => badge('Inscrit', 'vert'), 'en_attente' => badge('En attente', 'orange'), 'retenue' => badge('Retenue', 'vert'), 'non_retenue' => badge('Non retenue', 'gris')];
 ?>
 <div class="ycm-entete-page">
   <div>
@@ -16,48 +28,123 @@ $ouvertes = participations_ouvertes($i, array_map(fn ($r) => $r + ['complet' => 
 </div>
 
 <nav class="ycm-onglets" aria-label="Participations">
-  <a href="<?= e($ici) ?>"<?= $onglet === 'candidatures' ? ' class="actif" aria-current="page"' : '' ?>>Candidatures <span>(<?= $total ?>)</span></a>
-  <a href="<?= e($ici) ?>?vue=formulaire"<?= $onglet === 'formulaire' ? ' class="actif" aria-current="page"' : '' ?>>Rôles et formulaire</a>
+  <a href="<?= e($ici) ?>"<?= $onglet === 'liste' ? ' class="actif" aria-current="page"' : '' ?>>Inscrits et candidatures <span>(<?= $total ?>)</span></a>
+  <a href="<?= e($ici) ?>?vue=formulaire"<?= $onglet === 'formulaire' ? ' class="actif" aria-current="page"' : '' ?>>Rôles et questions</a>
 </nav>
 
-<?php if ($onglet === 'candidatures'): ?>
-<div class="ycm-pa-outils">
-  <div class="ycm-pa-filtres">
-    <?php foreach (['' => 'Toutes', 'en_attente' => 'En attente', 'retenue' => 'Retenues', 'non_retenue' => 'Non retenues'] as $cle => $lib): $n = $cle === '' ? $total : (int) ($compteurs[$cle] ?? 0); ?>
-    <a href="<?= e($ici . ($cle || $role_filtre ? '?' . http_build_query(array_filter(['statut' => $cle, 'role' => $role_filtre])) : '')) ?>" class="ycm-pa-pastille<?= $statut === $cle ? ' actif' : '' ?>"><?= e($lib) ?> <span>(<?= $n ?>)</span></a>
-    <?php endforeach ?>
-  </div>
-  <div class="ycm-pa-droite">
-    <?php if (count($roles) > 1): ?>
-    <select data-filtre aria-label="Filtrer par rôle">
-      <option value="<?= e($ici . ($statut ? '?statut=' . $statut : '')) ?>">Tous les rôles</option>
-      <?php foreach ($roles as $r): ?><option value="<?= e($ici . '?' . http_build_query(array_filter(['statut' => $statut, 'role' => $r['id']]))) ?>"<?= $role_filtre === (int) $r['id'] ? ' selected' : '' ?>><?= e($r['nom']) ?> (<?= (int) $r['nb'] ?>)</option><?php endforeach ?>
-    </select>
-    <?php endif ?>
-    <?php if ($total): ?><a class="ycm-bouton-contour ycm-petit" href="<?= url('/gestion/initiatives/' . $i['id'] . '/participations/export') ?>">Exporter en tableau</a><?php endif ?>
-  </div>
-</div>
+<?php if ($onglet === 'liste'): ?>
 
 <?php if ($roles): ?>
 <ul class="ycm-pa-roles">
   <?php foreach ($roles as $r): ?>
-  <li><strong><?= e($r['nom']) ?></strong><span><?= (int) $r['nb'] ?><?= $r['places'] !== null ? ' / ' . (int) $r['places'] . ' places' : ' candidature' . pluriel((int) $r['nb']) ?></span></li>
+  <li><a href="<?= e($lien(['role' => $f['role'] === (int) $r['id'] ? '' : $r['id']])) ?>"<?= $f['role'] === (int) $r['id'] ? ' class="actif"' : '' ?>><strong><?= e($r['nom']) ?></strong>
+    <span><?= $r['mode'] === 'inscription' ? 'Inscription' : 'Candidature' ?> · <?= (int) $r['nb'] ?><?= $r['places'] !== null ? ' / ' . (int) $r['places'] . ' places' : '' ?></span></a></li>
   <?php endforeach ?>
 </ul>
 <?php endif ?>
 
-<?php if ($candidatures): ?>
+<?php if ($nb_billets && $peut_modifier): ?>
+<form method="post" action="<?= url('/gestion/initiatives/' . $i['id'] . '/pointage') ?>" class="ycm-pa-pointage">
+  <?= csrf() ?><input type="hidden" name="suivant" value="<?= e(adresse_actuelle()) ?>">
+  <div>
+    <p class="ycm-pa-pointage-titre">Pointage à l'entrée</p>
+    <p class="ycm-discret"><?= $nb_presents ?> présent<?= pluriel($nb_presents) ?> sur <?= $nb_billets ?> billet<?= pluriel($nb_billets) ?>. Saisissez le code du billet, ou scannez son QR code avec un lecteur.</p>
+  </div>
+  <div class="ycm-pa-pointage-champ">
+    <input type="text" name="code" placeholder="YCM-XXXXX" autocomplete="off" autocapitalize="characters" aria-label="Code du billet" required>
+    <button type="submit" class="ycm-bouton-vert">Pointer</button>
+  </div>
+</form>
+<?php endif ?>
+
+<form method="get" action="<?= e($ici) ?>" class="ycm-pa-outils">
+  <div class="ycm-pa-filtres">
+    <?php foreach (['' => 'Tous'] + array_filter(STATUTS_PARTICIPATION, fn ($s) => !empty($compteurs[$s]), ARRAY_FILTER_USE_KEY) as $cle => $lib): $n = $cle === '' ? $total : (int) $compteurs[$cle]; ?>
+    <a href="<?= e($lien(['statut' => $cle])) ?>" class="ycm-pa-pastille<?= $f['statut'] === $cle ? ' actif' : '' ?>"><?= e(['inscrit' => 'Inscrits', 'retenue' => 'Retenues', 'non_retenue' => 'Non retenues'][$cle] ?? $lib) ?> <span>(<?= $n ?>)</span></a>
+    <?php endforeach ?>
+  </div>
+  <?php foreach (['statut', 'affichage'] as $cache): if ($base[$cache] !== ''): ?><input type="hidden" name="<?= $cache ?>" value="<?= e($base[$cache]) ?>"><?php endif; endforeach ?>
+  <div class="ycm-pa-droite">
+    <?php if (count($roles) > 1): ?>
+    <select name="role" data-envoi-auto aria-label="Rôle"><option value="">Tous les rôles</option>
+      <?php foreach ($roles as $r): ?><option value="<?= (int) $r['id'] ?>"<?= $f['role'] === (int) $r['id'] ? ' selected' : '' ?>><?= e($r['nom']) ?></option><?php endforeach ?>
+    </select>
+    <?php elseif ($f['role']): ?><input type="hidden" name="role" value="<?= (int) $f['role'] ?>"><?php endif ?>
+    <select name="region" data-envoi-auto aria-label="Région"><option value="">Toutes les régions</option>
+      <?php foreach (REGIONS as $cle => $lib): ?><option value="<?= e($cle) ?>"<?= $f['region'] === $cle ? ' selected' : '' ?>><?= e($lib) ?></option><?php endforeach ?>
+    </select>
+    <select name="age" data-envoi-auto aria-label="Âge"><option value="">Tous les âges</option>
+      <?php foreach (TRANCHES_AGE as $cle => [$lib]): ?><option value="<?= e($cle) ?>"<?= $f['age'] === $cle ? ' selected' : '' ?>><?= e($lib) ?></option><?php endforeach ?>
+    </select>
+    <?php if ($nb_billets): ?>
+    <select name="presence" data-envoi-auto aria-label="Présence"><option value="">Présents et absents</option>
+      <option value="oui"<?= $f['presence'] === 'oui' ? ' selected' : '' ?>>Présents</option><option value="non"<?= $f['presence'] === 'non' ? ' selected' : '' ?>>Pas encore pointés</option>
+    </select>
+    <?php endif ?>
+    <?php if ($role_choisi): foreach ($role_choisi['champs'] as $c): if (!in_array($c['type'], ['choix', 'cases', 'oui_non'], true)) continue; $choix = $c['type'] === 'oui_non' ? ['Oui', 'Non'] : $c['choix']; ?>
+    <select name="q[<?= (int) $c['id'] ?>]" data-envoi-auto aria-label="<?= e($c['libelle']) ?>"><option value=""><?= e(couper($c['libelle'], 34)) ?> : tout</option>
+      <?php foreach ($choix as $ch): ?><option value="<?= e($ch) ?>"<?= ($f['q'][$c['id']] ?? '') === $ch ? ' selected' : '' ?>><?= e($ch) ?></option><?php endforeach ?>
+    </select>
+    <?php endforeach; endif ?>
+    <select name="tri" data-envoi-auto aria-label="Trier"><?php foreach (['recentes' => 'Plus récentes', 'anciennes' => 'Plus anciennes', 'nom' => 'Par nom', 'age' => 'Plus jeunes d\'abord'] as $cle => $lib): ?><option value="<?= $cle ?>"<?= $f['tri'] === $cle ? ' selected' : '' ?>><?= e($lib) ?></option><?php endforeach ?></select>
+    <noscript><button type="submit" class="ycm-bouton-gris ycm-petit">Filtrer</button></noscript>
+  </div>
+</form>
+
+<div class="ycm-pa-barre">
+  <p class="ycm-discret"><?= count($liste) ?> personne<?= pluriel(count($liste)) ?><?= $filtres_actifs ? ' · <a href="' . e($ici . ($f['affichage'] === 'tableau' ? '?affichage=tableau' : '')) . '">Retirer les filtres</a>' : '' ?></p>
+  <div class="ycm-pa-droite">
+    <span class="ycm-pa-bascule" role="group" aria-label="Affichage">
+      <a href="<?= e($lien(['affichage' => ''])) ?>"<?= $f['affichage'] === 'cartes' ? ' class="actif" aria-current="true"' : '' ?>>Fiches</a>
+      <a href="<?= e($lien(['affichage' => 'tableau'])) ?>"<?= $f['affichage'] === 'tableau' ? ' class="actif" aria-current="true"' : '' ?>>Tableau</a>
+    </span>
+    <?php if ($total): ?><a class="ycm-bouton-contour ycm-petit" href="<?= url('/gestion/initiatives/' . $i['id'] . '/participations/export') ?>">Exporter (Excel)</a><?php endif ?>
+  </div>
+</div>
+
+<?php if (!$liste): ?>
+<div class="ycm-boite ycm-boite--pad"><p class="ycm-vide"><?= $total ? 'Personne ne correspond à ces filtres.' : ($i['participations_ouvertes'] ? "Personne pour l'instant. Les rôles sont visibles sur la page de l'initiative." : "Personne : les participations ne sont pas encore ouvertes. Préparez-les dans l'onglet « Rôles et questions ».") ?></p></div>
+
+<?php elseif ($f['affichage'] === 'tableau'): ?>
+<div class="ycm-pa-defile">
+  <table class="ycm-pa-tableau">
+    <thead><tr>
+      <th>Nom</th><th>Rôle</th><th>Décision</th><th>Âge</th><th>Région</th><th>Téléphone</th><th>Billet</th><th>Présent</th>
+      <?php foreach ($colonnes_questions as $c): ?><th><?= e($c['libelle']) ?><?= !$role_choisi && count($roles) > 1 ? '<small>' . e($c['role_nom']) . '</small>' : '' ?></th><?php endforeach ?>
+      <th>Reçue le</th>
+    </tr></thead>
+    <tbody>
+      <?php foreach ($liste as $p): $rep = array_column(reponses_participation($p), 'reponse', 'id'); $a = age($p['date_naissance'] ?? null); ?>
+      <tr>
+        <td><a href="<?= url('/gestion/participations/' . $p['id']) ?>"><?= e($p['membre_nom']) ?></a><small><?= e($p['email']) ?></small></td>
+        <td><?= e($p['role_libelle']) ?></td>
+        <td><?= $badges[$p['statut']] ?? '' ?></td>
+        <td><?= $a !== null ? $a : '' ?></td>
+        <td><?= e(REGIONS[$p['region_i'] ?? ''] ?? '') ?></td>
+        <td><?= e((string) $p['telephone']) ?></td>
+        <td><?= billet_valable($p) ? e((string) $p['code']) : '' ?></td>
+        <td><?= $p['present_le'] ? 'Oui' : '' ?></td>
+        <?php foreach ($colonnes_questions as $c): ?><td><?= e(couper((string) ($rep[$c['id']] ?? ''), 160)) ?></td><?php endforeach ?>
+        <td><?= e(date_chiffres($p['cree_le'])) ?></td>
+      </tr>
+      <?php endforeach ?>
+    </tbody>
+  </table>
+</div>
+
+<?php else: ?>
 <div class="ycm-pa-liste">
-  <?php foreach ($candidatures as $c): $rep = reponses_participation($c); $a = age($c['date_naissance'] ?? null); ?>
+  <?php foreach ($liste as $p): $rep = reponses_participation($p); $a = age($p['date_naissance'] ?? null); $candidature = $p['statut'] !== 'inscrit'; ?>
   <article class="ycm-pa-carte">
     <div class="ycm-pa-tete">
       <div>
-        <p class="ycm-pa-nom"><?= e($c['membre_nom']) ?></p>
-        <p class="ycm-discret"><?= e(implode(' · ', array_filter([$c['email'], $c['telephone'] ?? '', GENRES[$c['genre'] ?? ''] ?? '', $a !== null ? $a . ' ans' : '', REGIONS[$c['region_i'] ?? ''] ?? '']))) ?></p>
+        <p class="ycm-pa-nom"><?= e($p['membre_nom']) ?></p>
+        <p class="ycm-discret"><?= e(implode(' · ', array_filter([$p['email'], $p['telephone'] ?? '', $a !== null ? $a . ' ans' : '', REGIONS[$p['region_i'] ?? ''] ?? '']))) ?></p>
       </div>
       <div class="ycm-pa-etat">
-        <span class="ycm-pa-role"><?= e($c['role_libelle']) ?></span>
-        <?= ['en_attente' => badge('En attente', 'orange'), 'retenue' => badge('Retenue', 'vert'), 'non_retenue' => badge('Non retenue', 'gris')][$c['statut']] ?? '' ?>
+        <span class="ycm-pa-role"><?= e($p['role_libelle']) ?></span>
+        <?= $badges[$p['statut']] ?? '' ?>
+        <?php if ($p['present_le']): ?><?= badge('Présent', 'bleu') ?><?php endif ?>
       </div>
     </div>
     <?php if ($rep): ?>
@@ -66,68 +153,52 @@ $ouvertes = participations_ouvertes($i, array_map(fn ($r) => $r + ['complet' => 
     </dl>
     <?php endif ?>
     <div class="ycm-pa-pied">
-      <span class="ycm-discret">Reçue le <?= e(date_longue($c['cree_le'])) ?></span>
+      <span class="ycm-discret"><?= $candidature ? 'Candidature reçue' : 'Inscrit' ?> le <?= e(date_longue($p['cree_le'])) ?><?= billet_valable($p) ? ' · Billet ' . e((string) $p['code']) : '' ?></span>
       <?php if ($peut_modifier): ?>
       <span class="ycm-pa-decisions">
-        <?php foreach (['retenue' => ['Retenir', 'ycm-bouton-vert', 'Retenir ' . $c['membre_nom'] . ' comme « ' . $c['role_libelle'] . ' » ?', ''], 'non_retenue' => ['Ne pas retenir', 'ycm-bouton-rouge-contour', 'Ne pas retenir ' . $c['membre_nom'] . ' ?', ' data-confirmer-danger'], 'en_attente' => ['Remettre en attente', 'ycm-bouton-gris', 'Remettre cette candidature en attente ?', '']] as $s => [$lib, $classe, $question, $danger]):
-            if ($s === $c['statut'] || ($s === 'en_attente' && $c['statut'] === 'en_attente')) continue; ?>
-        <form method="post" action="<?= url('/gestion/participations/' . $c['id'] . '/decision') ?>" data-confirmer="<?= e($question) ?>" data-confirmer-texte="La personne en est prévenue dans son espace." data-confirmer-oui="<?= e($lib) ?>"<?= $danger ?>>
+        <?php if (billet_valable($p)): ?>
+        <form method="post" action="<?= url('/gestion/initiatives/' . $i['id'] . '/pointage') ?>" data-confirmer="<?= e($p['present_le'] ? 'Retirer la présence de ' . $p['membre_nom'] . ' ?' : 'Pointer ' . $p['membre_nom'] . ' présent ?') ?>" data-confirmer-oui="<?= $p['present_le'] ? 'Retirer' : 'Pointer présent' ?>">
+          <?= csrf() ?><input type="hidden" name="participation" value="<?= (int) $p['id'] ?>"><input type="hidden" name="suivant" value="<?= e(adresse_actuelle()) ?>">
+          <?php if ($p['present_le']): ?><input type="hidden" name="annuler" value="1"><?php endif ?>
+          <button type="submit" class="ycm-bouton-gris ycm-petit"><?= $p['present_le'] ? 'Retirer la présence' : 'Pointer présent' ?></button>
+        </form>
+        <?php endif ?>
+        <?php if ($candidature): foreach (['retenue' => ['Retenir', 'ycm-bouton-vert', 'Retenir ' . $p['membre_nom'] . ' comme « ' . $p['role_libelle'] . ' » ?', '', 'La personne en est prévenue et reçoit son billet dans son espace.'], 'non_retenue' => ['Ne pas retenir', 'ycm-bouton-rouge-contour', 'Ne pas retenir ' . $p['membre_nom'] . ' ?', ' data-confirmer-danger', 'La personne en est prévenue dans son espace.'], 'en_attente' => ['Remettre en attente', 'ycm-bouton-gris', 'Remettre cette candidature en attente ?', '', 'Son billet ne sera plus valable tant qu\'elle n\'est pas retenue.']] as $s => [$lib, $classe, $question, $danger, $texte]):
+            if ($s === $p['statut']) continue; ?>
+        <form method="post" action="<?= url('/gestion/participations/' . $p['id'] . '/decision') ?>" data-confirmer="<?= e($question) ?>" data-confirmer-texte="<?= e($texte) ?>" data-confirmer-oui="<?= e($lib) ?>"<?= $danger ?>>
           <?= csrf() ?><input type="hidden" name="statut" value="<?= $s ?>"><input type="hidden" name="suivant" value="<?= e(adresse_actuelle()) ?>">
           <button type="submit" class="<?= $classe ?> ycm-petit"><?= $lib ?></button>
         </form>
-        <?php endforeach ?>
+        <?php endforeach; endif ?>
       </span>
       <?php endif ?>
     </div>
   </article>
   <?php endforeach ?>
 </div>
-<?php else: ?>
-<div class="ycm-boite ycm-boite--pad"><p class="ycm-vide"><?= $total ? 'Aucune candidature ne correspond à ce filtre.' : ($i['participations_ouvertes'] ? "Aucune candidature pour l'instant. Le formulaire est visible sur la page de l'initiative." : "Aucune candidature : les participations ne sont pas encore ouvertes. Préparez-les dans l'onglet « Rôles et formulaire ».") ?></p></div>
 <?php endif ?>
 
 <?php else: ?>
-<form method="post" class="ycm-form-grille" data-confirmer="Enregistrer les participations ?" data-confirmer-texte="Si elles sont ouvertes, le formulaire apparaît aussitôt sur la page de l'initiative." data-confirmer-oui="Enregistrer">
+<form method="post" class="ycm-form-grille" data-confirmer="Enregistrer les participations ?" data-confirmer-texte="Si elles sont ouvertes, les rôles apparaissent aussitôt sur la page de l'initiative." data-confirmer-oui="Enregistrer">
   <?= csrf() ?>
   <div class="ycm-form-principal">
     <fieldset class="ycm-module">
-      <legend><h2>1. Les rôles proposés</h2></legend>
-      <p class="ycm-description">Comment les jeunes peuvent-ils prendre part ? Par exemple : Bénévole accueil, Bénévole communication, Intervenant, Participant. Laissez « Places » vide s'il n'y a pas de limite.</p>
+      <legend><h2>Les rôles et leurs questions</h2></legend>
+      <p class="ycm-description">Chaque rôle a sa façon de participer et ses propres questions. Par exemple : « Participant » en inscription sans question, « Intervenant » en candidature avec la thématique proposée. Le nom, l'e-mail, le téléphone, l'âge et la région viennent déjà du compte : inutile de les redemander.</p>
       <?= $err('roles') ?>
       <div class="ycm-pa-lignes" data-lignes="roles">
-        <?php foreach ($roles ?: [['id' => 0, 'nom' => '', 'description' => '', 'places' => null]] as $k => $r): $cle = 'r' . $k; ?>
-        <div class="ycm-pa-ligne" data-ligne>
-          <input type="hidden" name="role_id[<?= $cle ?>]" value="<?= (int) $r['id'] ?>">
-          <div class="ycm-pa-champs-role">
-            <label>Rôle<input type="text" name="role_nom[<?= $cle ?>]" value="<?= e($r['nom']) ?>" maxlength="120" placeholder="Exemple : Bénévole accueil"<?= $d ?>></label>
-            <label>Places<input type="number" min="1" name="role_places[<?= $cle ?>]" value="<?= e((string) ($r['places'] ?? '')) ?>" placeholder="Sans limite"<?= $d ?>></label>
-            <label class="ycm-pa-large">Ce que fera la personne (facultatif)<input type="text" name="role_description[<?= $cle ?>]" value="<?= e($r['description']) ?>" maxlength="300" placeholder="Exemple : accueillir et orienter les participants"<?= $d ?>></label>
-          </div>
-          <?php if ($peut_modifier): ?><div class="ycm-pa-boutons-ligne"><button type="button" data-monter aria-label="Monter">↑</button><button type="button" data-descendre aria-label="Descendre">↓</button><button type="button" data-retirer class="ycm-pa-retirer">Retirer</button></div><?php endif ?>
-        </div>
+        <?php foreach ($roles_form ?: [['id' => 0, 'nom' => '', 'mode' => 'inscription', 'description' => '', 'places' => null, 'champs' => []]] as $k => $r): ?>
+        <?php partiel('admin/_ligne_role', ['rk' => 'r' . $k, 'r' => $r, 'd' => $d, 'peut_modifier' => $peut_modifier]) ?>
         <?php endforeach ?>
       </div>
       <?php if ($peut_modifier): ?><button type="button" class="ycm-bouton-contour ycm-petit" data-ajouter="roles">Ajouter un rôle</button><?php endif ?>
     </fieldset>
 
     <fieldset class="ycm-module">
-      <legend><h2>2. Les questions à poser</h2></legend>
-      <p class="ycm-description">Le nom, l'e-mail, le téléphone, le genre, l'âge et la région viennent déjà du compte de la personne : inutile de les redemander. Ajoutez seulement ce dont vous avez besoin (disponibilités, compétences, langues, taille de t-shirt…).</p>
-      <?= $err('champs') ?>
-      <div class="ycm-pa-lignes" data-lignes="champs">
-        <?php foreach ($champs as $k => $c): $cle = 'c' . $k; ?>
-        <?php partiel('admin/_ligne_champ', ['cle' => $cle, 'c' => $c, 'd' => $d, 'peut_modifier' => $peut_modifier]) ?>
-        <?php endforeach ?>
-      </div>
-      <?php if (!$champs): ?><p class="ycm-discret" data-aucune-question>Aucune question pour l'instant : la personne choisit seulement son rôle.</p><?php endif ?>
-      <?php if ($peut_modifier): ?><button type="button" class="ycm-bouton-contour ycm-petit" data-ajouter="champs">Ajouter une question</button><?php endif ?>
-    </fieldset>
-
-    <fieldset class="ycm-module">
-      <legend><h2>3. Message d'accueil (facultatif)</h2></legend>
+      <legend><h2>Message d'accueil (facultatif)</h2></legend>
       <div class="ycm-ligne-champ">
-        <label for="pa-intro">Affiché au-dessus du formulaire</label>
-        <textarea id="pa-intro" name="participations_intro" rows="3" maxlength="1000" placeholder="Exemple : nous recherchons des bénévoles motivés pour l'accueil et la logistique du forum."<?= $d ?>><?= e((string) ($i['participations_intro'] ?? '')) ?></textarea>
+        <label for="pa-intro">Affiché au-dessus des rôles</label>
+        <textarea id="pa-intro" name="participations_intro" rows="3" maxlength="1000" placeholder="Exemple : nous recherchons des intervenants et des bénévoles pour la journée."<?= $d ?>><?= e((string) ($i['participations_intro'] ?? '')) ?></textarea>
       </div>
     </fieldset>
   </div>
@@ -139,7 +210,7 @@ $ouvertes = participations_ouvertes($i, array_map(fn ($r) => $r + ['complet' => 
       <div class="ycm-ligne-champ" style="margin-top:14px">
         <label for="pa-fin">Date limite (facultative)</label>
         <input type="date" id="pa-fin" name="participations_fin" value="<?= e((string) ($i['participations_fin'] ?? '')) ?>"<?= $d ?>>
-        <small>Après cette date, le formulaire se ferme tout seul. Il se ferme aussi quand l'initiative passe à « Terminée » ou que toutes les places sont prises.</small>
+        <small>Après cette date, les participations se ferment toutes seules. Elles se ferment aussi quand l'initiative passe à « Terminée » ou que toutes les places sont prises. L'initiative reste visible sur le site.</small>
         <?= $err('participations_fin') ?>
       </div>
     </div>
@@ -152,16 +223,6 @@ $ouvertes = participations_ouvertes($i, array_map(fn ($r) => $r + ['complet' => 
   </aside>
 </form>
 
-<template data-modele="roles">
-  <div class="ycm-pa-ligne" data-ligne>
-    <input type="hidden" name="role_id[__cle__]" value="0">
-    <div class="ycm-pa-champs-role">
-      <label>Rôle<input type="text" name="role_nom[__cle__]" maxlength="120" placeholder="Exemple : Bénévole accueil"></label>
-      <label>Places<input type="number" min="1" name="role_places[__cle__]" placeholder="Sans limite"></label>
-      <label class="ycm-pa-large">Ce que fera la personne (facultatif)<input type="text" name="role_description[__cle__]" maxlength="300" placeholder="Exemple : accueillir et orienter les participants"></label>
-    </div>
-    <div class="ycm-pa-boutons-ligne"><button type="button" data-monter aria-label="Monter">↑</button><button type="button" data-descendre aria-label="Descendre">↓</button><button type="button" data-retirer class="ycm-pa-retirer">Retirer</button></div>
-  </div>
-</template>
-<template data-modele="champs"><?php partiel('admin/_ligne_champ', ['cle' => '__cle__', 'c' => ['id' => 0, 'libelle' => '', 'type' => 'texte', 'options' => '', 'aide' => '', 'requis' => 0], 'd' => '', 'peut_modifier' => true]) ?></template>
+<template data-modele="roles"><?php partiel('admin/_ligne_role', ['rk' => '__role__', 'r' => ['id' => 0, 'nom' => '', 'mode' => 'candidature', 'description' => '', 'places' => null, 'champs' => []], 'd' => '', 'peut_modifier' => true]) ?></template>
+<template data-modele="champs"><?php partiel('admin/_ligne_champ', ['rk' => '__role__', 'cle' => '__cle__', 'c' => ['id' => 0, 'libelle' => '', 'type' => 'texte', 'options' => '', 'aide' => '', 'requis' => 0], 'd' => '', 'peut_modifier' => true]) ?></template>
 <?php endif ?>

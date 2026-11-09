@@ -346,10 +346,10 @@ function notifications_membre(array $u): array
         $liste[] = ['Votre opportunité « ' . $o['titre'] . ' » a été publiée.', url('/opportunites/' . $o['slug']), $o['publie_le'], 'vert'];
     }
     try {
-        foreach (lignes("SELECT p.statut, p.traitee_le, COALESCE(r.nom, p.role_nom) AS role, i.titre FROM participations p JOIN initiatives i ON i.id = p.initiative_id
-                         LEFT JOIN initiative_roles r ON r.id = p.role_id WHERE p.utilisateur_id = ? AND p.statut <> 'en_attente' AND p.traitee_le >= ?", [$u['id'], $depuis]) as $p) {
+        foreach (lignes("SELECT p.id, p.statut, p.traitee_le, COALESCE(r.nom, p.role_nom) AS role, i.titre FROM participations p JOIN initiatives i ON i.id = p.initiative_id
+                         LEFT JOIN initiative_roles r ON r.id = p.role_id WHERE p.utilisateur_id = ? AND p.statut IN ('retenue', 'non_retenue') AND p.traitee_le >= ?", [$u['id'], $depuis]) as $p) {
             $liste[] = $p['statut'] === 'retenue'
-                ? ['Vous êtes retenu comme « ' . $p['role'] . ' » pour « ' . $p['titre'] . ' ». L\'équipe vous contactera.', url('/compte/mon-espace/participations'), $p['traitee_le'], 'vert']
+                ? ['Vous êtes retenu comme « ' . $p['role'] . ' » pour « ' . $p['titre'] . ' ». Votre billet est prêt.', url('/compte/mon-espace/participations/' . $p['id'] . '/billet'), $p['traitee_le'], 'vert']
                 : ['Votre candidature pour « ' . $p['titre'] . " » n'a pas été retenue cette fois.", url('/compte/mon-espace/participations'), $p['traitee_le'], 'rouge'];
         }
     } catch (Throwable $e) {
