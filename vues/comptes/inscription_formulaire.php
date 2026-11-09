@@ -22,6 +22,8 @@ partiel('comptes/etapes', ['etape' => $etape]);
   <?php else: ?>
     <?php partiel('partials/champ', $c('prenom') + ['libelle' => 'Prénom', 'attributs' => ['autocomplete' => 'given-name', 'placeholder' => 'Aminata', 'maxlength' => 80]]) ?>
     <?php partiel('partials/champ', $c('nom') + ['libelle' => 'Nom', 'attributs' => ['autocomplete' => 'family-name', 'placeholder' => 'Keïta', 'maxlength' => 80]]) ?>
+    <?php partiel('partials/champ', $c('genre') + ['libelle' => 'Genre', 'type' => 'select', 'options' => ['' => 'Choisir'] + GENRES, 'aide' => 'Privé : sert seulement aux statistiques du chapitre.']) ?>
+    <?php partiel('partials/champ', $c('date_naissance') + ['libelle' => 'Date de naissance', 'type' => 'date', 'aide' => 'Privée : jamais affichée sur le site.', 'attributs' => ['max' => date('Y-m-d', strtotime('-10 years')), 'min' => date('Y-m-d', strtotime('-100 years'))]]) ?>
     <?php partiel('partials/champ', $c('categorie') + ['libelle' => 'Vous êtes', 'type' => 'select', 'options' => ['' => 'Choisir votre profil'] + CATEGORIES_INDIVIDUELLES]) ?>
     <?php partiel('partials/champ', $c('region') + ['libelle' => 'Région', 'type' => 'select', 'options' => REGIONS]) ?>
     <?php partiel('partials/champ', $c('email') + ['libelle' => 'Adresse e-mail', 'type' => 'email', 'attributs' => ['autocomplete' => 'email', 'placeholder' => 'vous@exemple.com', 'maxlength' => 190]]) ?>

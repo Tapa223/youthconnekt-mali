@@ -200,7 +200,7 @@ function mon_profil(): void
     $profil = $u['profil'] ?? [];
     $champs = $organisation
         ? ['nom_structure', 'type_structure', 'secteur', 'region', 'ville', 'presentation', 'email_contact_public', 'personne_contact']
-        : ['prenom', 'nom', 'categorie', 'domaine', 'region', 'ville', 'presentation', 'telephone'];
+        : ['prenom', 'nom', 'genre', 'date_naissance', 'categorie', 'domaine', 'region', 'ville', 'presentation', 'telephone'];
     $valeurs = [];
     foreach ($champs as $c) {
         $valeurs[$c] = (string) ($profil[$c] ?? '');
@@ -264,6 +264,8 @@ function mon_profil(): void
         } else {
             if ($valeurs['prenom'] === '') $erreurs['prenom'] = 'Indiquez votre prénom.';
             if ($valeurs['nom'] === '') $erreurs['nom'] = 'Indiquez votre nom.';
+            if (!isset(GENRES[$valeurs['genre']])) $erreurs['genre'] = 'Choisissez une réponse.';
+            if ($m = erreur_naissance($valeurs['date_naissance'])) $erreurs['date_naissance'] = $m;
             if (!isset(CATEGORIES_INDIVIDUELLES[$valeurs['categorie']])) $erreurs['categorie'] = 'Choisissez votre profil.';
         }
         if (!isset(REGIONS[$valeurs['region']])) $erreurs['region'] = 'Choisissez votre région.';

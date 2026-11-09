@@ -33,6 +33,8 @@ CREATE TABLE IF NOT EXISTS profils_individuels (
   utilisateur_id INT UNSIGNED NOT NULL,
   prenom VARCHAR(80) NOT NULL,
   nom VARCHAR(80) NOT NULL,
+  genre VARCHAR(10) NOT NULL DEFAULT '',
+  date_naissance DATE NULL,
   photo VARCHAR(255) NOT NULL DEFAULT '',
   categorie VARCHAR(30) NOT NULL,
   domaine VARCHAR(150) NOT NULL DEFAULT '',
@@ -403,4 +405,25 @@ CREATE TABLE IF NOT EXISTS abonnes_newsletter (
   actif TINYINT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (id),
   UNIQUE KEY uk_abonnes_email (email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS newsletters (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  objet VARCHAR(200) NOT NULL,
+  titre VARCHAR(200) NOT NULL DEFAULT '',
+  message MEDIUMTEXT NULL,
+  image VARCHAR(255) NOT NULL DEFAULT '',
+  cible VARCHAR(20) NOT NULL DEFAULT 'tous',
+  communautes TEXT NULL,
+  contenus TEXT NULL,
+  statut VARCHAR(20) NOT NULL DEFAULT 'brouillon',
+  nb_destinataires INT UNSIGNED NOT NULL DEFAULT 0,
+  mode_envoi VARCHAR(20) NOT NULL DEFAULT '',
+  cree_par INT UNSIGNED NULL,
+  cree_le DATETIME NOT NULL,
+  modifie_le DATETIME NOT NULL,
+  envoyee_le DATETIME NULL,
+  PRIMARY KEY (id),
+  KEY idx_newsletters_statut (statut),
+  CONSTRAINT fk_newsletters_auteur FOREIGN KEY (cree_par) REFERENCES utilisateurs (id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

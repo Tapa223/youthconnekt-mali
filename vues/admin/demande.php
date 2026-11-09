@@ -34,8 +34,8 @@
     <?php if ($peut_modifier): ?>
     <form method="post" class="ycm-panneau-boutons">
       <?= csrf() ?>
-      <?php if ($d['statut'] !== 'acceptee'): ?><button type="submit" name="decision" value="accepter" class="ycm-bouton-vert">Accepter la demande</button><?php endif ?>
-      <?php if ($d['statut'] !== 'refusee'): ?><button type="submit" name="decision" value="refuser" class="ycm-bouton-supprimer"><?= $d['statut'] === 'acceptee' ? 'Retirer de la communauté' : 'Refuser la demande' ?></button><?php endif ?>
+      <?php if ($d['statut'] !== 'acceptee'): ?><button type="submit" name="decision" value="accepter" class="ycm-bouton-vert" data-confirmer="Accepter <?= e($d['membre_nom']) ?> dans la communauté ?" data-confirmer-texte="Le membre en est prévenu dans son espace." data-confirmer-oui="Accepter">Accepter la demande</button><?php endif ?>
+      <?php if ($d['statut'] !== 'refusee'): ?><button type="submit" name="decision" value="refuser" class="ycm-bouton-supprimer" data-confirmer="<?= $d['statut'] === 'acceptee' ? 'Retirer ' . e($d['membre_nom']) . ' de la communauté ?' : 'Refuser la demande de ' . e($d['membre_nom']) . ' ?' ?>" data-confirmer-texte="Le membre en est prévenu dans son espace." data-confirmer-oui="<?= $d['statut'] === 'acceptee' ? 'Retirer' : 'Refuser' ?>" data-confirmer-danger><?= $d['statut'] === 'acceptee' ? 'Retirer de la communauté' : 'Refuser la demande' ?></button><?php endif ?>
       <a href="<?= url('/gestion/communautes') ?>" class="ycm-bouton-gris">Retour</a>
     </form>
     <?php endif ?>

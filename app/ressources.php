@@ -101,6 +101,12 @@ function ressource(string $slug): ?array
     return $r;
 }
 
+/** Profil d'une personne qui témoigne, déduit de son compte (femme, homme, organisation, entreprise). */
+const SQL_PROFIL_TEMOIGNAGE = "(CASE WHEN pi.genre IN ('femme', 'homme') THEN pi.genre
+    WHEN po.type_structure IN ('entreprise', 'startup') THEN 'entreprise'
+    WHEN po.id IS NOT NULL THEN 'organisation'
+    ELSE NULLIF(t.categorie, '') END)";
+
 function ressources(): array
 {
     static $cache = null;
@@ -286,18 +292,17 @@ function ressources(): array
                 ['Affichés', 't.publie = 1'],
                 ['Masqués', 't.publie = 0'],
             ],
-            'filtres' => [['profil', 'Tous les profils', PROFILS_TEMOIGNAGE, 't.categorie']],
+            // Profil tiré du compte de la personne : genre du membre individuel, type de l'organisation
+            'depuis' => 'FROM temoignages t LEFT JOIN profils_individuels pi ON pi.utilisateur_id = t.utilisateur_id LEFT JOIN profils_organisations po ON po.utilisateur_id = t.utilisateur_id',
+            'champs_select' => "t.*, " . SQL_PROFIL_TEMOIGNAGE . " AS profil",
+            'filtres' => [['profil', 'Tous les profils', PROFILS_TEMOIGNAGE, SQL_PROFIL_TEMOIGNAGE]],
             'peut_ajouter' => false, 'vue_fiche' => 'admin/fiche_temoignage',
-            'actions' => array_merge([
+            'actions' => [
                 'afficher' => ['Afficher sur le site', fn ($ids) => requete('UPDATE temoignages SET publie = 1 WHERE id IN (' . marqueurs($ids) . ')', $ids)->rowCount() . ' témoignage(s) affiché(s).'],
                 'retirer' => ['Retirer du site', fn ($ids) => requete('UPDATE temoignages SET publie = 0, a_la_une = 0 WHERE id IN (' . marqueurs($ids) . ')', $ids)->rowCount() . ' témoignage(s) retiré(s).'],
                 'une' => ["Mettre en avant", fn ($ids) => requete('UPDATE temoignages SET a_la_une = 1, publie = 1 WHERE id IN (' . marqueurs($ids) . ')', $ids)->rowCount() . " témoignage(s) mis en avant : ils passent en premier sur l'accueil et sur la page Témoignages."],
                 'pas_une' => ["Ne plus mettre en avant", fn ($ids) => requete('UPDATE temoignages SET a_la_une = 0 WHERE id IN (' . marqueurs($ids) . ')', $ids)->rowCount() . " témoignage(s) ne sont plus mis en avant."],
-            ], array_combine(
-                // Classement par profil (sert au tri) : le seul renseignement que l'équipe ajoute
-                array_map(fn ($c) => 'profil_' . $c, array_keys(PROFILS_TEMOIGNAGE)),
-                array_map(fn ($c, $lib) => ['Profil : ' . mb_strtolower($lib), fn ($ids) => requete('UPDATE temoignages SET categorie = ? WHERE id IN (' . marqueurs($ids) . ')', array_merge([$c], $ids))->rowCount() . ' témoignage(s) classé(s).'], array_keys(PROFILS_TEMOIGNAGE), PROFILS_TEMOIGNAGE)
-            )),
+            ],
             'nom_element' => fn ($l) => $l['nom'],
             'groupes' => [
                 [null, 'champs' => [
@@ -351,12 +356,18 @@ function ressources(): array
             'depuis' => 'FROM profils_individuels t JOIN utilisateurs u ON u.id = t.utilisateur_id',
             'ordre' => 'u.inscrit_le DESC',
             'onglets' => [['Actifs', 'u.actif = 1'], ['Inactifs', 'u.actif = 0']],
-            'filtres' => [['region', 'Toutes les régions', REGIONS, 't.region'], ['categorie', 'Toutes catégories', CATEGORIES_INDIVIDUELLES, 't.categorie']],
+            'filtres' => [
+                ['genre', 'Femmes et hommes', GENRES, 't.genre'],
+                ['age', "Tous les âges", array_map(fn ($tr) => $tr[0], TRANCHES_AGE), "(CASE " . implode(' ', array_map(fn ($cle, $tr) => "WHEN TIMESTAMPDIFF(YEAR, t.date_naissance, CURDATE()) BETWEEN {$tr[1]} AND {$tr[2]} THEN '$cle'", array_keys(TRANCHES_AGE), TRANCHES_AGE)) . " END)"],
+                ['region', 'Toutes les régions', REGIONS, 't.region'],
+                ['categorie', 'Toutes catégories', CATEGORIES_INDIVIDUELLES, 't.categorie'],
+            ],
             'recherche' => ['t.prenom', 't.nom', 'u.email', 't.domaine', 't.ville'],
             'nom_element' => fn ($l) => $l['prenom'] . ' ' . $l['nom'],
             'colonnes' => [
                 ['Membre', fn ($l) => nom_et_detail($l['prenom'] . ' ' . $l['nom'], $l['email'], avatar(mb_strtoupper(mb_substr($l['prenom'], 0, 1) . mb_substr($l['nom'], 0, 1)), (int) $l['id'], $l['photo'] ?: null)), 'lien' => true],
                 ['Catégorie', fn ($l) => e(CATEGORIES_INDIVIDUELLES[$l['categorie']] ?? '')],
+                ['Genre et âge', fn ($l) => e(implode(', ', array_filter([GENRES[$l['genre'] ?? ''] ?? '', ($a = age($l['date_naissance'] ?? null)) !== null ? $a . ' ans' : '']))) ?: '<span class="ycm-discret">Non renseigné</span>'],
                 ['Région', fn ($l) => e(REGIONS[$l['region']] ?? '—')],
                 ['Communautés', fn ($l) => $l['nb_communautes'] . ' communauté' . pluriel((int) $l['nb_communautes'])],
                 ['Inscription', fn ($l) => e(date_chiffres($l['inscrit_le']))],
@@ -364,11 +375,14 @@ function ressources(): array
             ],
             'url_voir' => fn ($l) => ($l['visible'] && $l['actif']) ? url('/compte/membres/' . $l['utilisateur_id']) : null,
             'export' => ['Prénom' => 'prenom', 'Nom' => 'nom', 'E-mail' => 'email', 'Téléphone' => 'telephone', 'Catégorie' => fn ($l) => CATEGORIES_INDIVIDUELLES[$l['categorie']] ?? '',
+                'Genre' => fn ($l) => GENRES[$l['genre'] ?? ''] ?? '', 'Âge' => fn ($l) => age($l['date_naissance'] ?? null) ?? '',
                 'Région' => fn ($l) => REGIONS[$l['region']] ?? '', 'Ville' => 'ville', 'Domaine' => 'domaine', 'Communautés' => 'nb_communautes', 'Inscription' => fn ($l) => date_chiffres($l['inscrit_le'])],
             'groupes' => [
                 ['Identité', 'champs' => [
                     'prenom' => ['type' => 'texte', 'libelle' => 'Prénom', 'max' => 80, 'largeur' => 'demi'],
                     'nom' => ['type' => 'texte', 'libelle' => 'Nom', 'max' => 80, 'largeur' => 'demi'],
+                    'genre' => ['type' => 'select', 'libelle' => 'Genre', 'options' => ['' => 'Non renseigné'] + GENRES, 'requis' => false, 'largeur' => 'demi'],
+                    'date_naissance' => ['type' => 'date', 'libelle' => 'Date de naissance', 'requis' => false, 'largeur' => 'demi', 'aide' => 'Privée.'],
                     'categorie' => ['type' => 'select', 'libelle' => 'Profil', 'options' => CATEGORIES_INDIVIDUELLES, 'largeur' => 'demi'],
                     'domaine' => ['type' => 'texte', 'libelle' => "Domaine d'activité ou d'études", 'requis' => false, 'max' => 150, 'largeur' => 'demi'],
                     'photo' => ['type' => 'image', 'libelle' => 'Photo', 'requis' => false, 'dossier' => 'profils', 'largeur_max' => 800],
@@ -812,6 +826,9 @@ function ressources(): array
     $liste['types-opportunites']['parent'] = ['Opportunités', url('/gestion/opportunites')];
     $liste['categories-actualites']['parent'] = ['Actualités et événements', url('/gestion/actualites')];
     $liste['propositions']['menu_liste'] = [];
+    $liste['communautes']['menu_liste'] = [['Demandes déjà traitées', url('/gestion/demandes')]];
+    $liste['newsletter']['parent'] = ['Newsletter', url('/gestion/newsletters')];
+    $liste['newsletter']['menu_liste'] = [['Nouvelle newsletter', url('/gestion/newsletters/nouvelle')]];
     return $cache = $liste;
 }
 

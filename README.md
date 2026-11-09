@@ -25,6 +25,18 @@ Sur WAMP, les e-mails ne partent pas (mode `journal`) : le lien de confirmation 
 
 Changer d'hébergeur : copier les fichiers, exporter la base depuis phpMyAdmin et l'importer chez le nouvel hébergeur, puis adapter `config.php`.
 
+## Newsletter et e-mails avec Brevo
+
+Administration > Newsletter : rédiger un message, joindre des opportunités ou des actualités, choisir les destinataires (tous les abonnés, les membres de certaines communautés, les membres individuels ou les organisations), vérifier l'aperçu, s'envoyer un test, puis envoyer. Seules les adresses abonnées reçoivent la newsletter ; chaque e-mail contient un lien de désabonnement personnel.
+
+Pour envoyer réellement :
+
+1. Créer un compte sur brevo.com et valider l'adresse d'expédition (Expéditeurs, domaines et IP dédiées). Avec un nom de domaine, authentifier le domaine dans Brevo pour éviter les courriers indésirables.
+2. Créer une clé API (SMTP et API > Clés API).
+3. Dans `config.php`, rubrique `email` : `'mode' => 'brevo'`, `'expediteur' => 'l'adresse validée'`, `'brevo_cle' => 'la clé'`.
+
+Tant que le mode reste `journal`, tout fonctionne mais les envois sont seulement simulés et écrits dans `stockage/emails.log`.
+
 ## Organisation du code
 
 | Dossier | Contenu |

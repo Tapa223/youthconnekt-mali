@@ -1,6 +1,6 @@
 <?php partiel('admin/_entete_liste', get_defined_vars()); $couleurs = ['var(--ycm-turquoise)', 'var(--ycm-orange)', 'var(--ycm-vert)', 'var(--ycm-bleu)']; $av = ['orange', 'turquoise', 'bleu', 'vert']; ?>
 <?php if ($voit_demandes): ?>
-<div class="ycm-sous-section"><h2>Demandes d'intégration</h2><span>(<?= $total_attente ?> en attente)</span></div>
+<div class="ycm-sous-section"><h2>Demandes d'intégration</h2><?php if ($total_attente): ?><?= badge($total_attente . ' en attente', 'orange') ?><?php endif ?></div>
 <?php if ($acceptation_auto): ?><p class="ycm-alerte"><strong>Règle actuelle :</strong> les membres intègrent les communautés automatiquement (Paramètres). Les demandes ci-dessous datent d'avant ce réglage.</p><?php endif ?>
 <div class="ycm-boite" style="margin-bottom:8px">
   <?php if ($demandes): ?>
@@ -24,7 +24,6 @@
   <?php else: ?>
   <p class="ycm-vide" style="padding:20px">Aucune demande en attente.</p>
   <?php endif ?>
-  <p class="ycm-paginateur ycm-paginateur--boite"><span><?= $total_attente ?> demande<?= pluriel($total_attente) ?> en attente</span><a class="ycm-lien" href="<?= url('/gestion/demandes') ?>">Historique des demandes</a></p>
 </div>
 <?php endif ?>
 

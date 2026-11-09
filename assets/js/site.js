@@ -202,6 +202,7 @@
   var format = function (n) { return Math.round(n).toLocaleString("fr-FR").replace(/ | /g, " "); };
   compteurs.forEach(function (el) {
     var texte = el.textContent.trim();
+    if (/^(19|20)\d{2}$/.test(texte)) return; // une année (2021) s'affiche telle quelle
     var m = texte.match(/^([^\d]*)([\d\s  .,]+)(.*)$/);
     if (!m) return;
     var cible = parseFloat(m[2].replace(/[\s  ]/g, "").replace(",", "."));

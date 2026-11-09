@@ -10,7 +10,7 @@ $mdp = ['type' => 'motdepasse', 'requis' => true];
 </div>
 <div class="ycm-form-grille">
   <div class="ycm-form-principal">
-    <form method="post">
+    <form method="post" data-confirmer="Enregistrer vos informations ?" data-confirmer-oui="Enregistrer">
       <?= csrf() ?><input type="hidden" name="action" value="identite">
       <?php partiel('admin/_groupe', ['g' => ['Mes informations', 'description' => "Votre nom s'affiche dans l'administration, par exemple sur les demandes que vous traitez.", 'champs' => [
           'prenom_admin' => ['type' => 'texte', 'libelle' => 'Prénom', 'requis' => false, 'max' => 80, 'largeur' => 'demi'],
@@ -19,7 +19,7 @@ $mdp = ['type' => 'motdepasse', 'requis' => true];
       <p class="ycm-panneau-boutons" style="margin-top:12px"><button type="submit" class="ycm-bouton-vert">Enregistrer</button></p>
     </form>
 
-    <form method="post" style="margin-top:24px">
+    <form method="post" style="margin-top:24px" data-confirmer="Changer votre mot de passe ?" data-confirmer-texte="Il faudra utiliser le nouveau à la prochaine connexion." data-confirmer-oui="Changer">
       <?= csrf() ?><input type="hidden" name="action" value="mdp">
       <?php partiel('admin/_groupe', ['g' => ['Changer mon mot de passe', 'description' => '8 caractères au minimum, différent de votre adresse e-mail.', 'champs' => [
           'mot_de_passe_actuel' => $mdp + ['libelle' => 'Mot de passe actuel'],

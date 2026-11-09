@@ -27,10 +27,12 @@ return [
     // Envoi des e-mails (confirmation d'inscription, mot de passe oublié, formulaire de contact)
     //  - 'journal' : les e-mails ne partent pas, ils sont écrits dans stockage/emails.log
     //                et le lien s'affiche à l'écran (pratique sur WAMP) ;
+    //  - 'brevo'   : envoi réel par Brevo (e-mails du site ET newsletters) : renseigner 'brevo_cle' ;
     //  - 'smtp'    : envoi réel avec les informations SMTP de l'hébergeur (cPanel > Comptes e-mail) ;
     //  - 'mail'    : fonction mail() de PHP, si l'hébergeur la propose.
     'email' => [
         'mode' => 'journal',
+        // Brevo : l'expéditeur doit être une adresse validée dans Brevo (Expéditeurs, domaines et IP dédiées)
         'expediteur' => 'noreply@votre-domaine.ml',
         'nom_expediteur' => 'YouthConnekt Mali',
         'smtp_hote' => 'mail.votre-domaine.ml',
@@ -38,6 +40,8 @@ return [
         'smtp_securite' => 'ssl',        // 'ssl', 'tls' ou ''
         'smtp_utilisateur' => 'noreply@votre-domaine.ml',
         'smtp_mot_de_passe' => '',
+        // Clé API Brevo (Brevo > SMTP et API > Clés API). Ne jamais la publier ni l'envoyer sur GitHub.
+        'brevo_cle' => '',
         // Adresse qui reçoit une copie des messages du formulaire de contact (facultatif)
         'copie_contact' => '',
     ],

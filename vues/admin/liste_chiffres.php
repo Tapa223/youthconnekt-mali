@@ -1,6 +1,6 @@
 <?php partiel('admin/_entete_liste', get_defined_vars()); $publies = array_values(array_filter($lignes, fn ($c) => $c['publie'])); ?>
 <?php if ($lignes): ?>
-<form method="post" action="<?= url('/gestion/chiffres/enregistrer') ?>">
+<form method="post" action="<?= url('/gestion/chiffres/enregistrer') ?>" data-confirmer="Enregistrer les chiffres clés ?" data-confirmer-texte="Ils s'affichent aussitôt sur l'accueil." data-confirmer-oui="Enregistrer">
   <?= csrf() ?>
   <div class="ycm-resultats">
     <table class="ycm-tableau">
@@ -21,7 +21,8 @@
   <?php if ($peut_modifier): ?><p style="margin:14px 0 0"><button type="submit" class="ycm-bouton-vert">Enregistrer les chiffres</button></p><?php endif ?>
 </form>
 <section class="ycm-boite ycm-boite--pad" style="margin-top:22px" aria-labelledby="titre-apercu">
-  <div class="ycm-boite-tete ycm-boite-tete--nu"><h2 id="titre-apercu">Aperçu sur l'accueil</h2><span class="ycm-note">Les trois premiers chiffres publiés</span></div>
+  <div class="ycm-boite-tete ycm-boite-tete--nu"><h2 id="titre-apercu">Ce que l'on voit sur l'accueil</h2><a class="ycm-lien" href="<?= url('/') ?>#chapitre" target="_blank" rel="noopener">Voir sur le site</a></div>
+  <p class="ycm-sous-titre" style="margin:0 0 14px">Section « Le chapitre », juste sous le titre : les trois premiers chiffres publiés, dans l'ordre choisi.</p>
   <?php if ($publies): ?>
   <div class="ycm-apercu-chiffres">
     <?php foreach (array_slice($publies, 0, 3) as $c): ?><div><strong><?= e($c['valeur']) ?></strong><span aria-hidden="true"></span><small><?= e($c['libelle']) ?></small></div><?php endforeach ?>

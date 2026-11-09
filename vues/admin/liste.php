@@ -49,7 +49,7 @@ $id_form = 'liste-' . $r['slug'];
 </form>
 <?php partiel('admin/_pagination', get_defined_vars()) ?>
 <?php if ($r['slug'] === 'newsletter'): foreach ($lignes as $l): ?>
-<form id="basculer-<?= (int) $l['id'] ?>" method="post" action="<?= url('/gestion/newsletter/' . $l['id'] . '/basculer') ?>" hidden><?= csrf() ?><input type="hidden" name="suivant" value="<?= e(adresse_actuelle()) ?>"></form>
+<form id="basculer-<?= (int) $l['id'] ?>" method="post" data-confirmer="<?= $l['actif'] ? 'Désabonner ' . e($l['email']) . ' ?' : 'Réabonner ' . e($l['email']) . ' ?' ?>" data-confirmer-texte="<?= $l['actif'] ? "Cette adresse ne recevra plus la newsletter." : 'Cette adresse recevra de nouveau la newsletter.' ?>" data-confirmer-oui="<?= $l['actif'] ? 'Désabonner' : 'Réabonner' ?>"<?= $l['actif'] ? ' data-confirmer-danger' : '' ?> action="<?= url('/gestion/newsletter/' . $l['id'] . '/basculer') ?>" hidden><?= csrf() ?><input type="hidden" name="suivant" value="<?= e(adresse_actuelle()) ?>"></form>
 <?php endforeach; endif ?>
 <?php else: ?>
 <div class="ycm-boite ycm-boite--pad"><p class="ycm-vide"><?= $q !== '' || $filtres ? 'Aucun élément ne correspond à cette recherche.' : 'Aucun élément pour l\'instant.' ?></p></div>

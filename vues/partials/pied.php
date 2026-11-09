@@ -21,7 +21,7 @@ $pied_compact = str_starts_with(chemin_actuel(), '/compte/mon-espace') || str_st
       <div class="flex min-w-0 items-center gap-2.5 sm:gap-3">
         <?php if ($logo_ministere): ?><img src="<?= e($logo_ministere) ?>" alt="" class="h-10 w-auto shrink-0 sm:h-14" loading="lazy">
         <?php else: ?><span class="flex h-10 w-7 shrink-0 overflow-hidden rounded-sm sm:h-12 sm:w-9" aria-hidden="true"><span class="flex-1 bg-[#14B53A]"></span><span class="flex-1 bg-[#FCD116]"></span><span class="flex-1 bg-[#CE1126]"></span></span><?php endif ?>
-        <span class="min-w-0 leading-tight"><span class="block text-[11px] font-bold tracking-wide text-vert uppercase sm:text-sm">République du Mali</span><span class="hidden text-xs text-texte sm:block">Ministère de la Jeunesse et des Sports</span></span>
+        <span class="min-w-0 leading-tight"><span class="block text-[11px] font-bold tracking-wide text-vert uppercase sm:text-sm">République du Mali</span><span class="hidden max-w-[19rem] text-xs text-texte sm:block">Ministère de la Jeunesse et des Sports, chargé de l'Instruction civique et de la Construction citoyenne</span></span>
       </div>
       <a href="<?= url('/') ?>" class="justify-self-center" aria-label="YouthConnekt Mali, retour à l'accueil"><?php partiel('partials/logo', ['classes' => 'h-10 w-auto sm:h-14']) ?></a>
       <div class="flex min-w-0 items-center justify-end gap-2.5 text-right sm:gap-3">

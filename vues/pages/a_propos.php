@@ -52,7 +52,8 @@
       <div class="repliable mt-4 space-y-3 text-[15px] leading-relaxed sm:mt-5 sm:space-y-4 sm:text-[17px]" id="texte-qui" data-repliable>
         <p>YouthConnekt Mali rassemble les jeunes, les étudiants, les entrepreneurs et les organisations qui veulent faire avancer le pays. Le chapitre relaie des opportunités, organise des rencontres et met en valeur les initiatives des jeunes, partout au Mali.</p>
         <p>Notre conviction est simple : les jeunes Maliens ont des idées, de l'énergie et du talent, mais l'information et les réseaux leur manquent souvent. Le chapitre est là pour combler ce manque, en mettant au même endroit les jeunes, les organisations qui les accompagnent et les institutions qui décident.</p>
-        <p>Il s'appuie sur le réseau YouthConnekt Africa et travaille aux côtés du ministère chargé de la Jeunesse et de ses partenaires.</p>
+        <p>Le Gouvernement du Mali, à travers le ministère de la Jeunesse et des Sports, chargé de l'Instruction civique et de la Construction citoyenne, a endossé l'initiative YouthConnekt en octobre 2020, puis lancé le chapitre le 7 octobre 2021, avec l'appui du PNUD.</p>
+        <p>Un Comité technique, créé en 2022 par décision du ministre de la Jeunesse, associe les ministères sectoriels et les agences, fonds et programmes des Nations unies. Il est co-présidé par le ministère chargé de la Jeunesse et le PNUD.</p>
       </div>
       <?php partiel('partials/voir_plus', ['cible' => 'texte-qui']) ?>
     </div>
@@ -62,13 +63,13 @@
         <img src="<?= asset('img/a-propos/qui-sommes-nous.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy">
         <?php partiel('partials/mention_photo', ['texte' => 'Photo provisoire', 'position' => 'right-3 top-3']) ?>
       </div>
-      <span class="anim-flotte absolute top-8 -left-3 flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm shadow-lg"><span class="grid size-7 place-items-center rounded-full bg-orange text-white" aria-hidden="true"><svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></span>Lancé en <strong class="text-vert">2024</strong></span>
+      <span class="anim-flotte absolute top-8 -left-3 flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm shadow-lg"><span class="grid size-7 place-items-center rounded-full bg-orange text-white" aria-hidden="true"><svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></span>Lancé en <strong class="text-vert">2021</strong></span>
       <span class="anim-flotte-2 absolute top-1/2 -right-2 flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm shadow-lg"><span class="grid size-7 place-items-center rounded-full bg-turquoise text-white" aria-hidden="true"><svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/></svg></span>Basé à <strong class="text-vert">Bamako</strong></span>
       <span class="anim-flotte absolute bottom-0 left-4 flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm shadow-lg"><span class="grid size-7 place-items-center rounded-full bg-bleu text-white" aria-hidden="true"><svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="m8.2 11 7.6-3.8M8.2 13l7.6 3.8"/></svg></span>Réseau <strong class="text-vert">YouthConnekt Africa</strong></span>
     </div>
   </div>
   <ul class="mt-5 flex flex-wrap gap-2 md:hidden">
-    <li class="rounded-full border-[1.5px] border-orange px-3 py-1.5 text-[13px]">Lancé en <strong class="text-vert">2024</strong></li>
+    <li class="rounded-full border-[1.5px] border-orange px-3 py-1.5 text-[13px]">Lancé en <strong class="text-vert">2021</strong></li>
     <li class="rounded-full border-[1.5px] border-turquoise px-3 py-1.5 text-[13px]">Basé à <strong class="text-vert">Bamako</strong></li>
     <li class="rounded-full border-[1.5px] border-bleu px-3 py-1.5 text-[13px]">Réseau <strong class="text-vert">YouthConnekt Africa</strong></li>
   </ul>
@@ -96,7 +97,7 @@
     <div class="survol-leve rounded-2xl bg-vert flex items-center gap-3 p-3.5 md:block md:p-7 text-white">
       <span class="grid size-10 shrink-0 place-items-center rounded-full md:size-11 bg-orange" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></span>
       <div class="min-w-0"><h3 class="text-lg font-bold md:mt-4 md:text-2xl text-white">Mission</h3>
-      <p class="mt-0.5 text-sm leading-relaxed md:mt-2 md:text-[15px] text-white/90">Connecter les jeunes du Mali aux opportunités, aux savoirs et aux décideurs pour qu'ils prennent leur place.</p></div>
+      <p class="mt-0.5 text-sm leading-relaxed md:mt-2 md:text-[15px] text-white/90">Connecter les jeunes du Mali aux opportunités, aux savoirs et aux décideurs, et les faire participer à la transformation du pays.</p></div>
     </div>
     <div class="survol-leve rounded-2xl border-[1.5px] border-vert bg-white flex items-center gap-3 p-3.5 md:block md:p-7 md:mt-8">
       <span class="grid size-10 shrink-0 place-items-center rounded-full md:size-11 bg-vert" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span>
@@ -110,6 +111,35 @@
     </div>
   </div>
 </div>
+</section>
+
+<?php /* Objectifs et axes officiels du chapitre (alignés sur la politique nationale de la jeunesse et le cadre de coopération avec les Nations unies) */ ?>
+<section id="objectifs" class="scroll-mt-24 bg-gris py-12 sm:py-20" aria-labelledby="titre-objectifs">
+  <div class="conteneur grid gap-8 lg:grid-cols-[minmax(0,6fr)_minmax(0,6fr)] lg:gap-14">
+    <div>
+      <p class="surtitre surtitre-trait">Objectifs</p>
+      <h2 id="titre-objectifs" class="titre-section">Ce que le chapitre veut accomplir</h2>
+      <ol class="mt-5 space-y-2.5 sm:mt-7 sm:space-y-3">
+        <?php foreach ($objectifs as $k => $objectif): ?>
+        <li class="flex gap-3 rounded-xl bg-white p-3.5 sm:gap-4 sm:rounded-2xl sm:p-5"><span class="grid size-7 shrink-0 place-items-center rounded-full text-sm font-bold text-white sm:size-9 sm:text-base <?= cycle(['bg-orange', 'bg-turquoise', 'bg-bleu'], $k) ?>"><?= $k + 1 ?></span><span class="text-[15px] leading-relaxed text-encre sm:text-base"><?= e($objectif) ?></span></li>
+        <?php endforeach ?>
+      </ol>
+    </div>
+    <div>
+      <p class="surtitre surtitre-trait">Axes d'intervention</p>
+      <h2 class="titre-section">Deux axes pour agir</h2>
+      <ul class="mt-5 grid gap-3 sm:mt-7 sm:gap-4">
+        <?php foreach ($axes_officiels as $k => [$titre_axe, $texte_axe]): ?>
+        <li class="rounded-2xl border-l-[6px] bg-white p-4 shadow-sm sm:p-6 <?= $k ? 'border-orange' : 'border-vert' ?>">
+          <p class="text-xs font-bold tracking-[.14em] text-texte uppercase">Axe <?= $k + 1 ?></p>
+          <h3 class="mt-1 text-lg leading-snug font-bold text-vert sm:text-xl"><?= e($titre_axe) ?></h3>
+          <p class="mt-1.5 text-sm leading-relaxed sm:text-[15px]"><?= e($texte_axe) ?></p>
+        </li>
+        <?php endforeach ?>
+      </ul>
+      <p class="mt-4 text-sm leading-relaxed text-texte">Ces axes sont alignés sur la politique nationale de la jeunesse et sur le cadre de coopération entre le Gouvernement du Mali et les Nations unies.</p>
+    </div>
+  </div>
 </section>
 
 <section class="relative isolate overflow-hidden bg-vert py-12 sm:py-20 text-white">
@@ -135,7 +165,7 @@
 <?php if ($axes): ?>
 <section id="axes" class="scroll-mt-24 bg-gris py-12 sm:py-20">
   <div class="conteneur">
-    <p class="surtitre surtitre-trait">Nos axes d'action</p>
+    <p class="surtitre surtitre-trait">Nos façons d'agir</p>
     <h2 class="titre-section"><?= count($axes) === 3 ? "Trois façons d'agir avec les jeunes" : "Nos façons d'agir avec les jeunes" ?></h2>
     <div class="mt-5 space-y-2.5 md:hidden">
       <?php foreach ($axes as $k => $axe): ?>
@@ -186,7 +216,7 @@
       </li>
       <?php endforeach ?>
     </ol>
-    <ol class="mt-10 hidden gap-8 sm:grid sm:grid-cols-2 lg:grid-cols-4">
+    <ol class="mt-10 hidden gap-8 sm:grid sm:grid-cols-3 lg:grid-cols-5">
       <?php foreach ($parcours as $k => [$annee, $t, $texte]): ?>
       <li>
         <div class="flex items-center gap-3">
@@ -199,6 +229,40 @@
       </li>
       <?php endforeach ?>
     </ol>
+  </div>
+</section>
+
+<?php /* YouthConnekt Africa : l'initiative continentale et ses grands rendez-vous */ ?>
+<section id="youthconnekt-africa" class="relative isolate scroll-mt-24 overflow-hidden bg-vert py-12 text-white sm:py-20" aria-labelledby="titre-yca">
+  <?php partiel('partials/reseau_deco') ?>
+  <div class="conteneur relative">
+    <div class="grid gap-6 lg:grid-cols-[minmax(0,6fr)_minmax(0,6fr)] lg:items-end lg:gap-14">
+      <div>
+        <p class="surtitre surtitre-trait text-white/85">YouthConnekt Africa</p>
+        <h2 id="titre-yca" class="titre-section text-white">Un mouvement continental pour la jeunesse</h2>
+      </div>
+      <p class="text-[15px] leading-relaxed text-white/90 sm:text-lg">Lancée en 2012 au Rwanda par le Gouvernement rwandais avec l'appui du PNUD, l'initiative est devenue en 2017 un mouvement continental, soutenu par le PNUD et la Commission de l'Union africaine. Son hub est à Kigali ; elle compte aujourd'hui 37 chapitres nationaux, dont YouthConnekt Mali.</p>
+    </div>
+    <dl class="mt-8 grid grid-cols-2 gap-2.5 sm:mt-10 sm:gap-4 lg:grid-cols-4">
+      <?php foreach ([['10 millions', "d'emplois à créer pour les jeunes"], ['25 millions', 'de jeunes à former'], ['100 millions', 'de jeunes Africains à connecter'], ['1 million', 'de jeunes leaders à former']] as $k => [$nombre, $libelle]): ?>
+      <div class="rounded-2xl border border-white/20 bg-white/5 p-3.5 sm:p-6">
+        <dt class="sr-only"><?= e($libelle) ?></dt>
+        <dd class="text-2xl leading-none font-bold sm:text-4xl <?= cycle(['text-orange', 'text-turquoise', 'text-white', 'text-orange'], $k) ?>"><?= e($nombre) ?></dd>
+        <dd class="mt-2 text-[13px] leading-snug text-white/85 sm:text-[15px]"><?= e($libelle) ?></dd>
+      </div>
+      <?php endforeach ?>
+    </dl>
+    <p class="mt-3 text-xs text-white/70 sm:text-sm">Les objectifs que s'est fixés l'initiative à l'échelle du continent.</p>
+    <div class="mt-8 grid gap-3 sm:mt-10 md:grid-cols-2 md:gap-5">
+      <div class="rounded-2xl bg-white p-4 text-encre sm:p-6">
+        <h3 class="text-lg font-bold text-vert sm:text-xl">Le Sommet YouthConnekt Africa</h3>
+        <p class="mt-1.5 text-sm leading-relaxed sm:text-[15px]">Le grand rendez-vous annuel de la jeunesse africaine réunit en moyenne 5 000 jeunes leaders, entrepreneurs, décideurs et partenaires. La 8e édition se tient à Kigali du 25 au 27 novembre 2026.</p>
+      </div>
+      <div class="rounded-2xl bg-white p-4 text-encre sm:p-6">
+        <h3 class="text-lg font-bold text-vert sm:text-xl">Le Forum YouthConnekt Sahel</h3>
+        <p class="mt-1.5 text-sm leading-relaxed sm:text-[15px]">La plateforme des jeunes du Sahel pour la paix et la prospérité : Dakar en 2021, N'Djamena en 2025, Niamey en août 2026. Le Mali a pris part à chaque édition.</p>
+      </div>
+    </div>
   </div>
 </section>
 

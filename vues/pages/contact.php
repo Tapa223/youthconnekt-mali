@@ -49,7 +49,7 @@ $traces = ICONES_CONTACT;
 
     <div class="mx-4 rounded-3xl bg-white p-5 shadow-xl shadow-vert/5 sm:mx-0 sm:p-8">
       <h2 class="text-xl font-bold sm:text-2xl">Envoyer un message</h2>
-      <form method="post" class="mt-4 grid gap-4 sm:mt-5 sm:grid-cols-2 sm:gap-x-5" novalidate>
+      <form method="post" class="mt-4 grid gap-4 sm:mt-5 sm:grid-cols-2 sm:gap-x-5" novalidate data-confirmer="Envoyer votre message ?" data-confirmer-oui="Envoyer">
         <?= csrf() ?>
         <div class="hidden" aria-hidden="true"><label>Ne pas remplir <input type="text" name="site_web" tabindex="-1" autocomplete="off"></label></div>
         <?php partiel('partials/champ', ['nom' => 'nom', 'libelle' => 'Nom complet', 'valeur' => $valeurs['nom'], 'erreur' => $erreurs['nom'] ?? '', 'attributs' => ['autocomplete' => 'name', 'placeholder' => 'Votre nom', 'maxlength' => 120]]) ?>

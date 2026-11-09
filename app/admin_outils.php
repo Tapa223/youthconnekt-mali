@@ -42,7 +42,7 @@ const MENU_ADMIN = [
     ]],
     ['Échanges', [
         ['Messages de contact', 'messages', 'enveloppe', 'messages'],
-        ['Abonnés newsletter', 'newsletter', 'lettre', 'newsletter'],
+        ['Newsletter', 'newsletters', 'lettre', 'newsletter'],
     ]],
     ['Site', [
         ['Chiffres clés', 'chiffres', 'graphique', 'chiffres'],
@@ -84,6 +84,9 @@ function menu_admin(): array
             $adresse = '/gestion' . ($slug ? '/' . $slug : '');
             $actif = $slug === '' ? $chemin === '/gestion' : (strpos($chemin . '/', $adresse . '/') === 0);
             if ($slug === 'communautes' && strpos($chemin, '/gestion/demandes') === 0) {
+                $actif = true;
+            }
+            if ($slug === 'newsletters' && strpos($chemin . '/', '/gestion/newsletter/') === 0) {
                 $actif = true;
             }
             // Types et catégories : rattachés à leur rubrique

@@ -74,6 +74,6 @@ $groupe = fn ($g) => partiel('admin/_groupe', ['g' => $g, 'valeurs' => $valeurs,
 <form id="form-supprimer" method="post" action="<?= url('/gestion/' . $r['slug'] . '/' . $ligne['id'] . '/supprimer') ?>" data-confirmer="Supprimer définitivement cet élément ?" data-confirmer-texte="Cette action est irréversible." data-confirmer-oui="Supprimer" data-confirmer-danger hidden><?= csrf() ?></form>
 <?php endif ?>
 <?php if ($r['slug'] === 'parametres' && ($admin['role_admin'] ?? '') === 'super'): ?>
-<form id="form-exemples-charger" method="post" action="<?= url('/gestion/exemples') ?>" hidden><?= csrf() ?><input type="hidden" name="quoi" value="charger"></form>
+<form id="form-exemples-charger" method="post" action="<?= url('/gestion/exemples') ?>" hidden data-confirmer="Charger les contenus d'exemple ?" data-confirmer-oui="Charger"><?= csrf() ?><input type="hidden" name="quoi" value="charger"></form>
 <form id="form-exemples-retirer" method="post" action="<?= url('/gestion/exemples') ?>" data-confirmer="Retirer tous les contenus d'exemple ?" hidden><?= csrf() ?><input type="hidden" name="quoi" value="retirer"></form>
 <?php endif ?>

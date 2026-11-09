@@ -22,7 +22,7 @@ $infos = array_filter([
 
 <section class="bg-gris py-10 sm:py-14">
   <div class="conteneur grid gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
-    <form method="post" class="rounded-3xl bg-white p-6 sm:p-9" novalidate>
+    <form method="post" class="rounded-3xl bg-white p-6 sm:p-9" novalidate data-confirmer="Envoyer votre demande ?" data-confirmer-texte="L'équipe y répond sous 24 heures." data-confirmer-oui="Envoyer">
       <?= csrf() ?>
       <h2 class="text-2xl font-bold">Votre demande</h2>
       <p class="mt-1 text-[15px]"><?= $refusee ? 'Votre précédente demande n\'a pas été retenue : vous pouvez en envoyer une nouvelle.' : 'Quelques mots suffisent. Réponse sous 24 heures : sans réponse de l\'équipe, vous êtes intégré automatiquement.' ?></p>

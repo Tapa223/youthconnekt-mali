@@ -7,7 +7,7 @@ foreach ($partenaires as $partenaire) {
 }
 // Tant qu'aucun partenaire n'est saisi dans l'administration, seuls les partenaires connus sont affichés
 if (!$partenaires) {
-    $familles['institutionnel'] = array_map(fn ($nom) => ['nom' => $nom, 'logo' => '', 'lien' => ''], ['Ministère de la Jeunesse et des Sports', 'PNUD Mali']);
+    $familles['institutionnel'] = array_map(fn ($nom) => ['nom' => $nom, 'logo' => '', 'lien' => ''], ['Ministère de la Jeunesse et des Sports', 'PNUD Mali', 'UNFPA Mali', 'Bureau du Coordonnateur résident des Nations unies']);
 }
 $titres = [
     'institutionnel' => ['Partenaires institutionnels et techniques', 'border-vert'],

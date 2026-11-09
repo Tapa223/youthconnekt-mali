@@ -23,7 +23,7 @@
     <div class="ycm-lecture-actions">
       <a class="ycm-bouton-vert" href="mailto:<?= e($ouvert['email']) ?>?subject=<?= rawurlencode('Re : ' . $ouvert['objet']) ?>">Répondre par e-mail</a>
       <?php if ($peut_modifier): ?>
-      <form method="post" action="<?= url('/gestion/messages/' . $ouvert['id'] . '/traiter') ?>">
+      <form method="post" action="<?= url('/gestion/messages/' . $ouvert['id'] . '/traiter') ?>" data-confirmer="<?= $ouvert['traite'] ? 'Remettre ce message à traiter ?' : 'Marquer ce message comme traité ?' ?>" data-confirmer-oui="<?= $ouvert['traite'] ? 'Remettre à traiter' : 'Marquer comme traité' ?>">
         <?= csrf() ?><input type="hidden" name="suivant" value="<?= e(adresse_actuelle()) ?>"><input type="hidden" name="traite" value="<?= $ouvert['traite'] ? '0' : '1' ?>">
         <button type="submit" class="ycm-bouton-contour"><?= $ouvert['traite'] ? 'Remettre à traiter' : 'Marquer comme traité' ?></button>
       </form>

@@ -38,19 +38,11 @@ $ici = url('/gestion/temoignages/' . $id);
     <?php else: ?>
     <button type="submit" form="f-visible" class="ycm-bouton-vert">Afficher sur le site</button>
     <?php endif ?>
-    <label class="ycm-fiche-temoignage-profil">
-      <span>Profil de la personne</span>
-      <select name="action" form="f-profil" data-envoi-auto>
-        <option value="" disabled <?= empty($t['categorie']) ? 'selected' : '' ?>>Choisir…</option>
-        <?php foreach (PROFILS_TEMOIGNAGE as $c => $lib): ?><option value="profil_<?= e($c) ?>" <?= ($t['categorie'] ?? '') === $c ? 'selected' : '' ?>><?= e($lib) ?></option><?php endforeach ?>
-      </select>
-      <small>Sert seulement au tri des témoignages.</small>
-    </label>
+    <?php if (!empty($t['profil'])): ?><p class="ycm-fiche-temoignage-profil"><span>Profil</span><?= e(PROFILS_TEMOIGNAGE[$t['profil']] ?? '') ?><small>D'après le compte de la personne.</small></p><?php endif ?>
   </aside>
   <?php
   partiel('admin/_action_temoignage', ['id_form' => 'f-visible', 'ids' => [$id], 'suivant' => $ici, 'action' => $t['publie'] ? 'retirer' : 'afficher',
       'confirmer' => $t['publie'] ? ['Retirer ce témoignage du site ?', "Il n'apparaîtra plus sur le site. Vous pourrez l'afficher de nouveau à tout moment.", 'Retirer'] : ['Afficher ce témoignage sur le site ?', 'Il apparaîtra sur la page Témoignages, avec le nom et la photo de la personne.', 'Afficher']]);
   partiel('admin/_action_temoignage', ['id_form' => 'f-une', 'ids' => [$id], 'suivant' => $ici, 'action' => $une ? 'pas_une' : 'une']);
-  partiel('admin/_action_temoignage', ['id_form' => 'f-profil', 'ids' => [$id], 'suivant' => $ici, 'action' => '']);
   endif ?>
 </div>

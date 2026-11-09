@@ -46,7 +46,7 @@ $lignes_liens = $liens ?: [['reseau' => 'linkedin', 'url' => '']];
     <span class="rounded-full bg-gris px-3 py-1.5 text-xs font-bold text-vert group-open/modif:hidden">Ouvrir</span>
     <span class="hidden rounded-full bg-gris px-3 py-1.5 text-xs font-bold text-texte group-open/modif:inline">Fermer</span>
   </summary>
-  <form method="post" enctype="multipart/form-data" class="mt-4 grid gap-x-5 gap-y-4 sm:grid-cols-2" novalidate>
+  <form method="post" enctype="multipart/form-data" class="mt-4 grid gap-x-5 gap-y-4 sm:grid-cols-2" novalidate data-confirmer="Enregistrer vos informations ?" data-confirmer-oui="Enregistrer">
     <?= csrf() ?>
     <?php if ($erreurs): ?><p class="rounded-xl border border-rouge/30 bg-rouge/5 px-4 py-3 text-sm text-rouge sm:col-span-2" role="alert">Certaines informations sont à corriger.</p><?php endif ?>
 
@@ -98,6 +98,8 @@ $lignes_liens = $liens ?: [['reseau' => 'linkedin', 'url' => '']];
     <?php else: ?>
       <?php partiel('partials/champ', $c('prenom') + ['libelle' => 'Prénom', 'attributs' => ['maxlength' => 80, 'autocomplete' => 'given-name']]) ?>
       <?php partiel('partials/champ', $c('nom') + ['libelle' => 'Nom', 'attributs' => ['maxlength' => 80, 'autocomplete' => 'family-name']]) ?>
+      <?php partiel('partials/champ', $c('genre') + ['libelle' => 'Genre', 'type' => 'select', 'options' => ['' => 'Choisir'] + GENRES, 'aide' => 'Privé : sert seulement aux statistiques du chapitre.']) ?>
+      <?php partiel('partials/champ', $c('date_naissance') + ['libelle' => 'Date de naissance', 'type' => 'date', 'aide' => 'Privée : jamais affichée sur le site.', 'attributs' => ['max' => date('Y-m-d', strtotime('-10 years')), 'min' => date('Y-m-d', strtotime('-100 years'))]]) ?>
       <?= $groupe('Parcours') ?>
       <?php partiel('partials/champ', $c('categorie') + ['libelle' => 'Vous êtes', 'type' => 'select', 'options' => CATEGORIES_INDIVIDUELLES]) ?>
       <?php partiel('partials/champ', $c('domaine') + ['libelle' => "Domaine d'activité ou d'études", 'requis' => false, 'attributs' => ['maxlength' => 150, 'placeholder' => 'Exemple : marketing digital']]) ?>

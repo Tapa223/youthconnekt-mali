@@ -13,10 +13,6 @@ $rapides = ['afficher' => 'Afficher', 'retirer' => 'Retirer', 'une' => 'Mettre e
     <span class="ycm-selection" data-compte-selection>0 sur <?= count($lignes) ?> sélectionné</span>
     <span class="ycm-actions-tem">
       <?php foreach ($rapides as $cle => $libelle): ?><button type="submit" name="action" value="<?= $cle ?>" class="<?= $cle === 'retirer' ? 'ycm-bouton-rouge-contour' : 'ycm-bouton-contour' ?> ycm-petit"><?= $libelle ?></button><?php endforeach ?>
-      <select name="action" aria-label="Classer par profil" data-envoi-auto>
-        <option value="" selected disabled>Classer par profil…</option>
-        <?php foreach (PROFILS_TEMOIGNAGE as $c => $lib): ?><option value="profil_<?= e($c) ?>"><?= e($lib) ?></option><?php endforeach ?>
-      </select>
     </span>
     <button type="button" class="ycm-lien ycm-annuler-selection" data-basculer-selection>Annuler</button>
   </div>
@@ -30,7 +26,7 @@ $rapides = ['afficher' => 'Afficher', 'retirer' => 'Retirer', 'une' => 'Mettre e
         <?php elseif (!$t['publie']): ?><?= badge('Retiré du site', 'gris') ?>
         <?php else: ?><?= badge('Affiché', 'vert') ?><?php endif ?>
         <?php if ($une && $t['publie']): ?><?= badge('Mis en avant', 'bleu') ?><?php endif ?>
-        <?php if (!empty($t['categorie'])): ?><span class="ycm-temoignage-profil"><?= e(PROFILS_TEMOIGNAGE[$t['categorie']] ?? '') ?></span><?php endif ?>
+        <?php if (!empty($t['profil'])): ?><span class="ycm-temoignage-profil"><?= e(PROFILS_TEMOIGNAGE[$t['profil']] ?? '') ?></span><?php endif ?>
       </div>
       <blockquote>« <?= e($t['texte']) ?> »</blockquote>
       <div class="ycm-personne">

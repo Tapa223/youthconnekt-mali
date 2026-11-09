@@ -59,11 +59,22 @@ function a_propos(): void
             ['Accompagner', 'Ateliers, mentorat et événements pour aider chacun à saisir sa chance.'],
             ['Mettre en lumière', 'Nous faisons connaître les réussites et les projets des jeunes.'],
         ],
+        // Repères officiels (note technique YouthConnekt, juin 2026 ; débriefing du Sommet 2024)
         'parcours' => [
-            ['2024', 'Lancement du chapitre', 'Naissance de YouthConnekt Mali comme chapitre national.'],
-            ['2025', 'Premières formations', "Premiers ateliers et programmes d'accompagnement."],
-            ['2026', 'La plateforme en ligne', 'Un espace pour relier jeunes, organisations et opportunités.'],
-            ['Demain', 'Toutes les régions', 'Aller à la rencontre des jeunes partout au Mali.'],
+            ['2020', "L'initiative endossée", "En octobre, le Gouvernement du Mali endosse l'initiative YouthConnekt, avec l'appui du PNUD."],
+            ['2021', 'Lancement du chapitre', 'Le 7 octobre, YouthConnekt Mali est lancé comme chapitre national.'],
+            ['2022', 'Un comité technique', 'Créé par décision du ministre de la Jeunesse, il réunit ministères et agences des Nations unies.'],
+            ['2024', 'Au Sommet de Kigali', 'Une délégation de 18 personnes, dont 6 jeunes, porte la voix du Mali au Sommet YouthConnekt Africa.'],
+            ['2026', 'La plateforme en ligne', 'Un espace pour relier jeunes, organisations et opportunités, partout au Mali.'],
+        ],
+        'objectifs' => [
+            'Connecter les jeunes et les faire participer à la transformation socio-économique du pays.',
+            "Élargir l'accès des jeunes aux opportunités de leadership économique, social et civique, à travers des initiatives nationales.",
+            "Soutenir les initiatives d'autonomisation des jeunes qui existent déjà, en favorisant la synergie entre tous les acteurs.",
+        ],
+        'axes_officiels' => [
+            ['Gouvernance inclusive et participation des jeunes', 'Leadership, participation citoyenne et place des jeunes dans la gouvernance et la cohésion sociale.'],
+            ['Croissance inclusive et environnement', "Compétences, emploi, entrepreneuriat et solutions portées par les jeunes face aux défis de l'environnement."],
         ],
         'axes' => axes(),
         'mot' => ($mot['publie'] && trim((string) $mot['message']) !== '') ? $mot : null,
@@ -184,6 +195,20 @@ function newsletter(): void
     flash($erreur !== '' ? 'erreur' : 'succes', $erreur !== '' ? $erreur : $succes);
     $retour = strtok(adresse_retour(url('/')), '#');
     rediriger($retour . '#newsletter');
+}
+
+/** Lien « Se désabonner » des newsletters : vérifié par un jeton propre à l'adresse, sans connexion. */
+function newsletter_desabonner(): void
+{
+    require_once RACINE . '/app/newsletter.php';
+    $email = mb_strtolower(get('e'));
+    if ($email !== '' && jeton_desabonnement_valide($email, get('j'))) {
+        requete('UPDATE abonnes_newsletter SET actif = 0 WHERE email = ?', [$email]);
+        flash('succes', "C'est fait : $email ne recevra plus la newsletter de YouthConnekt Mali. Vous pouvez vous réabonner à tout moment, en bas de chaque page.");
+    } else {
+        flash('erreur', "Ce lien de désabonnement n'est pas valide. Écrivez-nous depuis la page Contact et nous vous retirerons de la liste.");
+    }
+    rediriger(url('/'));
 }
 
 /**

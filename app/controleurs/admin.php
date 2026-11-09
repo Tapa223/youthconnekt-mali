@@ -97,9 +97,10 @@ function tableau_de_bord(): void
     $actions = [];
     foreach ([['opportunites', 'Ajouter une opportunité', 'mallette'], ['actualites', 'Publier une actualité', 'journal'],
         ['initiatives', 'Ajouter une initiative', 'drapeau'], ['partenaires', 'Ajouter un partenaire', 'batiment'],
-        ['temoignages', 'Ajouter un témoignage', 'bulle']] as [$rub, $libelle, $icone]) {
+        ['newsletter', 'Rédiger une newsletter', 'lettre', '/gestion/newsletters/nouvelle']] as $act) {
+        [$rub, $libelle, $icone] = $act;
         if (peut($rub, 'modifier')) {
-            $actions[] = ['libelle' => $libelle, 'url' => url('/gestion/' . $rub . '/ajouter'), 'icone' => ICONES[$icone]];
+            $actions[] = ['libelle' => $libelle, 'url' => url($act[3] ?? '/gestion/' . $rub . '/ajouter'), 'icone' => ICONES[$icone]];
         }
     }
 
@@ -133,8 +134,26 @@ function tableau_de_bord(): void
         }
     }
 
+    // Qui sont les membres individuels : genre et tranches d'âge (renseignés à l'inscription)
+    $profil_membres = [];
+    try {
+        $tot = (int) valeur('SELECT COUNT(*) FROM profils_individuels');
+        if ($tot) {
+            $g = array_column(lignes("SELECT genre, COUNT(*) AS n FROM profils_individuels GROUP BY genre"), 'n', 'genre');
+            $ages = [];
+            foreach (TRANCHES_AGE as $cle => [$lib, $min, $max]) {
+                $ages[$cle] = [$lib, (int) valeur('SELECT COUNT(*) FROM profils_individuels WHERE TIMESTAMPDIFF(YEAR, date_naissance, CURDATE()) BETWEEN ? AND ?', [$min, $max])];
+            }
+            $profil_membres = ['total' => $tot, 'femmes' => (int) ($g['femme'] ?? 0), 'hommes' => (int) ($g['homme'] ?? 0), 'ages' => $ages,
+                'age_moyen' => valeur('SELECT ROUND(AVG(TIMESTAMPDIFF(YEAR, date_naissance, CURDATE()))) FROM profils_individuels WHERE date_naissance IS NOT NULL')];
+        }
+    } catch (Throwable $e) {
+        $profil_membres = [];
+    }
+
     vue_admin('admin/tableau_de_bord', [
         'titre_page' => 'Tableau de bord',
+        'profil_membres' => $profil_membres,
         'participation' => $participation,
         'contributeurs' => $contributeurs,
         'ariane' => [],

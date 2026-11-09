@@ -833,3 +833,53 @@ input[type=file]::file-selector-button {
   .ycm-actions-tem { gap: 5px; }
   .ycm-actions-tem .ycm-petit { min-height: 34px; padding: 0 10px; font-size: 12.5px; }
 }
+
+/* Tableau de bord : genre et âge des membres individuels */
+.ycm-profil-membres { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px 24px; align-items: start; }
+.ycm-profil-ligne { margin: 0 0 8px; font-size: 15px; }
+.ycm-profil-ligne strong { font-size: 20px; color: var(--ycm-vert); }
+.ycm-barre-genre { display: flex; height: 10px; overflow: hidden; border-radius: 999px; background: var(--ycm-ligne); }
+.ycm-barre-genre span:first-child { background: var(--ycm-orange); }
+.ycm-barre-genre span:last-child { background: var(--ycm-turquoise, #0FA3A3); }
+.ycm-profil-membres ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.ycm-profil-membres li a { display: flex; justify-content: space-between; gap: 8px; padding: 8px 12px; border-radius: 10px; background: var(--ycm-fond); color: var(--ycm-encre); font-size: 14px; text-decoration: none; }
+.ycm-profil-membres li a:hover { color: var(--ycm-orange); }
+.ycm-profil-membres li strong { color: var(--ycm-vert); }
+@media (max-width: 900px) { .ycm-profil-membres { grid-template-columns: 1fr; } }
+
+/* Newsletter */
+.ycm-newsletters { display: grid; gap: 12px; margin-top: 16px; }
+.ycm-newsletter { position: relative; padding: 16px 18px; background: #fff; border: 1px solid var(--ycm-ligne); border-radius: 16px; }
+.ycm-newsletter:hover { border-color: var(--ycm-orange); }
+.ycm-newsletter h2 { margin: 8px 0 2px; font-size: 18px; }
+.ycm-newsletter-lien { color: var(--ycm-vert); text-decoration: none; }
+.ycm-newsletter-lien::after { content: ""; position: absolute; inset: 0; }
+.ycm-newsletter-etat { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.ycm-newsletter .ycm-discret { margin: 0; font-size: 13px; }
+.ycm-nl-choix { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.ycm-nl-choix h3 { margin: 0 0 8px; font-size: 15px; color: var(--ycm-vert); }
+.ycm-nl-choix ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; max-height: 22rem; overflow-y: auto; }
+.ycm-nl-choix .ycm-case-ligne { align-items: flex-start; padding: 8px 10px; border: 1px solid var(--ycm-ligne); border-radius: 10px; font-weight: 600; font-size: 14px; }
+.ycm-nl-choix .ycm-case-ligne:has(input:checked) { border-color: var(--ycm-orange); background: var(--ycm-orange-clair, #fff4ef); }
+.ycm-nl-choix small { display: block; font-weight: 400; color: var(--ycm-texte); font-size: 12.5px; }
+.ycm-nl-cibles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.ycm-nl-cible { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 14px; border: 1.5px solid var(--ycm-ligne); border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; }
+.ycm-nl-cible:has(input:checked) { border-color: var(--ycm-orange); background: var(--ycm-orange-clair, #fff4ef); }
+.ycm-nl-cible input { accent-color: var(--ycm-orange); }
+.ycm-nl-communautes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 14px; margin-top: 12px; padding: 12px 14px; border-radius: 12px; background: var(--ycm-fond); }
+.ycm-nl-communautes[hidden] { display: none; }
+.ycm-nl-compte { margin: 14px 0 0; font-size: 15px; }
+.ycm-nl-compte strong { font-size: 22px; color: var(--ycm-vert); }
+.ycm-nl-compte small { display: block; margin-top: 4px; color: var(--ycm-texte); font-size: 13px; }
+.ycm-nl-envoi { display: grid; grid-template-columns: minmax(0, 1fr) 22rem; gap: 20px; align-items: start; margin-top: 24px; scroll-margin-top: 90px; }
+.ycm-nl-apercu { display: block; width: 100%; height: 640px; border: 1px solid var(--ycm-ligne); border-radius: 12px; background: #f3f5f4; }
+.ycm-nl-actions h2 { margin: 0 0 12px; font-size: 18px; color: var(--ycm-vert); }
+.ycm-nl-test { display: grid; gap: 6px; margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--ycm-ligne); font-size: 14px; font-weight: 700; }
+.ycm-nl-test div { display: flex; flex-wrap: wrap; gap: 8px; }
+.ycm-nl-test input { flex: 1 1 12rem; min-height: 42px; padding: 0 12px; border: 1px solid var(--ycm-ligne); border-radius: 8px; font-size: 14px; }
+.ycm-nl-bouton-envoi { width: 100%; min-height: 48px; }
+.ycm-nl-actions button:disabled { opacity: .5; cursor: not-allowed; }
+@media (max-width: 900px) {
+  .ycm-nl-choix, .ycm-nl-cibles, .ycm-nl-communautes, .ycm-nl-envoi { grid-template-columns: 1fr; }
+  .ycm-nl-apercu { height: 520px; }
+}

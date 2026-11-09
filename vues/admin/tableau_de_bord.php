@@ -27,6 +27,22 @@
     <a href="<?= e($lien) ?>" class="ycm-participation-chiffre"><strong><?= $nombre ?></strong><span><?= e($libelle) ?></span><small><?= e($detail) ?></small></a>
     <?php endforeach ?>
   </div>
+  <?php if ($profil_membres): $pm = $profil_membres; $non = $pm['total'] - $pm['femmes'] - $pm['hommes']; ?>
+  <h3 class="ycm-participation-titre">Qui sont les membres individuels</h3>
+  <div class="ycm-profil-membres">
+    <div>
+      <p class="ycm-profil-ligne"><strong><?= $pm['femmes'] ?></strong> femme<?= pluriel($pm['femmes']) ?> · <strong><?= $pm['hommes'] ?></strong> homme<?= pluriel($pm['hommes']) ?><?= $non > 0 ? ' · <span class="ycm-discret">' . $non . ' non renseigné' . pluriel($non) . '</span>' : '' ?></p>
+      <?php $pf = $pm['total'] ? round($pm['femmes'] * 100 / $pm['total']) : 0; $ph = $pm['total'] ? round($pm['hommes'] * 100 / $pm['total']) : 0; ?>
+      <div class="ycm-barre-genre" role="img" aria-label="<?= $pf ?> % de femmes, <?= $ph ?> % d'hommes"><span style="width:<?= $pf ?>%"></span><span style="width:<?= $ph ?>%"></span></div>
+      <?php if ($pm['age_moyen'] !== null): ?><p class="ycm-discret">Âge moyen : <?= (int) $pm['age_moyen'] ?> ans</p><?php endif ?>
+    </div>
+    <ul>
+      <?php foreach ($pm['ages'] as $cle => [$lib, $n]): ?>
+      <li><a href="<?= url('/gestion/membres', ['age' => $cle]) ?>"><span><?= e($lib) ?></span><strong><?= $n ?></strong></a></li>
+      <?php endforeach ?>
+    </ul>
+  </div>
+  <?php endif ?>
   <?php if ($contributeurs): ?>
   <h3 class="ycm-participation-titre">Les plus actifs</h3>
   <ul class="ycm-participation-liste">
@@ -96,21 +112,4 @@
   </div>
 </div>
 
-<?php if ($chiffres): ?>
-<section class="ycm-boite ycm-boite--pad" aria-labelledby="tdb-chiffres">
-  <div class="ycm-boite-tete ycm-boite-tete--nu">
-    <h2 id="tdb-chiffres">Chiffres clés affichés sur l'accueil</h2>
-    <a href="<?= url('/gestion/chiffres') ?>" class="ycm-lien">Gérer les chiffres</a>
-  </div>
-  <form method="post" action="<?= url('/gestion/chiffres-rapides') ?>" class="ycm-chiffres-form">
-    <?= csrf() ?>
-    <?php foreach ($chiffres as $c): ?><label><?= e(majuscule_initiale($c['libelle'])) ?><?= $c['publie'] ? '' : ' (non publié)' ?><input type="text" name="chiffre_<?= $c['id'] ?>" value="<?= e($c['valeur']) ?>" maxlength="30"></label><?php endforeach ?>
-    <button type="submit" class="ycm-bouton-vert">Enregistrer</button>
-  </form>
-</section>
-<?php elseif (peut('chiffres', 'modifier')): ?>
-<section class="ycm-boite ycm-boite--pad">
-  <div class="ycm-boite-tete ycm-boite-tete--nu"><h2>Chiffres clés affichés sur l'accueil</h2></div>
-  <p class="ycm-vide">Aucun chiffre saisi : la ligne de chiffres de l'accueil est masquée. <a class="ycm-lien" href="<?= url('/gestion/chiffres/ajouter') ?>">Ajouter un chiffre vérifié</a></p>
-</section>
-<?php endif ?>
+<?php /* Les chiffres clés se modifient à un seul endroit : Administration > Chiffres clés (avec l'aperçu de l'accueil). */ ?>

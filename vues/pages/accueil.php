@@ -93,7 +93,7 @@ $points = [
           <dt class="sr-only"><?= e($chiffre['libelle']) ?></dt>
           <dd class="text-2xl font-bold text-vert tabular-nums sm:text-4xl" data-compteur><?= e($chiffre['valeur']) ?></dd>
           <dd class="mt-2 h-[3px] w-6 rounded-full <?= cycle(['bg-orange', 'bg-turquoise', 'bg-bleu'], $k) ?>" aria-hidden="true"></dd>
-          <dd class="mt-2 text-xs leading-snug text-encre sm:text-sm"><?= e($chiffre['libelle']) ?></dd>
+          <dd class="mt-2 text-xs leading-snug text-encre sm:text-sm"><?= e(majuscule_initiale($chiffre['libelle'])) ?></dd>
         </div>
         <?php endforeach ?>
       </dl>

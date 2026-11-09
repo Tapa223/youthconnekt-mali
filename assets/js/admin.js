@@ -45,7 +45,6 @@
       cases.forEach(function (c) { c.addEventListener("change", maj); });
       form.addEventListener("submit", function (e) {
         var action = form.querySelector("select[name=action]");
-        if (action && /supprimer/.test(action.value) && !window.confirm("Supprimer définitivement les éléments sélectionnés ?")) e.preventDefault();
         // Rien de choisi : ni bouton d'action rapide, ni action dans la liste
         if (action && !action.value && !(e.submitter && e.submitter.name === "action")) { e.preventDefault(); action.focus(); }
         if (!form.querySelector("input[name='ids[]']:checked")) { e.preventDefault(); }
@@ -68,6 +67,38 @@
       document.querySelectorAll("details.ycm-plus[open]").forEach(function (d) { if (!d.contains(e.target)) d.open = false; });
     });
 
+    // ---- Newsletter : communautés selon la cible, nombre de destinataires en direct,
+    //      test et envoi bloqués tant que les changements ne sont pas enregistrés
+    document.querySelectorAll("form[data-newsletter]").forEach(function (form) {
+      var bloc = form.querySelector("[data-communautes]");
+      var nombre = form.querySelector("[data-nombre]");
+      var pluriel = form.querySelector("[data-pluriel]");
+      var compter = function () {
+        var cible = form.querySelector("[data-cible]:checked");
+        if (!cible) return;
+        if (bloc) bloc.hidden = cible.value !== "communautes";
+        var p = new URLSearchParams({ cible: cible.value });
+        form.querySelectorAll("[data-communaute]:checked").forEach(function (c) { p.append("communautes[]", c.value); });
+        fetch(form.getAttribute("data-compter") + "?" + p.toString(), { headers: { "X-Requested-With": "fetch" } })
+          .then(function (r) { return r.json(); })
+          .then(function (d) { if (nombre) { nombre.textContent = d.nombre; pluriel.textContent = d.nombre > 1 ? "s" : ""; } })
+          .catch(function () {});
+      };
+      form.querySelectorAll("[data-cible], [data-communaute]").forEach(function (c) { c.addEventListener("change", compter); });
+      var avertir = function () {
+        var zone = document.querySelector(".ycm-nl-actions");
+        if (!zone || zone.dataset.modifie) return;
+        zone.dataset.modifie = "1";
+        zone.querySelectorAll("button, input").forEach(function (b) { b.disabled = true; });
+        var note = document.createElement("p");
+        note.className = "ycm-alerte";
+        note.textContent = "Vous avez modifié la newsletter : enregistrez le brouillon pour mettre à jour l'aperçu, puis tester et envoyer.";
+        zone.insertBefore(note, zone.children[1] || null);
+      };
+      form.addEventListener("input", avertir);
+      form.addEventListener("change", avertir);
+    });
+
     // ---- Listes déroulantes qui s'appliquent dès qu'on choisit (profil d'un témoignage)
     document.querySelectorAll("select[data-envoi-auto]").forEach(function (select) {
       select.addEventListener("change", function () { var f = select.form; if (f) { if (f.requestSubmit) f.requestSubmit(); else f.submit(); } });
@@ -86,27 +117,50 @@
       boite.addEventListener("click", function (e) { if (e.target === boite) boite.close(); });
       return boite;
     }
-    document.querySelectorAll("form[data-confirmer]").forEach(function (form) {
-      form.addEventListener("submit", function (e) {
-        if (form.dataset.confirme === "1") return;
-        e.preventDefault();
-        var source = (e.submitter && e.submitter.hasAttribute("data-confirmer")) ? e.submitter : form;
-        var question = source.getAttribute("data-confirmer");
-        var soumettre = function () { form.dataset.confirme = "1"; if (form.requestSubmit) form.requestSubmit(e.submitter || undefined); else form.submit(); };
-        if (!window.HTMLDialogElement) { if (window.confirm(question)) soumettre(); return; }
-        var b = fenetre();
-        b.querySelector("[data-question]").textContent = question;
-        var texte = b.querySelector("[data-texte]");
-        texte.textContent = source.getAttribute("data-confirmer-texte") || "";
-        texte.hidden = !texte.textContent;
-        var oui = b.querySelector("[data-oui]");
-        oui.textContent = source.getAttribute("data-confirmer-oui") || "Confirmer";
-        oui.className = source.hasAttribute("data-confirmer-danger") ? "ycm-bouton-rouge" : "ycm-bouton-vert";
-        oui.onclick = function () { b.close(); soumettre(); };
-        b.showModal();
-        oui.focus();
-      });
-    });
+    // Une seule écoute pour toute la page : le bouton cliqué, puis le formulaire, portent la question ;
+    // les listes (actions groupées) construisent la leur. Rien ne part sans « Confirmer ».
+    document.addEventListener("submit", function (e) {
+      var form = e.target;
+      if (!(form instanceof HTMLFormElement) || form.dataset.confirme === "1") return;
+      var sub = e.submitter || null;
+      var q = null, texte = "", libelleOui = "Confirmer", danger = false;
+      var source = (sub && sub.hasAttribute("data-confirmer")) ? sub : (form.hasAttribute("data-confirmer") ? form : null);
+      if (source) {
+        q = source.getAttribute("data-confirmer");
+        texte = source.getAttribute("data-confirmer-texte") || "";
+        libelleOui = source.getAttribute("data-confirmer-oui") || "Confirmer";
+        danger = source.hasAttribute("data-confirmer-danger");
+      } else if (form.hasAttribute("data-liste")) {
+        var n = form.querySelectorAll("input[name='ids[]']:checked").length;
+        var choix = (sub && sub.name === "action") ? sub : form.querySelector("select[name=action]");
+        if (!n || !choix || !choix.value) return; // le contrôle de la liste s'en charge
+        var libelle = choix.tagName === "SELECT" ? choix.options[choix.selectedIndex].text : choix.textContent.trim();
+        q = libelle + " : " + n + " élément" + (n > 1 ? "s" : "") + " sélectionné" + (n > 1 ? "s" : "") + ". Confirmer ?";
+        libelleOui = libelle;
+        danger = /supprimer|retirer|désactiver|refuser|désabonner/i.test(choix.value + " " + libelle);
+        texte = /supprimer/i.test(choix.value) ? "Cette action est irréversible." : "";
+      }
+      if (!q) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      var soumettre = function () {
+        form.dataset.confirme = "1";
+        if (form.requestSubmit) form.requestSubmit(sub || undefined); else form.submit();
+        setTimeout(function () { delete form.dataset.confirme; }, 0);
+      };
+      if (!window.HTMLDialogElement) { if (window.confirm(q)) soumettre(); return; }
+      var b = fenetre();
+      b.querySelector("[data-question]").textContent = q;
+      var t = b.querySelector("[data-texte]");
+      t.textContent = texte;
+      t.hidden = !texte;
+      var oui = b.querySelector("[data-oui]");
+      oui.textContent = libelleOui;
+      oui.className = danger ? "ycm-bouton-rouge" : "ycm-bouton-vert";
+      oui.onclick = function () { b.close(); soumettre(); };
+      b.showModal();
+      oui.focus();
+    }, true);
 
     // ---- Barre d'outils au-dessus des zones de texte (mise en forme simple du site)
     document.querySelectorAll("textarea[data-barre]").forEach(function (zone) {

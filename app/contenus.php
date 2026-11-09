@@ -186,6 +186,32 @@ function types_communaute(): array
     return $types;
 }
 
+/** Âge en années à partir d'une date de naissance (AAAA-MM-JJ), ou null. */
+function age(?string $naissance): ?int
+{
+    if (!$naissance || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $naissance)) {
+        return null;
+    }
+    return (int) (new DateTimeImmutable($naissance))->diff(new DateTimeImmutable('today'))->y;
+}
+
+/** Vérifie une date de naissance saisie : renvoie un message d'erreur, ou '' si elle convient. */
+function erreur_naissance(string $naissance): string
+{
+    if ($naissance === '') {
+        return 'Indiquez votre date de naissance.';
+    }
+    $d = DateTimeImmutable::createFromFormat('!Y-m-d', $naissance);
+    if (!$d || $d->format('Y-m-d') !== $naissance) {
+        return "Cette date n'est pas valide.";
+    }
+    $a = age($naissance);
+    if ($a < 10 || $a > 100) {
+        return 'Vérifiez votre date de naissance.';
+    }
+    return '';
+}
+
 /** Délai de réponse aux demandes d'intégration : passé ce délai sans décision de l'équipe, la demande est acceptée. */
 const DELAI_ADHESION_HEURES = 24;
 

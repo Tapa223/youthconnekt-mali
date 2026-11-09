@@ -38,7 +38,7 @@ function inscription_formulaire(string $slug): void
     $organisation = $slug === 'organisation';
     $champs = $organisation
         ? ['nom_structure', 'type_structure', 'personne_contact', 'region', 'email', 'site_web']
-        : ['prenom', 'nom', 'categorie', 'region', 'email', 'telephone'];
+        : ['prenom', 'nom', 'genre', 'date_naissance', 'categorie', 'region', 'email', 'telephone'];
     $valeurs = array_fill_keys($champs, '') + ['region' => 'bamako', 'conditions' => '', 'newsletter' => ''];
     $erreurs = [];
 
@@ -63,6 +63,8 @@ function inscription_formulaire(string $slug): void
         } else {
             if ($valeurs['prenom'] === '') $erreurs['prenom'] = 'Indiquez votre prénom.';
             if ($valeurs['nom'] === '') $erreurs['nom'] = 'Indiquez votre nom.';
+            if (!isset(GENRES[$valeurs['genre']])) $erreurs['genre'] = 'Choisissez une réponse.';
+            if ($m = erreur_naissance($valeurs['date_naissance'])) $erreurs['date_naissance'] = $m;
             if (!isset(CATEGORIES_INDIVIDUELLES[$valeurs['categorie']])) $erreurs['categorie'] = 'Choisissez votre profil.';
         }
         if (!isset(REGIONS[$valeurs['region']])) $erreurs['region'] = 'Choisissez votre région.';
@@ -117,6 +119,8 @@ function inscription_formulaire(string $slug): void
                         'prenom' => mb_substr($valeurs['prenom'], 0, 80),
                         'nom' => mb_substr($valeurs['nom'], 0, 80),
                         'categorie' => $valeurs['categorie'],
+                        'genre' => $valeurs['genre'],
+                        'date_naissance' => $valeurs['date_naissance'],
                         'telephone' => mb_substr($valeurs['telephone'], 0, 30),
                     ]);
                 }

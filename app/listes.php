@@ -75,6 +75,20 @@ const COULEURS_HEX = [
     'rouge' => '#7C0D02',
 ];
 
+/** Genre d'un membre individuel (privé : sert aux statistiques et au tri) */
+const GENRES = [
+    'femme' => 'Femme',
+    'homme' => 'Homme',
+];
+
+/** Tranches d'âge des membres individuels : [libellé, âge minimum, âge maximum] */
+const TRANCHES_AGE = [
+    'moins18' => ['Moins de 18 ans', 0, 17],
+    '18_24' => ['18 à 24 ans', 18, 24],
+    '25_35' => ['25 à 35 ans', 25, 35],
+    'plus35' => ['Plus de 35 ans', 36, 200],
+];
+
 /** Famille d'un partenaire : deux blocs distincts dans la section Partenaires */
 const CATEGORIES_PARTENAIRE = [
     'institutionnel' => 'Partenaire institutionnel ou technique',
@@ -83,11 +97,10 @@ const CATEGORIES_PARTENAIRE = [
 
 /** Profil de la personne qui témoigne (tri des témoignages dans l'administration) */
 const PROFILS_TEMOIGNAGE = [
-    'jeune_femme' => 'Femme',
-    'jeune_homme' => 'Homme',
-    'organisation' => 'Organisation ou association',
-    'entreprise' => 'Entreprise',
-    'partenaire' => 'Partenaire ou institution',
+    'femme' => 'Femmes',
+    'homme' => 'Hommes',
+    'organisation' => 'Organisations et associations',
+    'entreprise' => 'Entreprises et startups',
 ];
 
 /** Liens qu'un membre peut ajouter à son profil : [libellé, tracé de l'icône] */
