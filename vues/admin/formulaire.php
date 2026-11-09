@@ -52,7 +52,14 @@ $groupe = fn ($g) => partiel('admin/_groupe', ['g' => $g, 'valeurs' => $valeurs,
       <?php foreach ($groupes as $g) if (!empty($g['cote'])) $groupe($g) ?>
       <?php if ($peut_modifier): ?>
       <div class="ycm-panneau-boutons">
+        <?php if (!$ajout && $r['decisions']): /* Propositions : valider ou non, en gardant les corrections */ ?>
+        <?php foreach ($r['decisions'] as $valeur_d => [$libelle_d, $classe_d, $question_d, $texte_d]): if (($ligne['statut'] ?? '') === $valeur_d) continue; ?>
+        <button type="submit" name="_decision" value="<?= e($valeur_d) ?>" class="<?= e($classe_d) ?>" data-confirmer="<?= e($question_d) ?>" data-confirmer-texte="<?= e($texte_d) ?>" data-confirmer-oui="<?= e($libelle_d) ?>"<?= $valeur_d === 'brouillon' ? ' data-confirmer-danger' : '' ?>><?= e($libelle_d) ?></button>
+        <?php endforeach ?>
+        <button type="submit" name="_enregistrer" class="ycm-bouton-contour">Enregistrer les corrections</button>
+        <?php else: ?>
         <button type="submit" name="_enregistrer" class="ycm-bouton-vert">Enregistrer</button>
+        <?php endif ?>
         <?php if (!$r['fiche_unique']): ?><a href="<?= url('/gestion/' . $r['slug']) ?>" class="ycm-bouton-gris">Annuler</a><?php endif ?>
         <?php if (!$ajout && $r['peut_supprimer'] && !$r['fiche_unique']): ?>
         <button type="submit" form="form-supprimer" class="ycm-lien-supprimer">Supprimer cet élément</button>

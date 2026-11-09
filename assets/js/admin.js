@@ -46,7 +46,9 @@
       form.addEventListener("submit", function (e) {
         var action = form.querySelector("select[name=action]");
         if (action && /supprimer/.test(action.value) && !window.confirm("Supprimer définitivement les éléments sélectionnés ?")) e.preventDefault();
-        if (action && !action.value) { e.preventDefault(); action.focus(); }
+        // Rien de choisi : ni bouton d'action rapide, ni action dans la liste
+        if (action && !action.value && !(e.submitter && e.submitter.name === "action")) { e.preventDefault(); action.focus(); }
+        if (!form.querySelector("input[name='ids[]']:checked")) { e.preventDefault(); }
       });
     });
 
@@ -88,17 +90,18 @@
       form.addEventListener("submit", function (e) {
         if (form.dataset.confirme === "1") return;
         e.preventDefault();
-        var question = form.getAttribute("data-confirmer");
+        var source = (e.submitter && e.submitter.hasAttribute("data-confirmer")) ? e.submitter : form;
+        var question = source.getAttribute("data-confirmer");
         var soumettre = function () { form.dataset.confirme = "1"; if (form.requestSubmit) form.requestSubmit(e.submitter || undefined); else form.submit(); };
         if (!window.HTMLDialogElement) { if (window.confirm(question)) soumettre(); return; }
         var b = fenetre();
         b.querySelector("[data-question]").textContent = question;
         var texte = b.querySelector("[data-texte]");
-        texte.textContent = form.getAttribute("data-confirmer-texte") || "";
+        texte.textContent = source.getAttribute("data-confirmer-texte") || "";
         texte.hidden = !texte.textContent;
         var oui = b.querySelector("[data-oui]");
-        oui.textContent = form.getAttribute("data-confirmer-oui") || "Confirmer";
-        oui.className = form.hasAttribute("data-confirmer-danger") ? "ycm-bouton-rouge" : "ycm-bouton-vert";
+        oui.textContent = source.getAttribute("data-confirmer-oui") || "Confirmer";
+        oui.className = source.hasAttribute("data-confirmer-danger") ? "ycm-bouton-rouge" : "ycm-bouton-vert";
         oui.onclick = function () { b.close(); soumettre(); };
         b.showModal();
         oui.focus();

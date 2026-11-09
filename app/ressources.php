@@ -94,7 +94,7 @@ function ressource(string $slug): ?array
             'recherche' => [], 'actions' => [], 'export' => [], 'par_page' => 25, 'peut_ajouter' => true,
             'peut_supprimer' => true, 'groupes' => [], 'vue_liste' => 'admin/liste', 'url_voir' => null,
             'aide_cote' => '', 'fiche_unique' => false, 'galerie' => null, 'liaison' => null,
-            'avant' => null, 'apres' => null, 'condition' => '1=1', 'parent' => null, 'menu_liste' => [], 'ajout_discret' => false, 'sans_fiche' => false, 'champs_select' => 't.*', 'depuis' => 'FROM `' . $r['table'] . '` t',
+            'avant' => null, 'apres' => null, 'condition' => '1=1', 'parent' => null, 'menu_liste' => [], 'ajout_discret' => false, 'sans_fiche' => false, 'decisions' => [], 'vue_fiche' => null, 'champs_select' => 't.*', 'depuis' => 'FROM `' . $r['table'] . '` t',
             'titre_ajout' => $r['libelle_ajout'] ?? 'Ajouter', 'nom_element' => fn ($l) => (string) ($l['titre'] ?? $l['nom'] ?? ''),
         ];
     }
@@ -287,7 +287,7 @@ function ressources(): array
                 ['Masqués', 't.publie = 0'],
             ],
             'filtres' => [['profil', 'Tous les profils', PROFILS_TEMOIGNAGE, 't.categorie']],
-            'peut_ajouter' => false, 'sans_fiche' => true,
+            'peut_ajouter' => false, 'vue_fiche' => 'admin/fiche_temoignage',
             'actions' => array_merge([
                 'afficher' => ['Afficher sur le site', fn ($ids) => requete('UPDATE temoignages SET publie = 1 WHERE id IN (' . marqueurs($ids) . ')', $ids)->rowCount() . ' témoignage(s) affiché(s).'],
                 'retirer' => ['Retirer du site', fn ($ids) => requete('UPDATE temoignages SET publie = 0, a_la_une = 0 WHERE id IN (' . marqueurs($ids) . ')', $ids)->rowCount() . ' témoignage(s) retiré(s).'],
@@ -777,8 +777,8 @@ function ressources(): array
     $liste['opportunites']['description'] = "Les opportunités créées par l'équipe. Celles des membres sont dans « Propositions des membres ».";
     $groupes = array_values(array_filter($opp['groupes'], fn ($g) => !in_array($g[0], ['Publication', 'Origine'], true)));
     array_unshift($groupes, ['Membre', 'cote' => true, 'champs' => $opp['groupes'][array_key_last($opp['groupes'])]['champs']]);
-    $groupes[] = ['Décision', 'cote' => true, 'description' => "Relisez et corrigez si besoin, puis choisissez « Validée et publiée ».", 'champs' => [
-        'statut' => ['type' => 'select', 'libelle' => 'Décision', 'options' => ['propose' => 'À valider', 'publie' => 'Validée et publiée', 'brouillon' => 'Non retenue'], 'defaut' => 'propose'],
+    $groupes[] = ['Décision', 'cote' => true, 'description' => "Relisez la proposition, améliorez-la si besoin, puis validez-la ou non avec les boutons ci-dessous.", 'champs' => [
+        'etat' => ['type' => 'lecture', 'libelle' => 'État actuel', 'html' => fn ($l) => ['propose' => badge('À valider', 'orange'), 'publie' => badge('Publiée sur le site', 'vert'), 'brouillon' => badge('Non retenue', 'gris')][$l['statut'] ?? 'propose'] ?? ''],
         'publie_le' => ['type' => 'datetime', 'libelle' => 'Date de publication', 'requis' => false, 'aide' => 'Vide : maintenant.', 'defaut' => 'maintenant'],
         'slug' => ['type' => 'slug', 'libelle' => 'Adresse (URL)', 'requis' => false, 'max' => 200],
     ]];
@@ -786,6 +786,11 @@ function ressources(): array
         'titre' => 'Propositions des membres', 'rubrique' => 'opportunites', 'condition' => 't.propose_par IS NOT NULL',
         'description' => "Les opportunités envoyées par les membres depuis leur espace. Relisez-les, corrigez-les si besoin, puis publiez-les.",
         'peut_ajouter' => false, 'libelle_tous' => 'Toutes', 'ordre' => "t.statut = 'propose' DESC, t.cree_le DESC",
+        // Boutons de la fiche : chacun enregistre aussi les corrections faites
+        'decisions' => [
+            'publie' => ['Valider et publier', 'ycm-bouton-vert', 'Valider et publier cette opportunité ?', "Vos corrections sont enregistrées et l'opportunité apparaît sur le site. Le membre en est prévenu.", 'Proposition validée et publiée sur le site.'],
+            'brouillon' => ['Ne pas retenir', 'ycm-bouton-rouge-contour', 'Ne pas retenir cette proposition ?', "Elle ne sera pas publiée. Vous pourrez revenir sur cette décision plus tard.", 'Proposition non retenue.'],
+        ],
         'onglets' => [
             ['À valider', "t.statut = 'propose'"],
             ['Publiées', "t.statut = 'publie'"],

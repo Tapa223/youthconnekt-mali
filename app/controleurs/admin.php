@@ -493,6 +493,16 @@ function formulaire(string $slug, ?int $id = null): void
     }
     unset($g);
 
+    // Fiche en lecture seule (témoignages : on consulte et on décide, on ne réécrit pas)
+    if ($r['vue_fiche'] && $ligne) {
+        vue_admin($r['vue_fiche'], [
+            'titre_page' => couper(($r['nom_element'])($ligne), 70),
+            'ariane' => [[$r['titre'], url('/gestion/' . $slug)], [couper(($r['nom_element'])($ligne), 40), null]],
+            'r' => $r, 'ligne' => $ligne, 'peut_modifier' => $peut_modifier,
+        ]);
+        return;
+    }
+
     $groupes = groupes_de($r, $ligne);
     $champs = champs_de($groupes);
     $valeurs = [];
@@ -513,6 +523,14 @@ function formulaire(string $slug, ?int $id = null): void
             page_erreur(403);
         }
         [$donnees, $valeurs, $erreurs, $images] = lire_formulaire($champs, $valeurs, $ligne);
+        // Décision prise depuis la fiche (propositions) : enregistrée avec les corrections
+        $decision = $ligne && isset($r['decisions'][post('_decision')]) ? post('_decision') : '';
+        if ($decision !== '') {
+            $donnees['statut'] = $decision;
+            if ($decision === 'publie' && empty($donnees['publie_le']) && empty($ligne['publie_le'])) {
+                $donnees['publie_le'] = maintenant();
+            }
+        }
         if (!$erreurs && $r['avant']) {
             try {
                 ($r['avant'])($donnees, $ligne);
@@ -568,7 +586,7 @@ function formulaire(string $slug, ?int $id = null): void
                     supprimer_image($ligne[$nom]);
                 }
             }
-            flash('succes', $ligne ? 'Modifications enregistrées.' : 'Élément ajouté.');
+            flash('succes', $decision !== '' ? $r['decisions'][$decision][4] : ($ligne ? 'Modifications enregistrées.' : 'Élément ajouté.'));
             if ($r['fiche_unique'] || isset($_POST['_continuer'])) {
                 rediriger(url('/gestion/' . $slug . '/' . $id));
             }
