@@ -11,10 +11,10 @@
 
 <?php /* Filtres : restent visibles en haut de l'écran pendant qu'on fait défiler les initiatives */ ?>
 <div class="sticky top-16 z-30 border-b border-ligne/70 bg-gris/95 backdrop-blur">
-  <nav class="conteneur flex gap-1.5 py-2.5 sm:flex-wrap sm:gap-2 sm:py-3" aria-label="Filtrer par axe d'action">
-    <a href="<?= url('/initiatives') ?>" class="survol-orange inline-flex min-h-9 min-w-0 flex-auto items-center justify-center gap-1.5 rounded-full border-2 px-2 text-[12.5px] font-bold sm:min-h-10 sm:flex-none sm:px-4 sm:text-sm transition-colors <?= !$axe_actif ? 'border-orange bg-orange text-white' : 'border-vert bg-white text-vert hover:bg-vert-clair' ?>" <?= !$axe_actif ? 'aria-current="true"' : '' ?>>Toutes <span class="hidden opacity-70 sm:inline">(<?= $nombres[''] ?>)</span></a>
+  <nav class="conteneur flex gap-1.5 overflow-x-auto py-2.5 [scrollbar-width:none] sm:flex-wrap sm:gap-2 sm:py-3" aria-label="Filtrer par axe d'intervention">
+    <a href="<?= url('/initiatives') ?>" class="survol-orange inline-flex min-h-9 shrink-0 items-center whitespace-nowrap justify-center gap-1.5 rounded-full border-2 px-2 text-[12.5px] font-bold sm:min-h-10 sm:flex-none sm:px-4 sm:text-sm transition-colors <?= !$axe_actif ? 'border-orange bg-orange text-white' : 'border-vert bg-white text-vert hover:bg-vert-clair' ?>" <?= !$axe_actif ? 'aria-current="true"' : '' ?>>Toutes <span class="hidden opacity-70 sm:inline">(<?= $nombres[''] ?>)</span></a>
     <?php foreach ($axes as $axe): $actif = $axe_actif === $axe['slug']; ?>
-    <a href="<?= url('/initiatives', ['axe' => $axe['slug']]) ?>" class="survol-orange inline-flex min-h-9 min-w-0 flex-auto items-center justify-center gap-1.5 rounded-full border-2 px-2 text-[12.5px] font-bold sm:min-h-10 sm:flex-none sm:px-4 sm:text-sm transition-colors <?= $actif ? 'border-orange bg-orange text-white' : bordure($axe['couleur']) . ' bg-white text-vert hover:bg-gris' ?>" <?= $actif ? 'aria-current="true"' : '' ?>><?= e($axe['nom']) ?> <span class="hidden opacity-70 sm:inline">(<?= $nombres[$axe['slug']] ?? 0 ?>)</span></a>
+    <a href="<?= url('/initiatives', ['axe' => $axe['slug']]) ?>" class="survol-orange inline-flex min-h-9 shrink-0 items-center whitespace-nowrap justify-center gap-1.5 rounded-full border-2 px-2 text-[12.5px] font-bold sm:min-h-10 sm:flex-none sm:px-4 sm:text-sm transition-colors <?= $actif ? 'border-orange bg-orange text-white' : bordure($axe['couleur']) . ' bg-white text-vert hover:bg-gris' ?>" <?= $actif ? 'aria-current="true"' : '' ?>><?= e(nom_court_axe($axe['nom'])) ?> <span class="hidden opacity-70 sm:inline">(<?= $nombres[$axe['slug']] ?? 0 ?>)</span></a>
     <?php endforeach ?>
   </nav>
 </div>

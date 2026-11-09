@@ -50,6 +50,17 @@ function mot_ministre(): array
     return ligne('SELECT * FROM mot_ministre WHERE id = 1') ?? ['nom' => '', 'titre_officiel' => '', 'photo' => '', 'extrait' => '', 'message' => '', 'publie' => 0];
 }
 
+/** Nom court d'un axe, pour les étiquettes et les filtres (le nom complet reste sur les pages). */
+function nom_court_axe(?string $nom): string
+{
+    $nom = (string) $nom;
+    $courts = [
+        'Gouvernance inclusive et participation des jeunes' => 'Gouvernance et participation',
+        'Croissance inclusive et environnement' => 'Croissance et environnement',
+    ];
+    return $courts[$nom] ?? $nom;
+}
+
 function axes(): array
 {
     return lignes('SELECT * FROM axes ORDER BY ordre, nom');

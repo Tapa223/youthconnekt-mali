@@ -115,30 +115,14 @@
 
 <?php /* Objectifs et axes officiels du chapitre (alignés sur la politique nationale de la jeunesse et le cadre de coopération avec les Nations unies) */ ?>
 <section id="objectifs" class="scroll-mt-24 bg-gris py-12 sm:py-20" aria-labelledby="titre-objectifs">
-  <div class="conteneur grid gap-8 lg:grid-cols-[minmax(0,6fr)_minmax(0,6fr)] lg:gap-14">
-    <div>
-      <p class="surtitre surtitre-trait">Objectifs</p>
-      <h2 id="titre-objectifs" class="titre-section">Ce que le chapitre veut accomplir</h2>
-      <ol class="mt-5 space-y-2.5 sm:mt-7 sm:space-y-3">
-        <?php foreach ($objectifs as $k => $objectif): ?>
-        <li class="flex gap-3 rounded-xl bg-white p-3.5 sm:gap-4 sm:rounded-2xl sm:p-5"><span class="grid size-7 shrink-0 place-items-center rounded-full text-sm font-bold text-white sm:size-9 sm:text-base <?= cycle(['bg-orange', 'bg-turquoise', 'bg-bleu'], $k) ?>"><?= $k + 1 ?></span><span class="text-[15px] leading-relaxed text-encre sm:text-base"><?= e($objectif) ?></span></li>
-        <?php endforeach ?>
-      </ol>
-    </div>
-    <div>
-      <p class="surtitre surtitre-trait">Axes d'intervention</p>
-      <h2 class="titre-section">Deux axes pour agir</h2>
-      <ul class="mt-5 grid gap-3 sm:mt-7 sm:gap-4">
-        <?php foreach ($axes_officiels as $k => [$titre_axe, $texte_axe]): ?>
-        <li class="rounded-2xl border-l-[6px] bg-white p-4 shadow-sm sm:p-6 <?= $k ? 'border-orange' : 'border-vert' ?>">
-          <p class="text-xs font-bold tracking-[.14em] text-texte uppercase">Axe <?= $k + 1 ?></p>
-          <h3 class="mt-1 text-lg leading-snug font-bold text-vert sm:text-xl"><?= e($titre_axe) ?></h3>
-          <p class="mt-1.5 text-sm leading-relaxed sm:text-[15px]"><?= e($texte_axe) ?></p>
-        </li>
-        <?php endforeach ?>
-      </ul>
-      <p class="mt-4 text-sm leading-relaxed text-texte">Ces axes sont alignés sur la politique nationale de la jeunesse et sur le cadre de coopération entre le Gouvernement du Mali et les Nations unies.</p>
-    </div>
+  <div class="conteneur">
+    <p class="surtitre surtitre-trait">Objectifs</p>
+    <h2 id="titre-objectifs" class="titre-section">Ce que le chapitre veut accomplir</h2>
+    <ol class="mt-5 grid gap-2.5 sm:mt-8 md:grid-cols-3 md:gap-5">
+      <?php foreach ($objectifs as $k => $objectif): ?>
+      <li class="flex gap-3 rounded-xl bg-white p-3.5 sm:gap-4 sm:rounded-2xl sm:p-6 md:flex-col"><span class="grid size-8 shrink-0 place-items-center rounded-full text-sm font-bold text-white sm:size-10 sm:text-base <?= cycle(['bg-orange', 'bg-turquoise', 'bg-bleu'], $k) ?>"><?= $k + 1 ?></span><span class="text-[15px] leading-relaxed text-encre sm:text-base"><?= e($objectif) ?></span></li>
+      <?php endforeach ?>
+    </ol>
   </div>
 </section>
 
@@ -165,8 +149,8 @@
 <?php if ($axes): ?>
 <section id="axes" class="scroll-mt-24 bg-gris py-12 sm:py-20">
   <div class="conteneur">
-    <p class="surtitre surtitre-trait">Nos façons d'agir</p>
-    <h2 class="titre-section"><?= count($axes) === 3 ? "Trois façons d'agir avec les jeunes" : "Nos façons d'agir avec les jeunes" ?></h2>
+    <p class="surtitre surtitre-trait">Axes d'intervention</p>
+    <h2 class="titre-section"><?= [1 => 'Un axe pour agir', 2 => 'Deux axes pour agir', 3 => 'Trois axes pour agir'][count($axes)] ?? 'Nos axes pour agir' ?></h2>
     <div class="mt-5 space-y-2.5 md:hidden">
       <?php foreach ($axes as $k => $axe): ?>
       <div class="flex gap-3 rounded-2xl bg-white p-2.5 shadow-sm">
@@ -174,7 +158,7 @@
           <span class="absolute inset-0"><?php partiel('partials/image_axe', ['axe' => $axe]) ?></span>
           <span class="absolute top-1.5 left-1.5 grid size-6 place-items-center rounded-full bg-white/90 text-[11px] font-bold text-vert"><?= sprintf('%02d', $k + 1) ?></span>
         </span>
-        <span class="min-w-0 py-1"><strong class="block text-lg text-vert"><?= e($axe['nom']) ?></strong><span class="mt-0.5 block text-sm leading-snug"><?= e($axe['description']) ?></span></span>
+        <span class="min-w-0 py-1"><strong class="block text-base leading-snug text-vert"><?= e($axe['nom']) ?></strong><span class="mt-1 block text-sm leading-snug"><?= e($axe['description']) ?></span></span>
       </div>
       <?php endforeach ?>
     </div>
@@ -187,7 +171,8 @@
           <?php if (!$axe['image']) partiel('partials/mention_photo', ['texte' => 'Photo provisoire', 'position' => 'right-3 top-3']) ?>
         </div>
         <div class="md:px-4">
-          <h3 class="text-3xl font-bold sm:text-4xl"><?= e($axe['nom']) ?></h3>
+          <p class="text-sm font-bold tracking-[.14em] text-texte uppercase">Axe <?= $k + 1 ?></p>
+          <h3 class="mt-1 text-2xl leading-tight font-bold sm:text-3xl"><?= e($axe['nom']) ?></h3>
           <p class="mt-3 text-base leading-relaxed sm:text-lg"><?= e($axe['description']) ?></p>
           <?php if ($elements): ?>
           <ul class="mt-4 space-y-2">
@@ -198,6 +183,7 @@
       </article>
       <?php endforeach ?>
     </div>
+    <p class="mt-6 text-sm leading-relaxed text-texte md:mt-10">Ces axes sont alignés sur la politique nationale de la jeunesse et sur le cadre de coopération entre le Gouvernement du Mali et les Nations unies.</p>
   </div>
 </section>
 <?php endif ?>
@@ -260,7 +246,7 @@
       </div>
       <div class="rounded-2xl bg-white p-4 text-encre sm:p-6">
         <h3 class="text-lg font-bold text-vert sm:text-xl">Le Forum YouthConnekt Sahel</h3>
-        <p class="mt-1.5 text-sm leading-relaxed sm:text-[15px]">La plateforme des jeunes du Sahel pour la paix et la prospérité : Dakar en 2021, N'Djamena en 2025, Niamey en août 2026. Le Mali a pris part à chaque édition.</p>
+        <p class="mt-1.5 text-sm leading-relaxed sm:text-[15px]">La plateforme des jeunes du Sahel pour la paix et la prospérité : Dakar en 2021, N'Djamena en 2025, Niamey en août 2026. Le Mali a activement pris part aux éditions de Dakar et de N'Djamena.</p>
       </div>
     </div>
   </div>

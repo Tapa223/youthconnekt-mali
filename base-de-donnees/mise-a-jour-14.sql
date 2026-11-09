@@ -46,7 +46,7 @@ Renforcement des capacités, réseautage, innovation et plaidoyer : le Sommet ac
 Après Dakar en 2021 (« Connecter les jeunes du Sahel pour la paix et la prospérité ») et N''Djamena en 2025 (« Jeunesse sahélienne et Souveraineté »), la 3e édition s''est tenue à Niamey, au Niger, du 10 au 12 août 2026.
 
 ## Une édition charnière
-Cette édition a posé les bases de la gouvernance du Forum : constitution d''un comité de pilotage réunissant les ministres en charge de la jeunesse des pays du Sahel, et validation de la Charte du Forum. Le Mali a pris part à chacune des éditions.',
+Cette édition a posé les bases de la gouvernance du Forum : constitution d''un comité de pilotage réunissant les ministres en charge de la jeunesse des pays du Sahel, et validation de la Charte du Forum. Le Mali a activement pris part aux éditions de Dakar et de N''Djamena.',
     'Niamey, Niger', 'publie', '2026-08-10', 0, NOW() - INTERVAL 1 DAY, '', NOW(), NOW()
   UNION ALL
   SELECT 'Le Mali au Sommet YouthConnekt Africa 2024', 'mali-sommet-youthconnekt-africa-2024', 'actualite',

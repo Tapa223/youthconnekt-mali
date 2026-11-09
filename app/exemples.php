@@ -9,7 +9,7 @@
 declare(strict_types=1);
 
 const EXEMPLES_INITIATIVES = [
-    ['slug' => 'bootcamp-jeunes-entrepreneurs', 'titre' => 'Bootcamp Jeunes Entrepreneurs', 'axe' => 'accompagner', 'photo' => 'stand',
+    ['slug' => 'bootcamp-jeunes-entrepreneurs', 'titre' => 'Bootcamp Jeunes Entrepreneurs', 'axe' => 'croissance-environnement', 'photo' => 'stand',
      'resume' => 'Trois jours pour transformer une idée en projet, avec des mentors, des ateliers pratiques et une présentation finale devant un jury.',
      'contenu' => "Beaucoup de jeunes ont une idée de projet mais ne savent pas par où commencer. Le Bootcamp Jeunes Entrepreneurs leur donne trois jours pour passer de l'idée à un projet solide, accompagnés par des entrepreneurs qui sont passés par là.\n\nLes participants travaillent en petites équipes, alternent ateliers et séances de mentorat, puis présentent leur projet devant un jury composé de partenaires du chapitre.",
      'etat' => 'terminee', 'date_libelle' => '12 au 14 mars 2026', 'lieu' => 'Bamako', 'participants' => '60 jeunes', 'format' => 'Présentiel',
@@ -18,19 +18,19 @@ const EXEMPLES_INITIATIVES = [
      'chiffres' => "60 | jeunes accompagnés\n12 | mentors mobilisés\n15 | projets présentés",
      'citation' => "J'y suis arrivée avec une idée, je suis repartie avec un projet et des mentors.", 'citation_auteur' => 'Une participante',
      'galerie' => ['salle-bleue', 'intervenant', 'panel', 'arena'], 'une' => 1],
-    ['slug' => 'caravane-de-la-citoyennete', 'titre' => 'Caravane de la citoyenneté', 'axe' => 'engager', 'photo' => 'panel',
+    ['slug' => 'caravane-de-la-citoyennete', 'titre' => 'Caravane de la citoyenneté', 'axe' => 'gouvernance-participation', 'photo' => 'panel',
      'resume' => 'À la rencontre des jeunes dans les régions pour parler engagement.', 'contenu' => 'La caravane va à la rencontre des jeunes dans les régions pour parler engagement citoyen.',
      'etat' => 'terminee', 'date_libelle' => 'Janvier 2026', 'lieu' => 'Ségou, Mopti'],
-    ['slug' => 'prix-des-jeunes-innovateurs', 'titre' => 'Prix des jeunes innovateurs', 'axe' => 'valoriser', 'photo' => 'arena',
+    ['slug' => 'prix-des-jeunes-innovateurs', 'titre' => 'Prix des jeunes innovateurs', 'axe' => 'croissance-environnement', 'photo' => 'arena',
      'resume' => 'Récompenser les projets qui font bouger le pays.', 'contenu' => 'Un prix pour mettre en lumière les projets innovants portés par des jeunes.',
      'etat' => 'terminee', 'date_libelle' => 'Décembre 2025', 'lieu' => 'Bamako'],
-    ['slug' => 'atelier-leadership-des-jeunes-femmes', 'titre' => 'Atelier leadership des jeunes femmes', 'axe' => 'accompagner', 'photo' => 'intervenant',
+    ['slug' => 'atelier-leadership-des-jeunes-femmes', 'titre' => 'Atelier leadership des jeunes femmes', 'axe' => 'croissance-environnement', 'photo' => 'intervenant',
      'resume' => 'Prise de parole, confiance et réseau pour les jeunes femmes.', 'contenu' => 'Un atelier pour renforcer la prise de parole, la confiance et le réseau des jeunes femmes.',
      'etat' => 'terminee', 'date_libelle' => 'Novembre 2025', 'lieu' => 'Bamako'],
-    ['slug' => 'dialogue-jeunes-et-decideurs', 'titre' => 'Dialogue jeunes et décideurs', 'axe' => 'engager', 'photo' => 'ceremonie',
+    ['slug' => 'dialogue-jeunes-et-decideurs', 'titre' => 'Dialogue jeunes et décideurs', 'axe' => 'gouvernance-participation', 'photo' => 'ceremonie',
      'resume' => "Une journée d'échanges entre jeunes et institutions.", 'contenu' => "Une journée d'échanges directs entre jeunes et institutions.",
      'etat' => 'terminee', 'date_libelle' => 'Octobre 2025', 'lieu' => 'Bamako'],
-    ['slug' => 'vitrine-des-talents', 'titre' => 'Vitrine des talents', 'axe' => 'valoriser', 'photo' => 'salle-bleue',
+    ['slug' => 'vitrine-des-talents', 'titre' => 'Vitrine des talents', 'axe' => 'croissance-environnement', 'photo' => 'salle-bleue',
      'resume' => 'Mettre en lumière les jeunes créateurs et artisans.', 'contenu' => 'Une vitrine pour mettre en lumière les jeunes créateurs et artisans.',
      'etat' => 'terminee', 'date_libelle' => 'Septembre 2025', 'lieu' => 'Sikasso'],
 ];

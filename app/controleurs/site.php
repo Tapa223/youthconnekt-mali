@@ -72,10 +72,6 @@ function a_propos(): void
             "Élargir l'accès des jeunes aux opportunités de leadership économique, social et civique, à travers des initiatives nationales.",
             "Soutenir les initiatives d'autonomisation des jeunes qui existent déjà, en favorisant la synergie entre tous les acteurs.",
         ],
-        'axes_officiels' => [
-            ['Gouvernance inclusive et participation des jeunes', 'Leadership, participation citoyenne et place des jeunes dans la gouvernance et la cohésion sociale.'],
-            ['Croissance inclusive et environnement', "Compétences, emploi, entrepreneuriat et solutions portées par les jeunes face aux défis de l'environnement."],
-        ],
         'axes' => axes(),
         'mot' => ($mot['publie'] && trim((string) $mot['message']) !== '') ? $mot : null,
         'reseau' => [

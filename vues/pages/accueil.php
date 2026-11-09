@@ -118,9 +118,9 @@ $points = [
 
   <?php if ($axes): ?>
   <div class="conteneur relative mt-14 sm:mt-20 lg:mt-28">
-    <p class="surtitre">Nos axes d'action</p>
+    <p class="surtitre">Nos axes d'intervention</p>
     <h2 class="titre-section">Ce que fait le chapitre</h2>
-    <ul class="mt-4 grid grid-cols-3 gap-2 sm:mt-8 sm:gap-5">
+    <ul class="mt-4 grid gap-2 sm:mt-8 sm:gap-5 <?= count($axes) === 2 ? 'grid-cols-2 lg:mx-auto lg:max-w-5xl' : 'grid-cols-3' ?>">
       <?php foreach ($axes as $k => $axe): ?>
       <li class="carte survol-leve survol-zoom survol-orange relative flex flex-col rounded-[14px] border-[1.5px] sm:rounded-2xl sm:border-2">
         <div class="relative h-24 border-b-4 sm:aspect-[16/8.5] sm:h-auto <?= bordure($axe['couleur']) ?>">
@@ -162,7 +162,7 @@ $points = [
           </div>
           <div class="absolute inset-0 bg-gradient-to-t from-vert via-vert/55 to-transparent"></div>
           <div class="absolute inset-x-0 bottom-0 p-4 sm:p-6">
-            <span class="etiquette bg-white text-vert <?= !$premiere ? 'max-lg:bg-transparent max-lg:p-0 max-lg:text-white/90' : '' ?> <?= $initiative['axe_nom'] ? '' : 'invisible' ?>"><?= e($initiative['axe_nom'] ?: 'Initiative') ?></span>
+            <span class="etiquette bg-white text-vert <?= !$premiere ? 'max-lg:bg-transparent max-lg:p-0 max-lg:text-white/90' : '' ?> <?= $initiative['axe_nom'] ? '' : 'invisible' ?>"><?= e(nom_court_axe($initiative['axe_nom']) ?: 'Initiative') ?></span>
             <h3 class="mt-2 line-clamp-2 text-base leading-tight font-bold text-white sm:text-2xl lg:min-h-[2.5em]"><?= e($initiative['titre']) ?></h3>
             <p class="mt-1.5 hidden text-[15px] leading-snug text-white/90 sm:line-clamp-3 lg:min-h-[4.125em] <?= !$premiere ? 'max-lg:hidden' : '' ?>"><?= e($initiative['resume']) ?></p>
           </div>
