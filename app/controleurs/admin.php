@@ -308,7 +308,7 @@ function condition_recherche(array $r, string $q): array
 
 function options_filtre($options): array
 {
-    return is_string($options) ? $options() : $options;
+    return is_string($options) || $options instanceof Closure ? $options() : $options;
 }
 
 function liste(string $slug): void

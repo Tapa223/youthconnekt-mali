@@ -32,6 +32,7 @@ const MENU_ADMIN = [
         ['Propositions des membres', 'propositions', 'bulle', 'opportunites'],
         ['Actualités et événements', 'actualites', 'journal', 'actualites'],
         ['Initiatives', 'initiatives', 'drapeau', 'initiatives'],
+        ['Participations', 'participations', 'groupe', 'initiatives'],
         ['Témoignages', 'temoignages', 'bulle', 'temoignages'],
         ['Partenaires', 'partenaires', 'batiment', 'partenaires'],
     ]],
@@ -47,7 +48,7 @@ const MENU_ADMIN = [
     ['Site', [
         ['Chiffres clés', 'chiffres', 'graphique', 'chiffres'],
         ['Mot du ministre', 'ministre', 'coeur', 'ministre'],
-        ["Axes d'action", 'axes', 'cible', 'axes'],
+        ["Axes d'intervention", 'axes', 'cible', 'axes'],
         ['Paramètres', 'parametres', 'reglage', 'parametres'],
     ]],
     ['Accès', [
@@ -64,6 +65,10 @@ function menu_admin(): array
     }
     if (peut('opportunites')) {
         $pastilles['propositions'] = (int) valeur("SELECT COUNT(*) FROM opportunites WHERE statut = 'propose'");
+        try {
+            $pastilles['participations'] = (int) valeur("SELECT COUNT(*) FROM participations WHERE statut = 'en_attente'");
+        } catch (Throwable $e) {
+        }
     }
     if (peut('temoignages')) {
         try {

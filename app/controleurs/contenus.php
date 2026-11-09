@@ -41,7 +41,12 @@ function initiative(string $slug): void
     if (!$i) {
         page_erreur(404);
     }
+    $roles = roles_initiative((int) $i['id']);
+    $u = utilisateur();
     afficher(vue('pages/initiative', [
+        'roles' => $roles,
+        'ouvertes' => participations_ouvertes($i, $roles),
+        'ma_participation' => $u ? ligne('SELECT p.*, COALESCE(r.nom, p.role_nom) AS role_libelle FROM participations p LEFT JOIN initiative_roles r ON r.id = p.role_id WHERE p.initiative_id = ? AND p.utilisateur_id = ?', [$i['id'], $u['id']]) : null,
         'titre' => $i['titre'] . ' | YouthConnekt Mali',
         'description' => $i['resume'],
         'i' => $i,

@@ -6,6 +6,8 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/participations.php';
+
 // Condition « publié » : statut publié et date de publication atteinte
 const PUBLIE = "statut = 'publie' AND publie_le <= NOW()";
 
@@ -342,6 +344,15 @@ function notifications_membre(array $u): array
     }
     foreach (lignes("SELECT titre, slug, publie_le FROM opportunites WHERE propose_par = ? AND statut = 'publie' AND publie_le >= ? AND publie_le <= NOW()", [$u['id'], $depuis]) as $o) {
         $liste[] = ['Votre opportunité « ' . $o['titre'] . ' » a été publiée.', url('/opportunites/' . $o['slug']), $o['publie_le'], 'vert'];
+    }
+    try {
+        foreach (lignes("SELECT p.statut, p.traitee_le, COALESCE(r.nom, p.role_nom) AS role, i.titre FROM participations p JOIN initiatives i ON i.id = p.initiative_id
+                         LEFT JOIN initiative_roles r ON r.id = p.role_id WHERE p.utilisateur_id = ? AND p.statut <> 'en_attente' AND p.traitee_le >= ?", [$u['id'], $depuis]) as $p) {
+            $liste[] = $p['statut'] === 'retenue'
+                ? ['Vous êtes retenu comme « ' . $p['role'] . ' » pour « ' . $p['titre'] . ' ». L\'équipe vous contactera.', url('/compte/mon-espace/participations'), $p['traitee_le'], 'vert']
+                : ['Votre candidature pour « ' . $p['titre'] . " » n'a pas été retenue cette fois.", url('/compte/mon-espace/participations'), $p['traitee_le'], 'rouge'];
+        }
+    } catch (Throwable $e) {
     }
     try {
         foreach (lignes('SELECT envoye_le FROM temoignages WHERE utilisateur_id = ? AND publie = 1 AND envoye_le >= ?', [$u['id'], $depuis]) as $t) {

@@ -3,6 +3,7 @@ $ct = !empty($compacte_tel); ?>
 <a href="<?= e($i['url']) ?>" class="carte group flex h-full flex-col transition-shadow hover:shadow-lg">
   <div class="relative aspect-[16/9] border-b-4 <?= $ct ? 'max-sm:aspect-[4/3] max-sm:border-b-[3px]' : '' ?> border-orange">
     <?php partiel('partials/photo', ['image' => $i['image']]) ?>
+    <?php if (participations_ouvertes($i)): ?><span class="etiquette absolute top-3 left-3 rounded-full bg-orange text-white <?= $ct ? 'max-sm:top-2 max-sm:left-2 max-sm:px-2 max-sm:py-0.5 max-sm:text-[10px]' : '' ?>">On recherche des jeunes</span><?php endif ?>
   </div>
   <div class="flex flex-1 flex-col p-5 <?= $ct ? 'max-sm:p-3' : '' ?>">
     <?php if ($i['date_libelle'] || $i['lieu']): ?><p class="text-xs text-texte <?= $ct ? 'max-sm:text-[11px] max-sm:leading-tight' : '' ?>"><?= e($i['date_libelle']) ?><?= $i['date_libelle'] && $i['lieu'] ? ' · ' : '' ?><?= e($i['lieu']) ?></p><?php endif ?>

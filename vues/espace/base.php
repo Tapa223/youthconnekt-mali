@@ -10,6 +10,7 @@ $liens = [
     'notifications' => ['/compte/mon-espace/notifications', 'Notifications'],
     'communautes' => ['/compte/mon-espace/communautes', 'Mes communautés'],
     'opportunites' => ['/compte/mon-espace/opportunites', 'Mes opportunités'],
+    'participations' => ['/compte/mon-espace/participations', 'Mes participations'],
     'propositions' => ['/compte/mon-espace/propositions', 'Propositions et témoignage'],
     'profil' => ['/compte/mon-espace/profil', 'Mon profil'],
     'parametres' => ['/compte/mon-espace/parametres', 'Paramètres'],

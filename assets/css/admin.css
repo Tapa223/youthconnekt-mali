@@ -898,3 +898,45 @@ input[type=file]::file-selector-button {
 .ycm-guide li a::after { content: " →"; }
 .ycm-guide li a:hover { text-decoration: underline; }
 @media (max-width: 900px) { .ycm-guide { grid-template-columns: 1fr; } }
+
+/* Participations aux initiatives */
+.ycm-pa-outils { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin: 16px 0 12px; }
+.ycm-pa-filtres { display: flex; flex-wrap: wrap; gap: 6px; }
+.ycm-pa-pastille { display: inline-flex; align-items: center; min-height: 36px; padding: 0 14px; border: 1.5px solid var(--ycm-ligne); border-radius: 999px; background: #fff; color: var(--ycm-vert); font-size: 14px; font-weight: 700; text-decoration: none; }
+.ycm-pa-pastille span { margin-left: 4px; font-weight: 400; }
+.ycm-pa-pastille.actif { border-color: var(--ycm-orange); background: var(--ycm-orange); color: #fff; }
+.ycm-pa-droite { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.ycm-pa-droite select { min-height: 38px; padding: 0 12px; border: 1px solid var(--ycm-ligne); border-radius: 8px; background: #fff; font-size: 14px; }
+.ycm-pa-roles { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; padding: 0; }
+.ycm-pa-roles li { display: flex; gap: 10px; align-items: baseline; padding: 8px 14px; border-radius: 12px; background: #fff; border: 1px solid var(--ycm-ligne); font-size: 14px; }
+.ycm-pa-roles li span { color: var(--ycm-texte); }
+.ycm-pa-liste { display: grid; gap: 12px; }
+.ycm-pa-carte { padding: 16px 18px; background: #fff; border: 1px solid var(--ycm-ligne); border-radius: 16px; }
+.ycm-pa-tete { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; }
+.ycm-pa-nom { margin: 0; font-size: 17px; font-weight: 700; color: var(--ycm-vert); }
+.ycm-pa-tete .ycm-discret { margin: 2px 0 0; font-size: 13px; }
+.ycm-pa-etat { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.ycm-pa-role { padding: 4px 10px; border-radius: 999px; background: var(--ycm-fond); font-size: 13px; font-weight: 700; color: var(--ycm-encre); }
+.ycm-pa-reponses { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 8px 18px; margin: 12px 0 0; padding: 12px 0 0; border-top: 1px solid var(--ycm-ligne); }
+.ycm-pa-reponses dt { font-size: 12.5px; font-weight: 700; color: var(--ycm-texte); }
+.ycm-pa-reponses dd { margin: 2px 0 0; font-size: 14px; color: var(--ycm-encre); }
+.ycm-pa-pied { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; margin-top: 12px; }
+.ycm-pa-pied .ycm-discret { font-size: 13px; }
+.ycm-pa-decisions { display: flex; flex-wrap: wrap; gap: 6px; }
+.ycm-pa-decisions form { margin: 0; }
+.ycm-pa-lignes { display: grid; gap: 10px; margin: 12px 0; }
+.ycm-pa-ligne { display: flex; gap: 12px; align-items: flex-start; padding: 12px; border: 1px solid var(--ycm-ligne); border-radius: 12px; background: var(--ycm-fond); }
+.ycm-pa-champs-role, .ycm-pa-champs-question { flex: 1; display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 10px 12px; min-width: 0; }
+.ycm-pa-ligne label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 700; color: var(--ycm-encre); }
+.ycm-pa-ligne label[hidden] { display: none; }
+.ycm-pa-ligne input[type=text], .ycm-pa-ligne input[type=number], .ycm-pa-ligne select, .ycm-pa-ligne textarea { min-height: 40px; padding: 8px 10px; border: 1px solid var(--ycm-champ, #cfd6d3); border-radius: 8px; background: #fff; font-size: 14px; font-weight: 400; }
+.ycm-pa-large { grid-column: 1 / -1; }
+.ycm-pa-ligne .ycm-pa-requis { flex-direction: row; align-items: center; align-self: end; min-height: 40px; }
+.ycm-pa-boutons-ligne { display: flex; flex-direction: column; gap: 4px; }
+.ycm-pa-boutons-ligne button { min-width: 36px; min-height: 32px; padding: 0 8px; border: 1px solid var(--ycm-ligne); border-radius: 8px; background: #fff; font-size: 13px; font-weight: 700; color: var(--ycm-vert); cursor: pointer; }
+.ycm-pa-boutons-ligne .ycm-pa-retirer { color: var(--ycm-rouge); }
+@media (max-width: 767px) {
+  .ycm-pa-ligne { flex-direction: column; }
+  .ycm-pa-champs-role, .ycm-pa-champs-question { grid-template-columns: 1fr; width: 100%; }
+  .ycm-pa-boutons-ligne { flex-direction: row; }
+}

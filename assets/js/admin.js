@@ -99,6 +99,37 @@
       form.addEventListener("change", avertir);
     });
 
+    // ---- Participations : ajout, retrait et ordre des rôles et des questions créés par l'administrateur
+    var compteurLignes = 0;
+    var brancherLigne = function (ligne) {
+      var type = ligne.querySelector("[data-type-champ]");
+      var opts = ligne.querySelector("[data-options]");
+      if (type && opts) type.addEventListener("change", function () { opts.hidden = !/^(choix|cases)$/.test(type.value); });
+      var m = ligne.querySelector("[data-monter]"), dsc = ligne.querySelector("[data-descendre]"), r = ligne.querySelector("[data-retirer]");
+      if (m) m.addEventListener("click", function () { var p = ligne.previousElementSibling; if (p) ligne.parentNode.insertBefore(ligne, p); });
+      if (dsc) dsc.addEventListener("click", function () { var n = ligne.nextElementSibling; if (n) ligne.parentNode.insertBefore(n, ligne); });
+      if (r) r.addEventListener("click", function () { ligne.remove(); });
+    };
+    document.querySelectorAll("[data-ligne]").forEach(brancherLigne);
+    document.querySelectorAll("[data-ajouter]").forEach(function (bouton) {
+      bouton.addEventListener("click", function () {
+        var nom = bouton.getAttribute("data-ajouter");
+        var modele = document.querySelector('template[data-modele="' + nom + '"]');
+        var zone = document.querySelector('[data-lignes="' + nom + '"]');
+        if (!modele || !zone) return;
+        var html = modele.innerHTML.replace(/__cle__/g, "n" + Date.now() + (compteurLignes++));
+        var tmp = document.createElement("div");
+        tmp.innerHTML = html.trim();
+        var ligne = tmp.firstElementChild;
+        zone.appendChild(ligne);
+        brancherLigne(ligne);
+        var vide = document.querySelector("[data-aucune-question]");
+        if (vide && nom === "champs") vide.remove();
+        var champ = ligne.querySelector("input[type=text]");
+        if (champ) champ.focus();
+      });
+    });
+
     // ---- Listes déroulantes qui s'appliquent dès qu'on choisit (profil d'un témoignage)
     document.querySelectorAll("select[data-envoi-auto]").forEach(function (select) {
       select.addEventListener("change", function () { var f = select.form; if (f) { if (f.requestSubmit) f.requestSubmit(); else f.submit(); } });

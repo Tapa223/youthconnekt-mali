@@ -236,17 +236,19 @@ function ressources(): array
             'table' => 'initiatives', 'titre' => 'Initiatives',
             'description' => 'Les programmes et actions menés par le chapitre.',
             'libelle_ajout' => 'Ajouter une initiative', 'libelle_tous' => 'Toutes',
-            'champs_select' => 't.*, a.nom AS axe_nom, a.couleur AS axe_couleur',
+            'champs_select' => "t.*, a.nom AS axe_nom, a.couleur AS axe_couleur,
+                (SELECT COUNT(*) FROM participations p WHERE p.initiative_id = t.id) AS nb_participations,
+                (SELECT COUNT(*) FROM participations p WHERE p.initiative_id = t.id AND p.statut = 'en_attente') AS nb_participations_attente",
             'depuis' => 'FROM initiatives t LEFT JOIN axes a ON a.id = t.axe_id',
             'ordre' => 't.publie_le DESC',
-            'onglets' => array_map(fn ($a) => [$a['nom'], 't.axe_id = ' . (int) $a['id']], axes()),
-            'filtres' => [['etat', 'Tous les états', ETATS_INITIATIVE, 't.etat']],
+            'onglets' => [['À venir', "t.etat = 'a_venir'"], ['En cours', "t.etat = 'en_cours'"], ['Terminées', "t.etat = 'terminee'"], ['Participations ouvertes', 't.participations_ouvertes = 1']],
+            'filtres' => [],
             'recherche' => ['t.titre', 't.resume'],
             'colonnes' => [
                 ['Initiative', fn ($l) => nom_et_detail($l['titre'], '', miniature($l['image'])), 'lien' => true],
-                ['Axe', fn ($l) => $l['axe_nom'] ? point_couleur($l['axe_nom'], $l['axe_couleur']) : '—'],
+                ['État', fn ($l) => e(ETATS_INITIATIVE[$l['etat']] ?? '')],
                 ['Date', fn ($l) => e($l['date_libelle'] ?: '—')],
-                ['Lieu', fn ($l) => e($l['lieu'] ?: '—')],
+                ['Participations', fn ($l) => '<a class="ycm-lien" href="' . url('/gestion/initiatives/' . $l['id'] . '/participations') . '">' . ($l['participations_ouvertes'] ? (int) $l['nb_participations'] . ' reçue' . pluriel((int) $l['nb_participations']) : 'Configurer') . '</a>' . ($l['nb_participations_attente'] ? ' ' . badge($l['nb_participations_attente'] . ' à traiter', 'orange') : '')],
                 ['Statut', fn ($l) => badge_statut($l, true)],
             ],
             'url_voir' => fn ($l) => url('/initiatives/' . $l['slug']),
@@ -264,6 +266,9 @@ function ressources(): array
                     'lieu' => ['type' => 'texte', 'libelle' => 'Lieu', 'requis' => false, 'max' => 120, 'largeur' => 'demi'],
                     'participants' => ['type' => 'texte', 'libelle' => 'Participants', 'requis' => false, 'max' => 80, 'largeur' => 'demi', 'aide' => 'Exemple : 60 jeunes'],
                     'format' => ['type' => 'texte', 'libelle' => 'Format', 'requis' => false, 'max' => 80, 'largeur' => 'demi', 'aide' => 'Exemple : Présentiel'],
+                ]],
+                ['Participations', 'cote' => true, 'description' => "Les jeunes peuvent se proposer comme bénévoles, intervenants ou participants. Vous créez vous-même les rôles et les questions.", 'champs' => [
+                    'participations_lien' => ['type' => 'lecture', 'libelle' => 'Formulaire et candidatures', 'html' => fn ($l) => empty($l['id']) ? "Enregistrez d'abord l'initiative." : ($l['participations_ouvertes'] ? badge('Ouvertes', 'vert') : badge('Fermées', 'gris')) . ' ' . (int) ($l['nb_participations'] ?? 0) . ' reçue' . pluriel((int) ($l['nb_participations'] ?? 0)) . '<br><a class="ycm-bouton-contour ycm-petit" style="margin-top:8px" href="' . url('/gestion/initiatives/' . $l['id'] . '/participations') . '">Gérer les participations</a>'],
                 ]],
                 ['Contenu', 'champs' => [
                     'contenu' => ['type' => 'zone', 'libelle' => 'Présentation détaillée', 'aide' => 'Paragraphes séparés par une ligne vide.', 'lignes' => 8],
@@ -826,6 +831,46 @@ function ressources(): array
     $liste['types-opportunites']['parent'] = ['Opportunités', url('/gestion/opportunites')];
     $liste['categories-actualites']['parent'] = ['Actualités et événements', url('/gestion/actualites')];
     $liste['propositions']['menu_liste'] = [];
+
+    // Candidatures aux initiatives : toutes au même endroit, triées par initiative et par rôle
+    $liste['participations'] = array_merge($liste['participations'] ?? [], [
+        'table' => 'participations', 'titre' => 'Participations aux initiatives', 'slug' => 'participations', 'rubrique' => 'initiatives',
+        'description' => "Les jeunes qui se sont proposés pour prendre part aux initiatives (bénévoles, intervenants, participants…).",
+        'peut_ajouter' => false, 'peut_supprimer' => true, 'vue_fiche' => 'admin/fiche_participation', 'libelle_tous' => 'Toutes',
+        'champs_select' => "t.*, i.titre AS initiative_titre, i.slug AS initiative_slug, u.email,
+            COALESCE(CONCAT(pi.prenom, ' ', pi.nom), po.nom_structure, u.email) AS membre_nom, pi.genre, pi.date_naissance, pi.region AS region_i, pi.telephone,
+            COALESCE(r.nom, t.role_nom) AS role_libelle",
+        'depuis' => 'FROM participations t JOIN initiatives i ON i.id = t.initiative_id JOIN utilisateurs u ON u.id = t.utilisateur_id
+            LEFT JOIN profils_individuels pi ON pi.utilisateur_id = u.id LEFT JOIN profils_organisations po ON po.utilisateur_id = u.id
+            LEFT JOIN initiative_roles r ON r.id = t.role_id',
+        'ordre' => "t.statut = 'en_attente' DESC, t.cree_le DESC", 'par_page' => 50,
+        'recherche' => ['pi.prenom', 'pi.nom', 'po.nom_structure', 'u.email', 'i.titre'],
+        'nom_element' => fn ($l) => $l['membre_nom'],
+        'onglets' => [['En attente', "t.statut = 'en_attente'"], ['Retenues', "t.statut = 'retenue'"], ['Non retenues', "t.statut = 'non_retenue'"]],
+        'filtres' => [
+            ['initiative', 'Toutes les initiatives', fn () => array_column(lignes('SELECT DISTINCT i.id, i.titre FROM participations p JOIN initiatives i ON i.id = p.initiative_id ORDER BY i.titre'), 'titre', 'id'), 't.initiative_id'],
+            ['role', 'Tous les rôles', fn () => array_column(lignes('SELECT DISTINCT r.id, CONCAT(r.nom, \' · \', i.titre) AS libelle FROM initiative_roles r JOIN initiatives i ON i.id = r.initiative_id ORDER BY i.titre, r.ordre'), 'libelle', 'id'), 't.role_id'],
+        ],
+        'colonnes' => [
+            ['Personne', fn ($l) => nom_et_detail($l['membre_nom'], $l['email']), 'lien' => true],
+            ['Rôle', fn ($l) => '<strong>' . e($l['role_libelle']) . '</strong>'],
+            ['Initiative', fn ($l) => e(couper($l['initiative_titre'], 50))],
+            ['Reçue le', fn ($l) => e(date_chiffres($l['cree_le']))],
+            ['Décision', fn ($l) => ['en_attente' => badge('En attente', 'orange'), 'retenue' => badge('Retenue', 'vert'), 'non_retenue' => badge('Non retenue', 'gris')][$l['statut']] ?? ''],
+        ],
+        'actions' => [
+            'retenir' => ['Retenir', fn ($ids) => requete("UPDATE participations SET statut = 'retenue', traitee_le = NOW() WHERE id IN (" . marqueurs($ids) . ')', $ids)->rowCount() . ' participation(s) retenue(s).'],
+            'ne_pas_retenir' => ['Ne pas retenir', fn ($ids) => requete("UPDATE participations SET statut = 'non_retenue', traitee_le = NOW() WHERE id IN (" . marqueurs($ids) . ')', $ids)->rowCount() . ' participation(s) non retenue(s).'],
+        ],
+        'export' => [
+            'Initiative' => 'initiative_titre', 'Rôle' => 'role_libelle', 'Nom' => 'membre_nom', 'E-mail' => 'email', 'Téléphone' => 'telephone',
+            'Genre' => fn ($l) => GENRES[$l['genre'] ?? ''] ?? '', 'Âge' => fn ($l) => age($l['date_naissance'] ?? null) ?? '', 'Région' => fn ($l) => REGIONS[$l['region_i'] ?? ''] ?? '',
+            'Décision' => fn ($l) => STATUTS_PARTICIPATION[$l['statut']] ?? '', 'Reçue le' => fn ($l) => date_chiffres($l['cree_le']),
+            'Réponses' => fn ($l) => implode(' | ', array_map(fn ($r) => $r['question'] . ' : ' . $r['reponse'], reponses_participation($l))),
+        ],
+        'groupes' => [[null, 'champs' => []]],
+    ]);
+    $liste['participations']['parent'] = ['Initiatives', url('/gestion/initiatives')];
 
     // Repère pour l'administrateur : ce qui va dans chaque rubrique (affiché en haut de la liste et du formulaire d'ajout)
     $liste['opportunites']['guide'] = [

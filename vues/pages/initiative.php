@@ -12,6 +12,14 @@ $chiffres_i = lignes_colonnes($i['chiffres'], 2);
     </div>
     <h1 class="mt-3 text-[1.875rem] leading-[1.08] font-bold sm:text-5xl xl:text-[3.5rem]"><?= e($i['titre']) ?></h1>
     <p class="mt-4 text-base leading-relaxed sm:text-lg"><?= e($i['resume']) ?></p>
+    <?php if ($ma_participation): ?>
+    <a href="<?= url('/compte/mon-espace/participations') ?>" class="mt-5 inline-flex min-h-11 items-center gap-2 rounded-full bg-vert-clair px-5 text-sm font-bold text-vert">Vous êtes candidat comme « <?= e($ma_participation['role_libelle']) ?> » · <?= e(STATUTS_PARTICIPATION[$ma_participation['statut']] ?? '') ?></a>
+    <?php elseif ($ouvertes): ?>
+    <div class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
+      <a href="#prendre-part" class="btn btn-orange min-h-12 px-6">Prendre part à cette initiative</a>
+      <?php if ($i['participations_fin']): ?><span class="text-sm text-texte">Jusqu'au <?= e(date_longue($i['participations_fin'])) ?></span><?php endif ?>
+    </div>
+    <?php endif ?>
     <?php if ($a_infos) partiel('pages/infos_initiative', ['i' => $i, 'classes' => 'mt-6 hidden lg:grid']) ?>
   </div>
 
@@ -28,6 +36,28 @@ $chiffres_i = lignes_colonnes($i['chiffres'], 2);
   </div>
   <?php if ($a_infos) partiel('pages/infos_initiative', ['i' => $i, 'classes' => '-mt-4 grid lg:hidden']) ?>
 </section>
+
+<?php if ($ouvertes && !$ma_participation): /* Prendre part : les rôles proposés par l'équipe */ ?>
+<section id="prendre-part" class="scroll-mt-24 bg-white pb-12 sm:pb-16" aria-labelledby="titre-prendre-part">
+  <div class="conteneur">
+    <div class="rounded-3xl border-2 border-orange/30 bg-orange-clair/40 p-5 sm:p-8">
+      <h2 id="titre-prendre-part" class="text-2xl font-bold sm:text-3xl">Prendre part</h2>
+      <p class="mt-2 max-w-2xl text-[15px] leading-relaxed text-encre sm:text-base"><?= trim((string) $i['participations_intro']) !== '' ? nl2br(e($i['participations_intro'])) : "L'équipe du chapitre recherche des jeunes pour faire vivre cette initiative. Choisissez votre rôle." ?></p>
+      <ul class="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <?php foreach ($roles as $r): ?>
+        <li class="flex flex-col rounded-2xl bg-white p-4 shadow-sm sm:p-5 <?= $r['complet'] ? 'opacity-60' : '' ?>">
+          <span class="text-lg font-bold text-vert"><?= e($r['nom']) ?></span>
+          <?php if ($r['description'] !== ''): ?><span class="mt-1 text-sm leading-snug"><?= e($r['description']) ?></span><?php endif ?>
+          <span class="mt-3 text-xs font-bold <?= $r['complet'] ? 'text-texte' : 'text-orange-fonce' ?>"><?= $r['complet'] ? 'Complet' : ($r['restantes'] !== null ? $r['restantes'] . ' place' . pluriel((int) $r['restantes']) . ' restante' . pluriel((int) $r['restantes']) : 'Places ouvertes') ?></span>
+          <?php if (!$r['complet']): ?><a href="<?= url('/initiatives/' . $i['slug'] . '/participer', ['role' => $r['id']]) ?>" class="btn btn-vert mt-3 min-h-11 w-full">Me proposer</a><?php endif ?>
+        </li>
+        <?php endforeach ?>
+      </ul>
+      <?php if ($i['participations_fin']): ?><p class="mt-4 text-sm text-texte">Candidatures ouvertes jusqu'au <?= e(date_longue($i['participations_fin'])) ?>.</p><?php endif ?>
+    </div>
+  </div>
+</section>
+<?php endif ?>
 
 <section class="bg-gris py-14 sm:py-16">
   <div class="conteneur grid gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-14">
