@@ -64,14 +64,6 @@ UPDATE communautes SET type = 'entreprendre' WHERE slug IN ('entrepreneuriat-et-
 UPDATE communautes SET type = 'engagement' WHERE slug IN ('leadership-et-citoyennete') AND type = '';
 UPDATE communautes SET type = 'etudes-carriere' WHERE slug IN ('etudiants', 'jeunes-professionnels') AND type = '';
 
--- Témoignages de la maquette (exemples, modifiables dans Administration > Témoignages)
-INSERT INTO temoignages (nom, role, texte, ordre, publie)
-SELECT * FROM (
-  SELECT 'Aminata K.' AS nom, 'Étudiante en agronomie, Sikasso · Jeune' AS role, 'Le Bootcamp m''a aidée à transformer mon idée de transformation de mangues en vrai projet. J''y ai aussi trouvé des mentors.' AS texte, 1 AS ordre, 1 AS publie
-  UNION ALL SELECT 'Moussa T.', 'Jeune entrepreneur, Ségou · Jeune', 'J''ai découvert ici un appel à candidatures que je n''aurais jamais vu ailleurs. Aujourd''hui, mon projet est accompagné.', 2, 1
-  UNION ALL SELECT 'Organisation partenaire', 'Responsable de programmes · Partenaire', 'Travailler avec YouthConnekt Mali nous permet de toucher des jeunes motivés partout dans le pays.', 3, 1
-) AS exemples
-WHERE NOT EXISTS (SELECT 1 FROM temoignages);
 
 -- Chiffres clés du chapitre malien (les trois premiers publiés s'affichent sur l'accueil)
 INSERT INTO chiffres_cles (valeur, libelle, ordre, publie) VALUES
@@ -98,27 +90,13 @@ Renforcement des capacités, réseautage, innovation et plaidoyer : le Sommet ac
   UNION ALL
   SELECT 'Forum YouthConnekt Sahel 2026 à Niamey', 'forum-youthconnekt-sahel-2026-niamey', 'evenement',
     'La 3e édition du Forum s''est tenue du 10 au 12 août 2026, sous le thème « Jeunesse sahélienne et Refondation : bâtir un Sahel souverain, résilient et prospère ».',
-    'Branche de YouthConnekt Africa, le Forum YouthConnekt Sahel donne la parole aux jeunes du Sahel pour réfléchir ensemble aux opportunités et aux solutions locales pour la paix et la prospérité. Il veut changer l''image du Sahel, en tant que terre d''opportunités et d''investissements.
+    'Branche de YouthConnekt Africa, le Forum YouthConnekt Sahel donne la parole aux jeunes du Sahel pour réfléchir ensemble aux opportunités et aux solutions locales pour la paix et la prospérité.
 
-Après Dakar en 2021 (« Connecter les jeunes du Sahel pour la paix et la prospérité ») et N''Djamena en 2025 (« Jeunesse sahélienne et Souveraineté »), la 3e édition s''est tenue à Niamey, au Niger, du 10 au 12 août 2026.
+La 3e édition s''est tenue à Niamey, au Niger, du 10 au 12 août 2026, sous le thème « Jeunesse sahélienne et Refondation : bâtir un Sahel souverain, résilient et prospère ».
 
 ## Une édition charnière
-Cette édition a posé les bases de la gouvernance du Forum : constitution d''un comité de pilotage réunissant les ministres en charge de la jeunesse des pays du Sahel, et validation de la Charte du Forum. Le Mali a activement pris part aux éditions de Dakar et de N''Djamena.',
+Cette édition devait poser les bases de la gouvernance du Forum : constitution d''un comité de pilotage réunissant les ministres en charge de la jeunesse des pays du Sahel, et validation de la Charte du Forum.',
     'Niamey, Niger', 'publie', '2026-08-10', 0, NOW() - INTERVAL 1 DAY, '', NOW(), NOW()
-  UNION ALL
-  SELECT 'Le Mali au Sommet YouthConnekt Africa 2024', 'mali-sommet-youthconnekt-africa-2024', 'actualite',
-    'Une délégation de 18 personnes, dont 6 jeunes délégués, a représenté le Mali à la 7e édition du Sommet, à Kigali.',
-    'La 7e édition du Sommet YouthConnekt Africa s''est tenue à Kigali, au Rwanda, du 8 au 11 novembre 2024, sous le thème « Des emplois pour les jeunes grâce à des compétences innovantes ». Elle a rassemblé plus de 4 000 participants venus de 33 pays africains.
-
-## Une délégation malienne de 18 personnes
-Coordonnée par le PNUD, la délégation réunissait 7 représentants du Gouvernement, 5 représentants du Système des Nations unies au Mali et 6 jeunes délégués : entrepreneurs, innovateurs et responsables d''organisations de jeunesse.
-
-## Ce que le Mali en retient
-- Les actions et les perspectives de YouthConnekt Mali ont été présentées au comité technique de YouthConnekt Africa.
-- Les jeunes délégués ont tenu un stand pour présenter des initiatives maliennes et noué une quarantaine de contacts dans 19 pays africains.
-- Une jeune déléguée a prononcé le mot de clôture du panel sur la santé des jeunes, en plaidant pour un meilleur accès aux services de santé mentale et à l''éducation à la santé sexuelle et reproductive.
-- Les échanges d''affaires, notamment autour du textile malien, ont ouvert la voie à des collaborations avec des entrepreneurs rwandais.',
-    'Kigali, Rwanda', 'publie', '2024-11-08', 0, '2024-11-15 10:00:00', '', NOW(), NOW()
 ) AS a
 WHERE NOT EXISTS (SELECT 1 FROM actualites x WHERE x.slug = a.slug);
 
@@ -156,13 +134,6 @@ Le chapitre agit selon deux axes : la gouvernance inclusive et la participation 
 
 Le Comité est co-présidé par le ministère chargé de la Jeunesse et par le PNUD. Il oriente les actions du chapitre et veille à la synergie entre les programmes en faveur des jeunes.',
     'Bamako', 'publie', NULL, 0, '2022-03-01 10:00:00', '', NOW(), NOW()
-  UNION ALL
-  SELECT 'Le Mali au Forum YouthConnekt Sahel 2025 à N''Djamena', 'mali-forum-youthconnekt-sahel-2025', 'evenement',
-    'Du 13 au 15 octobre 2025, la 2e édition du Forum a réuni les jeunes du Sahel autour de la souveraineté, de la sécurité, de l''environnement et de la justice sociale.',
-    'La 2e édition du Forum YouthConnekt Sahel s''est tenue à N''Djamena, au Tchad, du 13 au 15 octobre 2025, sous le thème « Jeunesse sahélienne et Souveraineté : Construire l''avenir face aux défis sécuritaires, environnementaux et de justice sociale ».
-
-Branche de YouthConnekt Africa, le Forum permet aux jeunes du Sahel de s''exprimer, de réfléchir aux opportunités et de proposer des solutions locales pour la paix et la prospérité. Le Mali, qui avait déjà participé à la première édition à Dakar en 2021, y a activement pris part.',
-    'N''Djamena, Tchad', 'publie', '2025-10-13', 0, '2025-10-16 10:00:00', '', NOW(), NOW()
 ) AS a
 WHERE NOT EXISTS (SELECT 1 FROM actualites x WHERE x.slug = a.slug);
 
