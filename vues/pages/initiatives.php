@@ -3,25 +3,28 @@
     <g stroke="#04B2B1" stroke-opacity=".35" stroke-width="1.5" fill="none"><path d="M300 210 L420 70 L560 150"/><path d="M420 70 L520 0"/><path d="M560 150 L600 20"/></g>
     <circle cx="300" cy="210" r="9" fill="#F1592A"/><circle cx="420" cy="70" r="12" fill="#04B2B1"/><circle cx="560" cy="150" r="8" fill="#0358D9"/>
   </svg>
-  <div class="conteneur anim-entree relative pt-6 pb-4 sm:pt-12 sm:pb-6">
-    <h1 class="text-[2.1rem] leading-none font-bold sm:text-6xl lg:text-7xl">Nos initiatives</h1>
-    <p class="mt-3 max-w-xl text-[15px] sm:mt-5 sm:text-lg">Formations, rencontres, prix : ce que le chapitre organise avec et pour les jeunes, partout au Mali.</p>
+  <div class="conteneur anim-entree relative pt-4 pb-3 sm:pt-8 sm:pb-5">
+    <h1 class="text-[1.75rem] leading-none font-bold sm:text-5xl">Nos initiatives</h1>
+    <p class="mt-2 max-w-xl text-sm sm:mt-3 sm:text-base">Formations, rencontres, prix : ce que le chapitre organise avec et pour les jeunes, partout au Mali.</p>
   </div>
 </section>
 
-<?php /* Filtres : restent visibles en haut de l'écran pendant qu'on fait défiler les initiatives */ ?>
+<?php /* Filtres par état : affichés seulement s'il y a au moins deux états différents (sinon ils ne servent à rien) */
+$etats_presents = array_filter(array_intersect_key($nombres, ETATS_INITIATIVE));
+if (count($etats_presents) >= 2 || $etat_actif): ?>
 <div class="sticky top-16 z-30 border-b border-ligne/70 bg-gris/95 backdrop-blur">
   <nav class="conteneur flex gap-1.5 overflow-x-auto py-2.5 [scrollbar-width:none] sm:flex-wrap sm:gap-2 sm:py-3" aria-label="Filtrer les initiatives">
     <?php foreach (['' => 'Toutes'] + ETATS_INITIATIVE as $cle => $libelle):
         if ($cle !== '' && empty($nombres[$cle])) continue; // un état sans initiative n'apparaît pas
         $actif = $etat_actif === $cle;
-        $libelle = ['terminee' => 'Terminées'][$cle] ?? $libelle; ?>
+        $libelle = ['terminee' => 'Passées'][$cle] ?? $libelle; ?>
     <a href="<?= url('/initiatives', ['etat' => $cle ?: null]) ?>" class="survol-orange inline-flex min-h-9 shrink-0 items-center justify-center gap-1.5 rounded-full border-2 px-3 text-[13px] font-bold whitespace-nowrap transition-colors sm:min-h-10 sm:px-4 sm:text-sm <?= $actif ? 'border-orange bg-orange text-white' : 'border-vert bg-white text-vert hover:bg-vert-clair' ?>" <?= $actif ? 'aria-current="true"' : '' ?>><?= e($libelle) ?> <span class="opacity-70">(<?= $nombres[$cle] ?? 0 ?>)</span></a>
     <?php endforeach ?>
   </nav>
 </div>
+<?php endif ?>
 
-<section class="conteneur pt-6 pb-10 sm:py-14" aria-labelledby="titre-liste">
+<section class="conteneur pt-4 pb-10 sm:pt-6 sm:pb-14" aria-labelledby="titre-liste">
   <h2 id="titre-liste" class="sr-only">Liste des initiatives</h2>
   <?php if ($liste): ?>
   <ul class="grid grid-cols-2 gap-2.5 sm:gap-5 lg:grid-cols-3">
