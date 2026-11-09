@@ -27,7 +27,7 @@ function initiatives(): void
 
     afficher(vue('pages/initiatives', [
         'titre' => 'Initiatives | YouthConnekt Mali',
-        'description' => 'Formations, rencontres, prix : ce que le chapitre YouthConnekt Mali organise avec et pour les jeunes.',
+        'description' => 'Les projets du chapitre YouthConnekt Mali et de ses membres, auxquels les jeunes peuvent prendre part.',
         'etat_actif' => $etat_actif,
         'nombres' => $nombres,
         'liste' => $liste,

@@ -5,7 +5,7 @@
   </svg>
   <div class="conteneur anim-entree relative pt-4 pb-3 sm:pt-8 sm:pb-5">
     <h1 class="text-[1.75rem] leading-none font-bold sm:text-5xl">Nos initiatives</h1>
-    <p class="mt-2 max-w-xl text-sm sm:mt-3 sm:text-base">Formations, rencontres, prix : ce que le chapitre organise avec et pour les jeunes, partout au Mali.</p>
+    <p class="mt-2 max-w-xl text-sm sm:mt-3 sm:text-base">Les projets du chapitre et de ses membres, auxquels vous pouvez prendre part.</p>
   </div>
 </section>
 
@@ -31,7 +31,7 @@ if (count($etats_presents) >= 2 || $etat_actif): ?>
     <?php foreach ($liste as $i): ?><li><?php partiel('cartes/initiative', ['i' => $i, 'compacte_tel' => true]) ?></li><?php endforeach ?>
   </ul>
   <?php partiel('partials/pagination', ['pagination' => $pagination]) ?>
-  <?php else: partiel('partials/vide', ['message' => 'Aucune initiative publiée pour le moment.', 'lien_admin' => url('/gestion/initiatives/ajouter')]); endif ?>
+  <?php else: partiel('partials/vide', ['message' => 'Les prochaines initiatives du chapitre seront annoncées ici. Vous pourrez y prendre part.', 'lien_admin' => url('/gestion/initiatives/ajouter')]); endif ?>
 </section>
 
 <section class="conteneur pb-12 sm:pb-20">

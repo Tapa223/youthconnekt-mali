@@ -6,10 +6,11 @@ $menu_plus = $selection_possible || $url_export || $r['menu_liste'];
 <div class="ycm-entete-page">
   <div>
     <h1><?= e($r['titre']) ?></h1>
-    <?php if ($r['description']): ?><p class="ycm-sous-titre"><?= e($r['description']) ?></p><?php endif ?>
+    <?php if ($r['description'] && empty($r['guide'])): ?><p class="ycm-sous-titre"><?= e($r['description']) ?></p><?php endif ?>
   </div>
   <?php if ($r['peut_ajouter'] && $peut_modifier && $r['groupes']): ?><a href="<?= url('/gestion/' . $r['slug'] . '/ajouter') ?>" class="<?= $r['ajout_discret'] ? 'ycm-bouton-contour ycm-petit' : 'ycm-bouton-orange' ?>"><?= e($r['libelle_ajout'] ?? 'Ajouter') ?></a><?php endif ?>
 </div>
+<?php if (!empty($r['guide'])) partiel('admin/_guide', ['guide' => $r['guide']]) ?>
 <?php if ($onglets || $filtres || $menu_plus): ?>
 <div class="ycm-barre-liste">
   <?php if ($onglets): ?>

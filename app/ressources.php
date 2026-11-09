@@ -94,7 +94,7 @@ function ressource(string $slug): ?array
             'recherche' => [], 'actions' => [], 'export' => [], 'par_page' => 25, 'peut_ajouter' => true,
             'peut_supprimer' => true, 'groupes' => [], 'vue_liste' => 'admin/liste', 'url_voir' => null,
             'aide_cote' => '', 'fiche_unique' => false, 'galerie' => null, 'liaison' => null,
-            'avant' => null, 'apres' => null, 'condition' => '1=1', 'parent' => null, 'menu_liste' => [], 'ajout_discret' => false, 'sans_fiche' => false, 'decisions' => [], 'vue_fiche' => null, 'champs_select' => 't.*', 'depuis' => 'FROM `' . $r['table'] . '` t',
+            'avant' => null, 'apres' => null, 'condition' => '1=1', 'parent' => null, 'menu_liste' => [], 'ajout_discret' => false, 'sans_fiche' => false, 'decisions' => [], 'vue_fiche' => null, 'guide' => null, 'champs_select' => 't.*', 'depuis' => 'FROM `' . $r['table'] . '` t',
             'titre_ajout' => $r['libelle_ajout'] ?? 'Ajouter', 'nom_element' => fn ($l) => (string) ($l['titre'] ?? $l['nom'] ?? ''),
         ];
     }
@@ -826,6 +826,24 @@ function ressources(): array
     $liste['types-opportunites']['parent'] = ['Opportunités', url('/gestion/opportunites')];
     $liste['categories-actualites']['parent'] = ['Actualités et événements', url('/gestion/actualites')];
     $liste['propositions']['menu_liste'] = [];
+
+    // Repère pour l'administrateur : ce qui va dans chaque rubrique (affiché en haut de la liste et du formulaire d'ajout)
+    $liste['opportunites']['guide'] = [
+        'Une opportunité',
+        "Une porte à saisir avant une date : formation, bourse, stage, emploi, appel à candidatures, concours. Le jeune s'inscrit ou candidate, puis c'est terminé.",
+        [["Un projet du chapitre auquel on prend part dans la durée", 'Initiatives', 'initiatives'], ["Une nouvelle, un événement annoncé ou son compte rendu", 'Actualités', 'actualites']],
+    ];
+    $liste['propositions']['guide'] = $liste['opportunites']['guide'];
+    $liste['initiatives']['guide'] = [
+        'Une initiative',
+        "Un projet porté par le chapitre ou par un membre, qui dure dans le temps et auquel les jeunes peuvent prendre part : campagne, caravane, programme de mentorat, activité organisée par le chapitre. Une fois terminée, sa page devient un bilan.",
+        [["Une inscription ponctuelle avant une date limite", 'Opportunités', 'opportunites'], ["Un événement du réseau auquel le Mali participe, une nouvelle", 'Actualités', 'actualites']],
+    ];
+    $liste['actualites']['guide'] = [
+        'Une actualité',
+        "Une information : une nouvelle du chapitre, un événement annoncé, ou le compte rendu d'un événement passé (forum, sommet, rencontre).",
+        [["Quelque chose à quoi les jeunes s'inscrivent", 'Opportunités', 'opportunites'], ["Un projet du chapitre auquel on peut participer", 'Initiatives', 'initiatives']],
+    ];
     $liste['communautes']['menu_liste'] = [['Demandes déjà traitées', url('/gestion/demandes')]];
     $liste['newsletter']['parent'] = ['Newsletter', url('/gestion/newsletters')];
     $liste['newsletter']['menu_liste'] = [['Nouvelle newsletter', url('/gestion/newsletters/nouvelle')]];

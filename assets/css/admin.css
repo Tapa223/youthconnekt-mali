@@ -883,3 +883,18 @@ input[type=file]::file-selector-button {
   .ycm-nl-choix, .ycm-nl-cibles, .ycm-nl-communautes, .ycm-nl-envoi { grid-template-columns: 1fr; }
   .ycm-nl-apercu { height: 520px; }
 }
+
+/* Repère « que mettre dans cette rubrique ? » */
+.ycm-guide { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 0; margin: 0 0 18px; overflow: hidden; border: 1px solid var(--ycm-ligne); border-radius: 16px; background: #fff; font-size: 14px; }
+.ycm-guide p { margin: 0; line-height: 1.5; color: var(--ycm-encre); }
+.ycm-guide-titre { margin-bottom: 4px !important; font-weight: 700; color: var(--ycm-vert) !important; }
+.ycm-guide-ici { padding: 14px 18px; border-left: 4px solid var(--ycm-orange); }
+.ycm-guide-ailleurs { padding: 14px 18px; background: var(--ycm-fond); }
+.ycm-guide-ailleurs .ycm-guide-titre { color: var(--ycm-texte) !important; }
+.ycm-guide ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.ycm-guide li { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 10px; }
+.ycm-guide li span { color: var(--ycm-encre); }
+.ycm-guide li a { flex-shrink: 0; font-weight: 700; color: var(--ycm-orange); text-decoration: none; white-space: nowrap; }
+.ycm-guide li a::after { content: " →"; }
+.ycm-guide li a:hover { text-decoration: underline; }
+@media (max-width: 900px) { .ycm-guide { grid-template-columns: 1fr; } }

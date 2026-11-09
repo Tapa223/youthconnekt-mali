@@ -52,5 +52,5 @@ $id_form = 'liste-' . $r['slug'];
 <form id="basculer-<?= (int) $l['id'] ?>" method="post" data-confirmer="<?= $l['actif'] ? 'Désabonner ' . e($l['email']) . ' ?' : 'Réabonner ' . e($l['email']) . ' ?' ?>" data-confirmer-texte="<?= $l['actif'] ? "Cette adresse ne recevra plus la newsletter." : 'Cette adresse recevra de nouveau la newsletter.' ?>" data-confirmer-oui="<?= $l['actif'] ? 'Désabonner' : 'Réabonner' ?>"<?= $l['actif'] ? ' data-confirmer-danger' : '' ?> action="<?= url('/gestion/newsletter/' . $l['id'] . '/basculer') ?>" hidden><?= csrf() ?><input type="hidden" name="suivant" value="<?= e(adresse_actuelle()) ?>"></form>
 <?php endforeach; endif ?>
 <?php else: ?>
-<div class="ycm-boite ycm-boite--pad"><p class="ycm-vide"><?= $q !== '' || $filtres ? 'Aucun élément ne correspond à cette recherche.' : 'Aucun élément pour l\'instant.' ?></p></div>
+<div class="ycm-boite ycm-boite--pad"><p class="ycm-vide"><?= $q !== '' || get('onglet') !== '' || array_filter(array_map(fn ($f) => get($f[0]), $r['filtres'])) ? 'Aucun élément ne correspond à cette recherche.' : 'Rien pour l\'instant.' . ($r['peut_ajouter'] && $peut_modifier && $r['groupes'] ? ' Commencez par « ' . e($r['libelle_ajout'] ?? 'Ajouter') . ' ».' : '') ?></p></div>
 <?php endif ?>
