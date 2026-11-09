@@ -7,30 +7,28 @@ declare(strict_types=1);
 
 function initiatives(): void
 {
-    $axes = axes();
-    $axe_actif = get('axe');
-    if (!in_array($axe_actif, array_column($axes, 'slug'), true)) {
-        $axe_actif = '';
+    // Filtre par état (à venir, en cours, terminées) : ce qui aide un jeune à choisir
+    $etat_actif = get('etat');
+    if (!isset(ETATS_INITIATIVE[$etat_actif])) {
+        $etat_actif = '';
     }
-    $filtre = $axe_actif ? 'AND a.slug = ?' : '';
-    $params = $axe_actif ? [$axe_actif] : [];
+    $filtre = $etat_actif ? 'AND i.etat = ?' : '';
+    $params = $etat_actif ? [$etat_actif] : [];
 
-    $total = (int) valeur("SELECT COUNT(*) FROM initiatives i LEFT JOIN axes a ON a.id = i.axe_id WHERE i.statut = 'publie' AND i.publie_le <= NOW() $filtre", $params);
+    $total = (int) valeur("SELECT COUNT(*) FROM initiatives i WHERE i.statut = 'publie' AND i.publie_le <= NOW() $filtre", $params);
     $pagination = paginer($total, 9);
     $liste = initiatives_publiees("$filtre ORDER BY i.publie_le DESC LIMIT {$pagination['par_page']} OFFSET {$pagination['decalage']}", $params);
 
-    // Nombre d'initiatives publiées par axe, affiché sur les filtres
     $nombres = ['' => 0];
-    foreach (lignes("SELECT a.slug, COUNT(*) AS n FROM initiatives i LEFT JOIN axes a ON a.id = i.axe_id WHERE i.statut = 'publie' AND i.publie_le <= NOW() GROUP BY a.slug") as $l) {
-        $nombres[(string) $l['slug']] = (int) $l['n'];
+    foreach (lignes("SELECT i.etat, COUNT(*) AS n FROM initiatives i WHERE i.statut = 'publie' AND i.publie_le <= NOW() GROUP BY i.etat") as $l) {
+        $nombres[(string) $l['etat']] = (int) $l['n'];
         $nombres[''] += (int) $l['n'];
     }
 
     afficher(vue('pages/initiatives', [
         'titre' => 'Initiatives | YouthConnekt Mali',
         'description' => 'Formations, rencontres, prix : ce que le chapitre YouthConnekt Mali organise avec et pour les jeunes.',
-        'axes' => $axes,
-        'axe_actif' => $axe_actif,
+        'etat_actif' => $etat_actif,
         'nombres' => $nombres,
         'liste' => $liste,
         'pagination' => $pagination,

@@ -11,10 +11,12 @@
 
 <?php /* Filtres : restent visibles en haut de l'écran pendant qu'on fait défiler les initiatives */ ?>
 <div class="sticky top-16 z-30 border-b border-ligne/70 bg-gris/95 backdrop-blur">
-  <nav class="conteneur flex gap-1.5 overflow-x-auto py-2.5 [scrollbar-width:none] sm:flex-wrap sm:gap-2 sm:py-3" aria-label="Filtrer par axe d'intervention">
-    <a href="<?= url('/initiatives') ?>" class="survol-orange inline-flex min-h-9 shrink-0 items-center whitespace-nowrap justify-center gap-1.5 rounded-full border-2 px-2 text-[12.5px] font-bold sm:min-h-10 sm:flex-none sm:px-4 sm:text-sm transition-colors <?= !$axe_actif ? 'border-orange bg-orange text-white' : 'border-vert bg-white text-vert hover:bg-vert-clair' ?>" <?= !$axe_actif ? 'aria-current="true"' : '' ?>>Toutes <span class="hidden opacity-70 sm:inline">(<?= $nombres[''] ?>)</span></a>
-    <?php foreach ($axes as $axe): $actif = $axe_actif === $axe['slug']; ?>
-    <a href="<?= url('/initiatives', ['axe' => $axe['slug']]) ?>" class="survol-orange inline-flex min-h-9 shrink-0 items-center whitespace-nowrap justify-center gap-1.5 rounded-full border-2 px-2 text-[12.5px] font-bold sm:min-h-10 sm:flex-none sm:px-4 sm:text-sm transition-colors <?= $actif ? 'border-orange bg-orange text-white' : bordure($axe['couleur']) . ' bg-white text-vert hover:bg-gris' ?>" <?= $actif ? 'aria-current="true"' : '' ?>><?= e(nom_court_axe($axe['nom'])) ?> <span class="hidden opacity-70 sm:inline">(<?= $nombres[$axe['slug']] ?? 0 ?>)</span></a>
+  <nav class="conteneur flex gap-1.5 overflow-x-auto py-2.5 [scrollbar-width:none] sm:flex-wrap sm:gap-2 sm:py-3" aria-label="Filtrer les initiatives">
+    <?php foreach (['' => 'Toutes'] + ETATS_INITIATIVE as $cle => $libelle):
+        if ($cle !== '' && empty($nombres[$cle])) continue; // un état sans initiative n'apparaît pas
+        $actif = $etat_actif === $cle;
+        $libelle = ['terminee' => 'Terminées'][$cle] ?? $libelle; ?>
+    <a href="<?= url('/initiatives', ['etat' => $cle ?: null]) ?>" class="survol-orange inline-flex min-h-9 shrink-0 items-center justify-center gap-1.5 rounded-full border-2 px-3 text-[13px] font-bold whitespace-nowrap transition-colors sm:min-h-10 sm:px-4 sm:text-sm <?= $actif ? 'border-orange bg-orange text-white' : 'border-vert bg-white text-vert hover:bg-vert-clair' ?>" <?= $actif ? 'aria-current="true"' : '' ?>><?= e($libelle) ?> <span class="opacity-70">(<?= $nombres[$cle] ?? 0 ?>)</span></a>
     <?php endforeach ?>
   </nav>
 </div>

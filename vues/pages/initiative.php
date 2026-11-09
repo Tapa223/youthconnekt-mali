@@ -8,7 +8,6 @@ $chiffres_i = lignes_colonnes($i['chiffres'], 2);
   <div>
     <?php partiel('partials/retour', ['url' => url('/initiatives')]) ?>
     <div class="flex flex-wrap gap-2">
-      <?php if ($i['axe_nom']): ?><span class="etiquette rounded-full <?= fond($i['axe_couleur']) ?>"><?= e($i['axe_nom']) ?></span><?php endif ?>
       <span class="etiquette rounded-full bg-gris text-vert"><?= e(ETATS_INITIATIVE[$i['etat']] ?? '') ?></span>
     </div>
     <h1 class="mt-3 text-[1.875rem] leading-[1.08] font-bold sm:text-5xl xl:text-[3.5rem]"><?= e($i['titre']) ?></h1>
@@ -99,6 +98,10 @@ $chiffres_i = lignes_colonnes($i['chiffres'], 2);
     <?php endforeach ?>
   </ul>
 </section>
+<?php endif ?>
+
+<?php if ($i['axe_nom']): ?>
+<p class="conteneur py-8 text-sm text-texte sm:py-10">Cette initiative s'inscrit dans l'axe <a href="<?= url('/a-propos') ?>#axes" class="font-bold text-vert hover:text-orange"><?= e($i['axe_nom']) ?></a> du chapitre.</p>
 <?php endif ?>
 
 <?php if ($autres): ?>

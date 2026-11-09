@@ -255,7 +255,7 @@ function ressources(): array
             'groupes' => [
                 ['Informations principales', 'champs' => [
                     'titre' => ['type' => 'texte', 'libelle' => 'Titre', 'max' => 200],
-                    'axe_id' => ['type' => 'select', 'libelle' => "Axe d'action", 'options' => options_axes(), 'requis' => false, 'largeur' => 'demi', 'nul' => true],
+                    'axe_id' => ['type' => 'select', 'libelle' => "Axe d'intervention", 'options' => options_axes(), 'requis' => false, 'largeur' => 'demi', 'nul' => true, 'aide' => "Facultatif. Affiché discrètement en bas de la page de l'initiative."],
                     'etat' => ['type' => 'select', 'libelle' => 'État', 'options' => ETATS_INITIATIVE, 'largeur' => 'demi'],
                     'resume' => ['type' => 'texte', 'libelle' => 'Résumé', 'max' => 300],
                 ]],

@@ -162,7 +162,7 @@ $points = [
           </div>
           <div class="absolute inset-0 bg-gradient-to-t from-vert via-vert/55 to-transparent"></div>
           <div class="absolute inset-x-0 bottom-0 p-4 sm:p-6">
-            <span class="etiquette bg-white text-vert <?= !$premiere ? 'max-lg:bg-transparent max-lg:p-0 max-lg:text-white/90' : '' ?> <?= $initiative['axe_nom'] ? '' : 'invisible' ?>"><?= e(nom_court_axe($initiative['axe_nom']) ?: 'Initiative') ?></span>
+            <span class="etiquette bg-white text-vert <?= !$premiere ? 'max-lg:bg-transparent max-lg:p-0 max-lg:text-white/90' : '' ?> <?= $initiative['date_libelle'] ? '' : 'invisible' ?>"><?= e($initiative['date_libelle'] ?: 'Initiative') ?></span>
             <h3 class="mt-2 line-clamp-2 text-base leading-tight font-bold text-white sm:text-2xl lg:min-h-[2.5em]"><?= e($initiative['titre']) ?></h3>
             <p class="mt-1.5 hidden text-[15px] leading-snug text-white/90 sm:line-clamp-3 lg:min-h-[4.125em] <?= !$premiere ? 'max-lg:hidden' : '' ?>"><?= e($initiative['resume']) ?></p>
           </div>
