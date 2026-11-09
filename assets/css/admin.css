@@ -885,7 +885,7 @@ input[type=file]::file-selector-button {
 }
 
 /* Repère « que mettre dans cette rubrique ? » */
-.ycm-guide { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 0; margin: 0 0 18px; overflow: hidden; border: 1px solid var(--ycm-ligne); border-radius: 16px; background: #fff; font-size: 14px; }
+.ycm-guide { margin: 0 0 18px; padding: 14px 18px; border: 1px solid var(--ycm-ligne); border-left: 4px solid var(--ycm-orange); border-radius: 16px; background: #fff; font-size: 14px; }
 .ycm-guide p { margin: 0; line-height: 1.5; color: var(--ycm-encre); }
 .ycm-guide-titre { margin-bottom: 4px !important; font-weight: 700; color: var(--ycm-vert) !important; }
 .ycm-guide-ici { padding: 14px 18px; border-left: 4px solid var(--ycm-orange); }

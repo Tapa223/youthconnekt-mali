@@ -876,18 +876,15 @@ function ressources(): array
     $liste['opportunites']['guide'] = [
         'Une opportunité',
         "Une porte à saisir avant une date : formation, bourse, stage, emploi, appel à candidatures, concours. Le jeune s'inscrit ou candidate, puis c'est terminé.",
-        [["Un projet du chapitre auquel on prend part dans la durée", 'Initiatives', 'initiatives'], ["Une nouvelle, un événement annoncé ou son compte rendu", 'Actualités', 'actualites']],
     ];
     $liste['propositions']['guide'] = $liste['opportunites']['guide'];
     $liste['initiatives']['guide'] = [
         'Une initiative',
         "Un projet porté par le chapitre ou par un membre, qui dure dans le temps et auquel les jeunes peuvent prendre part : campagne, caravane, programme de mentorat, activité organisée par le chapitre. Une fois terminée, sa page devient un bilan.",
-        [["Une inscription ponctuelle avant une date limite", 'Opportunités', 'opportunites'], ["Un événement du réseau auquel le Mali participe, une nouvelle", 'Actualités', 'actualites']],
     ];
     $liste['actualites']['guide'] = [
         'Une actualité',
         "Une information : une nouvelle du chapitre, un événement annoncé, ou le compte rendu d'un événement passé (forum, sommet, rencontre).",
-        [["Quelque chose à quoi les jeunes s'inscrivent", 'Opportunités', 'opportunites'], ["Un projet du chapitre auquel on peut participer", 'Initiatives', 'initiatives']],
     ];
     $liste['communautes']['menu_liste'] = [['Demandes déjà traitées', url('/gestion/demandes')]];
     $liste['newsletter']['parent'] = ['Newsletter', url('/gestion/newsletters')];

@@ -51,7 +51,19 @@ $surtitre = fn ($a) => ($a['categorie_libelle'] !== '' ? e($a['categorie_libelle
 
   <?php /* Ordinateur : la première en grand, les autres à côté */ ?>
   <div class="mt-5 hidden gap-3 lg:mt-3 lg:grid <?= $a_cote ? 'lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-6' : '' ?>">
-    <a href="<?= e($principale['url']) ?>" class="survol-leve group relative block aspect-[16/9] overflow-hidden rounded-2xl sm:rounded-3xl <?= $a_cote ? 'lg:aspect-auto lg:min-h-[340px]' : 'lg:aspect-auto lg:h-[155px]' ?>">
+    <?php if (!$a_cote): /* Une seule actualité à la une : grande carte, photo à gauche, texte à droite */ ?>
+    <a href="<?= e($principale['url']) ?>" class="survol-leve group grid overflow-hidden rounded-3xl border border-ligne bg-white lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
+      <span class="relative block overflow-hidden lg:min-h-[300px]"><span class="absolute inset-0 transition-transform duration-500 group-hover:scale-105"><?php partiel('partials/photo', ['image' => $principale['image'], 'eager' => true]) ?></span></span>
+      <span class="flex flex-col justify-center p-7 xl:p-9">
+        <span class="etiquette self-start rounded-full bg-orange text-white"><?= $surtitre($principale) ?></span>
+        <span class="mt-3 block text-2xl leading-tight font-bold text-vert group-hover:text-orange xl:text-[1.75rem]"><?= e($principale['titre']) ?></span>
+        <span class="mt-3 line-clamp-4 block text-[15px] leading-relaxed text-encre"><?= e($principale['chapeau']) ?></span>
+        <?php if (!empty($principale['lieu'])): ?><span class="mt-3 block text-sm text-texte"><?= e($principale['lieu']) ?></span><?php endif ?>
+        <span class="btn btn-vert mt-5 min-h-11 self-start px-6">Lire la suite</span>
+      </span>
+    </a>
+    <?php else: ?>
+    <a href="<?= e($principale['url']) ?>" class="survol-leve group relative block aspect-[16/9] overflow-hidden rounded-2xl sm:rounded-3xl lg:aspect-auto lg:min-h-[340px]">
       <div class="absolute inset-0 transition-transform duration-500 group-hover:scale-105"><?php partiel('partials/photo', ['image' => $principale['image'], 'eager' => true]) ?></div>
       <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
       <div class="absolute inset-x-0 bottom-0 p-4 sm:p-7">
@@ -60,6 +72,7 @@ $surtitre = fn ($a) => ($a['categorie_libelle'] !== '' ? e($a['categorie_libelle
         <p class="mt-1.5 line-clamp-2 hidden text-white/90 sm:block"><?= e($principale['chapeau']) ?></p>
       </div>
     </a>
+    <?php endif ?>
 
     <?php if ($a_cote): ?>
     <ul class="grid gap-2.5 lg:content-start lg:gap-3" aria-label="Autres actualités à la une">
