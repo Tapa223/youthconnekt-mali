@@ -17,7 +17,7 @@ $navigation = [
 ];
 ?>
 <header class="site-entete sticky top-0 z-40 border-b border-transparent bg-white/95 backdrop-blur transition-[border-color,box-shadow] duration-200 data-[defile]:border-ligne data-[defile]:shadow-sm" data-entete>
-  <div class="conteneur flex h-16 items-center justify-between gap-6 lg:max-w-none lg:px-10 xl:px-14 2xl:max-w-[100rem]">
+  <div class="conteneur flex h-16 items-center justify-between gap-4 lg:max-w-none lg:px-10 xl:px-8 2xl:max-w-[100rem] 2xl:gap-6 2xl:px-14">
     <a href="<?= url('/') ?>" class="shrink-0 rounded-md" aria-label="YouthConnekt Mali, retour à l'accueil">
       <?php partiel('partials/logo', ['classes' => 'h-10 w-auto xl:h-11']) ?>
     </a>
@@ -27,14 +27,14 @@ $navigation = [
         <?php foreach ($navigation as [$lien, $libelle, $prefixe]): $actif = $section === $prefixe; ?>
         <li>
           <a href="<?= url($lien) ?>"
-             class="relative flex h-16 items-center px-3 text-[15px] font-medium whitespace-nowrap transition-colors <?= $actif ? 'text-vert after:absolute after:inset-x-3 after:bottom-0 after:h-[3px] after:rounded-t after:bg-orange' : 'text-encre hover:text-orange' ?>"
+             class="relative flex h-16 items-center px-2.5 text-[15px] font-medium whitespace-nowrap transition-colors 2xl:px-3 <?= $actif ? 'text-vert after:absolute after:inset-x-2.5 2xl:after:inset-x-3 after:bottom-0 after:h-[3px] after:rounded-t after:bg-orange' : 'text-encre hover:text-orange' ?>"
              <?= $actif ? 'aria-current="page"' : '' ?>><?= e($libelle) ?></a>
         </li>
         <?php endforeach ?>
       </ul>
     </nav>
 
-    <div class="hidden items-center gap-2.5 xl:flex">
+    <div class="hidden items-center gap-2 xl:flex 2xl:gap-2.5">
       <button type="button" class="grid size-11 place-items-center rounded-full text-vert transition-colors hover:bg-vert-clair hover:text-orange" data-ouvrir-recherche aria-label="Rechercher sur le site" title="Rechercher (Ctrl + K)"><svg class="size-[22px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
       <?php if ($u): ?>
         <a href="<?= url(est_membre($u) ? '/compte/mon-espace' : '/gestion') ?>" class="inline-flex min-h-11 items-center gap-2.5 rounded-full bg-vert py-1.5 pr-5 pl-1.5 text-[15px] font-bold text-white hover:bg-vert-fonce">

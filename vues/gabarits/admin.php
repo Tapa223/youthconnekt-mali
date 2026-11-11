@@ -106,6 +106,21 @@ $ariane = $ariane ?? [];
           <input id="ycm-q" type="search" name="q" value="<?= e($q ?? '') ?>" placeholder="Rechercher…">
         </form>
         <?php endif ?>
+        <?php $a_traiter = a_traiter_admin(); $nb_a_traiter = array_sum(array_column($a_traiter, 'nombre')); ?>
+        <details class="ycm-cloche">
+          <summary aria-label="<?= $nb_a_traiter ? $nb_a_traiter . ' élément' . pluriel($nb_a_traiter) . ' à traiter' : 'Rien à traiter' ?>">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>
+            <?php if ($nb_a_traiter): ?><span class="ycm-cloche-nb"><?= $nb_a_traiter > 99 ? '99+' : $nb_a_traiter ?></span><?php endif ?>
+          </summary>
+          <div class="ycm-cloche-menu">
+            <p class="ycm-cloche-titre">À traiter</p>
+            <?php if ($a_traiter): foreach ($a_traiter as $t): ?>
+            <a href="<?= e($t['url']) ?>"><span class="ycm-cloche-point" aria-hidden="true"></span><?= e($t['texte']) ?></a>
+            <?php endforeach; else: ?>
+            <p class="ycm-cloche-vide">Tout est à jour : rien n'attend votre action.</p>
+            <?php endif ?>
+          </div>
+        </details>
         <a href="<?= url('/') ?>" class="ycm-bouton-contour ycm-voir-site" target="_blank" rel="noopener">Voir le site</a>
         <details class="ycm-compte">
           <summary>

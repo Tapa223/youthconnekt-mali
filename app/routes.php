@@ -17,6 +17,8 @@ const ROUTES = [
     ['GET', '/mentions-legales', 'site', 'mentions_legales'],
     ['POST', '/newsletter', 'site', 'newsletter'],
     ['GET', '/newsletter/desabonner', 'site', 'newsletter_desabonner'],
+    ['GET', '/robots.txt', 'referencement', 'robots'],
+    ['GET', '/sitemap.xml', 'referencement', 'plan_du_site'],
     ['GET', '/recherche', 'recherche', 'recherche_site'],
     ['GET', '/recherche/suggestions', 'recherche', 'recherche_suggestions'],
     ['GET', '/initiatives', 'contenus', 'initiatives'],

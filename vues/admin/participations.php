@@ -48,11 +48,17 @@ $badges = ['inscrit' => badge('Inscrit', 'vert'), 'en_attente' => badge('En atte
   <?= csrf() ?><input type="hidden" name="suivant" value="<?= e(adresse_actuelle()) ?>">
   <div>
     <p class="ycm-pa-pointage-titre">Pointage à l'entrée</p>
-    <p class="ycm-discret"><?= $nb_presents ?> présent<?= pluriel($nb_presents) ?> sur <?= $nb_billets ?> billet<?= pluriel($nb_billets) ?>. Saisissez le code du billet, ou scannez son QR code avec un lecteur.</p>
+    <p class="ycm-discret"><?= $nb_presents ?> présent<?= pluriel($nb_presents) ?> sur <?= $nb_billets ?> billet<?= pluriel($nb_billets) ?>. Saisissez le code du billet, ou scannez son QR code avec la caméra de ce téléphone ou de cet ordinateur.</p>
   </div>
   <div class="ycm-pa-pointage-champ">
-    <input type="text" name="code" placeholder="YCM-XXXXX" autocomplete="off" autocapitalize="characters" aria-label="Code du billet" required>
+    <input type="text" name="code" placeholder="YCM-XXXXX" autocomplete="off" autocapitalize="characters" aria-label="Code du billet" required data-code-billet>
     <button type="submit" class="ycm-bouton-vert">Pointer</button>
+    <button type="button" class="ycm-bouton-contour" data-scanner data-jsqr="<?= e(asset('js/vendor/jsQR.js')) ?>">Scanner</button>
+  </div>
+  <div class="ycm-pa-camera" data-camera hidden>
+    <div class="ycm-pa-video"><video playsinline muted></video><span class="ycm-pa-viseur" aria-hidden="true"></span></div>
+    <p data-camera-etat>Placez le QR code du billet dans le cadre.</p>
+    <button type="button" class="ycm-bouton-gris ycm-petit" data-camera-fermer>Arrêter la caméra</button>
   </div>
 </form>
 <?php endif ?>

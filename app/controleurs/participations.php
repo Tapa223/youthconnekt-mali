@@ -233,6 +233,9 @@ function participation_decision(int $id): void
         page_erreur(400);
     }
     mettre_a_jour('participations', ['statut' => $statut, 'traitee_le' => in_array($statut, ['en_attente', 'inscrit'], true) ? null : maintenant()], $id);
+    if (in_array($statut, ['retenue', 'non_retenue'], true) && $statut !== $p['statut']) {
+        prevenir_participant($id, $statut);
+    }
     flash('succes', [
         'retenue' => 'Candidature retenue : la personne en est prévenue et reçoit son billet dans son espace.',
         'non_retenue' => 'Candidature non retenue : la personne en est prévenue dans son espace.',
@@ -362,6 +365,7 @@ function participer(string $slug): void
                 'reponses' => json_encode(array_map(fn ($r) => ['id' => $r['id'], 'question' => $r['question'], 'reponse' => $r['reponse']], $reponses), JSON_UNESCAPED_UNICODE),
                 'statut' => $inscription ? 'inscrit' : 'en_attente', 'code' => nouveau_code_billet(), 'cree_le' => maintenant(),
             ]);
+            prevenir_participant($pid, $inscription ? 'inscrit' : 'recue');
             if ($inscription) {
                 flash('succes', 'Vous êtes inscrit ! Voici votre billet : présentez-le à l\'entrée, sur votre téléphone ou imprimé.');
                 rediriger(url('/compte/mon-espace/participations/' . $pid . '/billet'));
@@ -417,4 +421,33 @@ function mon_billet(int $id): void
         mettre_a_jour('participations', ['code' => $p['code']], $id);
     }
     vue_espace('billet', 'participations', 'Mon billet', ['p' => $p], $u);
+}
+
+/** E-mail à la personne : inscription (avec son billet), candidature reçue, retenue ou non retenue. */
+function prevenir_participant(int $id, string $quoi): void
+{
+    $p = ligne(
+        "SELECT p.*, u.email, COALESCE(pi.prenom, po.nom_structure, '') AS prenom, COALESCE(r.nom, p.role_nom) AS role_libelle, i.titre, i.slug, i.date_libelle, i.lieu
+         FROM participations p JOIN utilisateurs u ON u.id = p.utilisateur_id JOIN initiatives i ON i.id = p.initiative_id
+         LEFT JOIN profils_individuels pi ON pi.utilisateur_id = u.id LEFT JOIN profils_organisations po ON po.utilisateur_id = u.id
+         LEFT JOIN initiative_roles r ON r.id = p.role_id WHERE p.id = ?",
+        [$id]
+    );
+    if (!$p) {
+        return;
+    }
+    $billet = url_absolue('/compte/mon-espace/participations/' . $id . '/billet');
+    $quand = implode(' · ', array_filter([$p['date_libelle'], $p['lieu']]));
+    $bonjour = 'Bonjour' . ($p['prenom'] !== '' ? ' ' . $p['prenom'] : '') . ",\n\n";
+    [$sujet, $texte] = match ($quoi) {
+        'inscrit' => ['Votre billet : ' . $p['titre'], $bonjour . "Vous êtes inscrit comme « {$p['role_libelle']} » à « {$p['titre']} »" . ($quand ? " ($quand)" : '') . ".\n\nVotre billet : {$p['code']}\nPrésentez-le à l'entrée, sur votre téléphone ou imprimé :\n$billet"],
+        'recue' => ['Candidature reçue : ' . $p['titre'], $bonjour . "Votre candidature comme « {$p['role_libelle']} » pour « {$p['titre']} » a bien été reçue. L'équipe du chapitre l'étudie et vous répond par e-mail et dans votre espace."],
+        'retenue' => ['Vous êtes retenu : ' . $p['titre'], $bonjour . "Bonne nouvelle : votre candidature comme « {$p['role_libelle']} » pour « {$p['titre']} » est retenue.\n\nVotre billet : {$p['code']}\nPrésentez-le à l'entrée :\n$billet\n\nL'équipe vous contactera pour la suite."],
+        default => ['Votre candidature : ' . $p['titre'], $bonjour . "Merci pour votre candidature comme « {$p['role_libelle']} » pour « {$p['titre']} ». Elle n'a pas été retenue cette fois, mais d'autres initiatives arrivent : suivez-les sur le site."],
+    };
+    try {
+        envoyer_email($p['email'], $sujet, $texte . "\n\nL'équipe YouthConnekt Mali");
+    } catch (Throwable $e) {
+        journaliser('erreurs.log', 'E-mail de participation non envoyé : ' . $e->getMessage());
+    }
 }

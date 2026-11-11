@@ -49,6 +49,27 @@ $presentation = trim((string) $p['presentation']);
         </ul>
         <?php endif ?>
 
+        <?php $nb_presences = count(array_filter($parcours, fn ($x) => $x['present_le'])); ?>
+        <h2 class="mt-7 text-lg font-bold">Parcours au sein du chapitre</h2>
+        <dl class="mt-3 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+          <?php foreach ([[count($parcours), 'initiative' . pluriel(count($parcours)), 'border-orange'], [$nb_presences, 'présence' . pluriel($nb_presences), 'border-turquoise'], [count($communautes), 'communauté' . pluriel(count($communautes)), 'border-vert'], [$contributions, 'opportunité' . pluriel($contributions) . ' partagée' . pluriel($contributions), 'border-bleu']] as [$n, $lib, $bord]): ?>
+          <div class="rounded-2xl border-l-4 bg-gris px-4 py-3 <?= $bord ?>"><dt class="sr-only"><?= e($lib) ?></dt><dd><span class="block text-2xl leading-none font-bold text-vert" data-compteur="<?= (int) $n ?>"><?= (int) $n ?></span><span class="mt-1 block text-xs font-bold text-texte"><?= e($lib) ?></span></dd></div>
+          <?php endforeach ?>
+        </dl>
+        <?php if ($parcours): ?>
+        <ol class="relative mt-4 space-y-3 border-l-2 border-ligne pl-5">
+          <?php foreach ($parcours as $x): ?>
+          <li class="relative">
+            <span class="absolute top-1.5 -left-[27px] size-3 rounded-full border-2 border-white <?= $x['present_le'] ? 'bg-orange' : 'bg-turquoise' ?>" aria-hidden="true"></span>
+            <a href="<?= url('/initiatives/' . $x['slug']) ?>" class="font-bold text-vert hover:text-orange"><?= e($x['titre']) ?></a>
+            <p class="text-sm"><?= e(implode(' · ', array_filter(['« ' . $x['role_libelle'] . ' »', $x['date_libelle'], $x['present_le'] ? 'Présent' : ($x['etat'] === 'terminee' ? '' : 'À venir')]))) ?></p>
+          </li>
+          <?php endforeach ?>
+        </ol>
+        <?php elseif ($est_moi): ?>
+        <p class="mt-3 text-sm">Votre parcours se remplit à chaque initiative à laquelle vous prenez part. <a href="<?= url('/initiatives') ?>" class="btn-lien ml-1">Voir les initiatives</a></p>
+        <?php endif ?>
+
         <h2 class="mt-7 text-lg font-bold">Communautés</h2>
         <?php if ($communautes): ?>
         <ul class="mt-3 flex flex-wrap gap-2"><?php foreach ($communautes as $c): ?><li><a href="<?= e($c['url']) ?>" class="inline-flex min-h-9 items-center rounded-full bg-vert-clair px-3.5 text-sm font-bold text-vert transition-colors hover:bg-vert hover:text-white"><?= e($c['nom']) ?></a></li><?php endforeach ?></ul>

@@ -979,3 +979,14 @@ function envoyer_agenda(string $uid, string $titre, string $debut, string $fin, 
     echo implode("\r\n", array_map($plier, $lignes)) . "\r\n";
     exit;
 }
+
+/** Adresse complète d'une image (envoyée ou du dossier assets), pour les aperçus de partage */
+function url_absolue_media(string $chemin): string
+{
+    $relatif = media($chemin);
+    $base = base_url();
+    if ($base !== '' && str_starts_with($relatif, $base)) {
+        $relatif = substr($relatif, strlen($base));
+    }
+    return url_absolue(strtok($relatif, '?'));
+}

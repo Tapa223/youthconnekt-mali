@@ -56,9 +56,13 @@ const MENU_ADMIN = [
     ]],
 ];
 
-function menu_admin(): array
+/** Nombre d'éléments en attente par rubrique (pastilles du menu et cloche). Calculé une fois par page. */
+function pastilles_admin(): array
 {
-    $chemin = chemin_actuel();
+    static $pastilles = null;
+    if ($pastilles !== null) {
+        return $pastilles;
+    }
     $pastilles = [];
     if (peut('messages')) {
         $pastilles['messages'] = (int) valeur('SELECT COUNT(*) FROM messages_contact WHERE traite = 0');
@@ -79,6 +83,34 @@ function menu_admin(): array
     if (peut('communautes') || peut('demandes')) {
         $pastilles['communautes'] = (int) valeur("SELECT COUNT(*) FROM demandes_adhesion WHERE statut = 'en_attente'");
     }
+    return $pastilles;
+}
+
+/** Cloche : ce qui attend une action de l'équipe, avec le lien pour s'en occuper. */
+function a_traiter_admin(): array
+{
+    $p = pastilles_admin();
+    $liste = [
+        ['propositions', 'proposition', 'propositions', ' de membre à valider', url('/gestion/propositions')],
+        ['communautes', 'demande', 'demandes', " d'intégration à une communauté", url('/gestion/demandes')],
+        ['participations', 'candidature', 'candidatures', ' à une initiative à étudier', url('/gestion/participations', ['onglet' => 2])],
+        ['temoignages', 'témoignage', 'témoignages', ' de membre à publier', url('/gestion/temoignages')],
+        ['messages', 'message', 'messages', ' de contact à traiter', url('/gestion/messages')],
+    ];
+    $sortie = [];
+    foreach ($liste as [$cle, $un, $plusieurs, $suite, $lien]) {
+        $n = (int) ($p[$cle] ?? 0);
+        if ($n) {
+            $sortie[] = ['texte' => $n . ' ' . ($n > 1 ? $plusieurs : $un) . $suite, 'url' => $lien, 'nombre' => $n];
+        }
+    }
+    return $sortie;
+}
+
+function menu_admin(): array
+{
+    $chemin = chemin_actuel();
+    $pastilles = pastilles_admin();
     $menu = [];
     foreach (MENU_ADMIN as [$rubrique, $elements]) {
         $liens = [];

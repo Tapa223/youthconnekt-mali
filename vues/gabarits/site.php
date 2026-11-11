@@ -11,8 +11,16 @@ $messages = flashs();
   <meta name="description" content="<?= e($description ?? 'YouthConnekt Mali relie les jeunes du pays aux opportunités, aux initiatives du chapitre et entre eux.') ?>">
   <?php if (!empty($noindex)): ?><meta name="robots" content="noindex"><?php endif ?>
   <meta name="theme-color" content="#035E4D">
+  <?php $image_og = !empty($image_partage) ? url_absolue_media($image_partage) : url_absolue('/assets/img/accueil/premier-ecran.jpg'); ?>
+  <link rel="canonical" href="<?= e(url_absolue(chemin_actuel())) ?>">
+  <meta property="og:type" content="<?= !empty($image_partage) ? 'article' : 'website' ?>">
   <meta property="og:title" content="<?= e($titre ?? 'YouthConnekt Mali') ?>">
+  <meta property="og:description" content="<?= e($description ?? 'YouthConnekt Mali relie les jeunes du pays aux opportunités, aux initiatives du chapitre et entre eux.') ?>">
+  <meta property="og:url" content="<?= e(url_absolue(chemin_actuel())) ?>">
+  <meta property="og:image" content="<?= e($image_og) ?>">
+  <meta property="og:locale" content="fr_FR">
   <meta property="og:site_name" content="YouthConnekt Mali">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/png" href="<?= asset('img/favicon.png') ?>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

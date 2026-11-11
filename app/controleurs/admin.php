@@ -151,11 +151,36 @@ function tableau_de_bord(): void
         $profil_membres = [];
     }
 
+    // Graphiques : inscriptions des 12 derniers mois, régions des membres, présence aux initiatives
+    $graphiques = null;
+    if ($voit_membres) {
+        $mois = [];
+        for ($k = 11; $k >= 0; $k--) {
+            $mois[date('Y-m', strtotime("first day of -$k month"))] = 0;
+        }
+        foreach (lignes("SELECT DATE_FORMAT(inscrit_le, '%Y-%m') AS m, COUNT(*) AS n FROM utilisateurs WHERE type_compte <> 'administration' AND inscrit_le >= ? GROUP BY m", [array_key_first($mois) . '-01']) as $l) {
+            if (isset($mois[$l['m']])) {
+                $mois[$l['m']] = (int) $l['n'];
+            }
+        }
+        $regions = [];
+        foreach (lignes("SELECT region, COUNT(*) AS n FROM (SELECT region FROM profils_individuels UNION ALL SELECT region FROM profils_organisations) x WHERE region IS NOT NULL AND region <> '' GROUP BY region ORDER BY n DESC") as $l) {
+            $regions[REGIONS[$l['region']] ?? $l['region']] = (int) $l['n'];
+        }
+        $presence = [];
+        if (peut('initiatives')) {
+            $presence = lignes("SELECT i.id, i.titre, SUM(p.statut IN ('inscrit', 'retenue')) AS billets, SUM(p.present_le IS NOT NULL) AS presents
+                FROM participations p JOIN initiatives i ON i.id = p.initiative_id GROUP BY i.id, i.titre HAVING billets > 0 ORDER BY MAX(p.cree_le) DESC LIMIT 5");
+        }
+        $graphiques = ['mois' => $mois, 'regions' => $regions, 'presence' => $presence];
+    }
+
     vue_admin('admin/tableau_de_bord', [
         'titre_page' => 'Tableau de bord',
         'profil_membres' => $profil_membres,
         'participation' => $participation,
         'contributeurs' => $contributeurs,
+        'graphiques' => $graphiques,
         'ariane' => [],
         'cartes' => $cartes,
         'inscriptions' => $inscriptions,

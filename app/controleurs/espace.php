@@ -369,12 +369,22 @@ function profil_public(int $id): void
          WHERE d.utilisateur_id = ? AND d.statut = 'acceptee' AND c.active = 1 ORDER BY c.ordre",
         [$m['id']]
     ));
+    // Parcours au sein du chapitre : initiatives (inscrit ou retenu), présences, contributions publiées
+    $parcours = lignes(
+        "SELECT p.statut, p.present_le, COALESCE(r.nom, p.role_nom) AS role_libelle, i.titre, i.slug, i.date_libelle, i.etat
+         FROM participations p JOIN initiatives i ON i.id = p.initiative_id LEFT JOIN initiative_roles r ON r.id = p.role_id
+         WHERE p.utilisateur_id = ? AND p.statut IN ('inscrit', 'retenue') AND i.statut = 'publie' ORDER BY p.cree_le DESC",
+        [$m['id']]
+    );
+    $contributions = (int) valeur("SELECT COUNT(*) FROM opportunites WHERE propose_par = ? AND statut = 'publie'", [$m['id']]);
     afficher(vue('espace/profil_public', [
         'titre' => $m['nom_affiche'] . ' | Communauté | YouthConnekt Mali',
         'noindex' => true,
         'm' => $m,
         'p' => $p,
         'communautes' => $communautes,
+        'parcours' => $parcours,
+        'contributions' => $contributions,
         'est_moi' => (int) $m['id'] === (int) $moi['id'],
     ]));
 }

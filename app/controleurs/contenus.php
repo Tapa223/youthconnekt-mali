@@ -50,6 +50,7 @@ function initiative(string $slug): void
         'ma_participation' => $u ? ligne('SELECT p.*, COALESCE(r.nom, p.role_nom) AS role_libelle FROM participations p LEFT JOIN initiative_roles r ON r.id = p.role_id WHERE p.initiative_id = ? AND p.utilisateur_id = ?', [$i['id'], $u['id']]) : null,
         'titre' => $i['titre'] . ' | YouthConnekt Mali',
         'description' => $i['resume'],
+        'image_partage' => $i['image'],
         'i' => $i,
         'photos' => lignes('SELECT * FROM photos_initiatives WHERE initiative_id = ? ORDER BY ordre, id', [$i['id']]),
         'autres' => initiatives_publiees('AND i.id <> ? ORDER BY i.publie_le DESC LIMIT 3', [$i['id']]),
@@ -116,6 +117,7 @@ function opportunite(string $slug): void
     afficher(vue('pages/opportunite', [
         'titre' => $o['titre'] . ' | Opportunités | YouthConnekt Mali',
         'description' => $o['resume'],
+        'image_partage' => $o['image'],
         'o' => $o,
         'similaires' => $similaires,
     ]));
@@ -188,6 +190,7 @@ function actualite(string $slug): void
     afficher(vue('pages/actualite', [
         'titre' => $a['titre'] . ' | YouthConnekt Mali',
         'description' => $a['chapeau'],
+        'image_partage' => $a['image'],
         'a' => $a,
         'photos' => lignes('SELECT * FROM photos_actualites WHERE actualite_id = ? ORDER BY ordre, id', [$a['id']]),
         'autres' => actualites_publiees('AND id <> ? ORDER BY publie_le DESC LIMIT 3', [$a['id']]),

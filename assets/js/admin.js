@@ -284,3 +284,65 @@
     if (e.target.matches && e.target.matches("select[data-filtre]")) memoriser();
   }, true);
 })();
+
+/* Pointage : lecture du QR code des billets avec la caméra (téléphone ou ordinateur) */
+(function () {
+  "use strict";
+  var bouton = document.querySelector("[data-scanner]");
+  if (!bouton) return;
+  var form = bouton.closest("form"), zone = form.querySelector("[data-camera]"), video = zone.querySelector("video");
+  var etat = zone.querySelector("[data-camera-etat]"), champ = form.querySelector("[data-code-billet]");
+  var flux = null, actif = false, detecteur = null, toile = document.createElement("canvas"), ctx = toile.getContext("2d", { willReadFrequently: true });
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { bouton.hidden = true; return; }
+  var arreter = function () {
+    actif = false;
+    if (flux) flux.getTracks().forEach(function (t) { t.stop(); });
+    flux = null; zone.hidden = true; bouton.hidden = false;
+  };
+  var trouve = function (texte) {
+    var m = /YCM-[A-Z0-9]{5}/i.exec(texte || "");
+    if (!m) return false;
+    champ.value = m[0].toUpperCase();
+    etat.textContent = "Billet " + champ.value + " lu : pointage en cours…";
+    arreter();
+    form.dataset.confirme = "1";
+    if (form.requestSubmit) form.requestSubmit(); else form.submit();
+    return true;
+  };
+  var lire = function () {
+    if (!actif) return;
+    if (video.readyState < 2) { requestAnimationFrame(lire); return; }
+    if (detecteur) {
+      detecteur.detect(video).then(function (codes) { if (!(codes[0] && trouve(codes[0].rawValue))) setTimeout(lire, 180); }).catch(function () { setTimeout(lire, 300); });
+      return;
+    }
+    toile.width = video.videoWidth; toile.height = video.videoHeight;
+    ctx.drawImage(video, 0, 0);
+    var img = ctx.getImageData(0, 0, toile.width, toile.height);
+    var res = window.jsQR ? window.jsQR(img.data, img.width, img.height, { inversionAttempts: "dontInvert" }) : null;
+    if (!(res && trouve(res.data))) setTimeout(lire, 200);
+  };
+  var charger = function () {
+    return new Promise(function (ok) {
+      if ("BarcodeDetector" in window) {
+        try { detecteur = new window.BarcodeDetector({ formats: ["qr_code"] }); return ok(); } catch (e) { detecteur = null; }
+      }
+      if (window.jsQR) return ok();
+      var s = document.createElement("script"); s.src = bouton.getAttribute("data-jsqr"); s.onload = ok; s.onerror = ok; document.head.appendChild(s);
+    });
+  };
+  bouton.addEventListener("click", function () {
+    zone.hidden = false; bouton.hidden = true; etat.textContent = "Ouverture de la caméra…";
+    charger().then(function () {
+      return navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
+    }).then(function (f) {
+      flux = f; video.srcObject = f; video.play(); actif = true;
+      etat.textContent = "Placez le QR code du billet dans le cadre.";
+      lire();
+    }).catch(function () {
+      etat.textContent = "La caméra n'est pas accessible : autorisez-la dans le navigateur (le site doit être en https), ou saisissez le code.";
+    });
+  });
+  zone.querySelector("[data-camera-fermer]").addEventListener("click", arreter);
+  window.addEventListener("pagehide", arreter);
+})();

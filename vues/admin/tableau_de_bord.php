@@ -18,6 +18,44 @@
 </section>
 <?php endif ?>
 
+<?php if ($graphiques): $g = $graphiques; $max_mois = max(1, max($g['mois'])); $total_annee = array_sum($g['mois']); $max_reg = max(1, $g['regions'] ? max($g['regions']) : 1);
+  $noms_mois = ['01' => 'janv.', '02' => 'févr.', '03' => 'mars', '04' => 'avr.', '05' => 'mai', '06' => 'juin', '07' => 'juil.', '08' => 'août', '09' => 'sept.', '10' => 'oct.', '11' => 'nov.', '12' => 'déc.']; ?>
+<div class="ycm-graphiques">
+  <section class="ycm-boite ycm-boite--pad" aria-labelledby="tdb-evolution">
+    <div class="ycm-boite-tete ycm-boite-tete--nu"><h2 id="tdb-evolution">Inscriptions sur 12 mois</h2><span class="ycm-discret"><?= $total_annee ?> au total</span></div>
+    <div class="ycm-histogramme" role="img" aria-label="Inscriptions par mois sur les 12 derniers mois">
+      <?php foreach ($g['mois'] as $m => $n): ?>
+      <div class="ycm-histo-col" title="<?= e($noms_mois[substr($m, 5)] . ' ' . substr($m, 0, 4)) ?> : <?= $n ?> inscription<?= pluriel($n) ?>">
+        <span class="ycm-histo-val"><?= $n ?: '' ?></span>
+        <span class="ycm-histo-barre<?= $m === date('Y-m') ? ' actuel' : '' ?>" style="--h: <?= max(2, round($n * 100 / $max_mois)) ?>%"></span>
+        <span class="ycm-histo-mois"><?= e($noms_mois[substr($m, 5)]) ?></span>
+      </div>
+      <?php endforeach ?>
+    </div>
+  </section>
+  <section class="ycm-boite ycm-boite--pad" aria-labelledby="tdb-regions">
+    <div class="ycm-boite-tete ycm-boite-tete--nu"><h2 id="tdb-regions">Membres par région</h2></div>
+    <?php if ($g['regions']): ?>
+    <ul class="ycm-barres">
+      <?php foreach (array_slice($g['regions'], 0, 7, true) as $r => $n): ?>
+      <li><span><?= e($r) ?></span><span class="ycm-barres-piste"><span style="--l: <?= round($n * 100 / $max_reg) ?>%"></span></span><strong><?= $n ?></strong></li>
+      <?php endforeach ?>
+    </ul>
+    <?php else: ?><p class="ycm-discret">Les régions apparaîtront quand les membres auront complété leur profil.</p><?php endif ?>
+  </section>
+  <?php if ($g['presence']): ?>
+  <section class="ycm-boite ycm-boite--pad ycm-graphiques-large" aria-labelledby="tdb-presence">
+    <div class="ycm-boite-tete ycm-boite-tete--nu"><h2 id="tdb-presence">Présence aux initiatives</h2><span class="ycm-discret">Présents sur billets délivrés</span></div>
+    <ul class="ycm-barres ycm-barres--presence">
+      <?php foreach ($g['presence'] as $x): $taux = $x['billets'] ? round($x['presents'] * 100 / $x['billets']) : 0; ?>
+      <li><a href="<?= url('/gestion/initiatives/' . $x['id'] . '/participations') ?>"><?= e(couper($x['titre'], 46)) ?></a><span class="ycm-barres-piste"><span style="--l: <?= $taux ?>%"></span></span><strong><?= (int) $x['presents'] ?> / <?= (int) $x['billets'] ?></strong></li>
+      <?php endforeach ?>
+    </ul>
+  </section>
+  <?php endif ?>
+</div>
+<?php endif ?>
+
 <?php if ($participation): ?>
 <section class="ycm-boite ycm-boite--pad ycm-participation" aria-labelledby="tdb-participation">
   <div class="ycm-boite-tete ycm-boite-tete--nu"><h2 id="tdb-participation">Participation des membres</h2></div>
