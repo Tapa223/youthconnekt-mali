@@ -4,6 +4,9 @@ $admin = est_admin();
 $ministre_publie = !empty($mot['publie']);
 $nom_ministre = ($ministre_publie && $mot['nom']) ? $mot['nom'] : 'M. Abdoul Kassim Ibrahim Fomba';
 $titre_ministre = ($ministre_publie && $mot['titre_officiel']) ? $mot['titre_officiel'] : "Ministre de la Jeunesse et des Sports, chargé de l'Instruction civique et de la Construction citoyenne";
+// Photos du premier écran : celles choisies dans Paramètres, sinon les photos provisoires
+$photos_accueil = array_values(array_filter([$p['image_accueil_1'] ?? '', $p['image_accueil_2'] ?? '', $p['image_accueil_3'] ?? '']));
+$photos_accueil = $photos_accueil ? array_map('media', $photos_accueil) : [asset('img/accueil/premier-ecran.jpg'), asset('img/accueil/premier-ecran-2.jpg'), asset('img/accueil/premier-ecran-3.jpg')];
 // Premier écran : grand cercle photo et anneau de points (repère 1440 × 820 de la maquette)
 $soleil = ['cx' => 720, 'cy' => 745, 'r' => 480, 'anneau' => 522];
 $points = [];
@@ -16,9 +19,7 @@ foreach (range(0, 11) as $k) {
 <?php /* 1. Premier écran */ ?>
 <section class="relative isolate overflow-hidden bg-vert text-white lg:h-[calc(100svh-4rem)] lg:max-h-[940px] lg:min-h-[620px]" aria-labelledby="titre-accueil" data-diapo-pause>
   <div class="absolute -inset-5 -z-10" data-diapo="accueil" aria-hidden="true">
-    <img data-diapo-image src="<?= asset('img/accueil/premier-ecran.jpg') ?>" alt="" class="absolute inset-0 h-full w-full object-cover blur-[3.5px]">
-    <img data-diapo-image src="<?= asset('img/accueil/premier-ecran-2.jpg') ?>" alt="" class="absolute inset-0 h-full w-full object-cover blur-[3.5px]" loading="lazy">
-    <img data-diapo-image src="<?= asset('img/accueil/premier-ecran-3.jpg') ?>" alt="" class="absolute inset-0 h-full w-full object-cover blur-[3.5px]" loading="lazy">
+    <?php foreach ($photos_accueil as $k => $src): ?><img data-diapo-image src="<?= e($src) ?>" alt="" class="absolute inset-0 h-full w-full object-cover blur-[3.5px]"<?= $k ? ' loading="lazy"' : '' ?>><?php endforeach ?>
   </div>
   <div class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(3_94_77/.95)_0%,rgb(3_94_77/.88)_34%,rgb(3_94_77/.72)_60%,rgb(3_94_77/.86)_100%)]" aria-hidden="true"></div>
 
@@ -40,10 +41,13 @@ foreach (range(0, 11) as $k) {
     <span class="anim-flotte-2 absolute top-[30.2%] left-[86%] aspect-square w-[7.2%] rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= asset('img/accueil/bulle-3.jpg') ?>" alt=""></span>
     <span class="anim-flotte absolute top-[57.5%] left-[87.1%] aspect-square w-[4.9%] rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= asset('img/accueil/bulle-4.jpg') ?>" alt=""></span>
     <div class="anim-soleil absolute top-[32.3%] left-[16.67%] aspect-square w-[66.67%]">
-      <div class="absolute inset-0 overflow-hidden rounded-full bg-vert shadow-[0_0_0_8px_rgb(255_255_255/.14)]" data-diapo="accueil" data-diapo-zoom>
-        <img data-diapo-image src="<?= asset('img/accueil/premier-ecran.jpg') ?>" alt="" class="absolute inset-0 h-full w-full object-cover object-[62%_30%]" fetchpriority="high">
-        <img data-diapo-image src="<?= asset('img/accueil/premier-ecran-2.jpg') ?>" alt="" class="absolute inset-0 h-full w-full object-cover object-[50%_20%]" loading="lazy">
-        <img data-diapo-image src="<?= asset('img/accueil/premier-ecran-3.jpg') ?>" alt="" class="absolute inset-0 h-full w-full object-cover" loading="lazy">
+      <div class="absolute inset-0 overflow-hidden rounded-full bg-vert shadow-[0_0_0_8px_rgb(255_255_255/.14)]" data-diapo="accueil">
+        <?php foreach ($photos_accueil as $k => $src): ?>
+        <div data-diapo-image class="absolute inset-0"><?php /* Photo entière, ni coupée ni agrandie, sur un fond flouté de la même photo */ ?>
+          <img src="<?= e($src) ?>" alt="" class="absolute inset-0 h-full w-full scale-110 object-cover opacity-70 blur-xl"<?= $k ? ' loading="lazy"' : '' ?>>
+          <img src="<?= e($src) ?>" alt="" class="photo-cercle absolute top-[7%] right-[12%] left-[12%] h-[46%] w-[76%] object-contain"<?= $k ? ' loading="lazy"' : ' fetchpriority="high"' ?>>
+        </div>
+        <?php endforeach ?>
       </div>
     </div>
   </div>
@@ -65,15 +69,18 @@ foreach (range(0, 11) as $k) {
 
     <div class="anim-soleil relative order-1 aspect-square w-[80vw] max-w-[340px] sm:max-w-[420px] lg:hidden">
       <div class="absolute -inset-3 rounded-full border-2 border-dashed border-white/35" aria-hidden="true"></div>
-      <div class="absolute inset-0 overflow-hidden rounded-full bg-vert shadow-[0_0_0_6px_rgb(255_255_255/.14)]" data-diapo="accueil" data-diapo-zoom>
-        <img data-diapo-image src="<?= asset('img/accueil/premier-ecran.jpg') ?>" alt="Jeunes réunis lors d'un événement YouthConnekt" class="absolute inset-0 h-full w-full object-cover object-[62%_30%]">
-        <img data-diapo-image src="<?= asset('img/accueil/premier-ecran-2.jpg') ?>" alt="" class="absolute inset-0 h-full w-full object-cover" loading="lazy">
-        <img data-diapo-image src="<?= asset('img/accueil/premier-ecran-3.jpg') ?>" alt="" class="absolute inset-0 h-full w-full object-cover" loading="lazy">
+      <div class="absolute inset-0 overflow-hidden rounded-full bg-vert shadow-[0_0_0_6px_rgb(255_255_255/.14)]" data-diapo="accueil">
+        <?php foreach ($photos_accueil as $k => $src): ?>
+        <div data-diapo-image class="absolute inset-0">
+          <img src="<?= e($src) ?>" alt="" class="absolute inset-0 h-full w-full scale-110 object-cover opacity-70 blur-lg"<?= $k ? ' loading="lazy"' : '' ?>>
+          <img src="<?= e($src) ?>" alt="<?= $k ? '' : "Jeunes réunis lors d'un événement YouthConnekt" ?>" class="photo-cercle absolute inset-[8%] h-[84%] w-[84%] object-contain"<?= $k ? ' loading="lazy"' : '' ?>>
+        </div>
+        <?php endforeach ?>
       </div>
     </div>
 
-    <div class="anim-flotte absolute bottom-[15%] left-4 z-10 hidden lg:block xl:-left-4"><a href="#chapitre" class="btn btn-contour-blanc min-h-14 w-[17rem] px-6 text-lg">Découvrir le chapitre</a></div>
-    <div class="anim-flotte-2 absolute right-4 bottom-[15%] z-10 hidden lg:block xl:-right-4"><a href="#rejoindre" class="btn btn-orange min-h-14 w-[17rem] px-6 text-lg shadow-lg shadow-orange/30">Let's Connekt</a></div>
+    <div class="anim-flotte absolute bottom-[13%] left-0 z-10 hidden lg:block xl:-left-10 2xl:-left-24"><a href="#chapitre" class="btn btn-contour-blanc min-h-16 w-[19rem] px-7 text-xl">Découvrir le chapitre</a></div>
+    <div class="anim-flotte-2 absolute right-0 bottom-[13%] z-10 hidden lg:block xl:-right-10 2xl:-right-24"><a href="#rejoindre" class="btn btn-orange min-h-16 w-[19rem] px-7 text-xl shadow-lg shadow-orange/30">Let's Connekt</a></div>
   </div>
   <?php partiel('partials/mention_photo', ['texte' => 'Photos provisoires · Sommet YouthConnekt Africa, hors Mali']) ?>
 </section>

@@ -18,9 +18,8 @@ function liste(): void
     }, communautes_actives());
 
     if ($recherche !== '') {
-        $cherche = mb_strtolower($recherche);
         $communautes = array_values(array_filter($communautes, fn ($c) =>
-            mb_strpos(mb_strtolower($c['nom'] . ' ' . $c['public_vise'] . ' ' . $c['description']), $cherche) !== false));
+            texte_correspond(implode(' ', [$c['nom'], $c['public_vise'], $c['description'], $c['activites'] ?? '', $c['type_nom'] ?? '']), $recherche)));
     }
 
     afficher(vue('pages/communautes', [

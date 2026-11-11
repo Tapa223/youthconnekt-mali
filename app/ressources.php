@@ -131,7 +131,7 @@ function ressources(): array
             'champs_select' => "t.*, COALESCE(CONCAT(pi.prenom, ' ', pi.nom), po.nom_structure, u.email) AS propose_par_nom, u.email AS propose_par_email",
             'depuis' => 'FROM opportunites t LEFT JOIN utilisateurs u ON u.id = t.propose_par LEFT JOIN profils_individuels pi ON pi.utilisateur_id = u.id LEFT JOIN profils_organisations po ON po.utilisateur_id = u.id',
             'filtres' => [['type', 'Tous les types', options_types_opportunite(), 't.type']],
-            'recherche' => ['t.titre', 't.organisme', 't.resume'],
+            'recherche' => ['t.titre', 't.organisme', 't.resume', 't.description', 't.lieu'],
             'colonnes' => [
                 ['Opportunité', fn ($l) => nom_et_detail($l['titre'], $l['propose_par'] ? 'Proposée par ' . ($l['propose_par_nom'] ?? '') : $l['organisme']), 'lien' => true],
                 ['Type', fn ($l) => e(options_types_opportunite()[$l['type']] ?? $l['type'])],
@@ -197,7 +197,7 @@ function ressources(): array
                 ['Brouillons', "t.statut = 'brouillon'"],
             ],
             'filtres' => [['categorie', 'Toutes catégories', array_map(fn ($c) => $c['nom'], categories_actualite()), 't.categorie']],
-            'recherche' => ['t.titre', 't.chapeau', 't.contenu'],
+            'recherche' => ['t.titre', 't.chapeau', 't.contenu', 't.lieu'],
             'colonnes' => [
                 ['Titre', fn ($l) => '<strong>' . e($l['titre']) . '</strong>', 'lien' => true],
                 ['Catégorie', fn ($l) => isset(categories_actualite()[$l['categorie']]) ? badge(categories_actualite()[$l['categorie']]['nom'], categories_actualite()[$l['categorie']]['couleur']) : '—'],
@@ -243,7 +243,7 @@ function ressources(): array
             'ordre' => 't.publie_le DESC',
             'onglets' => [['À venir', "t.etat = 'a_venir'"], ['En cours', "t.etat = 'en_cours'"], ['Terminées', "t.etat = 'terminee'"], ['Participations ouvertes', 't.participations_ouvertes = 1']],
             'filtres' => [],
-            'recherche' => ['t.titre', 't.resume'],
+            'recherche' => ['t.titre', 't.resume', 't.contenu', 't.lieu', 't.date_libelle'],
             'colonnes' => [
                 ['Initiative', fn ($l) => nom_et_detail($l['titre'], '', miniature($l['image'])), 'lien' => true],
                 ['État', fn ($l) => e(ETATS_INITIATIVE[$l['etat']] ?? '')],
@@ -367,7 +367,7 @@ function ressources(): array
                 ['region', 'Toutes les régions', REGIONS, 't.region'],
                 ['categorie', 'Toutes catégories', CATEGORIES_INDIVIDUELLES, 't.categorie'],
             ],
-            'recherche' => ['t.prenom', 't.nom', 'u.email', 't.domaine', 't.ville'],
+            'recherche' => ['t.prenom', 't.nom', 'u.email', 't.domaine', 't.ville', 't.region', 't.telephone', 't.presentation'],
             'nom_element' => fn ($l) => $l['prenom'] . ' ' . $l['nom'],
             'colonnes' => [
                 ['Membre', fn ($l) => nom_et_detail($l['prenom'] . ' ' . $l['nom'], $l['email'], avatar(mb_strtoupper(mb_substr($l['prenom'], 0, 1) . mb_substr($l['nom'], 0, 1)), (int) $l['id'], $l['photo'] ?: null)), 'lien' => true],
@@ -420,7 +420,7 @@ function ressources(): array
             'ordre' => 'u.inscrit_le DESC',
             'onglets' => [['Entreprises', "t.type_structure = 'entreprise'"], ['Startups', "t.type_structure = 'startup'"], ['Associations', "t.type_structure = 'association'"], ['ONG', "t.type_structure = 'ong'"]],
             'filtres' => [['region', 'Toutes les régions', REGIONS, 't.region']],
-            'recherche' => ['t.nom_structure', 'u.email', 't.secteur', 't.personne_contact'],
+            'recherche' => ['t.nom_structure', 'u.email', 't.secteur', 't.personne_contact', 't.ville', 't.region', 't.presentation'],
             'nom_element' => fn ($l) => $l['nom_structure'],
             'colonnes' => [
                 ['Organisation', fn ($l) => nom_et_detail($l['nom_structure'], TYPES_STRUCTURE[$l['type_structure']] ?? '', avatar(initiales_organisation($l['nom_structure']), (int) $l['id'], $l['logo'] ?: null)), 'lien' => true],
@@ -466,7 +466,7 @@ function ressources(): array
                 (SELECT COUNT(*) FROM demandes_adhesion d WHERE d.communaute_id = t.id AND d.statut = 'acceptee') AS nb_membres,
                 (SELECT COUNT(*) FROM demandes_adhesion d WHERE d.communaute_id = t.id AND d.statut = 'en_attente') AS nb_attente,
                 (SELECT COUNT(*) FROM opportunite_communaute oc WHERE oc.communaute_id = t.id) AS nb_opportunites",
-            'ordre' => 't.ordre, t.nom', 'par_page' => 60, 'recherche' => ['t.nom', 't.public_vise'],
+            'ordre' => 't.ordre, t.nom', 'par_page' => 60, 'recherche' => ['t.nom', 't.public_vise', 't.description'],
             'peut_supprimer' => false,
             'aide_cote' => "Une communauté désactivée n'apparaît plus sur le site, sans perte de données. Pour la retirer, décochez « Active ».",
             'url_voir' => fn ($l) => $l['active'] ? url('/communaute/' . $l['slug']) : null,
@@ -723,6 +723,11 @@ function ressources(): array
                 ["Textes de l'accueil", 'description' => 'Laisser vide pour garder les textes validés de la maquette.', 'champs' => [
                     'accroche_accueil' => ['type' => 'texte', 'libelle' => "Titre principal de l'accueil", 'requis' => false, 'max' => 200],
                     'presentation_accueil' => ['type' => 'zone', 'libelle' => "Présentation sur l'accueil", 'requis' => false, 'max' => 1200, 'lignes' => 3],
+                ]],
+                ["Photos du premier écran de l'accueil", 'description' => "Elles défilent dans le grand cercle et en fond, toutes les 5 secondes. Chaque photo s'affiche entière, sans être coupée ni agrandie. Choisissez de préférence des photos en largeur, d'au moins 1600 pixels. Sans photo choisie, les photos provisoires restent affichées.", 'champs' => [
+                    'image_accueil_1' => ['type' => 'image', 'libelle' => 'Photo 1', 'requis' => false, 'dossier' => 'accueil', 'largeur' => 'tiers'],
+                    'image_accueil_2' => ['type' => 'image', 'libelle' => 'Photo 2', 'requis' => false, 'dossier' => 'accueil', 'largeur' => 'tiers'],
+                    'image_accueil_3' => ['type' => 'image', 'libelle' => 'Photo 3', 'requis' => false, 'dossier' => 'accueil', 'largeur' => 'tiers'],
                 ]],
                 ['Réglages', 'cote' => true, 'champs' => [
                     'acceptation_automatique' => ['type' => 'case', 'libelle' => 'Intégration automatique aux communautés', 'aide' => "Décoché : chaque demande est validée par un administrateur (règle à confirmer par l'équipe)."],

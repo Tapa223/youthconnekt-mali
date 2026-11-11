@@ -206,7 +206,7 @@ function recherche(): void
     $q = mb_substr(get('q'), 0, 100);
     $groupes = [];
     if (mb_strlen($q) >= 2) {
-        foreach (['opportunites', 'actualites', 'initiatives', 'membres', 'organisations', 'communautes', 'messages', 'newsletter', 'comptes'] as $slug) {
+        foreach (['opportunites', 'propositions', 'actualites', 'initiatives', 'participations', 'membres', 'organisations', 'communautes', 'demandes', 'temoignages', 'partenaires', 'messages', 'newsletter', 'comptes'] as $slug) {
             $r = ressource($slug);
             if (!peut($r['rubrique']) || !$r['recherche']) {
                 continue;
@@ -301,9 +301,7 @@ function demande(int $id): void
 
 function condition_recherche(array $r, string $q): array
 {
-    $motif = '%' . addcslashes($q, '%_\\') . '%';
-    $morceaux = array_map(fn ($c) => "$c LIKE ?", $r['recherche']);
-    return ['(' . implode(' OR ', $morceaux) . ')', array_fill(0, count($morceaux), $motif)];
+    return condition_mots($r['recherche'], $q);
 }
 
 function options_filtre($options): array

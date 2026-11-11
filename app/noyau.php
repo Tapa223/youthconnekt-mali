@@ -834,3 +834,84 @@ function supprimer_image(?string $chemin): void
         }
     }
 }
+
+// ---------------------------------------------------------------------------
+// Recherche par mots-clés (site et administration)
+// ---------------------------------------------------------------------------
+
+/** Texte en minuscules, sans accents ni ponctuation : « Réseau, Numérique ! » → « reseau numerique » */
+function texte_simplifie(string $texte): string
+{
+    $texte = mb_strtolower($texte);
+    if (class_exists('Transliterator')) {
+        $t = Transliterator::create('NFD; [:Nonspacing Mark:] Remove; NFC');
+        $texte = $t ? $t->transliterate($texte) : $texte;
+    }
+    return trim(preg_replace('/[^\p{L}\p{N}@.]+/u', ' ', $texte));
+}
+
+/**
+ * Mots utiles d'une recherche : sans les petits mots (de, la, pour…), au singulier simple
+ * (« formations » cherche aussi « formation »). Au plus 8 mots.
+ */
+function mots_recherche(string $q): array
+{
+    static $vides = ['de', 'des', 'du', 'la', 'le', 'les', 'l', 'd', 'un', 'une', 'et', 'ou', 'en', 'a', 'au', 'aux', 'pour', 'par', 'sur', 'dans', 'avec', 'mon', 'ma', 'mes', 'ce', 'ces', 'qui', 'que', 'est'];
+    $mots = [];
+    foreach (explode(' ', texte_simplifie($q)) as $m) {
+        if ($m === '' || in_array($m, $vides, true)) {
+            continue;
+        }
+        if (mb_strlen($m) > 4 && preg_match('/[sx]$/', $m)) {
+            $m = mb_substr($m, 0, -1);
+        }
+        $mots[$m] = true;
+    }
+    return array_slice(array_keys($mots), 0, 8);
+}
+
+/**
+ * Condition SQL : chaque mot doit apparaître dans au moins une des colonnes (accents et majuscules ignorés
+ * par la base). « Awa Traoré » trouve donc le prénom et le nom rangés dans deux colonnes différentes.
+ */
+function condition_mots(array $colonnes, string $q): array
+{
+    $mots = mots_recherche($q);
+    if (!$mots || !$colonnes) {
+        return ['1 = 1', []];
+    }
+    $parties = [];
+    $params = [];
+    foreach ($mots as $m) {
+        $motif = '%' . addcslashes($m, '%_\\') . '%';
+        $parties[] = '(' . implode(' OR ', array_map(fn ($c) => "$c LIKE ?", $colonnes)) . ')';
+        array_push($params, ...array_fill(0, count($colonnes), $motif));
+    }
+    return ['(' . implode(' AND ', $parties) . ')', $params];
+}
+
+/** Ordre de pertinence : la phrase exacte dans le titre, puis tous les mots dans le titre, puis le reste. */
+function pertinence_mots(string $colonne_titre, string $q): array
+{
+    $mots = mots_recherche($q);
+    if (!$mots) {
+        return ['0', []];
+    }
+    $tous = implode(' AND ', array_fill(0, count($mots), "$colonne_titre LIKE ?"));
+    return [
+        "(CASE WHEN $colonne_titre LIKE ? THEN 0 WHEN $tous THEN 1 ELSE 2 END)",
+        array_merge(['%' . addcslashes(trim($q), '%_\\') . '%'], array_map(fn ($m) => '%' . addcslashes($m, '%_\\') . '%', $mots)),
+    ];
+}
+
+/** La même règle, pour filtrer une liste déjà chargée. */
+function texte_correspond(string $texte, string $q): bool
+{
+    $texte = texte_simplifie($texte);
+    foreach (mots_recherche($q) as $m) {
+        if (!str_contains($texte, $m)) {
+            return false;
+        }
+    }
+    return true;
+}

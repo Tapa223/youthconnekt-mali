@@ -70,10 +70,15 @@ function opportunites(): void
         $conditions .= ' AND type = ?';
         $params[] = $type_actif;
     }
-    if ($recherche !== '') {
-        $conditions .= ' AND (titre LIKE ? OR resume LIKE ? OR organisme LIKE ?)';
-        $motif = '%' . addcslashes($recherche, '%_\\') . '%';
-        array_push($params, $motif, $motif, $motif);
+    $ordre = 'date_limite IS NULL, date_limite, publie_le DESC';
+    $params_ordre = [];
+    if (mots_recherche($recherche)) {
+        // Chaque mot est cherché partout dans l'opportunité, y compris le nom de son type (« bourse », « stage »…)
+        [$c, $p] = condition_mots(['titre', 'resume', 'organisme', 'description', 'lieu', 'public', 'criteres', '(SELECT t.nom FROM types_opportunite t WHERE t.slug = opportunites.type)'], $recherche);
+        $conditions .= " AND $c";
+        $params = array_merge($params, $p);
+        [$pertinence, $params_ordre] = pertinence_mots('titre', $recherche);
+        $ordre = "$pertinence, $ordre";
     }
     $total = (int) valeur('SELECT COUNT(*) FROM opportunites WHERE ' . OUVERTE . $conditions, $params);
     $pagination = paginer($total, 12);
@@ -92,7 +97,7 @@ function opportunites(): void
         'nombres' => $nombres,
         'recherche' => $recherche,
         'total' => $total,
-        'liste' => opportunites_ouvertes("$conditions ORDER BY date_limite IS NULL, date_limite, publie_le DESC LIMIT {$pagination['par_page']} OFFSET {$pagination['decalage']}", $params),
+        'liste' => opportunites_ouvertes("$conditions ORDER BY $ordre LIMIT {$pagination['par_page']} OFFSET {$pagination['decalage']}", array_merge($params, $params_ordre)),
         'pagination' => $pagination,
     ]));
 }

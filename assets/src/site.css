@@ -229,9 +229,8 @@
   a.carte:hover img { transform: scale(1.06); }
 
   /* Diaporama : les photos se succèdent en fondu */
-  [data-diapo] > [data-diapo-image] { opacity: 0; transition: opacity 1.4s ease, transform 6s ease; }
+  [data-diapo] > [data-diapo-image] { opacity: 0; transition: opacity 1.4s ease; }
   [data-diapo] > [data-diapo-image].active { opacity: 1; }
-  [data-diapo-zoom] > [data-diapo-image].active { transform: scale(1.06); }
 }
 
 /* Apparition au défilement : un script ajoute « visible » quand le bloc entre à l'écran.
@@ -328,3 +327,6 @@ a.text-orange:not(.btn):not([class*="hover:bg-"]):hover { color: var(--color-ver
   body:has(.billet) .billet, body:has(.billet) .billet * { visibility: visible; }
   .billet { position: absolute; top: 0; left: 0; right: 0; box-shadow: none; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
+
+/* Photo du grand cercle : entière, avec une ombre douce pour la détacher du fond flouté */
+.photo-cercle { filter: drop-shadow(0 10px 24px rgb(0 0 0 / .35)); }
