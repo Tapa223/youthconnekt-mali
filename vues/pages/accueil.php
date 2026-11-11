@@ -80,7 +80,7 @@ foreach (range(0, 11) as $k) {
     </div>
 
     <div class="anim-flotte absolute bottom-[13%] left-0 z-10 hidden lg:block xl:-left-10 2xl:-left-24"><a href="#chapitre" class="btn btn-contour-blanc min-h-16 w-[19rem] px-7 text-xl">Découvrir le chapitre</a></div>
-    <div class="anim-flotte-2 absolute right-0 bottom-[13%] z-10 hidden lg:block xl:-right-10 2xl:-right-24"><a href="#rejoindre" class="btn btn-orange min-h-16 w-[19rem] px-7 text-xl shadow-lg shadow-orange/30">Let's Connekt</a></div>
+    <div class="anim-flotte-2 absolute right-0 bottom-[13%] z-10 hidden lg:block xl:-right-10 2xl:-right-24"><a href="#rejoindre" class="btn btn-orange btn-connekt min-h-16 w-[19rem] px-7 text-xl shadow-lg shadow-orange/30"><span class="points-connekt" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Let's Connekt</a></div>
   </div>
   <?php partiel('partials/mention_photo', ['texte' => 'Photos provisoires · Sommet YouthConnekt Africa, hors Mali']) ?>
 </section>
@@ -376,9 +376,9 @@ foreach (range(0, 11) as $k) {
     <h2 id="titre-invitation" class="text-5xl leading-none font-bold text-white sm:text-7xl lg:text-[8.5rem]">Let's Connekt</h2>
     <p class="mx-auto mt-5 max-w-md text-base text-white/95 sm:text-lg">Jeunes, entreprises et organisations : le chapitre YouthConnekt Mali vous ouvre ses portes.</p>
     <?php if (est_connecte()): ?>
-    <a href="<?= url('/communaute') ?>" class="btn btn-orange survol-grand mt-8 min-h-14 px-10 text-lg">Découvrir les communautés</a>
+    <a href="<?= url('/communaute') ?>" class="btn btn-orange btn-connekt survol-grand mt-8 min-h-14 px-10 text-lg"><span class="points-connekt" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Découvrir les communautés</a>
     <?php else: ?>
-    <a href="<?= url('/compte/inscription') ?>" class="btn btn-orange survol-grand mt-8 min-h-14 px-10 text-lg">Rejoindre le chapitre</a>
+    <a href="<?= url('/compte/inscription') ?>" class="btn btn-orange btn-connekt survol-grand mt-8 min-h-14 px-10 text-lg"><span class="points-connekt" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Rejoindre le chapitre</a>
     <?php endif ?>
   </div>
 </section>

@@ -1,7 +1,7 @@
 <?php /* Carte d'opportunité. Paramètres : $o, $compacte (bool), $via (nom de la communauté) */ $compacte = !empty($compacte); ?>
 <a href="<?= e($o['url']) ?>" class="carte group flex h-full flex-col transition-shadow hover:shadow-lg">
   <div class="relative aspect-[16/7.5] border-b-4 <?= bordure($o['couleur']) ?>">
-    <?php partiel('partials/photo', ['image' => $o['image']]) ?>
+    <?php partiel('partials/photo', ['transition' => 'photo-opp-' . $o['id'], 'image' => $o['image']]) ?>
     <?php if (!$compacte): ?><span class="etiquette absolute top-3 left-3 hidden rounded-full sm:inline-block <?= fond($o['couleur']) ?>"><?= e($o['type_libelle']) ?></span><?php endif ?>
     <?php if ($o['jours_restants'] !== null && $o['jours_restants'] >= 0): ?>
     <span class="absolute top-2 right-2 rounded-full px-2.5 py-1 text-sm leading-none font-bold whitespace-nowrap shadow sm:top-3 sm:right-3 sm:px-3 sm:py-1.5 sm:text-base <?= $o['jours_restants'] <= 25 ? 'bg-orange text-white' : 'bg-white text-vert' ?>" title="<?= $o['jours_restants'] ?> jour<?= pluriel($o['jours_restants']) ?> avant la date limite">J-<?= $o['jours_restants'] ?></span>

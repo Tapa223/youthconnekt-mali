@@ -34,7 +34,7 @@ $icone_partager = '<svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stro
         <div class="carrousel relative aspect-[4/3] overflow-hidden rounded-3xl bg-vert" data-carrousel aria-roledescription="carrousel" aria-label="Images de l'actualité">
           <?php foreach ($images as $k => $img): ?>
           <figure class="carrousel-vue <?= $k === 0 ? 'actif' : '' ?>" aria-hidden="<?= $k === 0 ? 'false' : 'true' ?>">
-            <img src="<?= e($img['src']) ?>" alt="<?= e($img['legende']) ?>" class="h-full w-full object-cover" <?= $k === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?>>
+            <img src="<?= e($img['src']) ?>" alt="<?= e($img['legende']) ?>" class="h-full w-full object-cover" <?= $k === 0 ? 'fetchpriority="high"' . ($a['image'] ? ' style="view-transition-name: photo-act-' . (int) $a['id'] . '"' : '') : 'loading="lazy"' ?>>
           </figure>
           <?php endforeach ?>
           <?php if (count($images) > 1): ?>

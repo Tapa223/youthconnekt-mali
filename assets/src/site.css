@@ -330,3 +330,75 @@ a.text-orange:not(.btn):not([class*="hover:bg-"]):hover { color: var(--color-ver
 
 /* Photo du grand cercle : entière, avec une ombre douce pour la détacher du fond flouté */
 .photo-cercle { filter: drop-shadow(0 10px 24px rgb(0 0 0 / .35)); }
+
+/* ------------------------------------------------------------------------
+   Signature du site : le réseau qui se connecte
+   ------------------------------------------------------------------------ */
+
+/* Passage d'une page à l'autre : fondu doux ; la photo d'une carte glisse et s'agrandit jusqu'à la page de détail */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: 220ms ease both sortie-page; }
+::view-transition-new(root) { animation: 320ms ease both entree-page; }
+::view-transition-group(*) { animation-duration: 420ms; animation-timing-function: cubic-bezier(.2, .8, .2, 1); }
+header.site-entete { view-transition-name: entete; }
+@keyframes sortie-page { to { opacity: 0; } }
+@keyframes entree-page { from { opacity: 0; transform: translateY(10px); } }
+
+/* Fils du décor : ils se tracent quand le bloc apparaît, puis les points s'allument */
+.js [data-reseau] path { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.8s cubic-bezier(.4, 0, .2, 1); }
+.js [data-reseau] circle { opacity: 0; transform-box: fill-box; transform-origin: center; transform: scale(.2); transition: opacity .5s ease, transform .5s cubic-bezier(.3, 1.6, .5, 1); }
+.js [data-reseau].trace path { stroke-dashoffset: 0; }
+.js [data-reseau].trace circle { opacity: 1; transform: none; }
+.js [data-reseau].trace circle:nth-of-type(1) { transition-delay: .6s; }
+.js [data-reseau].trace circle:nth-of-type(2) { transition-delay: .8s; }
+.js [data-reseau].trace circle:nth-of-type(3) { transition-delay: 1s; }
+.js [data-reseau].trace circle:nth-of-type(4) { transition-delay: 1.2s; }
+.js [data-reseau].trace circle:nth-of-type(5) { transition-delay: 1.4s; }
+
+/* Photo en cours de chargement : un reflet passe au lieu d'un bloc vide */
+.photo-attente { background: linear-gradient(100deg, #e9efed 30%, #f6f9f8 50%, #e9efed 70%) 0 0 / 300% 100%; animation: reflet 1.4s linear infinite; }
+.photo-attente.chargee { animation: none; background: none; }
+@keyframes reflet { from { background-position: 100% 0; } to { background-position: 0 0; } }
+
+/* Let's Connekt : au survol, des points du réseau viennent se relier au bouton */
+.btn-connekt { position: relative; isolation: isolate; overflow: visible; }
+.btn-connekt .points-connekt { position: absolute; inset: 0; pointer-events: none; }
+.btn-connekt .points-connekt i { position: absolute; width: 8px; height: 8px; border-radius: 999px; opacity: 0; transition: transform .55s cubic-bezier(.2, .8, .2, 1), opacity .3s ease; }
+.btn-connekt .points-connekt i:nth-child(1) { left: -34px; top: -18px; background: var(--color-turquoise); transform: translate(-14px, -10px); }
+.btn-connekt .points-connekt i:nth-child(2) { right: -30px; top: -22px; background: #fff; transform: translate(14px, -12px); }
+.btn-connekt .points-connekt i:nth-child(3) { left: -26px; bottom: -20px; background: var(--color-bleu); transform: translate(-12px, 10px); }
+.btn-connekt .points-connekt i:nth-child(4) { right: -36px; bottom: -14px; background: var(--color-turquoise); transform: translate(16px, 8px); }
+.btn-connekt .points-connekt i::after { content: ""; position: absolute; top: 50%; height: 1.5px; width: 30px; background: currentColor; opacity: .55; transform-origin: left center; }
+.btn-connekt .points-connekt i:nth-child(1), .btn-connekt .points-connekt i:nth-child(3) { color: #fff; }
+.btn-connekt .points-connekt i:nth-child(1)::after { left: 6px; transform: rotate(28deg); }
+.btn-connekt .points-connekt i:nth-child(3)::after { left: 6px; transform: rotate(-28deg); }
+.btn-connekt .points-connekt i:nth-child(2)::after, .btn-connekt .points-connekt i:nth-child(4)::after { right: 6px; transform-origin: right center; color: #fff; }
+.btn-connekt .points-connekt i:nth-child(2)::after { transform: rotate(-30deg); }
+.btn-connekt .points-connekt i:nth-child(4)::after { transform: rotate(24deg); }
+.btn-connekt:hover .points-connekt i, .btn-connekt:focus-visible .points-connekt i { opacity: 1; transform: none; }
+.btn-connekt:hover .points-connekt i:nth-child(2) { transition-delay: .06s; }
+.btn-connekt:hover .points-connekt i:nth-child(3) { transition-delay: .12s; }
+.btn-connekt:hover .points-connekt i:nth-child(4) { transition-delay: .18s; }
+
+/* Bienvenue dans l'espace : un nouveau point arrive et se relie au réseau */
+.bienvenue-point { transform-box: fill-box; transform-origin: center; animation: point-arrive .9s cubic-bezier(.3, 1.5, .5, 1) .2s both; }
+.bienvenue-fils path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: fil-trace .7s ease forwards; }
+.bienvenue-fils path:nth-child(1) { animation-delay: .9s; } .bienvenue-fils path:nth-child(2) { animation-delay: 1.05s; }
+.bienvenue-fils path:nth-child(3) { animation-delay: 1.2s; } .bienvenue-fils path:nth-child(4) { animation-delay: 1.35s; }
+@keyframes point-arrive { from { opacity: 0; transform: translate(60px, -50px) scale(.3); } }
+@keyframes fil-trace { to { stroke-dashoffset: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .bienvenue-point, .bienvenue-fils path { animation: none; stroke-dashoffset: 0; }
+  @view-transition { navigation: none; }
+  .js [data-reseau] path, .js [data-reseau] circle { transition: none; stroke-dashoffset: 0; opacity: 1; transform: none; }
+  .photo-attente { animation: none; }
+}
+
+/* Page d'erreur : le point détaché flotte au bout de son fil */
+.erreur-point { transform-box: fill-box; transform-origin: center; animation: point-perdu 3.2s ease-in-out infinite; }
+.erreur-fil { animation: fil-perdu 3.2s ease-in-out infinite; }
+@keyframes point-perdu { 50% { transform: translate(10px, 14px); } }
+@keyframes fil-perdu { 50% { stroke-dashoffset: 24; } }
+@media (prefers-reduced-motion: reduce) { .erreur-point, .erreur-fil { animation: none; } }
+.recherche-dialogue input[type=search]::-webkit-search-cancel-button { display: none; }

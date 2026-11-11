@@ -2,7 +2,7 @@
 <?php if ($mode === 'liste'): ?>
 <a href="<?= e($a['url']) ?>" class="carte group flex h-full flex-col transition-shadow hover:shadow-lg">
   <div class="relative aspect-[4/3] border-b-[3px] sm:aspect-[16/9] sm:border-b-4 lg:aspect-[16/7] <?= bordure($a['couleur']) ?>">
-    <?php partiel('partials/photo', ['image' => $a['image']]) ?>
+    <?php partiel('partials/photo', ['transition' => 'photo-act-' . $a['id'], 'image' => $a['image']]) ?>
     <?php if ($a['est_a_venir']): ?><span class="etiquette absolute top-2 left-2 rounded-full bg-orange text-white max-sm:px-2 max-sm:py-0.5 max-sm:text-[10px] sm:top-3 sm:left-3">À venir</span><?php endif ?>
   </div>
   <div class="flex flex-1 flex-col p-3 sm:p-5 lg:p-4">
@@ -16,7 +16,7 @@
 <?php return; endif ?>
 <a href="<?= e($a['url']) ?>" class="carte group flex h-full flex-col transition-shadow hover:shadow-lg">
   <div class="relative aspect-[16/8] <?= $mode === 'actualite' ? 'border-b-4 border-turquoise' : '' ?>">
-    <?php partiel('partials/photo', ['image' => $a['image']]) ?>
+    <?php partiel('partials/photo', ['transition' => 'photo-act-' . $a['id'], 'image' => $a['image']]) ?>
     <?php if ($mode === 'evenement'): ?>
     <time datetime="<?= e(date_iso($a['date_affichee'])) ?>" class="absolute top-0 left-0 grid min-w-13 rounded-br-xl px-2.5 py-2 text-center leading-none <?= $a['est_a_venir'] ? 'bg-orange text-white' : 'bg-white text-vert' ?>">
       <span class="text-xl font-bold"><?= e(jour($a['date_affichee'])) ?></span><span class="mt-1 text-[10px] font-bold uppercase"><?= e(mois_pastille($a['date_affichee'])) ?></span>

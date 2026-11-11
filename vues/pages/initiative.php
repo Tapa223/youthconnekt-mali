@@ -32,7 +32,7 @@ $chiffres_i = lignes_colonnes($i['chiffres'], 2);
   <div class="relative mx-auto w-full max-w-xl pr-4 pb-8 sm:pr-6 sm:pb-10">
     <div class="absolute top-6 right-0 bottom-10 left-1/3 rounded-3xl bg-orange" aria-hidden="true"></div>
     <div class="devoile survol-zoom relative aspect-[4/3] overflow-hidden rounded-3xl shadow-xl">
-      <?php partiel('partials/photo', ['image' => $i['image'], 'eager' => true]) ?>
+      <?php partiel('partials/photo', ['transition' => 'photo-ini-' . $i['id'], 'image' => $i['image'], 'eager' => true]) ?>
     </div>
     <?php if ($photos): $p2 = $photos[0]; ?>
     <div class="survol-penche absolute right-0 bottom-0 aspect-[4/3] w-[42%] rotate-2 overflow-hidden rounded-2xl border-4 border-white shadow-xl">

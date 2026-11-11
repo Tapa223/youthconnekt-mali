@@ -197,7 +197,7 @@ function confirmer(string $jeton): void
     unset($_SESSION['inscription_utilisateur']);
     $u['email_confirme'] = 1;
     connecter($u);
-    flash('succes', 'Votre adresse e-mail est confirmée. Bienvenue dans votre espace.');
+    $_SESSION['bienvenue'] = true; // l'espace membre accueille la personne : un nouveau point rejoint le réseau
     rediriger(url('/compte/mon-espace'));
 }
 

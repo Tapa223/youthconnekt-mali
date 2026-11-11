@@ -27,7 +27,7 @@ $etapes = lignes_texte($o['etapes']);
 
       <?php if ($o['image']): ?>
       <div class="mt-4 aspect-[16/9] overflow-hidden rounded-2xl sm:mt-6">
-        <?php partiel('partials/photo', ['image' => $o['image'], 'eager' => true]) ?>
+        <?php partiel('partials/photo', ['transition' => 'photo-opp-' . $o['id'], 'image' => $o['image'], 'eager' => true]) ?>
       </div>
       <?php endif ?>
 

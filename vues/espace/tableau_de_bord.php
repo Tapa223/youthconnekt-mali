@@ -25,6 +25,21 @@ $actions = [
 ];
 ?>
 <span data-recharger-apres-envoi hidden></span>
+<?php if (!empty($_SESSION['bienvenue'])): unset($_SESSION['bienvenue']); ?>
+<section class="bienvenue relative mb-4 overflow-hidden rounded-2xl border-2 border-orange/30 bg-white p-5 sm:flex sm:items-center sm:gap-6 sm:p-6" aria-labelledby="titre-bienvenue">
+  <svg class="bienvenue-reseau mx-auto h-28 w-56 shrink-0 sm:mx-0" viewBox="0 0 240 120" aria-hidden="true">
+    <g stroke="#035E4D" stroke-opacity=".25" stroke-width="1.5" fill="none"><path d="M30 30 L90 18 L150 40 L210 22"/><path d="M30 30 L40 95 L110 100"/><path d="M150 40 L200 92"/></g>
+    <g class="bienvenue-fils" stroke="#F1592A" stroke-width="2" fill="none"><path pathLength="1" d="M120 66 L90 18"/><path pathLength="1" d="M120 66 L150 40"/><path pathLength="1" d="M120 66 L110 100"/><path pathLength="1" d="M120 66 L200 92"/></g>
+    <g fill="#035E4D"><circle cx="30" cy="30" r="5"/><circle cx="90" cy="18" r="6" fill="#04B2B1"/><circle cx="150" cy="40" r="5"/><circle cx="210" cy="22" r="5" fill="#0358D9"/><circle cx="40" cy="95" r="5" fill="#04B2B1"/><circle cx="110" cy="100" r="5"/><circle cx="200" cy="92" r="6" fill="#04B2B1"/></g>
+    <circle class="bienvenue-point" cx="120" cy="66" r="9" fill="#F1592A" stroke="#fff" stroke-width="3"/>
+  </svg>
+  <div class="mt-3 text-center sm:mt-0 sm:text-left">
+    <h2 id="titre-bienvenue" class="text-xl font-bold text-vert sm:text-2xl">Bienvenue dans le réseau, <?= e($profil['prenom'] ?? $u['nom_affiche']) ?></h2>
+    <p class="mt-1 text-[15px]">Votre adresse est confirmée : vous êtes maintenant membre du chapitre YouthConnekt Mali. Commencez par rejoindre une communauté qui vous ressemble.</p>
+    <a href="<?= url('/communaute') ?>" class="btn btn-orange mt-3 min-h-11">Choisir une communauté</a>
+  </div>
+</section>
+<?php endif ?>
 <section class="relative overflow-hidden rounded-2xl bg-vert px-5 py-4 text-white sm:px-7 sm:py-6">
   <?php partiel('partials/reseau_deco', ['opacite' => 'opacity-40']) ?>
   <div class="relative">

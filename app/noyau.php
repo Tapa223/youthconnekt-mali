@@ -915,3 +915,42 @@ function texte_correspond(string $texte, string $q): bool
     }
     return true;
 }
+
+/** Met en valeur les mots cherchés dans un texte (déjà échappé ici), accents et majuscules ignorés. */
+function surligner(string $texte, string $q): string
+{
+    $html = e($texte);
+    $mots = mots_recherche($q);
+    if (!$mots || !class_exists('Transliterator')) {
+        return $html;
+    }
+    $simple = Transliterator::create('NFD; [:Nonspacing Mark:] Remove; NFC');
+    // Repère chaque mot dans la version sans accents, puis marque le même passage dans le texte d'origine
+    $plat = mb_strtolower($simple->transliterate($texte));
+    if (mb_strlen($plat) !== mb_strlen($texte)) {
+        return $html;
+    }
+    $marques = array_fill(0, mb_strlen($texte), false);
+    foreach ($mots as $m) {
+        $pos = 0;
+        while (($pos = mb_strpos($plat, $m, $pos)) !== false) {
+            for ($k = $pos; $k < $pos + mb_strlen($m); $k++) {
+                $marques[$k] = true;
+            }
+            $pos += mb_strlen($m);
+        }
+    }
+    $sortie = '';
+    $ouvert = false;
+    foreach (mb_str_split($texte) as $k => $car) {
+        if ($marques[$k] && !$ouvert) {
+            $sortie .= '<mark class="rounded bg-orange/15 px-0.5 text-inherit">';
+            $ouvert = true;
+        } elseif (!$marques[$k] && $ouvert) {
+            $sortie .= '</mark>';
+            $ouvert = false;
+        }
+        $sortie .= e($car);
+    }
+    return $sortie . ($ouvert ? '</mark>' : '');
+}

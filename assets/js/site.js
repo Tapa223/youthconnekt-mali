@@ -762,3 +762,96 @@
     });
   });
 })();
+
+/* ------------------------------------------------------------------------
+   Signature : fils du réseau qui se tracent à l'apparition, photos chargées
+   ------------------------------------------------------------------------ */
+(function () {
+  "use strict";
+  var reseaux = document.querySelectorAll("[data-reseau]");
+  if (reseaux.length) {
+    if (!("IntersectionObserver" in window)) { reseaux.forEach(function (r) { r.classList.add("trace"); }); }
+    else {
+      var obs = new IntersectionObserver(function (entrees) {
+        entrees.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("trace"); obs.unobserve(e.target); } });
+      }, { threshold: 0.2 });
+      reseaux.forEach(function (r) { obs.observe(r); });
+    }
+  }
+  document.querySelectorAll("img.photo-attente").forEach(function (img) {
+    var fini = function () { img.classList.add("chargee"); };
+    if (img.complete && img.naturalWidth) fini(); else { img.addEventListener("load", fini); img.addEventListener("error", fini); }
+  });
+})();
+
+/* ------------------------------------------------------------------------
+   Recherche instantanée : loupe de l'en-tête, Ctrl + K ou « / »
+   ------------------------------------------------------------------------ */
+(function () {
+  "use strict";
+  var boite = document.querySelector("[data-recherche]");
+  if (!boite || typeof boite.showModal !== "function") return;
+  var champ = boite.querySelector("[data-recherche-champ]");
+  var zone = boite.querySelector("[data-recherche-resultats]");
+  var adresse = boite.getAttribute("data-suggestions");
+  var aide = zone.innerHTML, minuterie = null, requete = 0, choix = -1;
+  var echapper = function (t) { var d = document.createElement("div"); d.textContent = t || ""; return d.innerHTML; };
+  var liens = function () { return Array.prototype.slice.call(zone.querySelectorAll("[data-suggestion]")); };
+  var marquer = function (k) {
+    var l = liens(); choix = k;
+    l.forEach(function (a, i) { a.classList.toggle("bg-gris", i === k); a.setAttribute("aria-selected", i === k ? "true" : "false"); });
+    if (l[k]) l[k].scrollIntoView({ block: "nearest" });
+  };
+  var afficher = function (d) {
+    choix = -1;
+    if (!d.groupes.length) {
+      zone.innerHTML = '<p class="px-3 py-6 text-center text-sm">Aucun résultat pour « ' + echapper(d.q) + ' ». Essayez un mot plus court ou plus général.</p>';
+      champ.setAttribute("aria-expanded", "false");
+      return;
+    }
+    var html = "";
+    d.groupes.forEach(function (g) {
+      html += '<p class="px-3 pt-3 pb-1 text-xs font-bold tracking-wide text-texte uppercase">' + echapper(g.titre) + "</p>";
+      g.elements.forEach(function (x) {
+        html += '<a href="' + echapper(x.url) + '" role="option" data-suggestion class="flex min-h-14 items-center gap-3 rounded-xl px-3 py-2 hover:bg-gris">'
+          + (x.image ? '<img src="' + echapper(x.image) + '" alt="" class="size-11 shrink-0 rounded-lg object-cover">' : '<span class="grid size-11 shrink-0 place-items-center rounded-lg bg-vert-clair text-vert" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="7" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="13" cy="18" r="2.5"/><path d="M8.3 7.6 15.6 6.4M7.4 9.2l4.3 6.9M17 8.4l-2.9 7.5"/></svg></span>')
+          + '<span class="min-w-0"><span class="block truncate font-bold text-vert">' + echapper(x.titre) + "</span>"
+          + (x.detail ? '<span class="block truncate text-xs text-texte">' + echapper(x.detail) + "</span>" : "") + "</span></a>";
+      });
+    });
+    html += '<a href="' + echapper(d.tout) + '" data-suggestion class="mt-2 flex min-h-12 items-center justify-center rounded-xl bg-vert-clair px-3 text-sm font-bold text-vert hover:bg-orange hover:text-white">Voir tous les résultats pour « ' + echapper(d.q) + " »</a>";
+    zone.innerHTML = html;
+    champ.setAttribute("aria-expanded", "true");
+  };
+  var chercher = function () {
+    var q = champ.value.trim();
+    if (q.length < 2) { zone.innerHTML = aide; champ.setAttribute("aria-expanded", "false"); return; }
+    var n = ++requete;
+    zone.setAttribute("aria-busy", "true");
+    fetch(adresse + "?q=" + encodeURIComponent(q), { headers: { Accept: "application/json" } })
+      .then(function (r) { return r.json(); })
+      .then(function (d) { if (n === requete) afficher(d); })
+      .catch(function () { if (n === requete) zone.innerHTML = '<p class="px-3 py-6 text-center text-sm">La recherche ne répond pas. Appuyez sur Entrée pour voir la page de résultats.</p>'; })
+      .then(function () { zone.removeAttribute("aria-busy"); });
+  };
+  var ouvrir = function () {
+    var menu = document.querySelector("[data-menu-mobile]");
+    if (menu && !menu.classList.contains("hidden")) { var f = menu.querySelector("[data-fermer-menu]"); if (f) f.click(); }
+    boite.showModal(); champ.focus(); champ.select();
+  };
+  document.querySelectorAll("[data-ouvrir-recherche]").forEach(function (b) { b.addEventListener("click", ouvrir); });
+  boite.querySelector("[data-fermer-recherche]").addEventListener("click", function () { boite.close(); });
+  boite.addEventListener("click", function (e) { if (e.target === boite) boite.close(); });
+  champ.addEventListener("input", function () { clearTimeout(minuterie); minuterie = setTimeout(chercher, 180); });
+  champ.addEventListener("keydown", function (e) {
+    var l = liens();
+    if (e.key === "ArrowDown" && l.length) { e.preventDefault(); marquer(Math.min(l.length - 1, choix + 1)); }
+    else if (e.key === "ArrowUp" && l.length) { e.preventDefault(); marquer(Math.max(0, choix - 1)); }
+    else if (e.key === "Enter" && choix >= 0 && l[choix]) { e.preventDefault(); window.location.href = l[choix].href; }
+  });
+  document.addEventListener("keydown", function (e) {
+    var cible = e.target, saisie = cible && (cible.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(cible.tagName));
+    if ((e.key === "k" || e.key === "K") && (e.ctrlKey || e.metaKey)) { e.preventDefault(); ouvrir(); }
+    else if (e.key === "/" && !saisie && !boite.open) { e.preventDefault(); ouvrir(); }
+  });
+})();
