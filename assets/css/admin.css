@@ -244,7 +244,7 @@ button, input, select, textarea { font: inherit; }
 .ycm-boite--pad .ycm-vide { padding: 0; }
 
 /* Tableaux de la maquette */
-.ycm-tableau-defile { overflow-x: auto; }
+.ycm-tableau-defile { position: relative; overflow-x: auto; }
 .ycm-tableau { width: 100%; border-collapse: collapse; }
 .ycm-tableau th {
   padding: 14px 16px;
@@ -990,3 +990,9 @@ input[type=file]::file-selector-button {
 .ycm-pa-questions summary em { margin-left: auto; font-style: normal; font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 12.5px; color: var(--ycm-texte); }
 .ycm-pa-questions[open] { padding-bottom: 4px; }
 @media (max-width: 760px) { .ycm-pa-questions summary em { display: none; } }
+@media (max-width: 400px) {
+  .ycm-pa-role-bloc { padding: 10px; }
+  .ycm-pa-questions { padding-left: 6px; border-left-width: 2px; }
+  .ycm-pa-ligne { padding: 10px; }
+  .ycm-pa-champs-role > *, .ycm-pa-champs-question > * { min-width: 0; }
+}

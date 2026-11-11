@@ -4,11 +4,13 @@ $admin = est_admin();
 $ministre_publie = !empty($mot['publie']);
 $nom_ministre = ($ministre_publie && $mot['nom']) ? $mot['nom'] : 'M. Abdoul Kassim Ibrahim Fomba';
 $titre_ministre = ($ministre_publie && $mot['titre_officiel']) ? $mot['titre_officiel'] : "Ministre de la Jeunesse et des Sports, chargé de l'Instruction civique et de la Construction citoyenne";
-$points = [
-    [1170, 710, 9, '#F1592A'], [1110, 485, 7, '#04B2B1'], [945, 320, 7, '#fff'], [720, 260, 9, '#0358D9'],
-    [495, 320, 7, '#F1592A'], [330, 485, 7, '#04B2B1'], [270, 710, 9, '#fff'], [330, 935, 7, '#0358D9'],
-    [495, 1100, 7, '#F1592A'], [720, 1160, 9, '#04B2B1'], [945, 1100, 7, '#fff'], [1110, 935, 7, '#0358D9'],
-];
+// Premier écran : grand cercle photo et anneau de points (repère 1440 × 820 de la maquette)
+$soleil = ['cx' => 720, 'cy' => 745, 'r' => 480, 'anneau' => 522];
+$points = [];
+foreach (range(0, 11) as $k) {
+    $angle = deg2rad(-$k * 30);
+    $points[] = [round($soleil['cx'] + $soleil['anneau'] * cos($angle)), round($soleil['cy'] + $soleil['anneau'] * sin($angle)), $k % 3 === 0 ? 9 : 7, ['#F1592A', '#04B2B1', '#fff', '#0358D9'][$k % 4]];
+}
 ?>
 
 <?php /* 1. Premier écran */ ?>
@@ -23,21 +25,21 @@ $points = [
   <?php /* Cadre de la maquette (1440 × 820) mis à l'échelle de l'écran : anneau, grand cercle et bulles s'y alignent */ ?>
   <div class="pointer-events-none absolute inset-y-0 left-1/2 hidden aspect-[1440/820] -translate-x-1/2 lg:block" aria-hidden="true">
     <svg class="absolute inset-0 h-full w-full overflow-visible" viewBox="0 0 1440 820" fill="none">
-      <circle cx="720" cy="710" r="450" stroke="#fff" stroke-opacity=".3" stroke-width="1.5" stroke-dasharray="6 8"/>
-      <circle cx="720" cy="710" r="490" stroke="#fff" stroke-opacity=".1"/>
-      <g class="anim-orbite" style="transform-origin: 720px 710px">
+      <circle cx="<?= $soleil['cx'] ?>" cy="<?= $soleil['cy'] ?>" r="<?= $soleil['anneau'] ?>" stroke="#fff" stroke-opacity=".3" stroke-width="1.5" stroke-dasharray="6 8"/>
+      <circle cx="<?= $soleil['cx'] ?>" cy="<?= $soleil['cy'] ?>" r="<?= $soleil['anneau'] + 42 ?>" stroke="#fff" stroke-opacity=".1"/>
+      <g class="anim-orbite" style="transform-origin: <?= $soleil['cx'] ?>px <?= $soleil['cy'] ?>px">
         <?php foreach ($points as $k => [$cx, $cy, $r, $c]): ?>
         <circle class="anim-point" cx="<?= $cx ?>" cy="<?= $cy ?>" r="<?= $r ?>" fill="<?= $c ?>" stroke="#035E4D" stroke-width="3" style="animation-delay:<?= number_format(0.6 + $k * 0.25, 2, '.', '') ?>s"/>
         <?php endforeach ?>
       </g>
-      <g stroke="#fff" stroke-opacity=".35" stroke-width="1.5" stroke-dasharray="4 6"><path d="M195 360 L346 460"/><path d="M289 536 L303 541"/><path d="M1243 334 L1085 447"/><path d="M1143 517 L1129 523"/></g>
-      <circle cx="346" cy="460" r="4" fill="#F1592A"/><circle cx="303" cy="541" r="4" fill="#04B2B1"/><circle cx="1085" cy="447" r="4" fill="#04B2B1"/><circle cx="1129" cy="523" r="4" fill="#F1592A"/>
+      <g stroke="#fff" stroke-opacity=".35" stroke-width="1.5" stroke-dasharray="4 6"><path d="M195 360 L287 453"/><path d="M160 520 L216 610"/><path d="M1243 334 L1153 453"/><path d="M1290 505 L1224 610"/></g>
+      <circle cx="287" cy="453" r="4" fill="#F1592A"/><circle cx="216" cy="610" r="4" fill="#04B2B1"/><circle cx="1153" cy="453" r="4" fill="#04B2B1"/><circle cx="1224" cy="610" r="4" fill="#F1592A"/>
     </svg>
     <span class="anim-flotte-2 absolute top-[34.4%] left-[7.1%] aspect-square w-[6.7%] rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= asset('img/accueil/bulle-1.jpg') ?>" alt=""></span>
-    <span class="anim-flotte absolute top-[59%] left-[14.9%] aspect-square w-[5%] rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= asset('img/accueil/bulle-2.jpg') ?>" alt=""></span>
+    <span class="anim-flotte absolute top-[59%] left-[8.6%] aspect-square w-[5%] rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= asset('img/accueil/bulle-2.jpg') ?>" alt=""></span>
     <span class="anim-flotte-2 absolute top-[30.2%] left-[86%] aspect-square w-[7.2%] rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= asset('img/accueil/bulle-3.jpg') ?>" alt=""></span>
-    <span class="anim-flotte absolute top-[56.7%] left-[79.5%] aspect-square w-[4.9%] rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= asset('img/accueil/bulle-4.jpg') ?>" alt=""></span>
-    <div class="anim-soleil absolute top-[36.6%] left-[21.5%] aspect-square w-[57%]">
+    <span class="anim-flotte absolute top-[57.5%] left-[87.1%] aspect-square w-[4.9%] rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= asset('img/accueil/bulle-4.jpg') ?>" alt=""></span>
+    <div class="anim-soleil absolute top-[32.3%] left-[16.67%] aspect-square w-[66.67%]">
       <div class="absolute inset-0 overflow-hidden rounded-full bg-vert shadow-[0_0_0_8px_rgb(255_255_255/.14)]" data-diapo="accueil" data-diapo-zoom>
         <img data-diapo-image src="<?= asset('img/accueil/premier-ecran.jpg') ?>" alt="" class="absolute inset-0 h-full w-full object-cover object-[62%_30%]" fetchpriority="high">
         <img data-diapo-image src="<?= asset('img/accueil/premier-ecran-2.jpg') ?>" alt="" class="absolute inset-0 h-full w-full object-cover object-[50%_20%]" loading="lazy">
@@ -61,7 +63,7 @@ $points = [
       <a href="#rejoindre" class="btn btn-orange px-2 text-[13px] sm:text-base">Let's Connekt</a>
     </div>
 
-    <div class="anim-soleil relative order-1 aspect-square w-[66vw] max-w-[290px] sm:max-w-[340px] lg:hidden">
+    <div class="anim-soleil relative order-1 aspect-square w-[80vw] max-w-[340px] sm:max-w-[420px] lg:hidden">
       <div class="absolute -inset-3 rounded-full border-2 border-dashed border-white/35" aria-hidden="true"></div>
       <div class="absolute inset-0 overflow-hidden rounded-full bg-vert shadow-[0_0_0_6px_rgb(255_255_255/.14)]" data-diapo="accueil" data-diapo-zoom>
         <img data-diapo-image src="<?= asset('img/accueil/premier-ecran.jpg') ?>" alt="Jeunes réunis lors d'un événement YouthConnekt" class="absolute inset-0 h-full w-full object-cover object-[62%_30%]">
