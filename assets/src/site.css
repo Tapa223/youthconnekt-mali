@@ -402,3 +402,9 @@ header.site-entete { view-transition-name: entete; }
 @keyframes fil-perdu { 50% { stroke-dashoffset: 24; } }
 @media (prefers-reduced-motion: reduce) { .erreur-point, .erreur-fil { animation: none; } }
 .recherche-dialogue input[type=search]::-webkit-search-cancel-button { display: none; }
+
+/* Jauge des places : elle se remplit à l'apparition */
+.jauge > span { width: var(--taux); }
+.js .jauge > span { width: 0; transition: width 1.2s cubic-bezier(.2, .8, .2, 1) .2s; }
+.js .visible .jauge > span, .js .jauge.remplie > span { width: var(--taux); }
+@media (prefers-reduced-motion: reduce) { .js .jauge > span { transition: none; width: var(--taux); } }

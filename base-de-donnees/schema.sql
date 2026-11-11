@@ -187,6 +187,8 @@ CREATE TABLE IF NOT EXISTS initiatives (
   image VARCHAR(255) NOT NULL DEFAULT '',
   etat ENUM('a_venir','en_cours','terminee') NOT NULL DEFAULT 'a_venir',
   date_libelle VARCHAR(80) NOT NULL DEFAULT '',
+  date_debut DATE NULL,
+  date_fin DATE NULL,
   lieu VARCHAR(120) NOT NULL DEFAULT '',
   participants VARCHAR(80) NOT NULL DEFAULT '',
   format VARCHAR(80) NOT NULL DEFAULT '',

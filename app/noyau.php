@@ -954,3 +954,28 @@ function surligner(string $texte, string $q): string
     }
     return $sortie . ($ouvert ? '</mark>' : '');
 }
+
+/** Envoie un événement d'agenda (.ics) sur la journée entière, du premier au dernier jour. */
+function envoyer_agenda(string $uid, string $titre, string $debut, string $fin, string $lieu, string $texte, string $adresse, string $nom_fichier): never
+{
+    $echapper = fn (string $t) => str_replace(["\\", ';', ',', "\r\n", "\n"], ['\\\\', '\\;', '\\,', '\\n', '\\n'], $t);
+    $plier = fn (string $ligne) => implode("\r\n ", mb_str_split($ligne, 60)); // lignes courtes, sans couper un caractère accentué
+    $lendemain = (new DateTimeImmutable($fin))->modify('+1 day')->format('Ymd');
+    $lignes = [
+        'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//YouthConnekt Mali//Site//FR', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
+        'BEGIN:VEVENT',
+        'UID:' . $uid . '@youthconnekt-mali',
+        'DTSTAMP:' . gmdate('Ymd\THis\Z'),
+        'DTSTART;VALUE=DATE:' . (new DateTimeImmutable($debut))->format('Ymd'),
+        'DTEND;VALUE=DATE:' . $lendemain,
+        'SUMMARY:' . $echapper($titre),
+        'LOCATION:' . $echapper($lieu),
+        'DESCRIPTION:' . $echapper(trim($texte . "\n\n" . $adresse)),
+        'URL:' . $adresse,
+        'END:VEVENT', 'END:VCALENDAR',
+    ];
+    header('Content-Type: text/calendar; charset=utf-8');
+    header('Content-Disposition: attachment; filename="' . preg_replace('/[^a-z0-9-]/', '', $nom_fichier) . '.ics"');
+    echo implode("\r\n", array_map($plier, $lignes)) . "\r\n";
+    exit;
+}

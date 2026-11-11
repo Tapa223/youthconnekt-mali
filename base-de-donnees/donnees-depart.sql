@@ -246,6 +246,9 @@ Venez y participer, présenter votre projet ou rejoindre l''équipe de bénévol
 WHERE NOT EXISTS (SELECT 1 FROM initiatives x WHERE x.slug = i.slug);
 
 -- Rôles
+UPDATE initiatives SET date_debut = '2027-02-15', date_fin = '2027-02-28' WHERE slug = 'exemple-caravane-de-la-citoyennete';
+UPDATE initiatives SET date_debut = '2027-03-20', date_fin = '2027-03-20' WHERE slug = 'exemple-journee-youthconnekt-mali';
+
 INSERT INTO initiative_roles (initiative_id, nom, description, places, ordre)
 SELECT (SELECT id FROM initiatives WHERE slug = r.slug), r.nom, r.description, r.places, r.ordre FROM (
   SELECT 'exemple-caravane-de-la-citoyennete' AS slug, 'Bénévole animation' AS nom, 'Animer les débats et les ateliers avec les jeunes' AS description, 10 AS places, 0 AS ordre

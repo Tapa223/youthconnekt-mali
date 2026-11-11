@@ -142,3 +142,18 @@ function reponses_participation(array $p): array
 {
     return json_decode((string) ($p['reponses'] ?? ''), true) ?: [];
 }
+
+/** Personnes inscrites ou retenues : leur nombre et quelques visages (photo ou initiales) pour la page de l'initiative. */
+function inscrits_initiative(int $initiative_id): array
+{
+    $liste = lignes(
+        "SELECT COALESCE(pi.photo, po.logo) AS photo, COALESCE(pi.prenom, po.nom_structure, '') AS prenom, COALESCE(pi.nom, '') AS nom
+         FROM participations p LEFT JOIN profils_individuels pi ON pi.utilisateur_id = p.utilisateur_id LEFT JOIN profils_organisations po ON po.utilisateur_id = p.utilisateur_id
+         WHERE p.initiative_id = ? AND p.statut IN ('inscrit', 'retenue') ORDER BY (COALESCE(pi.photo, po.logo) IS NULL), p.cree_le DESC LIMIT 6",
+        [$initiative_id]
+    );
+    return [
+        'nombre' => (int) valeur("SELECT COUNT(*) FROM participations WHERE initiative_id = ? AND statut IN ('inscrit', 'retenue')", [$initiative_id]),
+        'visages' => array_map(fn ($l) => ['photo' => $l['photo'], 'initiales' => mb_strtoupper(mb_substr($l['prenom'], 0, 1) . mb_substr($l['nom'], 0, 1)) ?: 'YC'], $liste),
+    ];
+}

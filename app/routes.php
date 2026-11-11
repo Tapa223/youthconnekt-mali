@@ -20,6 +20,8 @@ const ROUTES = [
     ['GET', '/recherche', 'recherche', 'recherche_site'],
     ['GET', '/recherche/suggestions', 'recherche', 'recherche_suggestions'],
     ['GET', '/initiatives', 'contenus', 'initiatives'],
+    ['GET', '/initiatives/{slug}/agenda', 'contenus', 'initiative_agenda'],
+    ['GET', '/actualites/{slug}/agenda', 'contenus', 'actualite_agenda'],
     ['GET', '/initiatives/{slug}', 'contenus', 'initiative'],
     ['GET|POST', '/initiatives/{slug}/participer', 'participations', 'participer'],
     ['POST', '/opportunites/proposer', 'contenus', 'proposer_opportunite'],

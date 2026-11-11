@@ -778,6 +778,15 @@
       reseaux.forEach(function (r) { obs.observe(r); });
     }
   }
+  // Jauges des places : remplies quand elles apparaissent à l'écran
+  var jauges = document.querySelectorAll(".jauge");
+  if (jauges.length) {
+    if (!("IntersectionObserver" in window)) jauges.forEach(function (j) { j.classList.add("remplie"); });
+    else {
+      var oj = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("remplie"); oj.unobserve(e.target); } }); }, { threshold: 0.5 });
+      jauges.forEach(function (j) { oj.observe(j); });
+    }
+  }
   document.querySelectorAll("img.photo-attente").forEach(function (img) {
     var fini = function () { img.classList.add("chargee"); };
     if (img.complete && img.naturalWidth) fini(); else { img.addEventListener("load", fini); img.addEventListener("error", fini); }

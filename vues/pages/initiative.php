@@ -26,6 +26,27 @@ $chiffres_i = lignes_colonnes($i['chiffres'], 2);
     <?php elseif ($roles && $i['participations_ouvertes']): ?>
     <p class="mt-5 text-sm text-texte">Les participations à cette initiative sont closes.</p>
     <?php endif ?>
+    <?php if ($inscrits['nombre'] || ($i['date_debut'] && $i['etat'] !== 'terminee')): ?>
+    <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-3">
+      <?php if ($inscrits['nombre']): ?>
+      <p class="flex items-center gap-2.5 text-sm font-bold text-vert">
+        <span class="flex -space-x-2.5" aria-hidden="true">
+          <?php foreach ($inscrits['visages'] as $k => $v): ?>
+          <?php if ($v['photo']): ?><img src="<?= e(media($v['photo'])) ?>" alt="" class="size-8 rounded-full border-2 border-white object-cover" loading="lazy">
+          <?php else: ?><span class="grid size-8 place-items-center rounded-full border-2 border-white text-[10px] font-bold text-white <?= cycle(['bg-vert', 'bg-orange', 'bg-turquoise', 'bg-bleu'], $k) ?>"><?= e($v['initiales']) ?></span><?php endif ?>
+          <?php endforeach ?>
+        </span>
+        <span><?= $inscrits['nombre'] ?> personne<?= pluriel($inscrits['nombre']) ?> <?= $i['etat'] === 'terminee' ? 'y ont pris part' : 'déjà inscrite' . pluriel($inscrits['nombre']) ?></span>
+      </p>
+      <?php endif ?>
+      <?php if ($i['date_debut'] && $i['etat'] !== 'terminee'): ?>
+      <a href="<?= url('/initiatives/' . $i['slug'] . '/agenda') ?>" class="inline-flex min-h-10 items-center gap-2 rounded-full border-2 border-vert px-4 text-sm font-bold text-vert transition-colors hover:border-orange hover:bg-orange hover:text-white" download>
+        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M12 13v5M9.5 15.5h5"/></svg>
+        Ajouter à mon agenda
+      </a>
+      <?php endif ?>
+    </div>
+    <?php endif ?>
     <?php if ($a_infos) partiel('pages/infos_initiative', ['i' => $i, 'classes' => 'mt-6 hidden lg:grid']) ?>
   </div>
 
@@ -54,6 +75,9 @@ $chiffres_i = lignes_colonnes($i['chiffres'], 2);
         <li class="flex flex-col rounded-2xl bg-white p-4 shadow-sm sm:p-5 <?= $r['complet'] ? 'opacity-60' : '' ?>">
           <span class="text-lg font-bold text-vert"><?= e($r['nom']) ?></span>
           <?php if ($r['description'] !== ''): ?><span class="mt-1 text-sm leading-snug"><?= e($r['description']) ?></span><?php endif ?>
+          <?php if ($r['places'] !== null): $taux = min(100, (int) round(100 * (int) $r['nb'] / max(1, (int) $r['places']))); ?>
+          <span class="jauge mt-3 block h-2 overflow-hidden rounded-full bg-gris" role="img" aria-label="<?= (int) $r['nb'] ?> sur <?= (int) $r['places'] ?> places prises"><span class="block h-full rounded-full <?= $taux >= 80 ? 'bg-orange' : 'bg-turquoise' ?>" style="--taux: <?= $taux ?>%"></span></span>
+          <?php endif ?>
           <span class="mt-3 mb-3 text-xs font-bold <?= $r['complet'] ? 'text-texte' : 'text-orange-fonce' ?>"><?= $r['complet'] ? 'Complet' : ($r['mode'] === 'inscription' ? 'Inscription directe, billet aussitôt' : "Sur candidature : l'équipe choisit") . ($r['restantes'] !== null ? ' · ' . $r['restantes'] . ' place' . pluriel((int) $r['restantes']) . ' restante' . pluriel((int) $r['restantes']) : '') ?></span>
           <?php if (!$r['complet']): ?><a href="<?= url('/initiatives/' . $i['slug'] . '/participer', ['role' => $r['id']]) ?>" class="btn btn-vert mt-auto min-h-11 w-full"><?= $r['mode'] === 'inscription' ? "Je m'inscris" : 'Me proposer' ?></a><?php endif ?>
         </li>

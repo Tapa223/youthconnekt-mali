@@ -46,6 +46,7 @@ function initiative(string $slug): void
     afficher(vue('pages/initiative', [
         'roles' => $roles,
         'ouvertes' => participations_ouvertes($i, $roles),
+        'inscrits' => inscrits_initiative((int) $i['id']),
         'ma_participation' => $u ? ligne('SELECT p.*, COALESCE(r.nom, p.role_nom) AS role_libelle FROM participations p LEFT JOIN initiative_roles r ON r.id = p.role_id WHERE p.initiative_id = ? AND p.utilisateur_id = ?', [$i['id'], $u['id']]) : null,
         'titre' => $i['titre'] . ' | YouthConnekt Mali',
         'description' => $i['resume'],
@@ -282,4 +283,23 @@ function proposer_opportunite(): void
             "{$u['nom_affiche']} <{$u['email']}> propose une opportunité.\nÀ relire et publier : " . url_absolue(url('/gestion/opportunites/' . $id)), '', $u['email']);
     }
     $repondre([], "Merci ! Votre opportunité a bien été envoyée. Elle sera publiée après validation par l'équipe du chapitre.");
+}
+
+/** Fichier d'agenda (.ics) d'une initiative datée : s'ouvre dans Google Agenda, Outlook ou le téléphone. */
+function initiative_agenda(string $slug): void
+{
+    $i = initiatives_publiees('AND i.slug = ? LIMIT 1', [$slug])[0] ?? null;
+    if (!$i || !$i['date_debut']) {
+        page_erreur(404);
+    }
+    envoyer_agenda('initiative-' . $i['id'], $i['titre'], $i['date_debut'], $i['date_fin'] ?: $i['date_debut'], (string) $i['lieu'], (string) $i['resume'], url_absolue('/initiatives/' . $i['slug']), $i['slug']);
+}
+
+function actualite_agenda(string $slug): void
+{
+    $a = actualites_publiees('AND slug = ? LIMIT 1', [$slug])[0] ?? null;
+    if (!$a || !$a['date_evenement']) {
+        page_erreur(404);
+    }
+    envoyer_agenda('actualite-' . $a['id'], $a['titre'], $a['date_evenement'], $a['date_evenement'], (string) $a['lieu'], (string) $a['chapeau'], url_absolue('/actualites/' . $a['slug']), $a['slug']);
 }

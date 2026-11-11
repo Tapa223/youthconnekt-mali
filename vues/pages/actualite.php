@@ -26,6 +26,12 @@ $icone_partager = '<svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stro
       </p>
       <h1 class="mt-3 text-[1.9rem] leading-[1.1] font-bold sm:text-5xl"><?= e($a['titre']) ?></h1>
       <?php if ($a['chapeau']): ?><p class="mt-4 text-lg leading-relaxed text-encre sm:text-xl"><?= e($a['chapeau']) ?></p><?php endif ?>
+      <?php if ($a['est_a_venir']): ?>
+      <a href="<?= url('/actualites/' . $a['slug'] . '/agenda') ?>" class="mt-5 inline-flex min-h-11 items-center gap-2 rounded-full border-2 border-vert px-5 text-sm font-bold text-vert transition-colors hover:border-orange hover:bg-orange hover:text-white" download>
+        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M12 13v5M9.5 15.5h5"/></svg>
+        Ajouter à mon agenda
+      </a>
+      <?php endif ?>
     </header>
 
     <?php if ($images): ?>

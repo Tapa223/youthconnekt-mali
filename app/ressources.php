@@ -262,7 +262,9 @@ function ressources(): array
                     'resume' => ['type' => 'texte', 'libelle' => 'Résumé', 'max' => 300],
                 ]],
                 ['Informations pratiques', 'champs' => [
-                    'date_libelle' => ['type' => 'texte', 'libelle' => 'Date', 'requis' => false, 'max' => 80, 'largeur' => 'demi', 'aide' => 'Exemple : 12 au 14 mars 2026'],
+                    'date_libelle' => ['type' => 'texte', 'libelle' => 'Date affichée', 'requis' => false, 'max' => 80, 'largeur' => 'demi', 'aide' => 'Exemple : 12 au 14 mars 2026'],
+                    'date_debut' => ['type' => 'date', 'libelle' => 'Premier jour', 'requis' => false, 'largeur' => 'demi', 'aide' => "Facultatif. Permet aux visiteurs d'ajouter l'initiative à leur agenda."],
+                    'date_fin' => ['type' => 'date', 'libelle' => 'Dernier jour', 'requis' => false, 'largeur' => 'demi', 'aide' => 'Laisser vide si elle dure un seul jour.'],
                     'lieu' => ['type' => 'texte', 'libelle' => 'Lieu', 'requis' => false, 'max' => 120, 'largeur' => 'demi'],
                     'participants' => ['type' => 'texte', 'libelle' => 'Participants', 'requis' => false, 'max' => 80, 'largeur' => 'demi', 'aide' => 'Exemple : 60 jeunes'],
                     'format' => ['type' => 'texte', 'libelle' => 'Format', 'requis' => false, 'max' => 80, 'largeur' => 'demi', 'aide' => 'Exemple : Présentiel'],
