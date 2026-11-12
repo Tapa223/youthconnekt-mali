@@ -35,7 +35,7 @@ $navigation = [
     </nav>
 
     <div class="hidden items-center gap-2 xl:flex 2xl:gap-2.5">
-      <button type="button" class="grid size-11 place-items-center rounded-full text-vert transition-colors hover:bg-vert-clair hover:text-orange" data-ouvrir-recherche aria-label="Rechercher sur le site" title="Rechercher (Ctrl + K)"><svg class="size-[22px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+      <?php if (!$u): /* La recherche sert aux visiteurs ; une fois connecté, on ne l'affiche plus */ ?><button type="button" class="grid size-11 place-items-center rounded-full text-vert transition-colors hover:bg-vert-clair hover:text-orange" data-ouvrir-recherche aria-label="Rechercher sur le site" title="Rechercher (Ctrl + K)"><svg class="size-[22px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button><?php endif ?>
       <?php if ($u): ?>
         <a href="<?= url(est_membre($u) ? '/compte/mon-espace' : '/gestion') ?>" class="inline-flex min-h-11 items-center gap-2.5 rounded-full bg-vert py-1.5 pr-5 pl-1.5 text-[15px] font-bold text-white hover:bg-vert-fonce">
           <span class="relative"><?= $pastille('size-8') ?><?php if ($nb_notifs_entete): ?><span class="absolute -top-1.5 -right-1.5 grid min-w-[18px] place-items-center rounded-full bg-orange px-1 text-[10px] leading-[18px] font-bold text-white ring-2 ring-vert" aria-label="<?= $nb_notifs_entete ?> notification<?= pluriel($nb_notifs_entete) ?>"><?= $nb_notifs_entete > 9 ? '9+' : $nb_notifs_entete ?></span><?php endif ?></span>
@@ -48,7 +48,7 @@ $navigation = [
     </div>
 
     <div class="-mr-2 flex items-center xl:hidden">
-    <button type="button" class="grid size-12 place-items-center rounded-lg text-vert hover:bg-vert-clair" data-ouvrir-recherche aria-label="Rechercher sur le site"><svg class="size-[22px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+    <?php if (!$u): ?><button type="button" class="grid size-12 place-items-center rounded-lg text-vert hover:bg-vert-clair" data-ouvrir-recherche aria-label="Rechercher sur le site"><svg class="size-[22px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button><?php endif ?>
     <button type="button" class="relative grid size-12 place-items-center rounded-lg text-vert hover:bg-vert-clair" aria-controls="menu-mobile" aria-expanded="false" data-ouvrir-menu>
       <span class="sr-only">Ouvrir le menu</span>
       <?php if ($nb_notifs_entete): ?><span class="absolute top-2.5 right-2 size-2.5 rounded-full bg-orange ring-2 ring-white" aria-hidden="true"></span><?php endif ?>
@@ -59,6 +59,7 @@ $navigation = [
 </header>
 
 <?php /* Recherche instantanée sur tout le site (Ctrl + K ou la loupe) */ ?>
+<?php if (!$u): ?>
 <dialog class="recherche-dialogue m-0 h-full max-h-none w-full max-w-none bg-transparent p-0 backdrop:bg-encre/45 backdrop:backdrop-blur-[3px] sm:mx-auto sm:mt-[9vh] sm:h-auto sm:w-[min(42rem,calc(100vw-2rem))]" aria-label="Rechercher sur le site" data-recherche
         data-suggestions="<?= e(url('/recherche/suggestions')) ?>">
   <div class="flex h-full flex-col bg-white sm:h-auto sm:max-h-[75vh] sm:rounded-3xl sm:shadow-2xl">
@@ -76,6 +77,7 @@ $navigation = [
     <p class="hidden border-t border-ligne px-4 py-2.5 text-xs text-texte sm:block"><kbd class="rounded border border-ligne px-1.5 font-sans">↑</kbd> <kbd class="rounded border border-ligne px-1.5 font-sans">↓</kbd> pour choisir · <kbd class="rounded border border-ligne px-1.5 font-sans">Entrée</kbd> pour ouvrir · <kbd class="rounded border border-ligne px-1.5 font-sans">Échap</kbd> pour fermer</p>
   </div>
 </dialog>
+<?php endif ?>
 
 <div id="menu-mobile" class="fixed inset-0 z-50 hidden xl:hidden" role="dialog" aria-modal="true" aria-label="Menu" data-menu-mobile>
   <div class="absolute inset-0 bg-encre/35 backdrop-blur-[3px]" data-fermer-menu></div>

@@ -41,6 +41,16 @@ if ($type === 'cache') return;
           <small>JPG, PNG ou WebP, 3 Mo maximum. Les très grandes images sont réduites automatiquement.</small>
           <?php if ($valeur && !$desactive): ?><label class="ycm-case-ligne ycm-case-petite"><input type="checkbox" name="supprimer_<?= e($nom) ?>" value="1"> Retirer l'image actuelle</label><?php endif ?>
         </div>
+        <?php if (!empty($def['phototheque']) && !$desactive && ($photos_choix = photos_phototheque())): ?>
+        <details class="ycm-phototheque">
+          <summary>Ou choisir dans la photothèque (<?= count($photos_choix) ?>)</summary>
+          <div class="ycm-phototheque-grille">
+            <?php foreach ($photos_choix as $ph): ?>
+            <label title="<?= e($ph['titre']) ?>"><input type="radio" name="phototheque_<?= e($nom) ?>" value="<?= e($ph['image']) ?>"<?= $valeur === $ph['image'] ? ' checked' : '' ?>><img src="<?= e(media($ph['image'])) ?>" alt="" loading="lazy"></label>
+            <?php endforeach ?>
+          </div>
+        </details>
+        <?php endif ?>
       <?php break; case 'communautes': ?>
         <ul class="ycm-cases">
           <?php foreach (options_communautes() as $cid => $libelle): ?>

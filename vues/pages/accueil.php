@@ -4,9 +4,33 @@ $admin = est_admin();
 $ministre_publie = !empty($mot['publie']);
 $nom_ministre = ($ministre_publie && $mot['nom']) ? $mot['nom'] : 'M. Abdoul Kassim Ibrahim Fomba';
 $titre_ministre = ($ministre_publie && $mot['titre_officiel']) ? $mot['titre_officiel'] : "Ministre de la Jeunesse et des Sports, chargé de l'Instruction civique et de la Construction citoyenne";
-// Photos du premier écran : celles choisies dans Paramètres, sinon les photos provisoires
-$photos_accueil = array_values(array_filter([$p['image_accueil_1'] ?? '', $p['image_accueil_2'] ?? '', $p['image_accueil_3'] ?? '']));
-$photos_accueil = $photos_accueil ? array_map('media', $photos_accueil) : [asset('img/accueil/premier-ecran.jpg'), asset('img/accueil/premier-ecran-2.jpg'), asset('img/accueil/premier-ecran-3.jpg')];
+// Photos du premier écran et leur phrase : celles choisies dans Paramètres, sinon les photos provisoires.
+// Une photo dont le fichier a disparu (actualité supprimée…) est simplement ignorée.
+$existe = fn ($chemin) => $chemin !== '' && (!str_starts_with($chemin, 'uploads/') || is_file(RACINE . '/' . $chemin));
+$phrases_defaut = ['Se former : des formations et des ateliers pour développer vos compétences', "S'engager : des initiatives citoyennes dans les régions du Mali", "Se connecter : un réseau de jeunes, d'organisations et de partenaires"];
+$diapos = [];
+foreach ([1, 2, 3] as $n) {
+    $img = (string) ($p['image_accueil_' . $n] ?? '');
+    if ($existe($img)) {
+        $diapos[] = ['src' => media($img), 'texte' => trim((string) ($p['texte_accueil_' . $n] ?? ''))];
+    }
+}
+if (!$diapos) {
+    foreach (['premier-ecran.jpg', 'premier-ecran-2.jpg', 'premier-ecran-3.jpg'] as $k => $f) {
+        $diapos[] = ['src' => asset('img/accueil/' . $f), 'texte' => trim((string) ($p['texte_accueil_' . ($k + 1)] ?? ''))];
+    }
+}
+foreach ($diapos as $k => &$d) {
+    $d['texte'] = $d['texte'] !== '' ? $d['texte'] : $phrases_defaut[$k % 3];
+}
+unset($d);
+$photos_accueil = array_column($diapos, 'src');
+// Petites bulles : 4 photos fixes choisies dans Paramètres (photothèque), sinon les photos provisoires
+$bulles = [];
+foreach ([1, 2, 3, 4] as $n) {
+    $img = (string) ($p['bulle_accueil_' . $n] ?? '');
+    $bulles[$n] = $existe($img) ? media($img) : asset('img/accueil/bulle-' . $n . '.jpg');
+}
 // Premier écran : grand cercle photo et anneau de points (repère 1440 × 820 de la maquette)
 $soleil = ['cx' => 720, 'cy' => 745, 'r' => 480, 'anneau' => 522];
 $points = [];
@@ -17,7 +41,7 @@ foreach (range(0, 11) as $k) {
 ?>
 
 <?php /* 1. Premier écran */ ?>
-<section class="relative isolate overflow-hidden bg-vert text-white lg:h-[calc(100svh-4rem)] lg:max-h-[940px] lg:min-h-[620px]" aria-labelledby="titre-accueil" data-diapo-pause>
+<section class="relative isolate overflow-hidden bg-vert text-white lg:h-[calc(100svh-4rem)] lg:max-h-[940px] lg:min-h-[620px]" aria-labelledby="titre-accueil" data-premier-ecran>
   <div class="absolute -inset-5 -z-10" data-diapo="accueil" aria-hidden="true">
     <?php foreach ($photos_accueil as $k => $src): ?><img data-diapo-image src="<?= e($src) ?>" alt="" class="absolute inset-0 h-full w-full object-cover blur-[3.5px]"<?= $k ? ' loading="lazy"' : '' ?>><?php endforeach ?>
   </div>
@@ -26,20 +50,27 @@ foreach (range(0, 11) as $k) {
   <?php /* Cadre de la maquette (1440 × 820) mis à l'échelle de l'écran : anneau, grand cercle et bulles s'y alignent */ ?>
   <div class="pointer-events-none absolute inset-y-0 left-1/2 hidden aspect-[1440/820] -translate-x-1/2 lg:block" aria-hidden="true">
     <svg class="absolute inset-0 h-full w-full overflow-visible" viewBox="0 0 1440 820" fill="none">
-      <circle cx="<?= $soleil['cx'] ?>" cy="<?= $soleil['cy'] ?>" r="<?= $soleil['anneau'] ?>" stroke="#fff" stroke-opacity=".3" stroke-width="1.5" stroke-dasharray="6 8"/>
-      <circle cx="<?= $soleil['cx'] ?>" cy="<?= $soleil['cy'] ?>" r="<?= $soleil['anneau'] + 42 ?>" stroke="#fff" stroke-opacity=".1"/>
-      <g class="anim-orbite" style="transform-origin: <?= $soleil['cx'] ?>px <?= $soleil['cy'] ?>px">
-        <?php foreach ($points as $k => [$cx, $cy, $r, $c]): ?>
-        <circle class="anim-point" cx="<?= $cx ?>" cy="<?= $cy ?>" r="<?= $r ?>" fill="<?= $c ?>" stroke="#035E4D" stroke-width="3" style="animation-delay:<?= number_format(0.6 + $k * 0.25, 2, '.', '') ?>s"/>
-        <?php endforeach ?>
+      <?php /* L'anneau s'efface en descendant : aucun trait ne passe derrière les deux boutons */ ?>
+      <defs>
+        <linearGradient id="fondu-anneau" x1="0" y1="0" x2="0" y2="820" gradientUnits="userSpaceOnUse"><stop offset=".62" stop-color="#fff"/><stop offset=".72" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <mask id="masque-anneau" maskUnits="userSpaceOnUse" x="0" y="-200" width="1440" height="1100"><rect x="0" y="-200" width="1440" height="1100" fill="url(#fondu-anneau)"/></mask>
+      </defs>
+      <g mask="url(#masque-anneau)">
+        <circle cx="<?= $soleil['cx'] ?>" cy="<?= $soleil['cy'] ?>" r="<?= $soleil['anneau'] ?>" stroke="#fff" stroke-opacity=".3" stroke-width="1.5" stroke-dasharray="6 8"/>
+        <circle cx="<?= $soleil['cx'] ?>" cy="<?= $soleil['cy'] ?>" r="<?= $soleil['anneau'] + 42 ?>" stroke="#fff" stroke-opacity=".1"/>
+        <g class="anim-orbite" style="transform-origin: <?= $soleil['cx'] ?>px <?= $soleil['cy'] ?>px">
+          <?php foreach ($points as $k => [$cx, $cy, $r, $c]): ?>
+          <circle class="anim-point" cx="<?= $cx ?>" cy="<?= $cy ?>" r="<?= $r ?>" fill="<?= $c ?>" stroke="#035E4D" stroke-width="3" style="animation-delay:<?= number_format(0.6 + $k * 0.25, 2, '.', '') ?>s"/>
+          <?php endforeach ?>
+        </g>
       </g>
-      <g stroke="#fff" stroke-opacity=".35" stroke-width="1.5" stroke-dasharray="4 6"><path d="M195 360 L287 453"/><path d="M160 520 L216 610"/><path d="M1243 334 L1153 453"/><path d="M1290 505 L1224 610"/></g>
-      <circle cx="287" cy="453" r="4" fill="#F1592A"/><circle cx="216" cy="610" r="4" fill="#04B2B1"/><circle cx="1153" cy="453" r="4" fill="#04B2B1"/><circle cx="1224" cy="610" r="4" fill="#F1592A"/>
+      <g stroke="#fff" stroke-opacity=".35" stroke-width="1.5" stroke-dasharray="4 6"><path d="M150 330 L347 380"/><path d="M110 470 L265 490"/><path d="M1290 300 L1093 380"/><path d="M1330 470 L1175 490"/></g>
+      <circle cx="347" cy="380" r="4" fill="#F1592A"/><circle cx="265" cy="490" r="4" fill="#04B2B1"/><circle cx="1093" cy="380" r="4" fill="#04B2B1"/><circle cx="1175" cy="490" r="4" fill="#F1592A"/>
     </svg>
-    <span class="anim-flotte-2 absolute top-[34.4%] left-[7.1%] aspect-square w-[6.7%] rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= asset('img/accueil/bulle-1.jpg') ?>" alt=""></span>
-    <span class="anim-flotte absolute top-[59%] left-[8.6%] aspect-square w-[5%] rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= asset('img/accueil/bulle-2.jpg') ?>" alt=""></span>
-    <span class="anim-flotte-2 absolute top-[30.2%] left-[86%] aspect-square w-[7.2%] rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= asset('img/accueil/bulle-3.jpg') ?>" alt=""></span>
-    <span class="anim-flotte absolute top-[57.5%] left-[87.1%] aspect-square w-[4.9%] rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= asset('img/accueil/bulle-4.jpg') ?>" alt=""></span>
+    <span class="anim-flotte-2 absolute top-[34.4%] left-[7.1%] aspect-square w-[6.7%] rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= e($bulles[1]) ?>" alt="" class="h-full w-full object-cover"></span>
+    <span class="anim-flotte absolute top-[52.9%] left-[5.1%] aspect-square w-[5%] rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= e($bulles[3]) ?>" alt="" class="h-full w-full object-cover"></span>
+    <span class="anim-flotte-2 absolute top-[30.2%] left-[86%] aspect-square w-[7.2%] rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= e($bulles[2]) ?>" alt="" class="h-full w-full object-cover"></span>
+    <span class="anim-flotte absolute top-[53%] left-[89.9%] aspect-square w-[4.9%] rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= e($bulles[4]) ?>" alt="" class="h-full w-full object-cover"></span>
     <div class="anim-soleil absolute top-[32.3%] left-[16.67%] aspect-square w-[66.67%]">
       <div class="absolute inset-0 overflow-hidden rounded-full bg-vert shadow-[0_0_0_8px_rgb(255_255_255/.14)]" data-diapo="accueil">
         <?php foreach ($photos_accueil as $k => $src): ?><img data-diapo-image src="<?= e($src) ?>" alt="<?= $k ? '' : "Jeunes réunis lors d'un événement YouthConnekt" ?>" class="absolute inset-0 h-full w-full object-cover"<?= $k ? ' loading="lazy"' : ' fetchpriority="high"' ?>><?php endforeach ?>
@@ -52,10 +83,17 @@ foreach (range(0, 11) as $k) {
       <h1 id="titre-accueil" class="mt-7 max-w-4xl text-[2.1rem] leading-[1.05] font-bold text-white [text-shadow:0_4px_28px_rgb(0_0_0/.45)] sm:text-5xl lg:mt-0 lg:text-[clamp(2.75rem,8vh,4.75rem)]">
         <?= e(rtrim($p['accroche_accueil'] ?: 'La jeunesse malienne se connecte ici', '. ')) ?>
       </h1>
-      <p class="mt-3 flex flex-wrap justify-center gap-x-2.5 gap-y-1 text-[13px] font-bold tracking-wide text-white/90 uppercase sm:hidden"><span>Formations</span><span class="text-orange" aria-hidden="true">•</span><span>Opportunités</span><span class="text-turquoise" aria-hidden="true">•</span><span>Initiatives</span></p>
-      <p class="mt-5 hidden max-w-2xl rounded-2xl border border-white/20 bg-vert/80 px-6 py-3.5 text-base leading-relaxed text-white backdrop-blur-md sm:block lg:mt-[2.5vh] lg:text-[clamp(0.95rem,2.1vh,1.15rem)]">
-        <?= e($p['presentation_accueil'] ?: 'Chapitre national de YouthConnekt Africa, YouthConnekt Mali rassemble les jeunes et les organisations qui font avancer le pays : formations, opportunités, rencontres et initiatives pour une jeunesse qui agit.') ?>
-      </p>
+      <?php /* La phrase change avec la photo ; les petits traits montrent laquelle est affichée et permettent d'en choisir une */ ?>
+      <div class="mt-3 grid w-full max-w-2xl sm:mt-5 lg:mt-[2.5vh]" data-diapo="accueil" aria-live="polite">
+        <?php foreach ($diapos as $k => $d): ?>
+        <p data-diapo-image class="diapo-texte col-start-1 row-start-1 self-center text-[15px] leading-snug font-bold text-white/95 sm:rounded-2xl sm:border sm:border-white/20 sm:bg-vert/80 sm:px-6 sm:py-3.5 sm:text-base sm:font-normal sm:leading-relaxed sm:backdrop-blur-md lg:text-[clamp(0.95rem,2.1vh,1.15rem)]"<?= $k ? ' aria-hidden="true"' : '' ?>><?= e($d['texte']) ?></p>
+        <?php endforeach ?>
+      </div>
+      <?php if (count($diapos) > 1): ?>
+      <div class="mt-3 flex justify-center gap-2" role="group" aria-label="Choisir la photo">
+        <?php foreach ($diapos as $k => $d): ?><button type="button" class="diapo-trait" data-diapo-aller="accueil" data-index="<?= $k ?>" aria-label="Photo <?= $k + 1 ?>"><span></span></button><?php endforeach ?>
+      </div>
+      <?php endif ?>
     </div>
 
     <div class="order-4 mt-6 grid w-full max-w-md grid-cols-2 gap-3 lg:hidden">
@@ -72,10 +110,10 @@ foreach (range(0, 11) as $k) {
         <span class="absolute bottom-[8%] left-[20%] size-2.5 rounded-full bg-turquoise"></span>
         <span class="absolute top-[30%] -left-1 size-2 rounded-full bg-bleu"></span>
       </div>
-      <span class="anim-flotte absolute -top-1 -left-[9%] z-[1] size-[22%] overflow-hidden rounded-full border-[3px] border-orange shadow-[0_10px_22px_rgb(0_0_0/.3)]" aria-hidden="true"><img src="<?= asset('img/accueil/bulle-1.jpg') ?>" alt="" class="h-full w-full object-cover"></span>
-      <span class="anim-flotte-2 absolute top-[16%] -right-[10%] z-[1] size-[17%] overflow-hidden rounded-full border-[3px] border-turquoise shadow-[0_10px_22px_rgb(0_0_0/.3)]" aria-hidden="true"><img src="<?= asset('img/accueil/bulle-3.jpg') ?>" alt="" class="h-full w-full object-cover"></span>
-      <span class="anim-flotte absolute -right-[4%] bottom-[2%] z-[1] size-[20%] overflow-hidden rounded-full border-[3px] border-white shadow-[0_10px_22px_rgb(0_0_0/.3)]" aria-hidden="true"><img src="<?= asset('img/accueil/bulle-4.jpg') ?>" alt="" class="h-full w-full object-cover"></span>
-      <span class="anim-flotte-2 absolute bottom-[20%] -left-[10%] z-[1] size-[14%] overflow-hidden rounded-full border-[3px] border-turquoise shadow-[0_10px_22px_rgb(0_0_0/.3)]" aria-hidden="true"><img src="<?= asset('img/accueil/bulle-2.jpg') ?>" alt="" class="h-full w-full object-cover"></span>
+      <span class="anim-flotte absolute -top-1 -left-[9%] z-[1] size-[22%] overflow-hidden rounded-full border-[3px] border-orange shadow-[0_10px_22px_rgb(0_0_0/.3)]" aria-hidden="true"><img src="<?= e($bulles[1]) ?>" alt="" class="h-full w-full object-cover"></span>
+      <span class="anim-flotte-2 absolute top-[16%] -right-[10%] z-[1] size-[17%] overflow-hidden rounded-full border-[3px] border-turquoise shadow-[0_10px_22px_rgb(0_0_0/.3)]" aria-hidden="true"><img src="<?= e($bulles[2]) ?>" alt="" class="h-full w-full object-cover"></span>
+      <span class="anim-flotte absolute -right-[4%] bottom-[2%] z-[1] size-[20%] overflow-hidden rounded-full border-[3px] border-white shadow-[0_10px_22px_rgb(0_0_0/.3)]" aria-hidden="true"><img src="<?= e($bulles[4]) ?>" alt="" class="h-full w-full object-cover"></span>
+      <span class="anim-flotte-2 absolute bottom-[20%] -left-[10%] z-[1] size-[14%] overflow-hidden rounded-full border-[3px] border-turquoise shadow-[0_10px_22px_rgb(0_0_0/.3)]" aria-hidden="true"><img src="<?= e($bulles[3]) ?>" alt="" class="h-full w-full object-cover"></span>
       <div class="absolute inset-0 overflow-hidden rounded-full bg-vert shadow-[0_0_0_6px_rgb(255_255_255/.14)]" data-diapo="accueil">
         <?php foreach ($photos_accueil as $k => $src): ?><img data-diapo-image src="<?= e($src) ?>" alt="<?= $k ? '' : "Jeunes réunis lors d'un événement YouthConnekt" ?>" class="absolute inset-0 h-full w-full object-cover"<?= $k ? ' loading="lazy"' : ' fetchpriority="high"' ?>><?php endforeach ?>
       </div>
@@ -84,7 +122,7 @@ foreach (range(0, 11) as $k) {
     <div class="anim-flotte absolute bottom-[17%] left-0 z-10 hidden lg:block xl:-left-10 2xl:-left-24"><a href="#chapitre" class="btn btn-contour-blanc btn-relie btn-relie--droite min-h-13 w-[16rem] px-6 text-[17px]">Découvrir le chapitre</a></div>
     <div class="anim-flotte-2 absolute right-0 bottom-[17%] z-10 hidden lg:block xl:-right-10 2xl:-right-24"><a href="#rejoindre" class="btn btn-orange btn-relie btn-relie--gauche min-h-13 w-[16rem] px-6 text-[17px] shadow-lg shadow-orange/30">Let's Connekt</a></div>
   </div>
-  <?php partiel('partials/mention_photo', ['texte' => 'Photos provisoires · Sommet YouthConnekt Africa, hors Mali']) ?>
+  <?php if (empty($p['image_accueil_1']) && empty($p['image_accueil_2']) && empty($p['image_accueil_3'])) partiel('partials/mention_photo', ['texte' => 'Photos provisoires · Sommet YouthConnekt Africa, hors Mali']) ?>
 </section>
 
 <?php /* 2. Le chapitre : présentation, chiffres clés, axes */ ?>

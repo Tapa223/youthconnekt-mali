@@ -730,10 +730,19 @@ function ressources(): array
                     'logo_ministere' => ['type' => 'image', 'libelle' => "Sceau de l'État ou logo du ministère", 'requis' => false, 'dossier' => 'logos', 'largeur' => 'demi'],
                     'logo_pnud' => ['type' => 'image', 'libelle' => 'Logo du PNUD', 'requis' => false, 'dossier' => 'logos', 'largeur' => 'demi'],
                 ]],
-                ["Photos du premier écran de l'accueil", 'description' => "Elles défilent dans le grand cercle et en fond, toutes les 5 secondes. Chaque photo s'affiche entière, sans être coupée ni agrandie. Choisissez de préférence des photos en largeur, d'au moins 1600 pixels. Sans photo choisie, les photos provisoires restent affichées.", 'champs' => [
-                    'image_accueil_1' => ['type' => 'image', 'libelle' => 'Photo 1', 'requis' => false, 'dossier' => 'accueil', 'largeur' => 'tiers'],
-                    'image_accueil_2' => ['type' => 'image', 'libelle' => 'Photo 2', 'requis' => false, 'dossier' => 'accueil', 'largeur' => 'tiers'],
-                    'image_accueil_3' => ['type' => 'image', 'libelle' => 'Photo 3', 'requis' => false, 'dossier' => 'accueil', 'largeur' => 'tiers'],
+                ["Photos du premier écran de l'accueil", 'description' => "Elles défilent toutes les 5 secondes dans le grand cercle et en fond. Chaque photo a sa phrase, affichée sous le titre et qui change avec elle. Choisissez des photos en largeur, d'au moins 1600 pixels : envoyez-en une ou prenez-la dans la photothèque. Sans photo choisie, les photos provisoires restent affichées.", 'champs' => [
+                    'image_accueil_1' => ['type' => 'image', 'libelle' => 'Photo 1', 'requis' => false, 'dossier' => 'accueil', 'largeur' => 'tiers', 'phototheque' => true],
+                    'image_accueil_2' => ['type' => 'image', 'libelle' => 'Photo 2', 'requis' => false, 'dossier' => 'accueil', 'largeur' => 'tiers', 'phototheque' => true],
+                    'image_accueil_3' => ['type' => 'image', 'libelle' => 'Photo 3', 'requis' => false, 'dossier' => 'accueil', 'largeur' => 'tiers', 'phototheque' => true],
+                    'texte_accueil_1' => ['type' => 'texte', 'libelle' => 'Phrase de la photo 1', 'requis' => false, 'max' => 200, 'largeur' => 'tiers', 'aide' => 'Exemple : Se former : des formations et des ateliers'],
+                    'texte_accueil_2' => ['type' => 'texte', 'libelle' => 'Phrase de la photo 2', 'requis' => false, 'max' => 200, 'largeur' => 'tiers'],
+                    'texte_accueil_3' => ['type' => 'texte', 'libelle' => 'Phrase de la photo 3', 'requis' => false, 'max' => 200, 'largeur' => 'tiers'],
+                ]],
+                ["Petites bulles du premier écran", 'description' => "Les 4 photos rondes autour du grand cercle. Elles restent fixes : de préférence des photos de groupe ou des visages souriants, prises dans la photothèque du chapitre.", 'champs' => [
+                    'bulle_accueil_1' => ['type' => 'image', 'libelle' => 'Bulle 1 (en haut à gauche)', 'requis' => false, 'dossier' => 'accueil', 'largeur' => 'demi', 'phototheque' => true],
+                    'bulle_accueil_2' => ['type' => 'image', 'libelle' => 'Bulle 2 (en haut à droite)', 'requis' => false, 'dossier' => 'accueil', 'largeur' => 'demi', 'phototheque' => true],
+                    'bulle_accueil_3' => ['type' => 'image', 'libelle' => 'Bulle 3 (au milieu à gauche)', 'requis' => false, 'dossier' => 'accueil', 'largeur' => 'demi', 'phototheque' => true],
+                    'bulle_accueil_4' => ['type' => 'image', 'libelle' => 'Bulle 4 (au milieu à droite)', 'requis' => false, 'dossier' => 'accueil', 'largeur' => 'demi', 'phototheque' => true],
                 ]],
                 ['Réglages', 'cote' => true, 'champs' => [
                     'acceptation_automatique' => ['type' => 'case', 'libelle' => 'Intégration automatique aux communautés', 'aide' => "Décoché : chaque demande est validée par un administrateur (règle à confirmer par l'équipe)."],

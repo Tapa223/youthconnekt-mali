@@ -12,7 +12,10 @@ UPDATE parametres SET
   email_contact = IF(email_contact = '', 'contact@youthconnektmali.org', email_contact),
   telephone = IF(telephone = '', '+223 00 00 00 00', telephone),
   adresse = IF(adresse = '', 'Bamako, Mali', adresse),
-  horaires = IF(horaires = '', 'Du lundi au vendredi, de 8 h à 17 h', horaires)
+  horaires = IF(horaires = '', 'Du lundi au vendredi, de 8 h à 17 h', horaires),
+  texte_accueil_1 = 'Se former : des formations et des ateliers pour développer vos compétences',
+  texte_accueil_2 = 'S''engager : des initiatives citoyennes dans les régions du Mali',
+  texte_accueil_3 = 'Se connecter : un réseau de jeunes, d''organisations et de partenaires'
 WHERE id = 1;
 INSERT IGNORE INTO mot_ministre (id, nom, titre_officiel) VALUES
   (1, 'M. Abdoul Kassim Ibrahim Fomba', 'Ministre de la Jeunesse et des Sports, chargé de l''Instruction civique et de la Construction citoyenne');

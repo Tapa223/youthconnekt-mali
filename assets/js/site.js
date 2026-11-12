@@ -193,24 +193,30 @@
     var total = blocs[0].querySelectorAll("[data-diapo-image]").length;
     if (total < 2) { blocs.forEach(function (bloc) { var i = bloc.querySelector("[data-diapo-image]"); if (i) i.classList.add("active"); }); return; }
     var index = 0, minuteur = null;
+    var traits = document.querySelectorAll('[data-diapo-aller="' + nom + '"]');
     var afficher = function (i) {
+      index = i;
       blocs.forEach(function (bloc) {
         bloc.querySelectorAll("[data-diapo-image]").forEach(function (img, k) {
           img.classList.toggle("active", k === i);
+          if (img.tagName !== "IMG") img.setAttribute("aria-hidden", k === i ? "false" : "true");
         });
       });
+      traits.forEach(function (t, k) {
+        t.classList.remove("actif"); void t.offsetWidth; // relance la petite barre de progression
+        t.classList.toggle("actif", k === i);
+        t.setAttribute("aria-current", k === i ? "true" : "false");
+      });
     };
+    // Les photos changent toutes les 5 secondes, même si la souris est dessus ; avec « réduire les animations », en simple fondu
     var demarrer = function () {
-      if (calme) return;
       clearInterval(minuteur);
-      minuteur = setInterval(function () { index = (index + 1) % total; afficher(index); }, 5000);
+      minuteur = setInterval(function () { afficher((index + 1) % total); }, 5000);
     };
     afficher(0);
     demarrer();
-    blocs.forEach(function (bloc) {
-      var zone = bloc.closest("[data-diapo-pause]") || bloc;
-      zone.addEventListener("mouseenter", function () { clearInterval(minuteur); });
-      zone.addEventListener("mouseleave", demarrer);
+    traits.forEach(function (t) {
+      t.addEventListener("click", function () { afficher(parseInt(t.getAttribute("data-index"), 10) || 0); demarrer(); });
     });
     document.addEventListener("visibilitychange", function () {
       if (document.hidden) clearInterval(minuteur); else demarrer();
@@ -424,11 +430,21 @@
   var noter = function (c) { try { localStorage.setItem(c, "1"); } catch (e) {} };
   var cacherInvite = function () { if (invite && !invite.hidden) { invite.classList.remove("visible"); setTimeout(function () { invite.hidden = true; }, 250); noter("ycm-invite-vue"); } };
   if (invite && !aide.classList.contains("aide-espace") && !lire("ycm-invite-vue")) {
-    setTimeout(function () {
-      if (!panneau.hidden) return;
+    var montrerInvite = function () {
+      if (!panneau.hidden || !invite.hidden || lire("ycm-invite-vue")) return;
       invite.hidden = false;
       requestAnimationFrame(function () { invite.classList.add("visible"); });
-    }, 2500);
+    };
+    // Accueil sur ordinateur : le message attend qu'on ait quitté le premier écran, pour ne jamais couvrir les boutons
+    var ecran = document.querySelector("[data-premier-ecran]");
+    if (ecran && window.matchMedia("(min-width: 1024px)").matches) {
+      var surDefilement = function () {
+        if (ecran.getBoundingClientRect().bottom < window.innerHeight * 0.55) { window.removeEventListener("scroll", surDefilement); setTimeout(montrerInvite, 600); }
+      };
+      window.addEventListener("scroll", surDefilement, { passive: true });
+    } else {
+      setTimeout(montrerInvite, 2500);
+    }
     invite.querySelector("[data-aide-invite-fermer]").addEventListener("click", cacherInvite);
     invite.querySelector("[data-aide-invite-ouvrir]").addEventListener("click", function () { cacherInvite(); basculer(true); });
   }

@@ -1053,3 +1053,15 @@ input[type=file]::file-selector-button {
   .ycm-barres--presence .ycm-barres-piste { grid-column: 1 / -1; grid-row: 2; }
 }
 @media (prefers-reduced-motion: reduce) { .ycm-histo-barre, .ycm-barres-piste > span { animation: none; } }
+
+/* Choix d'une photo dans la photothèque du chapitre */
+.ycm-phototheque { margin-top: 8px; }
+.ycm-phototheque summary { cursor: pointer; font-size: 13.5px; font-weight: 700; color: var(--ycm-vert); padding: 6px 0; }
+.ycm-phototheque summary:hover { color: var(--ycm-orange); }
+.ycm-phototheque-grille { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 6px; max-height: 260px; overflow-y: auto; padding: 4px; border: 1px solid var(--ycm-ligne); border-radius: 10px; }
+.ycm-phototheque-grille label { position: relative; display: block; aspect-ratio: 1; border-radius: 8px; overflow: hidden; cursor: pointer; }
+.ycm-phototheque-grille input { position: absolute; opacity: 0; }
+.ycm-phototheque-grille img { width: 100%; height: 100%; object-fit: cover; transition: transform .2s ease; }
+.ycm-phototheque-grille label:hover img { transform: scale(1.05); }
+.ycm-phototheque-grille label:has(input:checked) { box-shadow: 0 0 0 3px var(--ycm-orange); }
+.ycm-phototheque-grille label:has(input:focus-visible) { outline: 2px solid var(--ycm-vert); outline-offset: 2px; }

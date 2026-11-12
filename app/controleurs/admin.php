@@ -586,8 +586,11 @@ function formulaire(string $slug, ?int $id = null): void
             foreach ($images as $nom => $def) {
                 try {
                     $chemin = televerser_image($_FILES[$nom] ?? null, $def['dossier'] ?? $slug, $def['largeur_max'] ?? 1800);
+                    $choisie = !empty($def['phototheque']) ? post('phototheque_' . $nom) : '';
                     if ($chemin) {
                         $donnees[$nom] = $chemin;
+                    } elseif ($choisie !== '' && in_array($choisie, array_column(photos_phototheque(), 'image'), true)) {
+                        $donnees[$nom] = $choisie; // photo reprise de la photothèque (le fichier n'est pas copié)
                     } elseif (post('supprimer_' . $nom) !== '') {
                         $donnees[$nom] = '';
                     }
@@ -624,7 +627,7 @@ function formulaire(string $slug, ?int $id = null): void
             }
             // Anciennes images remplacées : fichiers supprimés
             foreach ($images as $nom => $def) {
-                if ($ligne && isset($donnees[$nom]) && $ligne[$nom] && $donnees[$nom] !== $ligne[$nom]) {
+                if ($ligne && isset($donnees[$nom]) && $ligne[$nom] && $donnees[$nom] !== $ligne[$nom] && !image_utilisee_ailleurs($ligne[$nom])) {
                     supprimer_image($ligne[$nom]);
                 }
             }
@@ -879,4 +882,32 @@ function mon_compte(): void
         'valeurs' => $valeurs,
         'erreurs' => $erreurs,
     ]);
+}
+
+/** Photos de la photothèque du chapitre (actualités et initiatives), les plus récentes d'abord. */
+function photos_phototheque(): array
+{
+    static $photos = null;
+    return $photos ??= lignes(
+        "SELECT image, MAX(titre) AS titre, MAX(quand) AS quand FROM (
+            SELECT p.image, a.titre, a.publie_le AS quand FROM photos_actualites p JOIN actualites a ON a.id = p.actualite_id
+            UNION ALL SELECT a.image, a.titre, a.publie_le FROM actualites a WHERE a.image IS NOT NULL AND a.image <> ''
+            UNION ALL SELECT p.image, i.titre, i.publie_le FROM photos_initiatives p JOIN initiatives i ON i.id = p.initiative_id
+            UNION ALL SELECT i.image, i.titre, i.publie_le FROM initiatives i WHERE i.image IS NOT NULL AND i.image <> ''
+         ) x GROUP BY image ORDER BY quand DESC LIMIT 80"
+    );
+}
+
+/** Une image encore utilisée ailleurs (photothèque, paramètres) ne doit pas être effacée du disque. */
+function image_utilisee_ailleurs(string $chemin): bool
+{
+    if (in_array($chemin, array_column(photos_phototheque(), 'image'), true)) {
+        return true;
+    }
+    $p = ligne('SELECT * FROM parametres WHERE id = 1') ?: [];
+    $n = 0;
+    foreach ($p as $v) {
+        $n += $v === $chemin ? 1 : 0;
+    }
+    return $n > 1;
 }

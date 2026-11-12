@@ -229,7 +229,7 @@
   a.carte:hover img { transform: scale(1.06); }
 
   /* Diaporama : les photos se succèdent en fondu */
-  [data-diapo] > [data-diapo-image] { opacity: 0; transition: opacity 1.4s ease; }
+  [data-diapo] > [data-diapo-image] { opacity: 0; transition: opacity 1.1s ease; }
   [data-diapo] > [data-diapo-image].active { opacity: 1; }
 }
 
@@ -261,7 +261,7 @@ a.text-orange:not(.btn):not([class*="hover:bg-"]):hover { color: var(--color-ver
   .js .apparition, .js main > section > .conteneur, .js .devoile, .js .devoile-2 { opacity: 1 !important; transform: none !important; clip-path: none !important; transition: none !important; }
   .survol-leve:hover, .survol-grand:hover, .survol-carte:hover, .survol-zoom:hover img,
   a.carte:hover, a.carte:hover img { transform: none !important; }
-  [data-diapo] > [data-diapo-image] { transition: none; }
+  [data-diapo] > [data-diapo-image] { transition: opacity .6s ease; }
 }
 
 @utility masquer-defilement {
@@ -410,3 +410,17 @@ header.site-entete { view-transition-name: entete; }
 .bande-defile:hover .bande-piste { animation-play-state: paused; }
 @keyframes bande { to { transform: translateX(calc(-50% - 5px)); } }
 @media (prefers-reduced-motion: reduce) { .bande-piste { animation: none; } }
+
+/* Premier écran : la phrase change avec la photo, les traits montrent l'avancement */
+.diapo-texte { opacity: 0; transform: translateY(8px); transition: opacity .7s ease, transform .7s ease; }
+.diapo-texte.active { opacity: 1; transform: none; }
+.diapo-trait { display: grid; place-items: center; width: 34px; height: 24px; }
+.diapo-trait span { position: relative; display: block; width: 100%; height: 4px; border-radius: 999px; background: rgb(255 255 255 / .35); overflow: hidden; }
+.diapo-trait span::after { content: ""; position: absolute; inset: 0; width: 0; background: #F1592A; border-radius: inherit; }
+.diapo-trait.actif span::after { animation: trait-avance 5s linear forwards; }
+.diapo-trait:hover span { background: rgb(255 255 255 / .6); }
+@keyframes trait-avance { to { width: 100%; } }
+@media (prefers-reduced-motion: reduce) {
+  .diapo-texte { transform: none; transition: opacity .4s ease; }
+  .diapo-trait.actif span::after { animation: none; width: 100%; }
+}
