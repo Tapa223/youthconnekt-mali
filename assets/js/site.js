@@ -191,7 +191,7 @@
   Object.keys(groupes).forEach(function (nom) {
     var blocs = groupes[nom];
     var total = blocs[0].querySelectorAll("[data-diapo-image]").length;
-    if (total < 2) return;
+    if (total < 2) { blocs.forEach(function (bloc) { var i = bloc.querySelector("[data-diapo-image]"); if (i) i.classList.add("active"); }); return; }
     var index = 0, minuteur = null;
     var afficher = function (i) {
       blocs.forEach(function (bloc) {

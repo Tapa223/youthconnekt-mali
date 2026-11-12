@@ -16,16 +16,17 @@ $meta = array_filter([date_longue($a['date_affichee']), $a['lieu'], $a['minutes_
 $icone_telecharger = '<svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>';
 $icone_partager = '<svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/></svg>';
 ?>
-<article class="conteneur pt-3 pb-10 sm:pt-5 sm:pb-14">
+<?php partiel('partials/banniere_detail', [
+    'images' => array_column($images, 'src'),
+    'titre' => $a['titre'],
+    'etiquette' => $a['categorie_libelle'] !== '' ? '<span class="etiquette rounded-full bg-white text-vert">' . e($a['categorie_libelle']) . '</span>' : '',
+    'meta' => implode(' · ', $meta),
+    'retour' => url('/actualites'),
+]) ?>
+<article class="conteneur pt-5 pb-10 sm:pt-10 sm:pb-14">
   <div class="grid gap-x-12 gap-y-6 <?= $images ? 'lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]' : 'max-w-3xl' ?>">
     <header class="relative lg:col-start-1">
-      <p class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
-        <?php partiel('partials/retour', ['url' => url('/actualites'), 'bord' => true, 'classes' => 'mr-1 shrink-0 xl:absolute xl:top-0 xl:-left-16 xl:mr-0']) ?>
-        <?php if ($a['categorie_libelle'] !== ''): ?><span class="etiquette rounded-full <?= fond($a['couleur']) ?>"><?= e($a['categorie_libelle']) ?></span><?php endif ?>
-        <span><?= e(implode(' · ', $meta)) ?></span>
-      </p>
-      <h1 class="mt-3 text-[1.9rem] leading-[1.1] font-bold sm:text-5xl"><?= e($a['titre']) ?></h1>
-      <?php if ($a['chapeau']): ?><p class="mt-4 text-lg leading-relaxed text-encre sm:text-xl"><?= e($a['chapeau']) ?></p><?php endif ?>
+      <?php if ($a['chapeau']): ?><p class="text-lg leading-relaxed text-encre sm:text-xl"><?= e($a['chapeau']) ?></p><?php endif ?>
       <?php if ($a['est_a_venir']): ?>
       <a href="<?= url('/actualites/' . $a['slug'] . '/agenda') ?>" class="mt-5 inline-flex min-h-11 items-center gap-2 rounded-full border-2 border-vert px-5 text-sm font-bold text-vert transition-colors hover:border-orange hover:bg-orange hover:text-white" download>
         <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M12 13v5M9.5 15.5h5"/></svg>
@@ -109,7 +110,7 @@ $icone_partager = '<svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stro
       <a href="<?= url('/actualites') ?>" class="btn btn-contour hidden sm:inline-flex">Toutes les actualités</a>
       <a href="<?= url('/actualites') ?>" class="btn-tout-voir sm:hidden">Tout voir</a>
     </div>
-    <ul class="masquer-defilement -mx-4 mt-7 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 lg:grid-cols-3">
+    <ul class="masquer-defilement -mx-4 mt-7 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 lg:grid-cols-3">
       <?php foreach ($autres as $autre): ?><li class="w-[75%] max-w-72 shrink-0 snap-start sm:w-auto sm:max-w-none"><?php partiel('cartes/actualite', ['a' => $autre, 'mode' => 'lire']) ?></li><?php endforeach ?>
     </ul>
   </div>

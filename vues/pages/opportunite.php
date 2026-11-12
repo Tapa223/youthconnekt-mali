@@ -61,7 +61,7 @@ $etapes = lignes_texte($o['etapes']);
       <a href="<?= url('/opportunites') ?>" class="btn btn-contour hidden sm:inline-flex">Toutes les opportunités</a>
       <a href="<?= url('/opportunites') ?>" class="btn-tout-voir sm:hidden">Tout voir</a>
     </div>
-    <ul class="masquer-defilement -mx-4 mt-4 flex sm:mt-7 snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 lg:grid-cols-3">
+    <ul class="masquer-defilement -mx-4 mt-4 flex sm:mt-7 snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 lg:grid-cols-3">
       <?php foreach ($similaires as $s): ?><li class="w-[75%] max-w-72 shrink-0 snap-start sm:w-auto sm:max-w-none"><?php partiel('cartes/opportunite', ['o' => $s, 'compacte' => true]) ?></li><?php endforeach ?>
     </ul>
   </div>

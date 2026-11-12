@@ -8,9 +8,9 @@
       <p class="mt-3 max-w-lg text-base text-white/90">Jeunes, entreprises et organisations : le chapitre YouthConnekt Mali vous ouvre ses portes.</p>
     </div>
     <?php if (est_connecte()): ?>
-    <a href="<?= url('/communaute') ?>" class="btn btn-orange btn-connekt min-h-13 px-7 text-lg"><span class="points-connekt" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Découvrir les communautés</a>
+    <a href="<?= url('/communaute') ?>" class="btn btn-orange min-h-13 px-7 text-lg">Découvrir les communautés</a>
     <?php else: ?>
-    <a href="<?= url('/compte/inscription') ?>" class="btn btn-orange btn-connekt min-h-13 px-7 text-lg"><span class="points-connekt" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Rejoindre le chapitre</a>
+    <a href="<?= url('/compte/inscription') ?>" class="btn btn-orange min-h-13 px-7 text-lg">Rejoindre le chapitre</a>
     <?php endif ?>
   </div>
 </section>

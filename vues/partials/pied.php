@@ -13,20 +13,21 @@ $pied_compact = str_starts_with(chemin_actuel(), '/compte/mon-espace') || str_st
       }
       return '';
   };
-  $logo_ministere = $logo_appui('ministere');
-  $logo_pnud = $logo_appui('pnud');
+  // Logos déposés dans Administration > Paramètres, sinon fichiers du dossier assets/img/appui/
+  $logo_ministere = !empty($p['logo_ministere']) ? media($p['logo_ministere']) : $logo_appui('ministere');
+  $logo_pnud = !empty($p['logo_pnud']) ? media($p['logo_pnud']) : $logo_appui('pnud');
   ?>
   <div class="relative bg-white text-encre">
     <div class="conteneur sans-apparition grid grid-cols-[1fr_auto_1fr] items-center gap-3 py-4 sm:gap-6 sm:py-5">
       <div class="flex min-w-0 items-center gap-2.5 sm:gap-3">
-        <?php if ($logo_ministere): ?><img src="<?= e($logo_ministere) ?>" alt="" class="h-10 w-auto shrink-0 sm:h-14" loading="lazy">
+        <?php if ($logo_ministere): ?><img src="<?= e($logo_ministere) ?>" alt="Sceau de la République du Mali" class="h-12 w-auto shrink-0 sm:h-14" loading="lazy">
         <?php else: ?><span class="flex h-10 w-7 shrink-0 overflow-hidden rounded-sm sm:h-12 sm:w-9" aria-hidden="true"><span class="flex-1 bg-[#14B53A]"></span><span class="flex-1 bg-[#FCD116]"></span><span class="flex-1 bg-[#CE1126]"></span></span><?php endif ?>
-        <span class="min-w-0 leading-tight"><span class="block text-[11px] font-bold tracking-wide text-vert uppercase sm:text-sm">République du Mali</span><span class="hidden max-w-[19rem] text-xs text-texte sm:block">Ministère de la Jeunesse et des Sports, chargé de l'Instruction civique et de la Construction citoyenne</span></span>
+        <span class="hidden min-w-0 leading-tight sm:block"><span class="block text-sm font-bold tracking-wide text-vert uppercase">République du Mali</span><span class="hidden max-w-[19rem] text-xs text-texte sm:block">Ministère de la Jeunesse et des Sports, chargé de l'Instruction civique et de la Construction citoyenne</span></span>
       </div>
       <a href="<?= url('/') ?>" class="justify-self-center" aria-label="YouthConnekt Mali, retour à l'accueil"><?php partiel('partials/logo', ['classes' => 'h-10 w-auto sm:h-14']) ?></a>
       <div class="flex min-w-0 items-center justify-end gap-2.5 text-right sm:gap-3">
-        <span class="min-w-0 leading-tight"><span class="block text-[11px] font-bold tracking-wide text-vert uppercase sm:text-sm">PNUD Mali</span><span class="hidden text-xs text-texte sm:block">Programme des Nations unies pour le développement</span></span>
-        <?php if ($logo_pnud): ?><img src="<?= e($logo_pnud) ?>" alt="" class="h-10 w-auto shrink-0 sm:h-14" loading="lazy">
+        <span class="hidden min-w-0 leading-tight sm:block"><span class="block text-sm font-bold tracking-wide text-vert uppercase">PNUD Mali</span><span class="hidden text-xs text-texte sm:block">Programme des Nations unies pour le développement</span></span>
+        <?php if ($logo_pnud): ?><img src="<?= e($logo_pnud) ?>" alt="PNUD" class="h-12 w-auto shrink-0 sm:h-14" loading="lazy">
         <?php else: ?><span class="grid h-10 w-8 shrink-0 place-items-center rounded-sm bg-[#0468B1] text-[9px] font-bold text-white sm:h-12 sm:w-10 sm:text-[10px]" aria-hidden="true">PNUD</span><?php endif ?>
       </div>
     </div>
@@ -46,8 +47,7 @@ $pied_compact = str_starts_with(chemin_actuel(), '/compte/mon-espace') || str_st
   ?>
   <div class="conteneur sans-apparition relative grid gap-8 py-9 sm:py-12 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:gap-12">
     <div>
-      <p class="max-w-sm text-sm leading-relaxed text-white/85 sm:text-[15px]">Chapitre national de YouthConnekt Africa, YouthConnekt Mali relie les jeunes du pays aux opportunités, aux initiatives et aux organisations qui les accompagnent.</p>
-      <p class="mt-6 text-sm font-bold text-white">Suivez-nous</p>
+      <p class="text-sm font-bold text-white">Suivez-nous</p>
       <ul class="mt-3 flex flex-wrap gap-2" aria-label="Réseaux sociaux de YouthConnekt Mali">
         <?php foreach ($icones_reseaux as $cle => [$nom_reseau, $trace]):
             if ($cle === 'lien_tiktok' && empty($p[$cle])) continue;
@@ -121,7 +121,7 @@ $pied_compact = str_starts_with(chemin_actuel(), '/compte/mon-espace') || str_st
 <?php endif ?>
   <div class="relative <?= $pied_compact ? '' : 'border-t border-white/15' ?>">
     <div class="conteneur sans-apparition flex flex-col gap-3 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] text-[13px] text-white/75 sm:py-6 sm:text-sm md:flex-row md:items-center md:justify-between">
-      <p>&copy; <?= date('Y') ?> YouthConnekt Mali · Un chapitre du réseau YouthConnekt Africa</p>
+      <p>&copy; <?= date('Y') ?> YouthConnekt Mali</p>
       <ul class="flex flex-wrap gap-x-5 gap-y-2">
         <li><a href="<?= url('/mentions-legales') ?>" class="lien-pied">Mentions légales</a></li>
         <li><a href="<?= url('/confidentialite') ?>" class="lien-pied">Politique de confidentialité</a></li>

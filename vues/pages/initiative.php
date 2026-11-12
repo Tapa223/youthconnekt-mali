@@ -4,14 +4,16 @@ $objectifs = lignes_texte($i['objectifs']);
 $programme = lignes_colonnes($i['programme'], 3);
 $chiffres_i = lignes_colonnes($i['chiffres'], 2);
 ?>
-<section class="conteneur grid items-center gap-8 pt-3 pb-10 sm:gap-10 sm:pt-5 sm:pb-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14">
+<?php partiel('partials/banniere_detail', [
+    'images' => array_merge($i['image'] ? [media($i['image'])] : [], array_map(fn ($ph) => media($ph['image']), $photos)),
+    'titre' => $i['titre'],
+    'etiquette' => '<span class="etiquette rounded-full bg-white text-vert">' . e(ETATS_INITIATIVE[$i['etat']] ?? '') . '</span>',
+    'meta' => implode(' · ', array_filter([$i['date_libelle'], $i['lieu']])),
+    'retour' => url('/initiatives'),
+]) ?>
+<section class="conteneur grid items-center gap-8 pt-5 pb-10 sm:gap-10 sm:pt-10 sm:pb-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14">
   <div class="relative">
-    <div class="flex flex-wrap items-center gap-2">
-      <?php partiel('partials/retour', ['url' => url('/initiatives'), 'bord' => true]) ?>
-      <span class="etiquette rounded-full bg-gris text-vert"><?= e(ETATS_INITIATIVE[$i['etat']] ?? '') ?></span>
-    </div>
-    <h1 class="mt-3 text-[1.875rem] leading-[1.08] font-bold sm:text-5xl xl:text-[3.5rem]"><?= e($i['titre']) ?></h1>
-    <p class="mt-4 text-base leading-relaxed sm:text-lg"><?= e($i['resume']) ?></p>
+    <p class="text-base leading-relaxed sm:text-lg"><?= e($i['resume']) ?></p>
     <?php if ($ma_participation): ?>
     <div class="mt-5 flex flex-wrap items-center gap-2">
       <span class="inline-flex min-h-11 items-center rounded-full bg-vert-clair px-5 text-sm font-bold text-vert"><?= $ma_participation['statut'] === 'inscrit' ? 'Vous êtes inscrit' : 'Votre candidature' ?> comme « <?= e($ma_participation['role_libelle']) ?> »<?= $ma_participation['statut'] !== 'inscrit' ? ' · ' . e(STATUTS_PARTICIPATION[$ma_participation['statut']] ?? '') : '' ?></span>
@@ -172,7 +174,7 @@ $chiffres_i = lignes_colonnes($i['chiffres'], 2);
       <a href="<?= url('/initiatives') ?>" class="btn btn-contour hidden sm:inline-flex">Toutes les initiatives</a>
       <a href="<?= url('/initiatives') ?>" class="btn-tout-voir sm:hidden">Tout voir</a>
     </div>
-    <ul class="masquer-defilement -mx-4 mt-7 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 lg:grid-cols-3">
+    <ul class="masquer-defilement -mx-4 mt-7 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 lg:grid-cols-3">
       <?php foreach ($autres as $autre): ?><li class="w-[75%] max-w-72 shrink-0 snap-start sm:w-auto sm:max-w-none"><?php partiel('cartes/initiative', ['i' => $autre, 'simple' => true]) ?></li><?php endforeach ?>
     </ul>
   </div>

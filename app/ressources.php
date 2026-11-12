@@ -726,6 +726,10 @@ function ressources(): array
                     'accroche_accueil' => ['type' => 'texte', 'libelle' => "Titre principal de l'accueil", 'requis' => false, 'max' => 200],
                     'presentation_accueil' => ['type' => 'zone', 'libelle' => "Présentation sur l'accueil", 'requis' => false, 'max' => 1200, 'lignes' => 3],
                 ]],
+                ['Logos du pied de page', 'description' => "Ils s'affichent en bas de toutes les pages, de part et d'autre du logo YouthConnekt Mali. De préférence des images PNG à fond transparent.", 'champs' => [
+                    'logo_ministere' => ['type' => 'image', 'libelle' => "Sceau de l'État ou logo du ministère", 'requis' => false, 'dossier' => 'logos', 'largeur' => 'demi'],
+                    'logo_pnud' => ['type' => 'image', 'libelle' => 'Logo du PNUD', 'requis' => false, 'dossier' => 'logos', 'largeur' => 'demi'],
+                ]],
                 ["Photos du premier écran de l'accueil", 'description' => "Elles défilent dans le grand cercle et en fond, toutes les 5 secondes. Chaque photo s'affiche entière, sans être coupée ni agrandie. Choisissez de préférence des photos en largeur, d'au moins 1600 pixels. Sans photo choisie, les photos provisoires restent affichées.", 'champs' => [
                     'image_accueil_1' => ['type' => 'image', 'libelle' => 'Photo 1', 'requis' => false, 'dossier' => 'accueil', 'largeur' => 'tiers'],
                     'image_accueil_2' => ['type' => 'image', 'libelle' => 'Photo 2', 'requis' => false, 'dossier' => 'accueil', 'largeur' => 'tiers'],

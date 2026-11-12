@@ -378,6 +378,8 @@ CREATE TABLE IF NOT EXISTS parametres (
   image_accueil_1 VARCHAR(255) NULL,
   image_accueil_2 VARCHAR(255) NULL,
   image_accueil_3 VARCHAR(255) NULL,
+  logo_ministere VARCHAR(255) NULL,
+  logo_pnud VARCHAR(255) NULL,
   adresse VARCHAR(255) NOT NULL DEFAULT '',
   horaires VARCHAR(200) NOT NULL DEFAULT '',
   telephone VARCHAR(40) NOT NULL DEFAULT '',

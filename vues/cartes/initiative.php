@@ -9,7 +9,7 @@ $ct = !empty($compacte_tel); ?>
     <?php if ($i['date_libelle'] || $i['lieu']): ?><p class="text-xs text-texte <?= $ct ? 'max-sm:text-[11px] max-sm:leading-tight' : '' ?>"><?= e($i['date_libelle']) ?><?= $i['date_libelle'] && $i['lieu'] ? ' · ' : '' ?><?= e($i['lieu']) ?></p><?php endif ?>
     <h3 class="mt-1 text-lg leading-snug font-bold text-vert <?= $ct ? 'max-sm:line-clamp-2 max-sm:text-[14px] max-sm:leading-tight' : '' ?>"><?= e($i['titre']) ?></h3>
     <?php if (empty($simple)): ?>
-    <p class="mt-2 flex-1 text-sm leading-relaxed <?= $ct ? 'max-sm:hidden' : '' ?>"><?= e($i['resume']) ?></p>
+    <p class="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed <?= $ct ? 'max-sm:hidden' : '' ?>"><?= e($i['resume']) ?></p>
     <span class="btn-lien mt-4 self-start group-hover:border-orange group-hover:bg-orange group-hover:text-white <?= $ct ? 'max-sm:hidden' : '' ?>">Voir l'initiative</span>
     <?php endif ?>
   </div>

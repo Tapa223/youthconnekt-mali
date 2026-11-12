@@ -89,7 +89,7 @@
   .btn-blanc { @apply border-white bg-white text-vert hover:border-orange hover:bg-orange hover:text-white; }
   .btn-contour-blanc { @apply border-white bg-vert text-white hover:bg-white hover:text-vert; }
   /* Petit bouton « Tout voir » à côté des titres de section, sur téléphone */
-  .btn-tout-voir { @apply inline-flex min-h-10 shrink-0 items-center rounded-full bg-turquoise-clair px-4 text-sm font-bold whitespace-nowrap text-vert transition-colors hover:bg-orange hover:text-white; }
+  .btn-tout-voir { @apply inline-flex min-h-10 shrink-0 items-center rounded-full bg-vert px-4 text-sm font-bold whitespace-nowrap text-white shadow-sm transition-colors hover:bg-orange; }
 
   .carte {
     @apply overflow-hidden rounded-2xl border border-ligne bg-white;
@@ -360,26 +360,6 @@ header.site-entete { view-transition-name: entete; }
 .photo-attente.chargee { animation: none; background: none; }
 @keyframes reflet { from { background-position: 100% 0; } to { background-position: 0 0; } }
 
-/* Let's Connekt : au survol, des points du réseau viennent se relier au bouton */
-.btn-connekt { position: relative; isolation: isolate; overflow: visible; }
-.btn-connekt .points-connekt { position: absolute; inset: 0; pointer-events: none; }
-.btn-connekt .points-connekt i { position: absolute; width: 8px; height: 8px; border-radius: 999px; opacity: 0; transition: transform .55s cubic-bezier(.2, .8, .2, 1), opacity .3s ease; }
-.btn-connekt .points-connekt i:nth-child(1) { left: -34px; top: -18px; background: var(--color-turquoise); transform: translate(-14px, -10px); }
-.btn-connekt .points-connekt i:nth-child(2) { right: -30px; top: -22px; background: #fff; transform: translate(14px, -12px); }
-.btn-connekt .points-connekt i:nth-child(3) { left: -26px; bottom: -20px; background: var(--color-bleu); transform: translate(-12px, 10px); }
-.btn-connekt .points-connekt i:nth-child(4) { right: -36px; bottom: -14px; background: var(--color-turquoise); transform: translate(16px, 8px); }
-.btn-connekt .points-connekt i::after { content: ""; position: absolute; top: 50%; height: 1.5px; width: 30px; background: currentColor; opacity: .55; transform-origin: left center; }
-.btn-connekt .points-connekt i:nth-child(1), .btn-connekt .points-connekt i:nth-child(3) { color: #fff; }
-.btn-connekt .points-connekt i:nth-child(1)::after { left: 6px; transform: rotate(28deg); }
-.btn-connekt .points-connekt i:nth-child(3)::after { left: 6px; transform: rotate(-28deg); }
-.btn-connekt .points-connekt i:nth-child(2)::after, .btn-connekt .points-connekt i:nth-child(4)::after { right: 6px; transform-origin: right center; color: #fff; }
-.btn-connekt .points-connekt i:nth-child(2)::after { transform: rotate(-30deg); }
-.btn-connekt .points-connekt i:nth-child(4)::after { transform: rotate(24deg); }
-.btn-connekt:hover .points-connekt i, .btn-connekt:focus-visible .points-connekt i { opacity: 1; transform: none; }
-.btn-connekt:hover .points-connekt i:nth-child(2) { transition-delay: .06s; }
-.btn-connekt:hover .points-connekt i:nth-child(3) { transition-delay: .12s; }
-.btn-connekt:hover .points-connekt i:nth-child(4) { transition-delay: .18s; }
-
 /* Bienvenue dans l'espace : un nouveau point arrive et se relie au réseau */
 .bienvenue-point { transform-box: fill-box; transform-origin: center; animation: point-arrive .9s cubic-bezier(.3, 1.5, .5, 1) .2s both; }
 .bienvenue-fils path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: fil-trace .7s ease forwards; }
@@ -388,29 +368,18 @@ header.site-entete { view-transition-name: entete; }
 @keyframes point-arrive { from { opacity: 0; transform: translate(60px, -50px) scale(.3); } }
 @keyframes fil-trace { to { stroke-dashoffset: 0; } }
 
-/* « Découvrir le chapitre », « Nous contacter » : au survol, le bouton devient un nœud relié de chaque côté */
-.btn-lien-reseau { position: relative; overflow: visible; }
-.btn-lien-reseau::before, .btn-lien-reseau::after {
-  content: ""; position: absolute; top: 50%; width: 0; height: 2px; pointer-events: none;
-  background: linear-gradient(90deg, var(--color-turquoise), var(--color-orange)); opacity: 0;
-  transition: width .45s cubic-bezier(.2, .8, .2, 1), opacity .2s ease;
+/* Boutons du premier écran : au survol, un fil discret les relie au grand cercle (même effet pour les deux) */
+.btn-relie { position: relative; overflow: visible; }
+.btn-relie::after {
+  content: ""; position: absolute; top: 50%; width: 0; height: 0; border-top: 2px dashed rgb(255 255 255 / .7);
+  pointer-events: none; transition: width .4s cubic-bezier(.2, .8, .2, 1);
 }
-.btn-lien-reseau::before { right: 100%; transform: translateY(-50%); background: linear-gradient(90deg, var(--color-turquoise) 0 7px, transparent 7px 11px, var(--color-turquoise) 11px) no-repeat; }
-.btn-lien-reseau::after { left: 100%; transform: translateY(-50%); background: linear-gradient(270deg, var(--color-orange) 0 7px, transparent 7px 11px, var(--color-orange) 11px) no-repeat; }
-.btn-lien-reseau:hover::before, .btn-lien-reseau:hover::after, .btn-lien-reseau:focus-visible::before, .btn-lien-reseau:focus-visible::after { width: 34px; opacity: 1; }
-
-/* « Toutes les… », « Rejoindre le chapitre » : un point du réseau s'allume dans l'angle et envoie une onde */
-.btn-noeud { position: relative; overflow: visible; }
-.btn-noeud::before, .btn-noeud::after { content: ""; position: absolute; top: -5px; right: -5px; width: 12px; height: 12px; border-radius: 999px; pointer-events: none; opacity: 0; transform: scale(.3); transition: opacity .2s ease, transform .35s cubic-bezier(.3, 1.6, .5, 1); }
-.btn-noeud::before { background: var(--color-turquoise); box-shadow: 0 0 0 2px #fff; }
-.btn-noeud::after { border: 2px solid var(--color-turquoise); }
-.btn-noeud:hover::before, .btn-noeud:focus-visible::before { opacity: 1; transform: none; }
-.btn-noeud:hover::after, .btn-noeud:focus-visible::after { animation: onde-noeud 1.2s ease-out .15s infinite; }
-@keyframes onde-noeud { 0% { opacity: .9; transform: scale(1); } 100% { opacity: 0; transform: scale(3.2); } }
+.btn-relie--droite::after { left: 100%; }
+.btn-relie--gauche::after { right: 100%; }
+.btn-relie:hover::after, .btn-relie:focus-visible::after { width: 44px; }
 
 @media (prefers-reduced-motion: reduce) {
   .bienvenue-point, .bienvenue-fils path { animation: none; stroke-dashoffset: 0; }
-  .btn-noeud:hover::after { animation: none; }
   @view-transition { navigation: none; }
   .js [data-reseau] path, .js [data-reseau] circle { transition: none; stroke-dashoffset: 0; opacity: 1; transform: none; }
   .photo-attente { animation: none; }
@@ -434,3 +403,10 @@ header.site-entete { view-transition-name: entete; }
 .aide-invite { opacity: 0; transform: translateX(8px) scale(.96); transform-origin: bottom right; transition: opacity .25s ease, transform .3s cubic-bezier(.3, 1.4, .5, 1); }
 .aide-invite.visible { opacity: 1; transform: none; }
 .aide[data-ouvert] .aide-invite { display: none; }
+
+/* Bandeau des pages de détail : les images glissent en continu, en petit */
+.bande-defile { mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
+.bande-piste { animation: bande 38s linear infinite; }
+.bande-defile:hover .bande-piste { animation-play-state: paused; }
+@keyframes bande { to { transform: translateX(calc(-50% - 5px)); } }
+@media (prefers-reduced-motion: reduce) { .bande-piste { animation: none; } }
