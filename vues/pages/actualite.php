@@ -16,11 +16,11 @@ $meta = array_filter([date_longue($a['date_affichee']), $a['lieu'], $a['minutes_
 $icone_telecharger = '<svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>';
 $icone_partager = '<svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/></svg>';
 ?>
-<article class="conteneur pt-2 pb-10 sm:pt-6 sm:pb-14">
-  <?php partiel('partials/retour', ['url' => url('/actualites')]) ?>
+<article class="conteneur pt-3 pb-10 sm:pt-5 sm:pb-14">
   <div class="grid gap-x-12 gap-y-6 <?= $images ? 'lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]' : 'max-w-3xl' ?>">
-    <header class="lg:col-start-1">
+    <header class="relative lg:col-start-1">
       <p class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+        <?php partiel('partials/retour', ['url' => url('/actualites'), 'bord' => true, 'classes' => 'mr-1 shrink-0 xl:absolute xl:top-0 xl:-left-16 xl:mr-0']) ?>
         <?php if ($a['categorie_libelle'] !== ''): ?><span class="etiquette rounded-full <?= fond($a['couleur']) ?>"><?= e($a['categorie_libelle']) ?></span><?php endif ?>
         <span><?= e(implode(' · ', $meta)) ?></span>
       </p>

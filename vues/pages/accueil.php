@@ -42,12 +42,7 @@ foreach (range(0, 11) as $k) {
     <span class="anim-flotte absolute top-[57.5%] left-[87.1%] aspect-square w-[4.9%] rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= asset('img/accueil/bulle-4.jpg') ?>" alt=""></span>
     <div class="anim-soleil absolute top-[32.3%] left-[16.67%] aspect-square w-[66.67%]">
       <div class="absolute inset-0 overflow-hidden rounded-full bg-vert shadow-[0_0_0_8px_rgb(255_255_255/.14)]" data-diapo="accueil">
-        <?php foreach ($photos_accueil as $k => $src): ?>
-        <div data-diapo-image class="absolute inset-0"><?php /* Photo entière, ni coupée ni agrandie, sur un fond flouté de la même photo */ ?>
-          <img src="<?= e($src) ?>" alt="" class="absolute inset-0 h-full w-full scale-110 object-cover opacity-70 blur-xl"<?= $k ? ' loading="lazy"' : '' ?>>
-          <img src="<?= e($src) ?>" alt="" class="photo-cercle absolute top-[7%] right-[12%] left-[12%] h-[46%] w-[76%] object-contain"<?= $k ? ' loading="lazy"' : ' fetchpriority="high"' ?>>
-        </div>
-        <?php endforeach ?>
+        <?php foreach ($photos_accueil as $k => $src): ?><img data-diapo-image src="<?= e($src) ?>" alt="<?= $k ? '' : "Jeunes réunis lors d'un événement YouthConnekt" ?>" class="absolute inset-0 h-full w-full object-cover"<?= $k ? ' loading="lazy"' : ' fetchpriority="high"' ?>><?php endforeach ?>
       </div>
     </div>
   </div>
@@ -70,17 +65,12 @@ foreach (range(0, 11) as $k) {
     <div class="anim-soleil relative order-1 aspect-square w-[80vw] max-w-[340px] sm:max-w-[420px] lg:hidden">
       <div class="absolute -inset-3 rounded-full border-2 border-dashed border-white/35" aria-hidden="true"></div>
       <div class="absolute inset-0 overflow-hidden rounded-full bg-vert shadow-[0_0_0_6px_rgb(255_255_255/.14)]" data-diapo="accueil">
-        <?php foreach ($photos_accueil as $k => $src): ?>
-        <div data-diapo-image class="absolute inset-0">
-          <img src="<?= e($src) ?>" alt="" class="absolute inset-0 h-full w-full scale-110 object-cover opacity-70 blur-lg"<?= $k ? ' loading="lazy"' : '' ?>>
-          <img src="<?= e($src) ?>" alt="<?= $k ? '' : "Jeunes réunis lors d'un événement YouthConnekt" ?>" class="photo-cercle absolute inset-[8%] h-[84%] w-[84%] object-contain"<?= $k ? ' loading="lazy"' : '' ?>>
-        </div>
-        <?php endforeach ?>
+        <?php foreach ($photos_accueil as $k => $src): ?><img data-diapo-image src="<?= e($src) ?>" alt="<?= $k ? '' : "Jeunes réunis lors d'un événement YouthConnekt" ?>" class="absolute inset-0 h-full w-full object-cover"<?= $k ? ' loading="lazy"' : ' fetchpriority="high"' ?>><?php endforeach ?>
       </div>
     </div>
 
-    <div class="anim-flotte absolute bottom-[13%] left-0 z-10 hidden lg:block xl:-left-10 2xl:-left-24"><a href="#chapitre" class="btn btn-contour-blanc min-h-16 w-[19rem] px-7 text-xl">Découvrir le chapitre</a></div>
-    <div class="anim-flotte-2 absolute right-0 bottom-[13%] z-10 hidden lg:block xl:-right-10 2xl:-right-24"><a href="#rejoindre" class="btn btn-orange btn-connekt min-h-16 w-[19rem] px-7 text-xl shadow-lg shadow-orange/30"><span class="points-connekt" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Let's Connekt</a></div>
+    <div class="anim-flotte absolute bottom-[17%] left-0 z-10 hidden lg:block xl:-left-10 2xl:-left-24"><a href="#chapitre" class="btn btn-contour-blanc btn-lien-reseau min-h-13 w-[16rem] px-6 text-[17px]">Découvrir le chapitre</a></div>
+    <div class="anim-flotte-2 absolute right-0 bottom-[17%] z-10 hidden lg:block xl:-right-10 2xl:-right-24"><a href="#rejoindre" class="btn btn-orange btn-connekt min-h-13 w-[16rem] px-6 text-[17px] shadow-lg shadow-orange/30"><span class="points-connekt" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Let's Connekt</a></div>
   </div>
   <?php partiel('partials/mention_photo', ['texte' => 'Photos provisoires · Sommet YouthConnekt Africa, hors Mali']) ?>
 </section>
@@ -93,7 +83,7 @@ foreach (range(0, 11) as $k) {
       <div class="order-1"><p class="surtitre surtitre-trait">Le chapitre</p>
       <h2 id="titre-chapitre" class="titre-section">Le lieu où la jeunesse malienne se rencontre et avance</h2></div>
       <p class="order-4 text-base leading-relaxed sm:text-lg lg:mt-5">YouthConnekt Mali accompagne les jeunes dans leurs projets, les implique dans la vie citoyenne et met en lumière celles et ceux qui font bouger le pays. Étudiants, jeunes professionnels, entrepreneurs et organisations s'y retrouvent pour apprendre, se rencontrer et agir ensemble.</p>
-      <a href="<?= url('/a-propos') ?>" class="btn btn-vert survol-leve order-5 w-full sm:w-auto sm:self-start lg:mt-7">Découvrir le chapitre</a>
+      <a href="<?= url('/a-propos') ?>" class="btn btn-vert btn-lien-reseau survol-leve order-5 w-full sm:w-auto sm:self-start lg:mt-7">Découvrir le chapitre</a>
 
       <?php if ($chiffres): ?>
       <dl class="order-2 grid grid-cols-3 divide-x divide-ligne border-y border-ligne py-3.5 sm:py-5 lg:mt-9">
@@ -157,7 +147,7 @@ foreach (range(0, 11) as $k) {
         <p class="surtitre">Sur le terrain</p>
         <h2 id="titre-initiatives" class="titre-section">Nos initiatives</h2>
       </div>
-      <a href="<?= url('/initiatives') ?>" class="btn btn-vert survol-leve hidden sm:inline-flex">Toutes les initiatives</a>
+      <a href="<?= url('/initiatives') ?>" class="btn btn-vert btn-noeud survol-leve hidden sm:inline-flex">Toutes les initiatives</a>
       <a href="<?= url('/initiatives') ?>" class="btn-tout-voir sm:hidden">Tout voir</a>
     </div>
 
@@ -235,7 +225,7 @@ foreach (range(0, 11) as $k) {
         <p class="surtitre surtitre-trait">Communauté</p>
         <h2 id="titre-communaute" class="titre-section">Votre communauté, votre réseau, vos opportunités</h2>
         <p class="mt-5 max-w-lg text-base leading-relaxed sm:text-lg"><span class="sm:hidden">Retrouvez celles et ceux qui vous ressemblent et les opportunités de votre domaine.</span><span class="hidden sm:inline">Étudiants, entrepreneurs, leaders d'associations, innovateurs : retrouvez celles et ceux qui vous ressemblent, échangez et accédez aux opportunités de votre domaine.</span></p>
-        <a href="<?= url('/communaute') ?>" class="btn btn-orange mt-7 hidden min-h-14 px-8 text-lg lg:inline-flex">Découvrir les communautés</a>
+        <a href="<?= url('/communaute') ?>" class="btn btn-orange btn-connekt mt-7 hidden min-h-14 px-8 text-lg lg:inline-flex"><span class="points-connekt" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Découvrir les communautés</a>
       </div>
 
       <div class="hidden h-[400px] items-center justify-center lg:flex">
@@ -273,7 +263,7 @@ foreach (range(0, 11) as $k) {
         <p class="surtitre">À saisir maintenant</p>
         <h2 id="titre-opportunites" class="titre-section">Opportunités</h2>
       </div>
-      <a href="<?= url('/opportunites') ?>" class="btn btn-contour survol-leve hidden sm:inline-flex">Toutes les opportunités</a>
+      <a href="<?= url('/opportunites') ?>" class="btn btn-contour btn-noeud survol-leve hidden sm:inline-flex">Toutes les opportunités</a>
       <a href="<?= url('/opportunites') ?>" class="btn-tout-voir sm:hidden">Tout voir</a>
     </div>
 
@@ -320,7 +310,7 @@ foreach (range(0, 11) as $k) {
         <p class="surtitre max-sm:text-white/85">La vie du chapitre</p>
         <h2 id="titre-actualites" class="titre-section max-sm:text-white">Événements et actualités</h2>
       </div>
-      <a href="<?= url('/actualites') ?>" class="btn btn-contour survol-leve hidden sm:inline-flex">Toutes les actualités</a>
+      <a href="<?= url('/actualites') ?>" class="btn btn-contour btn-noeud survol-leve hidden sm:inline-flex">Toutes les actualités</a>
       <a href="<?= url('/actualites') ?>" class="btn-tout-voir bg-white sm:hidden">Tout voir</a>
     </div>
 
@@ -396,7 +386,7 @@ foreach (range(0, 11) as $k) {
       <div class="relative bg-vert px-5 py-6 text-white sm:p-10">
         <p class="text-xs font-medium tracking-[0.16em] text-white/80 uppercase">Contact</p>
         <h2 id="titre-contact" class="mt-2 text-2xl leading-tight font-bold text-white sm:mt-3 sm:text-4xl">Une question ?<br>Écrivez-nous</h2>
-        <a href="<?= url('/contact') ?>" class="btn btn-blanc survol-leve mt-5 sm:mt-7">Nous contacter</a>
+        <a href="<?= url('/contact') ?>" class="btn btn-blanc btn-lien-reseau survol-leve mt-5 sm:mt-7">Nous contacter</a>
         <svg class="pointer-events-none absolute right-0 bottom-0 hidden h-40 w-48 md:block" viewBox="0 0 200 160" aria-hidden="true">
           <g stroke="rgb(255 255 255 / .35)" stroke-width="1.2" fill="none"><path d="M20 150 L95 55 L170 15"/><path d="M95 55 L200 115"/></g>
           <circle cx="20" cy="150" r="6" fill="#F1592A"/><circle cx="95" cy="55" r="8" fill="#04B2B1"/><circle cx="170" cy="15" r="6" fill="#F1592A"/>

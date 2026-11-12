@@ -12,8 +12,8 @@ $nb = (int) $c['nb_membres'];
 <section class="relative isolate overflow-hidden text-white">
   <img src="<?= $c['image'] ? e(media($c['image'])) : asset('img/communaute/bandeau-detail.jpg') ?>" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover">
   <div class="absolute inset-0 -z-10 bg-gradient-to-t from-vert via-vert/85 to-vert/60 md:bg-gradient-to-r md:via-vert/80 md:to-vert/35"></div>
-  <div class="conteneur pt-3 pb-6 sm:pt-5 sm:pb-9">
-    <?php partiel('partials/retour', ['url' => url('/communaute'), 'clair' => true]) ?>
+  <div class="conteneur relative pt-3 pb-6 sm:pt-5 sm:pb-9">
+    <?php partiel('partials/retour', ['url' => url('/communaute'), 'clair' => true, 'bord' => true, 'classes' => 'mb-3 xl:absolute xl:top-5 xl:-left-16 xl:mb-0']) ?>
     <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
       <div>
         <h1 class="text-[2rem] leading-tight font-bold text-white sm:text-5xl"><?= e($c['nom']) ?></h1>

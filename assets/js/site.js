@@ -418,7 +418,22 @@
     setTimeout(function () { attente.remove(); fil.appendChild(noeud); defiler(); }, 450);
   }
 
-  bouton.addEventListener("click", function () { basculer(panneau.hidden); });
+  // Première visite : un petit message apparaît à côté de la bulle (fermée), une seule fois
+  var invite = aide.querySelector("[data-aide-invite]");
+  var lire = function (c) { try { return localStorage.getItem(c); } catch (e) { return "1"; } };
+  var noter = function (c) { try { localStorage.setItem(c, "1"); } catch (e) {} };
+  var cacherInvite = function () { if (invite && !invite.hidden) { invite.classList.remove("visible"); setTimeout(function () { invite.hidden = true; }, 250); noter("ycm-invite-vue"); } };
+  if (invite && !aide.classList.contains("aide-espace") && !lire("ycm-invite-vue")) {
+    setTimeout(function () {
+      if (!panneau.hidden) return;
+      invite.hidden = false;
+      requestAnimationFrame(function () { invite.classList.add("visible"); });
+    }, 2500);
+    invite.querySelector("[data-aide-invite-fermer]").addEventListener("click", cacherInvite);
+    invite.querySelector("[data-aide-invite-ouvrir]").addEventListener("click", function () { cacherInvite(); basculer(true); });
+  }
+
+  bouton.addEventListener("click", function () { cacherInvite(); basculer(panneau.hidden); });
   // Lien vers un endroit de la même page (newsletter) : on referme l'assistant pour laisser voir le formulaire
   panneau.addEventListener("click", function (e) {
     var lien = e.target.closest("a.aide-lien");

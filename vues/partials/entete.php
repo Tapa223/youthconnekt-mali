@@ -43,7 +43,7 @@ $navigation = [
         </a>
       <?php else: ?>
         <a href="<?= url('/compte/connexion') ?>" class="btn btn-contour px-4 whitespace-nowrap">Se connecter</a>
-        <a href="<?= url('/compte/inscription') ?>" class="btn btn-vert px-5 whitespace-nowrap">Rejoindre le chapitre</a>
+        <a href="<?= url('/compte/inscription') ?>" class="btn btn-vert btn-noeud px-5 whitespace-nowrap">Rejoindre le chapitre</a>
       <?php endif ?>
     </div>
 

@@ -63,6 +63,14 @@ $champ = 'min-h-10 w-full rounded-lg border border-ligne bg-white px-3 text-sm t
     </form>
   </div>
 
+  <?php /* Première visite : petit message à côté de la bulle, qui reste fermée ; la croix le fait disparaître pour de bon */ ?>
+  <div class="aide-invite absolute right-[calc(100%+10px)] bottom-0 flex w-max max-w-[min(15.5rem,calc(100vw-6rem))] items-start gap-1 rounded-2xl rounded-br-md border border-ligne bg-white py-2.5 pr-1.5 pl-4 shadow-xl shadow-vert/15" data-aide-invite hidden>
+    <button type="button" class="py-0.5 text-left text-[13px] leading-snug text-encre" data-aide-invite-ouvrir><span class="block font-bold text-vert">Une question, une suggestion&nbsp;?</span>Écrivez-nous, l'équipe vous répond.</button>
+    <button type="button" class="-mt-1 grid size-8 shrink-0 place-items-center rounded-full text-texte transition-colors hover:bg-gris hover:text-vert" data-aide-invite-fermer aria-label="Fermer ce message">
+      <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+
   <button type="button" class="aide-bouton grid size-12 place-items-center rounded-full text-white shadow-lg transition-colors sm:size-14" aria-expanded="false" aria-controls="panneau-aide" data-ouvrir-aide>
     <span class="sr-only">Ouvrir l'assistant</span>
     <svg class="aide-point aide-icone-message size-6 sm:size-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4A8 8 0 1 1 20 12z"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01" stroke-width="3"/></svg>

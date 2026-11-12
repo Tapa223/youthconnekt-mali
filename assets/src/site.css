@@ -388,8 +388,29 @@ header.site-entete { view-transition-name: entete; }
 @keyframes point-arrive { from { opacity: 0; transform: translate(60px, -50px) scale(.3); } }
 @keyframes fil-trace { to { stroke-dashoffset: 0; } }
 
+/* « Découvrir le chapitre », « Nous contacter » : au survol, le bouton devient un nœud relié de chaque côté */
+.btn-lien-reseau { position: relative; overflow: visible; }
+.btn-lien-reseau::before, .btn-lien-reseau::after {
+  content: ""; position: absolute; top: 50%; width: 0; height: 2px; pointer-events: none;
+  background: linear-gradient(90deg, var(--color-turquoise), var(--color-orange)); opacity: 0;
+  transition: width .45s cubic-bezier(.2, .8, .2, 1), opacity .2s ease;
+}
+.btn-lien-reseau::before { right: 100%; transform: translateY(-50%); background: linear-gradient(90deg, var(--color-turquoise) 0 7px, transparent 7px 11px, var(--color-turquoise) 11px) no-repeat; }
+.btn-lien-reseau::after { left: 100%; transform: translateY(-50%); background: linear-gradient(270deg, var(--color-orange) 0 7px, transparent 7px 11px, var(--color-orange) 11px) no-repeat; }
+.btn-lien-reseau:hover::before, .btn-lien-reseau:hover::after, .btn-lien-reseau:focus-visible::before, .btn-lien-reseau:focus-visible::after { width: 34px; opacity: 1; }
+
+/* « Toutes les… », « Rejoindre le chapitre » : un point du réseau s'allume dans l'angle et envoie une onde */
+.btn-noeud { position: relative; overflow: visible; }
+.btn-noeud::before, .btn-noeud::after { content: ""; position: absolute; top: -5px; right: -5px; width: 12px; height: 12px; border-radius: 999px; pointer-events: none; opacity: 0; transform: scale(.3); transition: opacity .2s ease, transform .35s cubic-bezier(.3, 1.6, .5, 1); }
+.btn-noeud::before { background: var(--color-turquoise); box-shadow: 0 0 0 2px #fff; }
+.btn-noeud::after { border: 2px solid var(--color-turquoise); }
+.btn-noeud:hover::before, .btn-noeud:focus-visible::before { opacity: 1; transform: none; }
+.btn-noeud:hover::after, .btn-noeud:focus-visible::after { animation: onde-noeud 1.2s ease-out .15s infinite; }
+@keyframes onde-noeud { 0% { opacity: .9; transform: scale(1); } 100% { opacity: 0; transform: scale(3.2); } }
+
 @media (prefers-reduced-motion: reduce) {
   .bienvenue-point, .bienvenue-fils path { animation: none; stroke-dashoffset: 0; }
+  .btn-noeud:hover::after { animation: none; }
   @view-transition { navigation: none; }
   .js [data-reseau] path, .js [data-reseau] circle { transition: none; stroke-dashoffset: 0; opacity: 1; transform: none; }
   .photo-attente { animation: none; }
@@ -408,3 +429,8 @@ header.site-entete { view-transition-name: entete; }
 .js .jauge > span { width: 0; transition: width 1.2s cubic-bezier(.2, .8, .2, 1) .2s; }
 .js .visible .jauge > span, .js .jauge.remplie > span { width: var(--taux); }
 @media (prefers-reduced-motion: reduce) { .js .jauge > span { transition: none; width: var(--taux); } }
+
+/* Message de bienvenue à côté de la bulle d'aide (première visite) */
+.aide-invite { opacity: 0; transform: translateX(8px) scale(.96); transform-origin: bottom right; transition: opacity .25s ease, transform .3s cubic-bezier(.3, 1.4, .5, 1); }
+.aide-invite.visible { opacity: 1; transform: none; }
+.aide[data-ouvert] .aide-invite { display: none; }

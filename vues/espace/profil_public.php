@@ -11,9 +11,9 @@ $liens = liens_profil((int) $m['id']);
 $mail_public = $p['email_contact_public'] ?? '';
 $presentation = trim((string) $p['presentation']);
 ?>
-<section class="bg-gris pt-3 pb-10 sm:pt-6 sm:pb-14">
-  <div class="conteneur max-w-4xl">
-    <?php partiel('partials/retour', ['url' => $est_moi ? url('/compte/mon-espace') : url('/communaute')]) ?>
+<section class="bg-gris pt-3 pb-10 sm:pt-5 sm:pb-14">
+  <div class="conteneur relative max-w-4xl">
+    <?php partiel('partials/retour', ['url' => $est_moi ? url('/compte/mon-espace') : url('/communaute'), 'bord' => true, 'classes' => 'mb-3 xl:absolute xl:top-0 xl:-left-16 xl:mb-0']) ?>
     <?php if (!$p['visible']): ?><p class="mb-4 rounded-xl bg-orange/10 px-4 py-2.5 text-sm font-bold text-orange-fonce"><?= $est_moi ? 'Votre profil est masqué : vous seul le voyez. Vous pouvez le rendre visible dans « Mon profil ».' : 'Ce profil est masqué aux autres membres.' ?></p><?php endif ?>
 
     <div class="overflow-hidden rounded-3xl bg-white">

@@ -12,8 +12,8 @@ $infos = array_filter([
 ?>
 <section class="relative isolate overflow-hidden bg-vert text-white">
   <?php partiel('partials/reseau_deco') ?>
-  <div class="conteneur relative pt-2 pb-8 sm:py-14">
-    <?php partiel('partials/retour', ['url' => $c['url'], 'clair' => true]) ?>
+  <div class="conteneur relative pt-3 pb-8 sm:pt-6 sm:pb-14">
+    <?php partiel('partials/retour', ['url' => $c['url'], 'clair' => true, 'bord' => true, 'classes' => 'mb-3 xl:absolute xl:top-6 xl:-left-16 xl:mb-0']) ?>
     <p class="surtitre surtitre-trait text-white/85">Intégrer la communauté</p>
     <h1 class="mt-3 text-4xl leading-tight font-bold text-white sm:text-5xl"><?= e($c['nom']) ?></h1>
     <p class="mt-3 max-w-xl text-white/90"><strong>Pour :</strong> <?= e($c['public_vise']) ?></p>

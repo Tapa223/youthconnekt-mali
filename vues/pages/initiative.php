@@ -4,10 +4,10 @@ $objectifs = lignes_texte($i['objectifs']);
 $programme = lignes_colonnes($i['programme'], 3);
 $chiffres_i = lignes_colonnes($i['chiffres'], 2);
 ?>
-<section class="conteneur grid items-center gap-8 pt-2 pb-10 sm:gap-10 sm:py-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14">
-  <div>
-    <?php partiel('partials/retour', ['url' => url('/initiatives')]) ?>
-    <div class="flex flex-wrap gap-2">
+<section class="conteneur grid items-center gap-8 pt-3 pb-10 sm:gap-10 sm:pt-5 sm:pb-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14">
+  <div class="relative">
+    <div class="flex flex-wrap items-center gap-2">
+      <?php partiel('partials/retour', ['url' => url('/initiatives'), 'bord' => true]) ?>
       <span class="etiquette rounded-full bg-gris text-vert"><?= e(ETATS_INITIATIVE[$i['etat']] ?? '') ?></span>
     </div>
     <h1 class="mt-3 text-[1.875rem] leading-[1.08] font-bold sm:text-5xl xl:text-[3.5rem]"><?= e($i['titre']) ?></h1>

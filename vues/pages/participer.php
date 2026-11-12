@@ -15,9 +15,11 @@ $textes = [
 ];
 $t = $textes[$choisi['mode'] ?? 'candidature'];
 ?>
-<section class="conteneur max-w-3xl pt-4 pb-14 sm:pt-8 sm:pb-20">
-  <?php partiel('partials/retour', ['url' => url('/initiatives/' . $i['slug'])]) ?>
-  <p class="surtitre">Prendre part</p>
+<section class="conteneur relative max-w-3xl pt-3 pb-14 sm:pt-5 sm:pb-20">
+  <div class="flex items-center gap-3">
+    <?php partiel('partials/retour', ['url' => url('/initiatives/' . $i['slug']), 'bord' => true, 'classes' => 'shrink-0 xl:absolute xl:top-5 xl:-left-16']) ?>
+    <p class="surtitre">Prendre part</p>
+  </div>
   <h1 class="mt-1 text-[1.75rem] leading-tight font-bold sm:text-4xl"><?= e($i['titre']) ?></h1>
   <?php if ($i['date_libelle'] || $i['lieu']): ?><p class="mt-2 text-sm text-texte"><?= e(implode(' · ', array_filter([$i['date_libelle'], $i['lieu']]))) ?></p><?php endif ?>
 
