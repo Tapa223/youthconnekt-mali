@@ -9,7 +9,7 @@ $connecte = est_connecte();
       <h1 class="text-[1.5rem] leading-[1.1] font-bold text-white sm:text-4xl lg:text-[2.6rem]"><span class="sm:hidden">Nos communautés</span><span class="hidden sm:inline">Découvrez nos différentes communautés</span></h1>
       <p class="mt-1.5 max-w-xl text-[13px] leading-snug text-white/90 sm:mt-3 sm:text-base"><span class="sm:hidden">Rejoignez celles qui vous ressemblent.</span><span class="hidden sm:inline">Des groupes de jeunes qui partagent un même domaine ou un même parcours. Rejoignez ceux qui vous ressemblent.</span></p>
     </div>
-    <div class="relative aspect-[5/4] w-[26%] shrink-0 sm:w-[26%] lg:w-[17rem]" aria-hidden="true">
+    <div class="relative aspect-[5/4] w-[26%] shrink-0 sm:w-[22%] lg:w-[13rem]" aria-hidden="true">
       <svg class="absolute inset-0 h-full w-full" viewBox="0 0 500 400"><g stroke="rgb(255 255 255 / .35)" stroke-width="2" fill="none"><path d="M90 80 L250 185 L430 70"/><path d="M90 80 L80 290 L250 185 L450 160"/><path d="M250 185 L260 370 L410 290"/><path d="M430 70 L450 160 L410 290"/></g></svg>
       <div class="absolute top-[46%] left-1/2 aspect-square w-[32%] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full border-[3px] border-orange shadow-2xl sm:border-4"><img src="<?= asset('img/communaute/cercle-centre.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
       <?php

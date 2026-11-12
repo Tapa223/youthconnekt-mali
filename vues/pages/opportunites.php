@@ -5,9 +5,9 @@ $total_ouvertes = array_sum($nombres);
 ?>
 <section class="relative isolate overflow-hidden bg-vert text-white">
   <?php partiel('partials/reseau_deco') ?>
-  <div class="conteneur anim-entree relative pt-4 pb-4 sm:pt-8 sm:pb-6">
-    <h1 class="text-[1.75rem] leading-none font-bold text-white sm:text-5xl">Opportunités</h1>
-    <p class="mt-2 max-w-lg text-sm text-white/90 sm:mt-3 sm:text-base">Formations, appels à candidatures, bourses, stages et événements relayés par le chapitre.</p>
+  <div class="conteneur anim-entree relative pt-4 pb-4 sm:pt-5 sm:pb-5">
+    <h1 class="text-[1.75rem] leading-none font-bold text-white sm:text-4xl">Opportunités</h1>
+    <p class="mt-2 max-w-lg text-sm text-white/90 sm:text-base">Formations, appels à candidatures, bourses, stages et événements relayés par le chapitre.</p>
   </div>
 </section>
 

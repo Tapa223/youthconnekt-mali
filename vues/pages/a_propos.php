@@ -1,15 +1,15 @@
 <?php /** Page À propos */ ?>
 <section class="relative isolate overflow-hidden bg-vert text-white">
   <?php partiel('partials/reseau_deco') ?>
-  <div class="conteneur relative grid items-center gap-6 pt-6 pb-8 sm:py-10 lg:grid-cols-2 lg:gap-10 lg:py-10">
+  <div class="conteneur relative grid items-center gap-5 pt-5 pb-7 sm:py-8 lg:grid-cols-2 lg:gap-10 lg:py-7">
     <div class="anim-entree">
-      <h1 class="text-[2.1rem] leading-[1.05] font-bold text-white sm:text-5xl lg:text-6xl">Un chapitre, une jeunesse, un même élan</h1>
+      <h1 class="text-[2.1rem] leading-[1.05] font-bold text-white sm:text-5xl lg:text-[3.25rem]">Un chapitre, une jeunesse, un même élan</h1>
       <p class="mt-4 max-w-lg text-[15px] leading-relaxed text-white/90 sm:mt-5 sm:text-lg">YouthConnekt Mali est le chapitre national de YouthConnekt Africa. Il relie les jeunes du pays aux opportunités, aux décideurs et entre eux.</p>
     </div>
     <div class="flex -space-x-3 lg:hidden" aria-hidden="true">
       <?php foreach (['cercle-centre', 'cercle-1', 'cercle-2', 'cercle-3'] as $k => $photo): ?><span class="size-16 overflow-hidden rounded-full border-[3px] bg-white shadow-lg sm:size-20 <?= cycle(['border-orange', 'border-turquoise', 'border-white', 'border-turquoise'], $k) ?>"><img src="<?= asset('img/a-propos/' . $photo . '.jpg') ?>" alt="" class="h-full w-full object-cover"></span><?php endforeach ?>
     </div>
-    <div class="relative mx-auto hidden aspect-[5/4] w-full max-w-sm lg:block" aria-hidden="true">
+    <div class="relative mx-auto hidden aspect-[5/4] w-full max-w-[17rem] lg:block" aria-hidden="true">
       <svg class="absolute inset-0 h-full w-full" viewBox="0 0 500 400"><g stroke="rgb(255 255 255 / .35)" stroke-width="1.3" fill="none"><path d="M90 90 L250 190 L400 80"/><path d="M250 190 L410 310"/><path d="M90 90 L400 80"/></g></svg>
       <div class="anim-soleil absolute top-[20%] left-[26%] aspect-square w-[48%] overflow-hidden rounded-full border-4 border-orange shadow-2xl"><img src="<?= asset('img/a-propos/cercle-centre.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
       <div class="anim-flotte absolute top-[4%] left-[6%] aspect-square w-[22%] overflow-hidden rounded-full border-4 border-turquoise shadow-xl"><img src="<?= asset('img/a-propos/cercle-1.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
@@ -22,7 +22,7 @@
   <?php partiel('partials/mention_photo', ['texte' => 'Photos provisoires · hors Mali']) ?>
 </section>
 
-<section id="pourquoi" class="scroll-mt-24 bg-white py-12 sm:py-20">
+<section id="pourquoi" class="scroll-mt-24 bg-white py-10 sm:py-14">
 <div class="conteneur grid gap-6 sm:gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-14">
   <div>
     <p class="surtitre surtitre-trait">Pourquoi YouthConnekt Mali</p>
@@ -43,7 +43,7 @@
 </div>
 </section>
 
-<section id="qui-sommes-nous" class="scroll-mt-24 bg-gris py-12 sm:py-20">
+<section id="qui-sommes-nous" class="scroll-mt-24 bg-gris py-10 sm:py-14">
 <div class="conteneur">
   <div class="grid items-center gap-6 md:gap-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-14">
     <div>
@@ -89,7 +89,7 @@
 </div>
 </section>
 
-<section id="mission" class="scroll-mt-24 bg-white py-12 sm:py-20">
+<section id="mission" class="scroll-mt-24 bg-white py-10 sm:py-14">
 <div class="conteneur">
   <p class="surtitre surtitre-trait">Mission et valeurs</p>
   <h2 class="titre-section">Ce qui nous guide</h2>
@@ -114,7 +114,7 @@
 </section>
 
 <?php /* Objectifs et axes officiels du chapitre (alignés sur la politique nationale de la jeunesse et le cadre de coopération avec les Nations unies) */ ?>
-<section id="objectifs" class="scroll-mt-24 bg-gris py-12 sm:py-20" aria-labelledby="titre-objectifs">
+<section id="objectifs" class="scroll-mt-24 bg-gris py-10 sm:py-14" aria-labelledby="titre-objectifs">
   <div class="conteneur">
     <p class="surtitre surtitre-trait">Objectifs</p>
     <h2 id="titre-objectifs" class="titre-section">Ce que le chapitre veut accomplir</h2>
@@ -126,7 +126,7 @@
   </div>
 </section>
 
-<section class="relative isolate overflow-hidden bg-vert py-12 sm:py-20 text-white">
+<section class="relative isolate overflow-hidden bg-vert py-10 sm:py-14 text-white">
   <?php partiel('partials/reseau_deco') ?>
   <div class="conteneur relative">
     <p class="surtitre surtitre-trait text-white/85">Notre approche</p>
@@ -147,7 +147,7 @@
 </section>
 
 <?php if ($axes): ?>
-<section id="axes" class="scroll-mt-24 bg-gris py-12 sm:py-20">
+<section id="axes" class="scroll-mt-24 bg-gris py-10 sm:py-14">
   <div class="conteneur">
     <p class="surtitre surtitre-trait">Axes d'intervention</p>
     <h2 class="titre-section"><?= [1 => 'Un axe pour agir', 2 => 'Deux axes pour agir', 3 => 'Trois axes pour agir'][count($axes)] ?? 'Nos axes pour agir' ?></h2>
@@ -188,7 +188,7 @@
 </section>
 <?php endif ?>
 
-<section id="parcours" class="scroll-mt-24 bg-white py-12 sm:py-20">
+<section id="parcours" class="scroll-mt-24 bg-white py-10 sm:py-14">
   <div class="conteneur">
     <p class="surtitre surtitre-trait">Notre parcours</p>
     <h2 class="titre-section">De la naissance du chapitre à aujourd'hui</h2>
@@ -219,7 +219,7 @@
 </section>
 
 <?php /* YouthConnekt Africa : l'initiative continentale et ses grands rendez-vous */ ?>
-<section id="youthconnekt-africa" class="relative isolate scroll-mt-24 overflow-hidden bg-vert py-12 text-white sm:py-20" aria-labelledby="titre-yca">
+<section id="youthconnekt-africa" class="relative isolate scroll-mt-24 overflow-hidden bg-vert py-10 text-white sm:py-14" aria-labelledby="titre-yca">
   <?php partiel('partials/reseau_deco') ?>
   <div class="conteneur relative">
     <div class="grid gap-6 lg:grid-cols-[minmax(0,6fr)_minmax(0,6fr)] lg:items-end lg:gap-14">
@@ -253,7 +253,7 @@
 </section>
 
 <?php /* Le réseau en chiffres : calculés à partir des comptes et des communautés */ ?>
-<section class="bg-gris py-12 sm:py-20" aria-labelledby="titre-reseau">
+<section class="bg-gris py-10 sm:py-14" aria-labelledby="titre-reseau">
   <div class="conteneur">
     <p class="surtitre surtitre-trait">Le réseau</p>
     <h2 id="titre-reseau" class="titre-section">Un chapitre qui grandit chaque jour</h2>
@@ -277,7 +277,7 @@
 <?php partiel('partials/partenaires', ['partenaires' => $partenaires, 'fond' => 'bg-white']) ?>
 
 <?php if ($mot): ?>
-<section id="mot-du-ministre" class="scroll-mt-24 bg-gris py-12 sm:py-20">
+<section id="mot-du-ministre" class="scroll-mt-24 bg-gris py-10 sm:py-14">
   <div class="conteneur grid gap-8 md:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] md:gap-14">
     <div class="mx-auto w-full max-w-[240px] md:max-w-xs">
       <div class="aspect-[4/5] overflow-hidden rounded-2xl border-t-[6px] border-orange bg-white shadow-xl">

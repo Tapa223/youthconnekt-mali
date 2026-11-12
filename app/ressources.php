@@ -730,13 +730,14 @@ function ressources(): array
                     'logo_ministere' => ['type' => 'image', 'libelle' => "Sceau de l'État ou logo du ministère", 'requis' => false, 'dossier' => 'logos', 'largeur' => 'demi'],
                     'logo_pnud' => ['type' => 'image', 'libelle' => 'Logo du PNUD', 'requis' => false, 'dossier' => 'logos', 'largeur' => 'demi'],
                 ]],
-                ["Photos du premier écran de l'accueil", 'description' => "Elles défilent toutes les 5 secondes dans le grand cercle et en fond. Chaque photo a sa phrase, affichée sous le titre et qui change avec elle. Choisissez des photos en largeur, d'au moins 1600 pixels : envoyez-en une ou prenez-la dans la photothèque. Sans photo choisie, les photos provisoires restent affichées.", 'champs' => [
+                ["Photos du premier écran de l'accueil", 'description' => "Elles défilent toutes les 5 secondes dans le grand cercle et en fond, et le titre et le texte changent avec elles. Avec la photo 1 s'affichent le titre principal et la présentation ci-dessus ; les photos 2 et 3 ont leur titre et leur texte ci-dessous. Choisissez des photos en largeur, d'au moins 1600 pixels : envoyez-en une ou prenez-la dans la photothèque. Sans photo choisie, les photos provisoires restent affichées.", 'champs' => [
                     'image_accueil_1' => ['type' => 'image', 'libelle' => 'Photo 1', 'requis' => false, 'dossier' => 'accueil', 'largeur' => 'tiers', 'phototheque' => true],
                     'image_accueil_2' => ['type' => 'image', 'libelle' => 'Photo 2', 'requis' => false, 'dossier' => 'accueil', 'largeur' => 'tiers', 'phototheque' => true],
                     'image_accueil_3' => ['type' => 'image', 'libelle' => 'Photo 3', 'requis' => false, 'dossier' => 'accueil', 'largeur' => 'tiers', 'phototheque' => true],
-                    'texte_accueil_1' => ['type' => 'texte', 'libelle' => 'Phrase de la photo 1', 'requis' => false, 'max' => 200, 'largeur' => 'tiers', 'aide' => 'Exemple : Se former : des formations et des ateliers'],
-                    'texte_accueil_2' => ['type' => 'texte', 'libelle' => 'Phrase de la photo 2', 'requis' => false, 'max' => 200, 'largeur' => 'tiers'],
-                    'texte_accueil_3' => ['type' => 'texte', 'libelle' => 'Phrase de la photo 3', 'requis' => false, 'max' => 200, 'largeur' => 'tiers'],
+                    'titre_accueil_2' => ['type' => 'texte', 'libelle' => 'Titre avec la photo 2', 'requis' => false, 'max' => 200, 'largeur' => 'demi', 'aide' => 'Exemple : La jeunesse malienne se forme'],
+                    'texte_accueil_2' => ['type' => 'zone', 'libelle' => 'Texte avec la photo 2', 'requis' => false, 'max' => 400, 'lignes' => 2, 'largeur' => 'demi'],
+                    'titre_accueil_3' => ['type' => 'texte', 'libelle' => 'Titre avec la photo 3', 'requis' => false, 'max' => 200, 'largeur' => 'demi', 'aide' => "Exemple : La jeunesse malienne s'engage"],
+                    'texte_accueil_3' => ['type' => 'zone', 'libelle' => 'Texte avec la photo 3', 'requis' => false, 'max' => 400, 'lignes' => 2, 'largeur' => 'demi'],
                 ]],
                 ["Petites bulles du premier écran", 'description' => "Les 4 photos rondes autour du grand cercle. Elles restent fixes : de préférence des photos de groupe ou des visages souriants, prises dans la photothèque du chapitre.", 'champs' => [
                     'bulle_accueil_1' => ['type' => 'image', 'libelle' => 'Bulle 1 (en haut à gauche)', 'requis' => false, 'dossier' => 'accueil', 'largeur' => 'demi', 'phototheque' => true],

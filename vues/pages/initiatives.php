@@ -3,9 +3,9 @@
     <g stroke="#04B2B1" stroke-opacity=".35" stroke-width="1.5" fill="none"><path d="M300 210 L420 70 L560 150"/><path d="M420 70 L520 0"/><path d="M560 150 L600 20"/></g>
     <circle cx="300" cy="210" r="9" fill="#F1592A"/><circle cx="420" cy="70" r="12" fill="#04B2B1"/><circle cx="560" cy="150" r="8" fill="#0358D9"/>
   </svg>
-  <div class="conteneur anim-entree relative pt-4 pb-3 sm:pt-8 sm:pb-5">
-    <h1 class="text-[1.75rem] leading-none font-bold sm:text-5xl">Nos initiatives</h1>
-    <p class="mt-2 max-w-xl text-sm sm:mt-3 sm:text-base">Les projets du chapitre et de ses membres, auxquels vous pouvez prendre part.</p>
+  <div class="conteneur anim-entree relative pt-4 pb-3 sm:pt-5 sm:pb-4">
+    <h1 class="text-[1.75rem] leading-none font-bold sm:text-4xl">Nos initiatives</h1>
+    <p class="mt-2 max-w-xl text-sm sm:text-base">Les projets du chapitre et de ses membres, auxquels vous pouvez prendre part.</p>
   </div>
 </section>
 
@@ -13,7 +13,7 @@
 $etats_presents = array_filter(array_intersect_key($nombres, ETATS_INITIATIVE));
 if (count($etats_presents) >= 2 || $etat_actif): ?>
 <div class="sticky top-16 z-30 border-b border-ligne/70 bg-gris/95 backdrop-blur">
-  <nav class="conteneur flex gap-1.5 overflow-x-auto py-2.5 [scrollbar-width:none] sm:flex-wrap sm:gap-2 sm:py-3" aria-label="Filtrer les initiatives">
+  <nav class="conteneur flex gap-1.5 overflow-x-auto py-2.5 [scrollbar-width:none] sm:flex-wrap sm:gap-2" aria-label="Filtrer les initiatives">
     <?php foreach (['' => 'Toutes'] + ETATS_INITIATIVE as $cle => $libelle):
         if ($cle !== '' && empty($nombres[$cle])) continue; // un état sans initiative n'apparaît pas
         $actif = $etat_actif === $cle;
@@ -24,7 +24,7 @@ if (count($etats_presents) >= 2 || $etat_actif): ?>
 </div>
 <?php endif ?>
 
-<section class="conteneur pt-4 pb-10 sm:pt-6 sm:pb-14" aria-labelledby="titre-liste">
+<section class="conteneur pt-4 pb-10 sm:pt-5 sm:pb-14" aria-labelledby="titre-liste">
   <h2 id="titre-liste" class="sr-only">Liste des initiatives</h2>
   <?php if ($liste): ?>
   <ul class="grid grid-cols-2 gap-2.5 sm:gap-5 lg:grid-cols-3">

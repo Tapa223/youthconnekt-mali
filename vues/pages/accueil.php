@@ -7,23 +7,24 @@ $titre_ministre = ($ministre_publie && $mot['titre_officiel']) ? $mot['titre_off
 // Photos du premier écran et leur phrase : celles choisies dans Paramètres, sinon les photos provisoires.
 // Une photo dont le fichier a disparu (actualité supprimée…) est simplement ignorée.
 $existe = fn ($chemin) => $chemin !== '' && (!str_starts_with($chemin, 'uploads/') || is_file(RACINE . '/' . $chemin));
-$phrases_defaut = ['Se former : des formations et des ateliers pour développer vos compétences', "S'engager : des initiatives citoyennes dans les régions du Mali", "Se connecter : un réseau de jeunes, d'organisations et de partenaires"];
+// Photo 1 : titre et présentation de l'accueil ; photos 2 et 3 : leur propre titre et texte (Paramètres)
+$defauts = [
+    [rtrim($p['accroche_accueil'] ?: 'La jeunesse malienne se connecte ici', '. '), $p['presentation_accueil'] ?: 'Chapitre national de YouthConnekt Africa, YouthConnekt Mali rassemble les jeunes et les organisations qui font avancer le pays : formations, opportunités, rencontres et initiatives pour une jeunesse qui agit.'],
+    [trim((string) ($p['titre_accueil_2'] ?? '')) ?: 'La jeunesse malienne se forme', trim((string) ($p['texte_accueil_2'] ?? '')) ?: 'Formations, ateliers et mentorat : le chapitre relaie les opportunités qui aident les jeunes à développer leurs compétences et à réussir leurs projets.'],
+    [trim((string) ($p['titre_accueil_3'] ?? '')) ?: "La jeunesse malienne s'engage", trim((string) ($p['texte_accueil_3'] ?? '')) ?: 'Initiatives citoyennes, bénévolat et actions dans les régions : les jeunes du chapitre agissent pour la paix, la citoyenneté et le développement du Mali.'],
+];
 $diapos = [];
 foreach ([1, 2, 3] as $n) {
     $img = (string) ($p['image_accueil_' . $n] ?? '');
     if ($existe($img)) {
-        $diapos[] = ['src' => media($img), 'texte' => trim((string) ($p['texte_accueil_' . $n] ?? ''))];
+        $diapos[] = ['src' => media($img), 'titre' => $defauts[$n - 1][0], 'texte' => $defauts[$n - 1][1]];
     }
 }
 if (!$diapos) {
     foreach (['premier-ecran.jpg', 'premier-ecran-2.jpg', 'premier-ecran-3.jpg'] as $k => $f) {
-        $diapos[] = ['src' => asset('img/accueil/' . $f), 'texte' => trim((string) ($p['texte_accueil_' . ($k + 1)] ?? ''))];
+        $diapos[] = ['src' => asset('img/accueil/' . $f), 'titre' => $defauts[$k][0], 'texte' => $defauts[$k][1]];
     }
 }
-foreach ($diapos as $k => &$d) {
-    $d['texte'] = $d['texte'] !== '' ? $d['texte'] : $phrases_defaut[$k % 3];
-}
-unset($d);
 $photos_accueil = array_column($diapos, 'src');
 // Petites bulles : 4 photos fixes choisies dans Paramètres (photothèque), sinon les photos provisoires
 $bulles = [];
@@ -64,13 +65,14 @@ foreach (range(0, 11) as $k) {
           <?php endforeach ?>
         </g>
       </g>
-      <g stroke="#fff" stroke-opacity=".35" stroke-width="1.5" stroke-dasharray="4 6"><path d="M150 330 L347 380"/><path d="M110 470 L265 490"/><path d="M1290 300 L1093 380"/><path d="M1330 470 L1175 490"/></g>
-      <circle cx="347" cy="380" r="4" fill="#F1592A"/><circle cx="265" cy="490" r="4" fill="#04B2B1"/><circle cx="1093" cy="380" r="4" fill="#04B2B1"/><circle cx="1175" cy="490" r="4" fill="#F1592A"/>
+      <?php /* Bulles et fils comme dans la maquette, agrandis avec le cercle */ ?>
+      <g stroke="#fff" stroke-opacity=".35" stroke-width="1.5" stroke-dasharray="4 6"><path d="M111 339 L286 455"/><path d="M220 543 L236 549"/><path d="M1327 309 L1143 440"/><path d="M1211 521 L1194 528"/></g>
+      <circle cx="286" cy="455" r="4" fill="#F1592A"/><circle cx="236" cy="549" r="4" fill="#04B2B1"/><circle cx="1143" cy="440" r="4" fill="#04B2B1"/><circle cx="1194" cy="528" r="4" fill="#F1592A"/>
     </svg>
-    <span class="anim-flotte-2 absolute top-[34.4%] left-[7.1%] aspect-square w-[6.7%] rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= e($bulles[1]) ?>" alt="" class="h-full w-full object-cover"></span>
-    <span class="anim-flotte absolute top-[52.9%] left-[5.1%] aspect-square w-[5%] rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= e($bulles[3]) ?>" alt="" class="h-full w-full object-cover"></span>
-    <span class="anim-flotte-2 absolute top-[30.2%] left-[86%] aspect-square w-[7.2%] rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= e($bulles[2]) ?>" alt="" class="h-full w-full object-cover"></span>
-    <span class="anim-flotte absolute top-[53%] left-[89.9%] aspect-square w-[4.9%] rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= e($bulles[4]) ?>" alt="" class="h-full w-full object-cover"></span>
+    <span class="anim-flotte-2 absolute top-[31.3%] left-[0.7%] aspect-square w-[6.7%] rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= e($bulles[1]) ?>" alt="" class="h-full w-full object-cover"></span>
+    <span class="anim-flotte absolute top-[59.5%] left-[9.7%] aspect-square w-[5%] rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= e($bulles[3]) ?>" alt="" class="h-full w-full object-cover"></span>
+    <span class="anim-flotte-2 absolute top-[26.5%] left-[92.3%] aspect-square w-[7.2%] rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= e($bulles[2]) ?>" alt="" class="h-full w-full object-cover"></span>
+    <span class="anim-flotte absolute top-[56.9%] left-[84.6%] aspect-square w-[4.9%] rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= e($bulles[4]) ?>" alt="" class="h-full w-full object-cover"></span>
     <div class="anim-soleil absolute top-[32.3%] left-[16.67%] aspect-square w-[66.67%]">
       <div class="absolute inset-0 overflow-hidden rounded-full bg-vert shadow-[0_0_0_8px_rgb(255_255_255/.14)]" data-diapo="accueil">
         <?php foreach ($photos_accueil as $k => $src): ?><img data-diapo-image src="<?= e($src) ?>" alt="<?= $k ? '' : "Jeunes réunis lors d'un événement YouthConnekt" ?>" class="absolute inset-0 h-full w-full object-cover"<?= $k ? ' loading="lazy"' : ' fetchpriority="high"' ?>><?php endforeach ?>
@@ -80,20 +82,15 @@ foreach (range(0, 11) as $k) {
 
   <div class="conteneur relative z-[2] flex flex-col items-center pt-7 pb-9 text-center sm:pt-10 lg:h-full lg:pt-[5vh] lg:pb-0">
     <div class="anim-entree order-2 flex flex-col items-center lg:order-1">
-      <h1 id="titre-accueil" class="mt-7 max-w-4xl text-[2.1rem] leading-[1.05] font-bold text-white [text-shadow:0_4px_28px_rgb(0_0_0/.45)] sm:text-5xl lg:mt-0 lg:text-[clamp(2.75rem,8vh,4.75rem)]">
-        <?= e(rtrim($p['accroche_accueil'] ?: 'La jeunesse malienne se connecte ici', '. ')) ?>
+      <?php /* Le titre et le texte changent avec la photo : « se connecte », « se forme », « s'engage » */ ?>
+      <h1 id="titre-accueil" class="mt-7 grid max-w-4xl text-[2.1rem] leading-[1.05] font-bold text-white [text-shadow:0_4px_28px_rgb(0_0_0/.45)] sm:text-5xl lg:mt-0 lg:text-[clamp(2.75rem,8vh,4.75rem)]" data-diapo="accueil">
+        <?php foreach ($diapos as $k => $d): ?><span data-diapo-image class="diapo-texte col-start-1 row-start-1 self-end"<?= $k ? ' aria-hidden="true"' : '' ?>><?= e($d['titre']) ?></span><?php endforeach ?>
       </h1>
-      <?php /* La phrase change avec la photo ; les petits traits montrent laquelle est affichée et permettent d'en choisir une */ ?>
-      <div class="mt-3 grid w-full max-w-2xl sm:mt-5 lg:mt-[2.5vh]" data-diapo="accueil" aria-live="polite">
+      <div class="mt-3 grid w-full max-w-2xl sm:mt-5 lg:mt-[2.5vh]" data-diapo="accueil">
         <?php foreach ($diapos as $k => $d): ?>
-        <p data-diapo-image class="diapo-texte col-start-1 row-start-1 self-center text-[15px] leading-snug font-bold text-white/95 sm:rounded-2xl sm:border sm:border-white/20 sm:bg-vert/80 sm:px-6 sm:py-3.5 sm:text-base sm:font-normal sm:leading-relaxed sm:backdrop-blur-md lg:text-[clamp(0.95rem,2.1vh,1.15rem)]"<?= $k ? ' aria-hidden="true"' : '' ?>><?= e($d['texte']) ?></p>
+        <p data-diapo-image class="diapo-texte col-start-1 row-start-1 self-start text-[13.5px] leading-snug text-white/95 sm:rounded-2xl sm:border sm:border-white/20 sm:bg-vert/80 sm:px-6 sm:py-3.5 sm:text-base sm:leading-relaxed sm:backdrop-blur-md lg:text-[clamp(0.95rem,2.1vh,1.15rem)]"<?= $k ? ' aria-hidden="true"' : '' ?>><?= e($d['texte']) ?></p>
         <?php endforeach ?>
       </div>
-      <?php if (count($diapos) > 1): ?>
-      <div class="mt-3 flex justify-center gap-2" role="group" aria-label="Choisir la photo">
-        <?php foreach ($diapos as $k => $d): ?><button type="button" class="diapo-trait" data-diapo-aller="accueil" data-index="<?= $k ?>" aria-label="Photo <?= $k + 1 ?>"><span></span></button><?php endforeach ?>
-      </div>
-      <?php endif ?>
     </div>
 
     <div class="order-4 mt-6 grid w-full max-w-md grid-cols-2 gap-3 lg:hidden">
@@ -126,7 +123,7 @@ foreach (range(0, 11) as $k) {
 </section>
 
 <?php /* 2. Le chapitre : présentation, chiffres clés, axes */ ?>
-<section id="chapitre" class="relative scroll-mt-20 overflow-hidden py-16 sm:py-20 lg:py-24" aria-labelledby="titre-chapitre">
+<section id="chapitre" class="relative scroll-mt-20 overflow-hidden py-12 sm:py-16 lg:py-18" aria-labelledby="titre-chapitre">
   <div class="absolute -top-24 -right-24 hidden size-80 rounded-full bg-turquoise/10 md:block" aria-hidden="true"></div>
   <div class="conteneur relative flex flex-col gap-5 sm:gap-8 lg:grid lg:grid-cols-2 lg:items-center lg:gap-16">
     <div class="contents lg:block">
@@ -190,7 +187,7 @@ foreach (range(0, 11) as $k) {
 
 <?php /* 3. Initiatives */ ?>
 <?php if ($initiatives || $admin): ?>
-<section class="bg-gris py-16 sm:py-20" aria-labelledby="titre-initiatives">
+<section class="bg-gris py-12 sm:py-16" aria-labelledby="titre-initiatives">
   <div class="conteneur">
     <div class="flex items-end justify-between gap-4">
       <div>
@@ -306,7 +303,7 @@ foreach (range(0, 11) as $k) {
 
 <?php /* 6. Opportunités */ ?>
 <?php if ($opportunites || $admin): ?>
-<section class="py-16 sm:py-20" aria-labelledby="titre-opportunites">
+<section class="py-12 sm:py-16" aria-labelledby="titre-opportunites">
   <div class="conteneur">
     <div class="flex items-end justify-between gap-4">
       <div>
