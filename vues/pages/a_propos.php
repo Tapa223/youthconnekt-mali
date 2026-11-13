@@ -245,9 +245,34 @@
         <p class="mt-1.5 text-sm leading-relaxed sm:text-[15px]">Le grand rendez-vous annuel de la jeunesse africaine réunit en moyenne 5 000 jeunes leaders, entrepreneurs, décideurs et partenaires. La 8e édition se tient à Kigali du 25 au 27 novembre 2026.</p>
       </div>
       <div class="rounded-2xl bg-white p-4 text-encre sm:p-6">
-        <h3 class="text-lg font-bold text-vert sm:text-xl">Le Forum YouthConnekt Sahel</h3>
-        <p class="mt-1.5 text-sm leading-relaxed sm:text-[15px]">La plateforme des jeunes du Sahel pour la paix et la prospérité : Dakar en 2021, N'Djamena en 2025, Niamey en août 2026. Le Mali a activement pris part aux éditions de Dakar et de N'Djamena.</p>
+        <h3 class="text-lg font-bold text-vert sm:text-xl">Le hub YouthConnekt Africa</h3>
+        <p class="mt-1.5 text-sm leading-relaxed sm:text-[15px]">Installé à Kigali, le hub coordonne le mouvement à l'échelle du continent : il accompagne les chapitres nationaux, dont YouthConnekt Mali, et porte les déclinaisons régionales comme YouthConnekt Sahel.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<?php /* YouthConnekt Sahel : la déclinaison régionale, juste après le hub continental */ ?>
+<section id="youthconnekt-sahel" class="scroll-mt-24 py-10 sm:py-14" aria-labelledby="titre-ycs">
+  <div class="conteneur grid gap-8 lg:grid-cols-[minmax(0,6fr)_minmax(0,5fr)] lg:items-center lg:gap-16">
+    <div>
+      <p class="surtitre surtitre-trait">YouthConnekt Sahel</p>
+      <h2 id="titre-ycs" class="titre-section">Les jeunes du Sahel, acteurs de leur région</h2>
+      <p class="mt-4 text-[15px] leading-relaxed sm:text-lg">Lancée en 2021 par le PNUD avec le hub YouthConnekt Africa, le Bureau du Coordonnateur spécial des Nations unies pour le développement au Sahel et Generation Unlimited, l'initiative relie les chapitres nationaux des pays du Sahel, dont le Mali.</p>
+      <p class="mt-3 text-[15px] leading-relaxed sm:text-base">Son ambition : faire du Sahel une terre d'opportunités et d'investissement, portée par l'innovation et l'engagement de sa jeunesse, dans les domaines économique, social, numérique et citoyen.</p>
+    </div>
+    <div class="rounded-3xl border-t-4 border-orange bg-gris p-5 sm:p-7">
+      <h3 class="text-lg font-bold text-vert sm:text-xl">Le Forum YouthConnekt Sahel</h3>
+      <p class="mt-1 text-sm sm:text-[15px]">La plateforme des jeunes du Sahel pour la paix et la prospérité.</p>
+      <ol class="mt-5 space-y-4 border-l-2 border-ligne pl-5">
+        <?php foreach ([['2021', 'Dakar', "Première édition, « Youth Rebranding the Sahel ». Le Mali y a activement pris part."], ['2025', "N'Djamena", 'Le Mali a activement pris part à cette édition.'], ['2026', 'Niamey', 'Édition du mois d\'août.']] as [$annee, $ville, $texte]): ?>
+        <li class="relative">
+          <span class="absolute top-1.5 -left-[27px] size-3 rounded-full bg-orange ring-4 ring-gris" aria-hidden="true"></span>
+          <p class="font-bold text-vert"><?= e($ville) ?> <span class="font-normal text-texte">· <?= e($annee) ?></span></p>
+          <p class="mt-0.5 text-sm leading-relaxed"><?= e($texte) ?></p>
+        </li>
+        <?php endforeach ?>
+      </ol>
     </div>
   </div>
 </section>
