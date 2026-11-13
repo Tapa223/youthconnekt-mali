@@ -32,51 +32,75 @@ foreach ([1, 2, 3, 4] as $n) {
     $img = (string) ($p['bulle_accueil_' . $n] ?? '');
     $bulles[$n] = $existe($img) ? media($img) : asset('img/accueil/bulle-' . $n . '.jpg');
 }
-// Premier écran sur ordinateur : anneau en pointillés autour de la photo (repère 1440 × 820 de la maquette)
-$soleil = ['cx' => 720, 'cy' => 745, 'anneau' => 522];
+// Premier écran : grand cercle photo et anneau de points (repère 1440 × 820 de la maquette)
+$soleil = ['cx' => 720, 'cy' => 745, 'r' => 480, 'anneau' => 522];
+$points = [];
+foreach (range(0, 11) as $k) {
+    $angle = deg2rad(-$k * 30);
+    $points[] = [round($soleil['cx'] + $soleil['anneau'] * cos($angle)), round($soleil['cy'] + $soleil['anneau'] * sin($angle)), $k % 3 === 0 ? 9 : 7, ['#F1592A', '#04B2B1', '#fff', '#0358D9'][$k % 4]];
+}
 ?>
 
 <?php /* 1. Premier écran */ ?>
 <section class="relative isolate overflow-hidden bg-vert text-white lg:h-[calc(100svh-4rem)] lg:max-h-[940px] lg:min-h-[620px]" aria-labelledby="titre-accueil" data-premier-ecran>
   <div class="absolute inset-0 -z-10" data-diapo="accueil" aria-hidden="true">
-    <?php foreach ($photos_accueil as $k => $src): ?><img data-diapo-image src="<?= e($src) ?>" alt="" class="absolute inset-0 h-full w-full object-cover"<?= $k ? ' loading="lazy"' : '' ?>><?php endforeach ?>
+    <?php foreach ($photos_accueil as $k => $src): ?><img data-diapo-image src="<?= e($src) ?>" alt="" class="absolute inset-0 h-full w-full object-cover max-lg:object-contain max-lg:object-top"<?= $k ? ' loading="lazy"' : '' ?>><?php endforeach ?>
   </div>
-  <div class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(3_94_77/.55)_0%,rgb(3_94_77/.45)_40%,rgb(3_94_77/.8)_70%,rgb(3_94_77/.92)_100%)] lg:bg-[linear-gradient(180deg,rgb(3_94_77/.8)_0%,rgb(3_94_77/.35)_30%,rgb(3_94_77/0)_50%,rgb(3_94_77/0)_68%,rgb(3_94_77/.55)_100%)]" aria-hidden="true"></div>
+  <div class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(3_94_77/.55)_0%,rgb(3_94_77/.45)_40%,rgb(3_94_77/.8)_70%,rgb(3_94_77/.92)_100%)] lg:bg-[linear-gradient(180deg,rgb(3_94_77/.75)_0%,rgb(3_94_77/.45)_28%,rgb(3_94_77/.25)_60%,rgb(3_94_77/.55)_100%)]" aria-hidden="true"></div>
 
   <?php /* Cadre de la maquette (1440 × 820) mis à l'échelle de l'écran : anneau, grand cercle et bulles s'y alignent */ ?>
   <div class="pointer-events-none absolute inset-y-0 left-1/2 hidden aspect-[1440/820] -translate-x-1/2 lg:block" aria-hidden="true">
     <svg class="absolute inset-0 h-full w-full overflow-visible" viewBox="0 0 1440 820" fill="none">
-      <?php /* L'anneau en pointillés encadre la photo, nette en plein écran */ ?>
-      <circle cx="<?= $soleil['cx'] ?>" cy="<?= $soleil['cy'] ?>" r="<?= $soleil['anneau'] ?>" stroke="#fff" stroke-opacity=".45" stroke-width="1.5" stroke-dasharray="6 8"/>
+      <?php /* L'anneau s'efface en descendant : aucun trait ne passe derrière les deux boutons */ ?>
+      <defs>
+        <linearGradient id="fondu-anneau" x1="0" y1="0" x2="0" y2="820" gradientUnits="userSpaceOnUse"><stop offset=".62" stop-color="#fff"/><stop offset=".72" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <mask id="masque-anneau" maskUnits="userSpaceOnUse" x="0" y="-200" width="1440" height="1100"><rect x="0" y="-200" width="1440" height="1100" fill="url(#fondu-anneau)"/></mask>
+      </defs>
+      <g mask="url(#masque-anneau)">
+        <circle cx="<?= $soleil['cx'] ?>" cy="<?= $soleil['cy'] ?>" r="<?= $soleil['anneau'] ?>" stroke="#fff" stroke-opacity=".3" stroke-width="1.5" stroke-dasharray="6 8"/>
+        <circle cx="<?= $soleil['cx'] ?>" cy="<?= $soleil['cy'] ?>" r="<?= $soleil['anneau'] + 42 ?>" stroke="#fff" stroke-opacity=".1"/>
+        <g class="anim-orbite" style="transform-origin: <?= $soleil['cx'] ?>px <?= $soleil['cy'] ?>px">
+          <?php foreach ($points as $k => [$cx, $cy, $r, $c]): ?>
+          <circle class="anim-point" cx="<?= $cx ?>" cy="<?= $cy ?>" r="<?= $r ?>" fill="<?= $c ?>" stroke="#035E4D" stroke-width="3" style="animation-delay:<?= number_format(0.6 + $k * 0.25, 2, '.', '') ?>s"/>
+          <?php endforeach ?>
+        </g>
+      </g>
       <?php /* Bulles et fils comme dans la maquette, agrandis avec le cercle */ ?>
+      <g stroke="#fff" stroke-opacity=".35" stroke-width="1.5" stroke-dasharray="4 6"><path d="M111 339 L286 455"/><path d="M220 543 L236 549"/><path d="M1327 309 L1143 440"/><path d="M1211 521 L1194 528"/></g>
+      <circle cx="286" cy="455" r="4" fill="#F1592A"/><circle cx="236" cy="549" r="4" fill="#04B2B1"/><circle cx="1143" cy="440" r="4" fill="#04B2B1"/><circle cx="1194" cy="528" r="4" fill="#F1592A"/>
     </svg>
     <span class="anim-flotte-2 absolute top-[31.3%] left-[0.7%] aspect-square w-[6.7%] rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= e($bulles[1]) ?>" alt="" class="h-full w-full object-cover"></span>
     <span class="anim-flotte absolute top-[59.5%] left-[9.7%] aspect-square w-[5%] rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= e($bulles[3]) ?>" alt="" class="h-full w-full object-cover"></span>
     <span class="anim-flotte-2 absolute top-[26.5%] left-[92.3%] aspect-square w-[7.2%] rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= e($bulles[2]) ?>" alt="" class="h-full w-full object-cover"></span>
     <span class="anim-flotte absolute top-[56.9%] left-[84.6%] aspect-square w-[4.9%] rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= e($bulles[4]) ?>" alt="" class="h-full w-full object-cover"></span>
+    <div class="anim-soleil absolute top-[32.3%] left-[16.67%] aspect-square w-[66.67%]">
+      <div class="absolute inset-0 overflow-hidden rounded-full bg-vert shadow-[0_0_0_8px_rgb(255_255_255/.14)]" data-diapo="accueil">
+        <?php foreach ($photos_accueil as $k => $src): ?><img data-diapo-image src="<?= e($src) ?>" alt="<?= $k ? '' : "Jeunes réunis lors d'un événement YouthConnekt" ?>" class="absolute inset-x-0 top-0 h-[58%] w-full object-cover"<?= $k ? ' loading="lazy"' : ' fetchpriority="high"' ?>><?php endforeach ?>
+      </div>
+    </div>
   </div>
 
   <div class="conteneur relative z-[2] flex flex-col items-center pt-5 pb-6 text-center sm:pt-10 sm:pb-9 lg:h-full lg:pt-[5vh] lg:pb-0">
     <div class="anim-entree order-2 flex flex-col items-center lg:order-1">
-      <?php /* Le titre et le texte changent avec la photo : « se connecte », « se forme », « s'engage » */ ?>
-      <h1 id="titre-accueil" class="mt-4 grid max-w-4xl text-[1.75rem] leading-[1.08] font-bold text-white [text-shadow:0_4px_28px_rgb(0_0_0/.45)] sm:text-5xl lg:mt-0 lg:text-[clamp(2.75rem,8vh,4.75rem)]" data-diapo="accueil">
+      <?php /* Le titre et le texte changent avec la photo : « se connecte », « se forme », « s'engage » ; largeur limitée pour que chaque titre tienne sur deux lignes, à la même hauteur */ ?>
+      <h1 id="titre-accueil" class="mt-4 grid max-w-[12.5em] text-[1.75rem] leading-[1.08] font-bold text-white [text-shadow:0_4px_28px_rgb(0_0_0/.45)] sm:text-5xl lg:mt-0 lg:text-[clamp(2.75rem,8vh,4.75rem)]" data-diapo="accueil">
         <?php foreach ($diapos as $k => $d): ?><span data-diapo-image class="diapo-texte col-start-1 row-start-1 self-end"<?= $k ? ' aria-hidden="true"' : '' ?>><?= e($d['titre']) ?></span><?php endforeach ?>
       </h1>
       <div class="mt-2 grid w-full max-w-2xl sm:mt-5 lg:mt-[2.5vh]" data-diapo="accueil">
         <?php foreach ($diapos as $k => $d): ?>
-        <p data-diapo-image class="diapo-texte col-start-1 row-start-1 self-start text-[13px] leading-snug text-white/95 sm:rounded-2xl sm:border sm:border-white/20 sm:bg-vert/80 sm:px-6 sm:py-3.5 sm:text-base sm:leading-relaxed sm:backdrop-blur-md lg:text-[clamp(0.95rem,2.1vh,1.15rem)]"<?= $k ? ' aria-hidden="true"' : '' ?>><?= e($d['texte']) ?></p>
+        <p data-diapo-image class="diapo-texte col-start-1 row-start-1 self-start rounded-2xl border border-white/20 bg-vert/80 px-4 py-3 text-[13px] leading-snug text-white/95 backdrop-blur-md sm:px-6 sm:py-3.5 sm:text-base sm:leading-relaxed sm:backdrop-blur-md lg:text-[clamp(0.95rem,2.1vh,1.15rem)]"<?= $k ? ' aria-hidden="true"' : '' ?>><?= e($d['texte']) ?></p>
         <?php endforeach ?>
       </div>
     </div>
 
-    <div class="order-4 mt-4 grid w-full max-w-md grid-cols-2 gap-2.5 sm:mt-6 sm:gap-3 lg:order-2 lg:mt-7 lg:flex lg:w-auto lg:max-w-none lg:justify-center">
-      <a href="#chapitre" class="btn btn-contour-blanc min-h-11 px-3 text-[13px] whitespace-nowrap sm:min-h-12 sm:px-4 sm:text-base lg:min-h-13 lg:w-[15rem] lg:bg-vert/60 lg:text-[17px] lg:backdrop-blur-sm">Découvrir le chapitre</a>
-      <a href="#rejoindre" class="btn btn-orange min-h-11 px-3 text-[13px] whitespace-nowrap sm:min-h-12 sm:px-4 sm:text-base lg:min-h-13 lg:w-[15rem] lg:text-[17px] lg:shadow-lg lg:shadow-orange/30">Let's Connekt</a>
+    <div class="order-4 mt-4 grid w-full max-w-md grid-cols-2 gap-2.5 sm:mt-6 sm:gap-3 lg:hidden">
+      <a href="#chapitre" class="btn btn-contour-blanc min-h-11 px-3 text-[13px] whitespace-nowrap sm:min-h-12 sm:px-4 sm:text-base">Découvrir le chapitre</a>
+      <a href="#rejoindre" class="btn btn-orange min-h-11 px-3 text-[13px] whitespace-nowrap sm:min-h-12 sm:px-4 sm:text-base">Let's Connekt</a>
     </div>
 
     <div class="anim-soleil relative order-1 mt-1 aspect-square w-[70vw] max-w-[300px] sm:w-[62vw] sm:max-w-[360px] lg:hidden">
       <div class="absolute -inset-3 rounded-full border-2 border-dashed border-white/35" aria-hidden="true"></div>
-      <?php /* Téléphone : grand cercle net sur la photo de fond, nette elle aussi et sans zoom ; l'anneau porte des points qui tournent lentement, et des bulles photo flottent autour du cercle */ ?>
+      <?php /* Téléphone : grand cercle net ; la photo de fond, entière et nette, en haut ; l'anneau porte des points qui tournent lentement, et des bulles photo flottent autour du cercle, comme sur ordinateur */ ?>
       <div class="anim-orbite absolute -inset-3 [animation-duration:45s]" aria-hidden="true">
         <span class="absolute top-[6%] left-[22%] size-3 rounded-full bg-orange"></span>
         <span class="absolute top-[48%] -right-1.5 size-2.5 rounded-full bg-white"></span>
@@ -92,6 +116,8 @@ $soleil = ['cx' => 720, 'cy' => 745, 'anneau' => 522];
       </div>
     </div>
 
+    <div class="anim-flotte absolute bottom-[17%] left-0 z-10 hidden lg:block xl:-left-10 2xl:-left-24"><a href="#chapitre" class="btn btn-contour-blanc btn-relie btn-relie--droite min-h-13 w-[16rem] px-6 text-[17px]">Découvrir le chapitre</a></div>
+    <div class="anim-flotte-2 absolute right-0 bottom-[17%] z-10 hidden lg:block xl:-right-10 2xl:-right-24"><a href="#rejoindre" class="btn btn-orange btn-relie btn-relie--gauche min-h-13 w-[16rem] px-6 text-[17px] shadow-lg shadow-orange/30">Let's Connekt</a></div>
   </div>
   <?php if (empty($p['image_accueil_1']) && empty($p['image_accueil_2']) && empty($p['image_accueil_3'])) partiel('partials/mention_photo', ['texte' => 'Photos provisoires · Sommet YouthConnekt Africa, hors Mali', 'position' => 'right-3 bottom-3 max-lg:top-2 max-lg:bottom-auto']) ?>
 </section>
