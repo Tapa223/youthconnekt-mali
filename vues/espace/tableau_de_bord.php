@@ -35,7 +35,7 @@ $actions = [
   </svg>
   <div class="mt-3 text-center sm:mt-0 sm:text-left">
     <h2 id="titre-bienvenue" class="text-xl font-bold text-vert sm:text-2xl">Bienvenue dans le réseau, <?= e($profil['prenom'] ?? $u['nom_affiche']) ?></h2>
-    <p class="mt-1 text-[15px]">Votre adresse est confirmée : vous êtes maintenant membre du chapitre YouthConnekt Mali. Commencez par rejoindre une communauté qui vous ressemble.</p>
+    <p class="mt-1 text-[15px]">Votre compte est créé : vous êtes maintenant membre du chapitre YouthConnekt Mali. Commencez par rejoindre une communauté qui vous ressemble.</p>
     <a href="<?= url('/communaute') ?>" class="btn btn-orange mt-3 min-h-11">Choisir une communauté</a>
   </div>
 </section>

@@ -98,7 +98,7 @@ function inscription_formulaire(string $slug): void
                     'email' => $valeurs['email'],
                     'mot_de_passe' => password_hash($mdp1, PASSWORD_DEFAULT),
                     'type_compte' => $slug,
-                    'email_confirme' => 0,
+                    'email_confirme' => 1,
                     'actif' => 1,
                     'inscrit_le' => maintenant(),
                 ]);
@@ -132,9 +132,10 @@ function inscription_formulaire(string $slug): void
                 bdd()->rollBack();
                 throw $e;
             }
-            envoyer_confirmation(['id' => $id, 'email' => $valeurs['email']]);
-            $_SESSION['inscription_utilisateur'] = $id;
-            rediriger(url('/compte/inscription/verification'));
+            // Pas d'e-mail de confirmation : le compte est ouvert et la personne connectée tout de suite
+            connecter(ligne('SELECT * FROM utilisateurs WHERE id = ?', [$id]));
+            $_SESSION['bienvenue'] = true; // l'espace membre accueille la personne : un nouveau point rejoint le réseau
+            rediriger(url('/compte/mon-espace'));
         }
     }
 
@@ -146,59 +147,6 @@ function inscription_formulaire(string $slug): void
         'valeurs' => $valeurs,
         'erreurs' => $erreurs,
     ], 'auth'));
-}
-
-function utilisateur_en_attente(): ?array
-{
-    $id = (int) ($_SESSION['inscription_utilisateur'] ?? 0);
-    return $id ? ligne('SELECT * FROM utilisateurs WHERE id = ? AND email_confirme = 0', [$id]) : null;
-}
-
-/** Étape 3 : invitation à confirmer l'adresse e-mail */
-function verification(): void
-{
-    $u = utilisateur_en_attente();
-    if (!$u) {
-        rediriger(url('/compte/connexion'));
-    }
-    afficher(vue('comptes/verification', [
-        'titre' => 'Vérifiez votre e-mail | YouthConnekt Mali',
-        'etape' => 3,
-        'largeur' => 'max-w-2xl',
-        'email' => $u['email'],
-    ], 'auth'));
-}
-
-function renvoyer_confirmation(): void
-{
-    $u = utilisateur_en_attente();
-    if (!$u) {
-        rediriger(url('/compte/connexion'));
-    }
-    if (time() - (int) ($_SESSION['confirmation_envoyee_a'] ?? 0) < 60) {
-        flash('erreur', 'Patientez une minute avant de demander un nouvel e-mail.');
-    } else {
-        envoyer_confirmation($u);
-        flash('succes', 'Un nouvel e-mail de confirmation vient de vous être envoyé.');
-    }
-    rediriger(url('/compte/inscription/verification'));
-}
-
-function confirmer(string $jeton): void
-{
-    $id = lire_jeton($jeton, 'confirmation');
-    $u = $id ? ligne('SELECT * FROM utilisateurs WHERE id = ? AND actif = 1', [$id]) : null;
-    if (!$u) {
-        http_response_code(400);
-        afficher(vue('comptes/lien_invalide', ['titre' => 'Lien invalide | YouthConnekt Mali'], 'auth'));
-    }
-    consommer_jeton($jeton);
-    requete('UPDATE utilisateurs SET email_confirme = 1 WHERE id = ?', [$u['id']]);
-    unset($_SESSION['inscription_utilisateur']);
-    $u['email_confirme'] = 1;
-    connecter($u);
-    $_SESSION['bienvenue'] = true; // l'espace membre accueille la personne : un nouveau point rejoint le réseau
-    rediriger(url('/compte/mon-espace'));
 }
 
 // ---------------------------------------------------------------------------
@@ -213,7 +161,6 @@ function connexion(): void
     }
     $email = '';
     $erreur = '';
-    $non_confirme = false;
 
     if (est_post()) {
         $email = mb_strtolower(post('email'));
@@ -229,10 +176,6 @@ function connexion(): void
                 $erreur = 'Adresse e-mail ou mot de passe incorrect.';
             } elseif (!$u['actif']) {
                 $erreur = 'Ce compte a été désactivé. Contactez le chapitre pour en savoir plus.';
-            } elseif (!$u['email_confirme'] && $u['type_compte'] !== 'administration') {
-                $erreur = "Confirmez d'abord votre adresse e-mail grâce au lien reçu par e-mail.";
-                $non_confirme = true;
-                $_SESSION['inscription_utilisateur'] = (int) $u['id'];
             } else {
                 effacer_tentatives($email);
                 if (password_needs_rehash($u['mot_de_passe'], PASSWORD_DEFAULT)) {
@@ -264,7 +207,6 @@ function connexion(): void
         'accroche_mobile' => 'Retrouvez vos opportunités, la communauté et votre espace membre.',
         'email' => $email,
         'erreur' => $erreur,
-        'non_confirme' => $non_confirme,
         'suivant' => $suivant,
         'contexte' => $contexte,
     ], 'auth'));

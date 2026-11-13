@@ -291,18 +291,6 @@ function consommer_jeton(string $jeton): void
     requete('DELETE FROM jetons WHERE empreinte = ?', [hash('sha256', $jeton)]);
 }
 
-function envoyer_confirmation(array $u): void
-{
-    $jeton = creer_jeton((int) $u['id'], 'confirmation', 72);
-    $lien = url_absolue('/compte/confirmer/' . $jeton);
-    $texte = "Bonjour,\n\nMerci d'avoir rejoint YouthConnekt Mali.\n\n"
-        . "Pour activer votre compte, confirmez votre adresse e-mail en ouvrant ce lien :\n" . $lien . "\n\n"
-        . "Ce lien reste valable 3 jours. Si vous n'êtes pas à l'origine de cette inscription, ignorez simplement ce message.\n\n"
-        . "L'équipe YouthConnekt Mali";
-    envoyer_email($u['email'], 'Confirmez votre adresse e-mail · YouthConnekt Mali', $texte, $lien);
-    $_SESSION['confirmation_envoyee_a'] = time();
-}
-
 function envoyer_reinitialisation(array $u): void
 {
     $jeton = creer_jeton((int) $u['id'], 'mot_de_passe', 2);

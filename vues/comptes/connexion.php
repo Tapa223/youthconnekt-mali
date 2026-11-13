@@ -13,8 +13,5 @@
   </div>
   <button type="submit" class="btn btn-vert min-h-12 w-full text-base">Se connecter</button>
 </form>
-<?php if ($non_confirme): ?>
-<form method="post" action="<?= url('/compte/inscription/renvoyer') ?>" class="mt-3 text-center"><?= csrf() ?><button type="submit" class="btn-lien">Renvoyer l'e-mail de confirmation</button></form>
-<?php endif ?>
 <p class="mt-6 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 border-t border-ligne pt-5 text-sm">Pas encore membre ?
   <a href="<?= url('/compte/inscription') ?>" class="font-bold text-orange hover:text-vert">Rejoindre le chapitre</a></p>

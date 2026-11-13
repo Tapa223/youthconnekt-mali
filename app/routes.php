@@ -38,10 +38,7 @@ const ROUTES = [
 
     // Comptes
     ['GET', '/compte/inscription', 'comptes', 'inscription'],
-    ['GET', '/compte/inscription/verification', 'comptes', 'verification'],
-    ['POST', '/compte/inscription/renvoyer', 'comptes', 'renvoyer_confirmation'],
     ['GET|POST', '/compte/inscription/{slug}', 'comptes', 'inscription_formulaire'],
-    ['GET', '/compte/confirmer/{jeton}', 'comptes', 'confirmer'],
     ['GET|POST', '/compte/connexion', 'comptes', 'connexion'],
     ['POST', '/compte/deconnexion', 'comptes', 'deconnexion'],
     ['GET|POST', '/compte/mot-de-passe-oublie', 'comptes', 'mdp_oublie'],

@@ -766,7 +766,6 @@ function ressources(): array
                 ['Membres individuels', "t.type_compte = 'individuel'"],
                 ['Organisations', "t.type_compte = 'organisation'"],
                 ["Équipe d'administration", "t.type_compte = 'administration'"],
-                ['E-mail à confirmer', 't.email_confirme = 0'],
                 ['Désactivés', 't.actif = 0'],
             ],
             'recherche' => ['t.email', 'pi.prenom', 'pi.nom', 'po.nom_structure', 't.nom_admin', 't.prenom_admin'],
@@ -776,7 +775,6 @@ function ressources(): array
                 ['Type', fn ($l) => ['individuel' => badge('Membre individuel', 'turquoise'), 'organisation' => badge('Organisation', 'bleu'), 'administration' => badge('Administration', 'vert')][$l['type_compte']] ?? ''],
                 ['Statut', function ($l) {
                     if (!$l['actif']) return badge('Désactivé', 'rouge');
-                    if (!$l['email_confirme']) return badge('E-mail à confirmer', 'orange');
                     if ($l['type_compte'] === 'administration') return badge(ROLES_ADMIN[$l['role_admin']] ?? 'Administrateur', 'vert');
                     return badge('Actif', 'gris');
                 }],
@@ -784,15 +782,6 @@ function ressources(): array
                 ['Profil', fn ($l) => $l['profil_ind_id'] ? '<a class="ycm-lien" href="' . url('/gestion/membres/' . $l['profil_ind_id']) . '">Voir le profil</a>' : ($l['profil_org_id'] ? '<a class="ycm-lien" href="' . url('/gestion/organisations/' . $l['profil_org_id']) . '">Voir la fiche</a>' : '—')],
             ],
             'actions' => [
-                'renvoyer' => ["Renvoyer l'e-mail de confirmation", function ($ids) {
-                    $n = 0;
-                    foreach (lignes('SELECT * FROM utilisateurs WHERE email_confirme = 0 AND actif = 1 AND id IN (' . marqueurs($ids) . ')', $ids) as $u) {
-                        envoyer_confirmation($u);
-                        $n++;
-                    }
-                    return "E-mail de confirmation renvoyé à $n compte(s).";
-                }],
-                'confirmer' => ["Marquer l'e-mail comme confirmé", fn ($ids) => requete('UPDATE utilisateurs SET email_confirme = 1 WHERE id IN (' . marqueurs($ids) . ')', $ids)->rowCount() . ' adresse(s) marquée(s) comme confirmée(s).'],
                 'desactiver' => ['Désactiver les comptes sélectionnés', function ($ids) {
                     // Un administrateur ne peut pas se désactiver lui-même par erreur
                     $ids = array_values(array_filter($ids, fn ($i) => $i !== (int) utilisateur()['id']));
@@ -800,7 +789,7 @@ function ressources(): array
                 }],
                 'reactiver' => ['Réactiver les comptes sélectionnés', fn ($ids) => requete('UPDATE utilisateurs SET actif = 1 WHERE id IN (' . marqueurs($ids) . ')', $ids)->rowCount() . ' compte(s) réactivé(s).'],
             ],
-            'export' => ['E-mail' => 'email', 'Nom' => 'nom_affiche', 'Type' => fn ($l) => TYPES_COMPTE[$l['type_compte']] ?? '', 'E-mail confirmé' => fn ($l) => $l['email_confirme'] ? 'oui' : 'non',
+            'export' => ['E-mail' => 'email', 'Nom' => 'nom_affiche', 'Type' => fn ($l) => TYPES_COMPTE[$l['type_compte']] ?? '',
                 'Actif' => fn ($l) => $l['actif'] ? 'oui' : 'non', 'Rôle' => fn ($l) => ROLES_ADMIN[$l['role_admin'] ?? ''] ?? '', 'Inscription' => fn ($l) => date_chiffres($l['inscrit_le'])],
             'groupes' => 'groupes_compte',
             'avant' => 'avant_compte',
@@ -943,7 +932,6 @@ function groupes_compte(?array $ligne): array
         ...($compte_admin ? [["Accès à l'administration", 'description' => $super ? "Ce compte sert uniquement à l'administration : il n'a ni espace membre ni communautés. Réservez « Administrateur principal » aux responsables du site." : "Seul un administrateur principal peut modifier les rôles.", 'champs' => $acces]] : []),
         ['État du compte', 'cote' => true, 'champs' => [
             'actif' => ['type' => 'case', 'libelle' => 'Compte actif', 'defaut' => 1],
-            'email_confirme' => ['type' => 'case', 'libelle' => 'E-mail confirmé', 'defaut' => 1],
         ]],
     ];
     if (!$ajout) {
