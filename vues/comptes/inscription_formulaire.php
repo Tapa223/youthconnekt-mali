@@ -3,13 +3,10 @@ $organisation = $type_compte === 'organisation';
 $c = fn ($nom) => ['nom' => $nom, 'valeur' => $valeurs[$nom] ?? '', 'erreur' => $erreurs[$nom] ?? ''];
 partiel('comptes/etapes', ['etape' => $etape]);
 ?>
-<h1 class="text-4xl font-bold">Vos informations</h1>
-<div class="mt-5 flex items-center justify-between gap-4 rounded-xl bg-gris px-4 py-3">
-  <p class="text-sm">Compte : <strong class="text-vert"><?= $organisation ? 'Organisation ou entreprise' : 'Membre individuel' ?></strong><br>
-    <span class="text-xs"><?= $organisation ? 'Pour une entreprise, une startup, une association ou une ONG qui agit avec ou pour les jeunes.' : 'Pour vous, à titre personnel : jeune, étudiant, professionnel, entrepreneur, porteur de projet, innovateur ou leader d\'association.' ?></span></p>
-  <a href="<?= url('/compte/inscription') ?>" class="btn btn-contour shrink-0 px-3 text-sm">Changer de type</a>
-</div>
-<form method="post" class="mt-6 grid gap-4 sm:grid-cols-2" novalidate>
+<h1 class="text-[1.9rem] leading-tight font-bold sm:text-4xl">Vos informations</h1>
+<p class="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[15px]">Compte : <strong class="text-vert"><?= $organisation ? 'Organisation ou entreprise' : 'Membre individuel' ?></strong>
+  <a href="<?= url('/compte/inscription') ?>" class="text-sm font-bold text-orange hover:text-vert">Changer</a></p>
+<form method="post" class="mt-5 grid gap-x-4 gap-y-3.5 sm:mt-6 sm:grid-cols-2 sm:gap-y-4" novalidate>
   <?= csrf() ?>
   <?php if ($erreurs): ?><p class="rounded-xl border border-rouge/30 bg-rouge/5 px-4 py-3 text-sm text-rouge sm:col-span-2" role="alert">Certaines informations sont à corriger : les champs concernés sont indiqués en rouge.</p><?php endif ?>
   <?php if ($organisation): ?>

@@ -22,14 +22,23 @@ $retour_auth = $_SESSION['retour_auth'] ?? url('/');
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap">
   <link rel="stylesheet" href="<?= asset('css/site.css') ?>">
 </head>
-<body class="min-h-screen lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-  <aside class="relative isolate flex flex-col overflow-hidden bg-vert px-5 pt-5 pb-8 text-white lg:sticky lg:top-0 lg:h-screen lg:px-10 lg:pt-8">
+<body class="min-h-svh bg-white lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+  <?php /* Téléphone : une barre fine, flèche de retour à gauche et logo, puis directement le formulaire */ ?>
+  <header class="flex h-14 items-center justify-between border-b border-ligne/70 px-4 lg:hidden">
+    <a href="<?= e($retour_auth) ?>" data-retour class="grid size-9 place-items-center rounded-full bg-vert text-white transition-colors hover:bg-orange" aria-label="Retour au site">
+      <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+    </a>
+    <a href="<?= url('/') ?>" aria-label="YouthConnekt Mali, accueil"><?php partiel('partials/logo', ['classes' => 'h-9 w-auto']) ?></a>
+  </header>
+
+  <?php /* Ordinateur : le panneau vert à gauche, le formulaire à droite */ ?>
+  <aside class="relative isolate hidden flex-col overflow-hidden bg-vert px-10 pt-8 pb-8 text-white lg:sticky lg:top-0 lg:flex lg:h-screen">
     <?php partiel('partials/reseau_deco') ?>
     <a href="<?= url('/') ?>" class="relative inline-flex self-start rounded-xl bg-white px-3 py-2" aria-label="YouthConnekt Mali, retour à l'accueil">
-      <?php partiel('partials/logo', ['classes' => 'h-9 w-auto lg:h-11']) ?>
+      <?php partiel('partials/logo', ['classes' => 'h-11 w-auto']) ?>
     </a>
-    <div class="relative hidden flex-1 flex-col items-center justify-center text-center lg:flex">
-      <div class="relative size-[min(52vh,360px)]">
+    <div class="relative flex flex-1 flex-col items-center justify-center text-center">
+      <div class="relative size-[min(44vh,330px)]">
         <div class="absolute -inset-5 rounded-full border-2 border-dashed border-white/35" aria-hidden="true"></div>
         <div class="anim-orbite absolute inset-0" aria-hidden="true">
           <span class="absolute -top-6 left-1/2 size-3.5 -translate-x-1/2 rounded-full bg-white"></span>
@@ -40,18 +49,20 @@ $retour_auth = $_SESSION['retour_auth'] ?? url('/');
         </div>
         <div class="anim-soleil h-full w-full overflow-hidden rounded-full ring-8 ring-turquoise/30"><img src="<?= asset('img/connexion/cercle.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
       </div>
-      <p class="mt-12 text-5xl font-bold">Let's Connekt</p>
+      <p class="mt-10 text-5xl font-bold">Let's Connekt</p>
       <p class="mt-3 max-w-sm text-white/90"><?= e($accroche ?? 'Jeunes, entreprises et organisations : un seul chapitre pour avancer ensemble.') ?></p>
     </div>
-    <p class="relative mt-4 text-base text-white/90 lg:hidden"><?= e($accroche_mobile ?? "Let's Connekt : un seul chapitre pour avancer ensemble.") ?></p>
     <?php partiel('partials/mention_photo') ?>
   </aside>
 
-  <main id="contenu" class="flex justify-center px-5 pt-3 pb-10 sm:px-8 sm:pt-10 lg:items-center lg:py-12">
+  <main id="contenu" class="relative flex justify-center px-5 pt-5 pb-8 sm:px-8 sm:pt-8 lg:items-center lg:py-16">
+    <?php /* Ordinateur : retour discret dans le coin, il ne pousse pas le formulaire vers le bas */ ?>
+    <a href="<?= e($retour_auth) ?>" data-retour class="absolute top-6 left-8 hidden min-h-10 items-center gap-1.5 rounded-full px-3 text-sm font-bold text-vert transition-colors hover:bg-vert-clair hover:text-orange lg:inline-flex">
+      <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Retour au site
+    </a>
     <div class="anim-entree w-full <?= e($largeur ?? 'max-w-md') ?>">
-      <?php partiel('partials/retour', ['url' => $retour_auth]) ?>
       <?php if ($messages): ?>
-      <div class="mb-5 space-y-2" role="status" aria-live="polite">
+      <div class="mb-4 space-y-2" role="status" aria-live="polite">
         <?php foreach ($messages as $m): ?><p class="rounded-xl border px-4 py-3 text-sm font-medium <?= $m['type'] === 'erreur' ? 'border-rouge/30 text-rouge' : 'border-vert/20 bg-vert-clair text-vert' ?>"><?= e($m['texte']) ?></p><?php endforeach ?>
       </div>
       <?php endif ?>
