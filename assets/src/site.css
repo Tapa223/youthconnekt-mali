@@ -404,12 +404,9 @@ header.site-entete { view-transition-name: entete; }
 .aide-invite.visible { opacity: 1; transform: none; }
 .aide[data-ouvert] .aide-invite { display: none; }
 
-/* Bandeau des pages de détail : les images glissent en continu, en petit */
-.bande-defile { mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
-.bande-piste { animation: bande 38s linear infinite; }
-.bande-defile:hover .bande-piste { animation-play-state: paused; }
-@keyframes bande { to { transform: translateX(calc(-50% - 5px)); } }
-@media (prefers-reduced-motion: reduce) { .bande-piste { animation: none; } }
+/* Bandeau des pages de détail : flou sur le côté du titre seulement, la photo reste nette à droite */
+.banniere-flou { mask-image: linear-gradient(90deg, #000 30%, transparent 62%); }
+@media (max-width: 639px) { .banniere-flou { mask-image: linear-gradient(90deg, #000 35%, transparent 75%); } }
 
 /* Premier écran : le titre et le texte changent avec la photo */
 .diapo-texte { opacity: 0; transform: translateY(8px); transition: opacity .7s ease, transform .7s ease; }

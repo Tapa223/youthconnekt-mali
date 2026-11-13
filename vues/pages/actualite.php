@@ -2,8 +2,8 @@
 /*
  * Détail d'une actualité ou d'un événement :
  *  - à gauche, le titre, le chapeau puis le texte ;
- *  - à droite, les images qui défilent ; sur ordinateur, elles restent visibles pendant la lecture ;
- *  - en bas, la photothèque : chaque photo s'agrandit, se télécharge et se partage.
+ *  - les images : carrousel à flèches sur ordinateur, bande à glisser sur téléphone ;
+ *  - en bas, la photothèque : deux photos et « +N » ; en grand, chaque photo se télécharge et se partage.
  */
 $images = [];
 if ($a['image']) {
@@ -12,7 +12,7 @@ if ($a['image']) {
 foreach ($photos as $photo) {
     $images[] = ['src' => media($photo['image']), 'legende' => (string) $photo['legende']];
 }
-$meta = array_filter([date_longue($a['date_affichee']), $a['lieu'], $a['minutes_lecture'] . ' min de lecture']);
+$meta = array_filter([date_longue($a['date_affichee']), $a['lieu']]);
 $icone_telecharger = '<svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>';
 $icone_partager = '<svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/></svg>';
 ?>
@@ -37,7 +37,19 @@ $icone_partager = '<svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stro
 
     <?php if ($images): ?>
     <div class="lg:col-start-2 lg:row-span-2 lg:row-start-1">
-      <div class="lg:sticky lg:top-24">
+      <?php /* Téléphone : les photos côte à côte, la suivante dépasse pour inviter à glisser ; un appui l'ouvre en grand */ ?>
+      <?php if (count($images) > 1): ?>
+      <ul class="masquer-defilement -mx-4 flex snap-x snap-mandatory scroll-px-4 gap-2.5 overflow-x-auto px-4 lg:hidden" aria-label="Images de l'actualité">
+        <?php foreach ($images as $k => $img): ?>
+        <li class="w-[82%] shrink-0 snap-start">
+          <button type="button" class="block aspect-[4/3] w-full overflow-hidden rounded-2xl bg-vert" data-ouvrir-photo="<?= $k ?>" aria-label="Agrandir la photo <?= $k + 1 ?>">
+            <img src="<?= e($img['src']) ?>" alt="<?= e($img['legende']) ?>" class="h-full w-full object-cover" <?= $k === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?>>
+          </button>
+        </li>
+        <?php endforeach ?>
+      </ul>
+      <?php endif ?>
+      <div class="lg:sticky lg:top-24 <?= count($images) > 1 ? 'max-lg:hidden' : '' ?>">
         <div class="carrousel relative aspect-[4/3] overflow-hidden rounded-3xl bg-vert" data-carrousel aria-roledescription="carrousel" aria-label="Images de l'actualité">
           <?php foreach ($images as $k => $img): ?>
           <figure class="carrousel-vue <?= $k === 0 ? 'actif' : '' ?>" aria-hidden="<?= $k === 0 ? 'false' : 'true' ?>">
@@ -53,7 +65,7 @@ $icone_partager = '<svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stro
           <?php endif ?>
         </div>
         <?php if (count($images) > 1): ?>
-        <a href="#phototheque" class="mt-3 hidden items-center gap-2 text-sm font-bold text-vert hover:text-orange lg:inline-flex">Voir les <?= count($images) ?> photos <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
+        <a href="#phototheque" class="mt-3 inline-flex items-center gap-2 text-sm font-bold text-vert hover:text-orange">Voir les <?= count($images) ?> photos <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
         <?php endif ?>
       </div>
     </div>
@@ -71,17 +83,19 @@ $icone_partager = '<svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stro
 <?php if (count($images) > 1): ?>
 <section id="phototheque" class="scroll-mt-20 border-t border-ligne py-10 sm:py-14" aria-labelledby="titre-phototheque" data-phototheque>
   <div class="conteneur">
-    <div class="flex items-baseline justify-between gap-4">
-      <h2 id="titre-phototheque" class="text-xl font-bold sm:text-2xl">Photothèque</h2>
-      <p class="text-sm"><?= count($images) ?> photos</p>
-    </div>
-    <ul class="mt-4 grid grid-cols-2 gap-2.5 sm:mt-6 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
+    <h2 id="titre-phototheque" class="text-xl font-bold sm:text-2xl">Photothèque <span class="text-base font-normal text-texte">· <?= count($images) ?> photos</span></h2>
+    <?php $visibles = count($images) > 3 ? 2 : count($images); $reste = count($images) - $visibles; ?>
+    <ul class="mt-4 grid max-w-4xl grid-cols-3 gap-2.5 sm:mt-6 sm:gap-4">
       <?php foreach ($images as $k => $img): ?>
-      <li class="group relative">
-        <button type="button" class="relative block aspect-square w-full overflow-hidden rounded-2xl bg-white" data-agrandir="<?= $k ?>" aria-label="Agrandir la photo <?= $k + 1 ?>">
+      <li class="group relative<?= $k >= $visibles + ($reste ? 1 : 0) ? ' hidden' : '' ?>">
+        <button type="button" class="relative block aspect-square w-full overflow-hidden rounded-2xl bg-vert" data-agrandir="<?= $k ?>" aria-label="<?= $reste && $k === $visibles ? 'Voir toute la photothèque, ' . count($images) . ' photos' : 'Agrandir la photo ' . ($k + 1) ?>">
           <img src="<?= e($img['src']) ?>" alt="<?= e($img['legende']) ?>" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+          <?php if ($reste && $k === $visibles): ?>
+          <span class="absolute inset-0 grid place-items-center bg-vert/75 text-white transition-colors group-hover:bg-orange/85" aria-hidden="true">
+            <span class="text-center"><span class="block text-2xl font-bold sm:text-4xl">+<?= $reste ?></span><span class="mt-0.5 block text-xs font-bold sm:text-sm">Tout voir</span></span>
+          </span>
+          <?php endif ?>
         </button>
-        <a href="<?= e($img['src']) ?>" download class="absolute right-2 bottom-2 grid size-9 place-items-center rounded-full bg-white/95 text-vert shadow transition-colors hover:bg-orange hover:text-white" aria-label="Télécharger la photo <?= $k + 1 ?>"><?= $icone_telecharger ?></a>
       </li>
       <?php endforeach ?>
     </ul>

@@ -369,6 +369,10 @@
       }
     });
     boutons.forEach(function (b) { b.addEventListener("click", function () { montrer(+b.dataset.agrandir); boite.showModal(); }); });
+    // Les photos affichées ailleurs dans la page (bande du téléphone) ouvrent la même visionneuse
+    document.querySelectorAll("[data-ouvrir-photo]").forEach(function (b) {
+      b.addEventListener("click", function () { montrer(+b.dataset.ouvrirPhoto); boite.showModal(); });
+    });
     boite.querySelector("[data-fermer]").addEventListener("click", function () { boite.close(); });
     boite.querySelector("[data-precedent]").addEventListener("click", function () { montrer(i - 1); });
     boite.querySelector("[data-suivant]").addEventListener("click", function () { montrer(i + 1); });

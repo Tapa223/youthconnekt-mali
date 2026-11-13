@@ -1,43 +1,28 @@
 <?php
 /*
- * Bandeau court en haut d'une initiative ou d'une actualité : la photo en fond, le titre,
- * et les mêmes images qui défilent en petit (une bande qui glisse en continu).
- * Paramètres : $images (adresses), $titre, $etiquette (HTML déjà échappé), $meta (texte), $retour (adresse)
+ * Bandeau court en haut d'une initiative ou d'une actualité : la photo principale, poussée à droite et nette,
+ * le côté du titre en vert légèrement flouté pour que le texte reste lisible.
+ * Paramètres : $images (adresses, la première est utilisée), $titre, $etiquette (HTML déjà échappé), $meta (texte), $retour (adresse)
  */
-$images = array_values(array_unique(array_filter($images ?? [])));
-$bande = count($images) > 1;
-// Assez de vignettes pour remplir la bande, puis la même suite répétée pour une boucle sans à-coup
-$vignettes = $images;
-while ($bande && count($vignettes) < 6) {
-    $vignettes = array_merge($vignettes, $images);
-}
+$image = array_values(array_filter($images ?? []))[0] ?? '';
 ?>
 <section class="relative isolate overflow-hidden bg-vert text-white" aria-label="<?= e($titre) ?>">
-  <?php if ($images): ?>
-  <div class="absolute inset-0 -z-20" data-diapo="banniere" aria-hidden="true">
-    <?php foreach ($images as $k => $src): ?><img data-diapo-image src="<?= e($src) ?>" alt="" class="absolute inset-0 h-full w-full scale-105 object-cover blur-[2px]"<?= $k ? ' loading="lazy"' : ' fetchpriority="high"' ?>><?php endforeach ?>
-  </div>
+  <?php if ($image): ?>
+  <img src="<?= e($image) ?>" alt="" class="absolute inset-y-0 right-0 -z-20 h-full w-full object-cover object-center sm:w-[78%] lg:w-[62%]" fetchpriority="high">
+  <?php /* Le côté du texte : flou léger puis vert, qui s'effacent vers la droite pour laisser voir la photo */ ?>
+  <div class="banniere-flou absolute inset-0 -z-10 backdrop-blur-[6px]" aria-hidden="true"></div>
+  <div class="absolute inset-0 -z-10 bg-linear-to-r from-vert from-25% via-vert/80 via-55% to-vert/10 max-sm:from-vert/90 max-sm:from-20% max-sm:via-vert/60 max-sm:to-vert/15" aria-hidden="true"></div>
   <?php endif ?>
-  <div class="absolute inset-0 -z-10 bg-linear-to-r from-vert/95 via-vert/75 to-vert/35" aria-hidden="true"></div>
-  <?php partiel('partials/reseau_deco', ['opacite' => 'opacity-40']) ?>
+  <?php partiel('partials/reseau_deco', ['opacite' => 'opacity-30']) ?>
 
-  <div class="conteneur relative grid items-center gap-4 py-5 sm:py-7 lg:min-h-[13rem] lg:gap-10 <?= $bande ? 'lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]' : '' ?>">
-    <div class="min-w-0">
+  <div class="conteneur relative py-6 sm:py-8 lg:flex lg:min-h-[14rem] lg:items-center">
+    <div class="max-w-[38rem] min-w-0">
       <div class="flex flex-wrap items-center gap-2">
         <?php if (!empty($retour)) partiel('partials/retour', ['url' => $retour, 'clair' => true, 'bord' => true, 'classes' => 'shrink-0 xl:absolute xl:top-1/2 xl:-left-16 xl:-translate-y-1/2']) ?>
         <?= $etiquette ?? '' ?>
       </div>
       <h1 class="mt-2.5 line-clamp-3 text-[1.6rem] leading-[1.1] font-bold text-white sm:text-4xl xl:text-[2.75rem]"><?= e($titre) ?></h1>
-      <?php if (!empty($meta)): ?><p class="mt-2 text-sm text-white/85 sm:text-[15px]"><?= e($meta) ?></p><?php endif ?>
+      <?php if (!empty($meta)): ?><p class="mt-2 text-sm text-white/90 sm:text-[15px]"><?= e($meta) ?></p><?php endif ?>
     </div>
-    <?php if ($bande): ?>
-    <div class="bande-defile -mx-4 overflow-hidden sm:mx-0" aria-hidden="true">
-      <div class="bande-piste flex w-max gap-2.5 sm:gap-3">
-        <?php foreach (array_merge($vignettes, $vignettes) as $src): ?>
-        <img src="<?= e($src) ?>" alt="" class="h-16 w-24 shrink-0 rounded-xl object-cover ring-2 ring-white/30 sm:h-24 sm:w-36" loading="lazy">
-        <?php endforeach ?>
-      </div>
-    </div>
-    <?php endif ?>
   </div>
 </section>
