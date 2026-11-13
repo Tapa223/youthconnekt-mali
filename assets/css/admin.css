@@ -213,6 +213,12 @@ button, input, select, textarea { font: inherit; }
 .ycm-point { display: inline-flex; align-items: center; gap: 8px; }
 .ycm-point::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--couleur, var(--ycm-orange)); }
 .ycm-miniature { width: auto; max-width: 64px; border-radius: 8px; object-fit: cover; vertical-align: middle; }
+.ycm-galerie-choix { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; margin: 12px 0 0; padding: 0; list-style: none; }
+.ycm-galerie-choix:empty { display: none; }
+.ycm-galerie-choix li { position: relative; }
+.ycm-galerie-choix img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 10px; border: 1px solid var(--ycm-ligne); }
+.ycm-galerie-choix button { position: absolute; right: 6px; bottom: 6px; min-height: 28px; padding: 0 10px; border: 0; border-radius: 999px; background: #fff; color: var(--ycm-rouge, #c62828); font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,.2); }
+.ycm-galerie-choix button:hover { background: var(--ycm-rouge, #c62828); color: #fff; }
 .ycm-apercu { max-height: 180px; max-width: 100%; border-radius: 12px; border: 1px solid var(--ycm-ligne); }
 .ycm-actions-ligne { display: inline-flex; gap: 14px; justify-content: flex-end; white-space: nowrap; }
 .ycm-actions-ligne a, td.ycm-actions-ligne a { font-weight: 700; text-decoration: underline !important; text-underline-offset: 3px; }

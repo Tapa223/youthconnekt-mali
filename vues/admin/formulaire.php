@@ -42,7 +42,7 @@ $groupe = fn ($g) => partiel('admin/_groupe', ['g' => $g, 'valeurs' => $valeurs,
         <div class="ycm-zone-image">
           <label for="f-galerie">Ajouter des photos</label>
           <input type="file" id="f-galerie" name="galerie_nouvelles[]" accept="image/jpeg,image/png,image/webp" multiple>
-          <small>Plusieurs photos à la fois possible. JPG, PNG ou WebP, 3 Mo maximum chacune.</small>
+          <small>Vous pouvez choisir plusieurs fois de suite, depuis des dossiers différents : les photos s'ajoutent. Elles sont allégées automatiquement. Jusqu'à 20 photos par enregistrement.</small>
         </div>
         <?php endif ?>
       </fieldset>

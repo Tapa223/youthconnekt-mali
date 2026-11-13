@@ -230,6 +230,75 @@
       zone.classList.add("ycm-avec-barre");
     });
 
+    // ---- Photos d'une galerie : chaque nouveau choix s'ajoute aux précédents (dossiers différents possibles),
+    //      chaque photo est allégée dans le navigateur (1600 px) et peut être retirée avant l'enregistrement.
+    document.querySelectorAll(".ycm-zone-image input[type=file][multiple]").forEach(function (champ) {
+      if (typeof DataTransfer === "undefined") return;
+      var MAX_NOMBRE = 20, MAX_POIDS = 7 * 1024 * 1024;
+      var zone = champ.closest(".ycm-zone-image");
+      var liste = document.createElement("ul");
+      liste.className = "ycm-galerie-choix";
+      var info = document.createElement("p");
+      info.className = "ycm-aide";
+      info.setAttribute("aria-live", "polite");
+      zone.appendChild(liste);
+      zone.appendChild(info);
+      var choisis = [];
+
+      function alleger(fichier) {
+        return new Promise(function (ok) {
+          if (!/^image\/(jpeg|png|webp)$/.test(fichier.type) || !window.createImageBitmap) return ok(fichier);
+          createImageBitmap(fichier).then(function (img) {
+            var echelle = Math.min(1, 1600 / Math.max(img.width, img.height));
+            if (echelle === 1 && fichier.size < 900 * 1024) return ok(fichier);
+            var c = document.createElement("canvas");
+            c.width = Math.round(img.width * echelle); c.height = Math.round(img.height * echelle);
+            var ctx = c.getContext("2d");
+            ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, c.width, c.height);
+            ctx.drawImage(img, 0, 0, c.width, c.height);
+            c.toBlob(function (blob) {
+              if (!blob || blob.size >= fichier.size) return ok(fichier);
+              ok(new File([blob], fichier.name.replace(/\.[^.]+$/, "") + ".jpg", { type: "image/jpeg" }));
+            }, "image/jpeg", 0.85);
+          }).catch(function () { ok(fichier); });
+        });
+      }
+      function poids() { return choisis.reduce(function (t, f) { return t + f.size; }, 0); }
+      function afficher(message) {
+        var dt = new DataTransfer();
+        choisis.forEach(function (f) { dt.items.add(f); });
+        champ.files = dt.files;
+        liste.innerHTML = "";
+        choisis.forEach(function (f, k) {
+          var li = document.createElement("li");
+          var img = document.createElement("img");
+          img.src = URL.createObjectURL(f); img.alt = "";
+          var retirer = document.createElement("button");
+          retirer.type = "button"; retirer.textContent = "Retirer";
+          retirer.setAttribute("aria-label", "Retirer " + f.name);
+          retirer.addEventListener("click", function () { choisis.splice(k, 1); afficher(""); });
+          li.appendChild(img); li.appendChild(retirer);
+          liste.appendChild(li);
+        });
+        info.textContent = message || (choisis.length ? choisis.length + " photo" + (choisis.length > 1 ? "s" : "") + " prête" + (choisis.length > 1 ? "s" : "") + " à être ajoutée" + (choisis.length > 1 ? "s" : "") + ". Vous pouvez en choisir d'autres, depuis un autre dossier si besoin." : "");
+      }
+      champ.addEventListener("change", function () {
+        var nouveaux = Array.prototype.slice.call(champ.files || []);
+        if (!nouveaux.length) { afficher(""); return; }
+        info.textContent = "Préparation des photos…";
+        Promise.all(nouveaux.map(alleger)).then(function (prets) {
+          var refus = 0;
+          prets.forEach(function (f) {
+            var deja = choisis.some(function (c) { return c.name === f.name && c.size === f.size; });
+            if (deja) return;
+            if (choisis.length >= MAX_NOMBRE || poids() + f.size > MAX_POIDS) { refus++; return; }
+            choisis.push(f);
+          });
+          afficher(refus ? refus + " photo" + (refus > 1 ? "s n'ont" : " n'a") + " pas été ajoutée" + (refus > 1 ? "s" : "") + " : enregistrez d'abord celles-ci, puis ajoutez les suivantes." : "");
+        });
+      });
+    });
+
     // ---- Aperçu immédiat d'une image choisie
     document.querySelectorAll(".ycm-zone-image input[type=file]:not([multiple])").forEach(function (champ) {
       champ.addEventListener("change", function () {
