@@ -93,9 +93,9 @@ foreach (range(0, 11) as $k) {
       </div>
     </div>
 
-    <div class="order-4 mt-4 grid w-full max-w-md grid-cols-2 gap-3 sm:mt-6 lg:hidden">
-      <a href="#chapitre" class="btn btn-contour-blanc min-h-11 px-2 text-[13px] sm:min-h-12 sm:text-base">Découvrir le chapitre</a>
-      <a href="#rejoindre" class="btn btn-orange min-h-11 px-2 text-[13px] sm:min-h-12 sm:text-base">Let's Connekt</a>
+    <div class="order-4 mt-4 grid w-full max-w-md grid-cols-2 gap-2.5 sm:mt-6 sm:gap-3 lg:hidden">
+      <a href="#chapitre" class="btn btn-contour-blanc min-h-11 px-3 text-[13px] whitespace-nowrap sm:min-h-12 sm:px-4 sm:text-base">Découvrir le chapitre</a>
+      <a href="#rejoindre" class="btn btn-orange min-h-11 px-3 text-[13px] whitespace-nowrap sm:min-h-12 sm:px-4 sm:text-base">Let's Connekt</a>
     </div>
 
     <div class="anim-soleil relative order-1 mt-1 aspect-square w-[54vw] max-w-[230px] sm:w-[60vw] sm:max-w-[360px] lg:hidden">
@@ -129,24 +129,24 @@ foreach (range(0, 11) as $k) {
     <div class="contents lg:block">
       <div class="order-1"><p class="surtitre surtitre-trait">Le chapitre</p>
       <h2 id="titre-chapitre" class="titre-section">Le lieu où la jeunesse malienne se rencontre et avance</h2></div>
-      <p class="order-4 text-base leading-relaxed sm:text-lg lg:mt-5">YouthConnekt Mali accompagne les jeunes dans leurs projets, les implique dans la vie citoyenne et met en lumière celles et ceux qui font bouger le pays. Étudiants, jeunes professionnels, entrepreneurs et organisations s'y retrouvent pour apprendre, se rencontrer et agir ensemble.</p>
-      <a href="<?= url('/a-propos') ?>" class="btn btn-vert survol-leve order-5 w-full sm:w-auto sm:self-start lg:mt-7">Découvrir le chapitre</a>
+      <p class="order-2 text-[15px] leading-relaxed sm:text-lg lg:mt-5">YouthConnekt Mali accompagne les jeunes dans leurs projets, les implique dans la vie citoyenne et met en lumière celles et ceux qui font bouger le pays. Étudiants, jeunes professionnels, entrepreneurs et organisations s'y retrouvent pour apprendre, se rencontrer et agir ensemble.</p>
+      <a href="<?= url('/a-propos') ?>" class="btn btn-vert survol-leve order-5 self-start px-6 lg:mt-7">Découvrir le chapitre</a>
 
       <?php if ($chiffres): ?>
-      <dl class="order-2 grid grid-cols-3 divide-x divide-ligne border-y border-ligne py-3.5 sm:py-5 lg:mt-9">
+      <dl class="order-4 grid grid-cols-3 divide-x divide-ligne border-y border-ligne py-3.5 sm:py-5 lg:mt-9">
         <?php foreach ($chiffres as $k => $chiffre): ?>
-        <div class="<?= $k > 0 ? 'pl-4 sm:pl-6' : '' ?> pr-2">
+        <div class="<?= $k > 0 ? 'pl-3 sm:pl-6' : '' ?> pr-2">
           <dt class="sr-only"><?= e($chiffre['libelle']) ?></dt>
-          <dd class="text-2xl font-bold text-vert tabular-nums sm:text-4xl" data-compteur><?= e($chiffre['valeur']) ?></dd>
+          <dd class="text-[1.4rem] font-bold text-vert tabular-nums sm:text-4xl" data-compteur><?= e($chiffre['valeur']) ?></dd>
           <dd class="mt-2 h-[3px] w-6 rounded-full <?= cycle(['bg-orange', 'bg-turquoise', 'bg-bleu'], $k) ?>" aria-hidden="true"></dd>
-          <dd class="mt-2 text-xs leading-snug text-encre sm:text-sm"><?= e(majuscule_initiale($chiffre['libelle'])) ?></dd>
+          <dd class="mt-1.5 text-[11.5px] leading-snug text-encre sm:mt-2 sm:text-sm"><?= e(majuscule_initiale($chiffre['libelle'])) ?></dd>
         </div>
         <?php endforeach ?>
       </dl>
       <?php endif ?>
     </div>
 
-    <div class="relative order-3 mx-auto h-[250px] w-full max-w-xl sm:h-[min(520px,calc(100vh-200px))] sm:min-h-[420px] lg:max-w-none" aria-hidden="true">
+    <div class="relative order-3 mx-auto h-[220px] w-full max-w-sm sm:h-[min(520px,calc(100vh-200px))] sm:max-w-xl sm:min-h-[420px] lg:max-w-none" aria-hidden="true">
       <span class="absolute top-4 left-0 h-[88%] w-[56%] rounded-2xl bg-orange sm:top-[30px] sm:w-[54%] sm:rounded-[22px]"></span>
       <span class="absolute right-[2%] bottom-0 h-[34%] w-[34%] rounded-[22px] bg-turquoise"></span>
       <div class="devoile survol-zoom absolute top-0 left-3 h-[88%] w-[54%] overflow-hidden rounded-2xl shadow-[0_20px_40px_rgb(20_32_29/.2)] sm:left-6 sm:w-[52%] sm:rounded-[22px]">
@@ -163,20 +163,20 @@ foreach (range(0, 11) as $k) {
   </div>
 
   <?php if ($axes): ?>
-  <div class="conteneur relative mt-14 sm:mt-20 lg:mt-28">
+  <div class="conteneur relative mt-12 sm:mt-20 lg:mt-28">
     <p class="surtitre">Nos axes d'intervention</p>
     <h2 class="titre-section">Ce que fait le chapitre</h2>
-    <ul class="mt-4 grid gap-2 sm:mt-8 sm:gap-5 <?= count($axes) === 2 ? 'grid-cols-2 lg:mx-auto lg:max-w-5xl' : 'grid-cols-3' ?>">
+    <ul class="mt-4 grid gap-2.5 sm:mt-8 sm:gap-5 <?= count($axes) === 2 ? 'sm:grid-cols-2 lg:mx-auto lg:max-w-5xl' : 'sm:grid-cols-3' ?>">
       <?php foreach ($axes as $k => $axe): ?>
-      <li class="carte survol-leve survol-zoom survol-orange relative flex flex-col rounded-[14px] border-[1.5px] sm:rounded-2xl sm:border-2">
-        <div class="relative h-24 border-b-4 sm:aspect-[16/8.5] sm:h-auto <?= bordure($axe['couleur']) ?>">
+      <li class="carte survol-leve survol-zoom survol-orange relative flex overflow-hidden rounded-[14px] border-[1.5px] sm:flex-col sm:rounded-2xl sm:border-2">
+        <div class="relative w-[30%] shrink-0 border-r-4 sm:aspect-[16/8.5] sm:w-auto sm:border-r-0 sm:border-b-4 <?= bordure($axe['couleur']) ?>">
           <?php partiel('partials/image_axe', ['axe' => $axe]) ?>
           <span class="absolute top-1.5 left-1.5 grid size-[22px] place-items-center rounded-full bg-white/90 text-[10px] font-bold text-vert sm:top-3 sm:left-3 sm:size-9 sm:text-xs"><?= sprintf('%02d', $k + 1) ?></span>
         </div>
-        <div class="flex flex-1 flex-col px-2.5 pt-2.5 pb-3 sm:p-6">
-          <h3 class="text-sm font-bold sm:text-2xl"><?= e($axe['nom']) ?></h3>
-          <p class="mt-1 line-clamp-4 flex-1 text-xs leading-snug text-encre sm:mt-2 sm:line-clamp-none sm:text-[15px] sm:leading-relaxed"><?= e($axe['description']) ?></p>
-          <a href="<?= url('/a-propos') ?>#axes" class="mt-2.5 self-start rounded-full bg-turquoise-clair px-2.5 py-1 text-xs font-bold text-vert transition-colors after:absolute after:inset-0 hover:bg-orange hover:text-white sm:mt-4 sm:border-2 sm:border-vert sm:bg-white sm:px-4 sm:py-1.5 sm:text-sm sm:hover:border-orange"><span class="sm:hidden">Lire</span><span class="hidden sm:inline">En savoir plus</span><span class="sr-only"> sur l'axe <?= e($axe['nom']) ?></span></a>
+        <div class="flex min-w-0 flex-1 flex-col px-3.5 py-3 sm:p-6">
+          <h3 class="text-[15px] leading-snug font-bold sm:text-2xl"><?= e($axe['nom']) ?></h3>
+          <p class="mt-1 line-clamp-2 flex-1 text-[13px] leading-snug text-encre sm:mt-2 sm:line-clamp-none sm:text-[15px] sm:leading-relaxed"><?= e($axe['description']) ?></p>
+          <a href="<?= url('/a-propos') ?>#axes" class="mt-2 self-start rounded-full bg-turquoise-clair px-2.5 py-1 text-xs font-bold text-vert transition-colors after:absolute after:inset-0 hover:bg-orange hover:text-white sm:mt-4 sm:border-2 sm:border-vert sm:bg-white sm:px-4 sm:py-1.5 sm:text-sm sm:hover:border-orange"><span class="sm:hidden">Lire</span><span class="hidden sm:inline">En savoir plus</span><span class="sr-only"> sur l'axe <?= e($axe['nom']) ?></span></a>
         </div>
       </li>
       <?php endforeach ?>
@@ -358,23 +358,23 @@ foreach (range(0, 11) as $k) {
         <h2 id="titre-actualites" class="titre-section max-sm:text-white">Événements et actualités</h2>
       </div>
       <a href="<?= url('/actualites') ?>" class="btn btn-contour survol-leve hidden sm:inline-flex">Toutes les actualités</a>
-      <a href="<?= url('/actualites') ?>" class="btn-tout-voir sm:hidden">Tout voir</a>
+      <a href="<?= url('/actualites') ?>" class="btn-tout-voir bg-white text-vert sm:hidden">Tout voir</a>
     </div>
 
     <?php if ($actualite_une): $une = $actualite_une; ?>
     <div class="mt-5 grid gap-2.5 sm:mt-8 sm:gap-4 lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)] lg:gap-5">
-      <a href="<?= e($une['url']) ?>" class="survol-leve group relative block h-[230px] overflow-hidden rounded-[18px] border-[3px] border-white sm:aspect-[16/10] sm:h-auto sm:rounded-2xl sm:border-0 lg:aspect-auto lg:min-h-[440px]">
+      <a href="<?= e($une['url']) ?>" class="survol-leve group relative block h-[200px] overflow-hidden rounded-[18px] border-[3px] border-white sm:aspect-[16/10] sm:h-auto sm:rounded-2xl sm:border-0 lg:aspect-auto lg:min-h-[440px]">
         <div class="absolute inset-0 transition-transform duration-500 group-hover:scale-105">
           <?php partiel('partials/photo', ['image' => $une['image']]) ?>
         </div>
         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
-        <time datetime="<?= e(date_iso($une['date_affichee'])) ?>" class="absolute top-4 left-4 grid min-w-14 rounded-xl bg-white px-2.5 py-2 text-center leading-none text-vert">
-          <span class="text-2xl font-bold"><?= e(jour($une['date_affichee'])) ?></span>
+        <time datetime="<?= e(date_iso($une['date_affichee'])) ?>" class="absolute top-3 left-3 grid min-w-12 rounded-xl bg-white px-2 py-1.5 sm:top-4 sm:left-4 sm:min-w-14 sm:px-2.5 sm:py-2 text-center leading-none text-vert">
+          <span class="text-xl font-bold sm:text-2xl"><?= e(jour($une['date_affichee'])) ?></span>
           <span class="mt-1 text-[11px] font-bold uppercase"><?= e(mois_pastille($une['date_affichee'])) ?></span>
         </time>
         <div class="absolute inset-x-0 bottom-0 p-4 sm:p-7">
           <span class="etiquette bg-orange tracking-wide text-white uppercase">À la une<?= $une['categorie_libelle'] !== '' ? ' · ' . e($une['categorie_libelle']) : '' ?></span>
-          <h3 class="mt-3 text-xl leading-tight font-bold text-white sm:text-3xl"><?= e($une['titre']) ?></h3>
+          <h3 class="mt-2 line-clamp-2 text-lg leading-tight font-bold text-white sm:mt-3 sm:text-3xl"><?= e($une['titre']) ?></h3>
           <p class="mt-2 line-clamp-2 hidden text-sm text-white/90 sm:block sm:text-base"><?= e($une['chapeau']) ?></p>
         </div>
       </a>
@@ -384,12 +384,12 @@ foreach (range(0, 11) as $k) {
         <?php foreach ($actualites as $actu): ?>
         <li>
           <a href="<?= e($actu['url']) ?>" class="survol-leve survol-zoom group flex h-full items-center gap-3 rounded-[14px] bg-white p-2 sm:gap-4 sm:rounded-2xl sm:p-4">
-            <div class="size-16 shrink-0 overflow-hidden rounded-xl sm:size-24">
+            <div class="size-14 shrink-0 overflow-hidden rounded-xl sm:size-24">
               <?php partiel('partials/photo', ['image' => $actu['image']]) ?>
             </div>
             <div class="min-w-0">
               <p class="text-[11px] font-bold tracking-[0.12em] text-vert uppercase sm:text-xs"><?= $actu['categorie_libelle'] !== '' ? e($actu['categorie_libelle']) . ' · ' : '' ?><time datetime="<?= e(date_iso($actu['date_affichee'])) ?>"><?= e(date_courte($actu['date_affichee'])) ?></time></p>
-              <h3 class="mt-1.5 line-clamp-2 text-[15px] leading-snug font-bold text-encre group-hover:text-orange sm:text-base"><?= e($actu['titre']) ?></h3>
+              <h3 class="mt-1 line-clamp-2 text-[14px] leading-snug font-bold text-encre group-hover:text-orange sm:text-base"><?= e($actu['titre']) ?></h3>
             </div>
           </a>
         </li>

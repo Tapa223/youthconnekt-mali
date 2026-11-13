@@ -75,7 +75,7 @@
     @apply block h-[3px] w-10 rounded-full bg-orange;
   }
   .titre-section {
-    @apply mt-3 text-3xl leading-tight font-bold sm:text-4xl lg:text-[2.75rem];
+    @apply mt-2.5 text-[1.6rem] leading-[1.15] font-bold sm:mt-3 sm:text-4xl sm:leading-tight lg:text-[2.75rem];
   }
 
   /* Boutons : hauteur minimale de 44 px pour le tactile */
@@ -89,7 +89,7 @@
   .btn-blanc { @apply border-white bg-white text-vert hover:border-orange hover:bg-orange hover:text-white; }
   .btn-contour-blanc { @apply border-white bg-vert text-white hover:bg-white hover:text-vert; }
   /* Petit bouton « Tout voir » à côté des titres de section, sur téléphone */
-  .btn-tout-voir { @apply inline-flex min-h-10 shrink-0 items-center rounded-full bg-vert px-4 text-sm font-bold whitespace-nowrap text-white shadow-sm transition-colors hover:bg-orange; }
+  .btn-tout-voir { @apply inline-flex min-h-9 shrink-0 items-center rounded-full bg-vert px-3.5 text-[13px] font-bold whitespace-nowrap text-white shadow-sm transition-colors hover:bg-orange sm:min-h-10 sm:px-4 sm:text-sm; }
 
   .carte {
     @apply overflow-hidden rounded-2xl border border-ligne bg-white;

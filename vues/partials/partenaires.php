@@ -30,8 +30,8 @@ $titres = [
         <ul class="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:gap-4 lg:border-l lg:border-ligne lg:pl-8">
           <?php foreach ($liste as $partenaire): $balise = $partenaire['lien'] ? 'a href="' . e($partenaire['lien']) . '" target="_blank" rel="noopener"' : 'div'; ?>
           <li class="sm:w-44">
-            <<?= $balise ?> class="survol-leve flex h-20 items-center justify-center rounded-[14px] border border-ligne bg-white p-3 text-center sm:h-24" title="<?= e($partenaire['nom']) ?>">
-              <?php if ($partenaire['logo']): ?><img src="<?= e(media($partenaire['logo'])) ?>" alt="<?= e($partenaire['nom']) ?>" class="max-h-full max-w-full object-contain" loading="lazy"><?php else: ?><span class="text-[13px] leading-tight font-bold text-vert sm:text-sm"><?= e($partenaire['nom']) ?></span><?php endif ?>
+            <<?= $balise ?> class="survol-leve flex h-full min-h-20 items-center justify-center rounded-[14px] border border-ligne bg-white p-3 text-center sm:h-24" title="<?= e($partenaire['nom']) ?>">
+              <?php if ($partenaire['logo']): ?><img src="<?= e(media($partenaire['logo'])) ?>" alt="<?= e($partenaire['nom']) ?>" class="max-h-full max-w-full object-contain" loading="lazy"><?php else: ?><span class="line-clamp-4 text-[12px] leading-tight font-bold text-vert sm:text-sm"><?= e($partenaire['nom']) ?></span><?php endif ?>
             </<?= $partenaire['lien'] ? 'a' : 'div' ?>>
           </li>
           <?php endforeach ?>
