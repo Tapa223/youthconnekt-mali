@@ -732,10 +732,12 @@ input[type=file]::file-selector-button {
 
 /* Fenêtre de confirmation */
 .ycm-confirmation { width: min(26rem, calc(100vw - 2rem)); padding: 24px; border: 0; border-radius: 20px; box-shadow: 0 24px 60px rgb(3 40 33 / .25); }
+.ycm-confirmation:has([data-autre]:not([hidden])) { width: min(34rem, calc(100vw - 2rem)); }
 .ycm-confirmation::backdrop { background: rgb(3 40 33 / .45); }
 .ycm-confirmation-question { margin: 0; font-size: 18px; font-weight: 700; color: var(--ycm-vert); }
 .ycm-confirmation-texte { margin: 8px 0 0; font-size: 14px; color: var(--ycm-texte); }
-.ycm-confirmation-boutons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+.ycm-confirmation-boutons { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+.ycm-confirmation-boutons > [hidden] { display: none !important; }
 .ycm-confirmation-boutons > * { min-height: 44px; padding: 0 20px; font-size: 15px; }
 .ycm-bouton-rouge { display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; border: 0; background: var(--ycm-rouge); color: #fff; font-weight: 700; cursor: pointer; }
 .ycm-bouton-rouge:hover { background: #9a1a0c; }

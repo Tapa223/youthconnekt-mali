@@ -155,7 +155,7 @@
       boite = document.createElement("dialog");
       boite.className = "ycm-confirmation";
       boite.innerHTML = '<p class="ycm-confirmation-question" data-question></p><p class="ycm-confirmation-texte" data-texte hidden></p>'
-        + '<div class="ycm-confirmation-boutons"><button type="button" class="ycm-bouton-gris" data-non>Annuler</button><button type="button" class="ycm-bouton-vert" data-oui>Confirmer</button></div>';
+        + '<div class="ycm-confirmation-boutons"><button type="button" class="ycm-bouton-gris" data-non>Annuler</button><button type="button" class="ycm-bouton-contour" data-autre hidden></button><button type="button" class="ycm-bouton-vert" data-oui>Confirmer</button></div>';
       document.body.appendChild(boite);
       boite.querySelector("[data-non]").addEventListener("click", function () { boite.close(); });
       boite.addEventListener("click", function (e) { if (e.target === boite) boite.close(); });
@@ -192,8 +192,24 @@
         if (form.requestSubmit) form.requestSubmit(sub || undefined); else form.submit();
         setTimeout(function () { delete form.dataset.confirme; }, 0);
       };
+      // Contenus avec un statut Brouillon / Publié : le choix se fait au moment d'enregistrer
+      var statut = (source === form && !(sub && sub.name === "_decision")) ? form.querySelector("select[name=statut]") : null;
+      if (statut && !(statut.querySelector("option[value=brouillon]") && statut.querySelector("option[value=publie]"))) statut = null;
+      if (statut && window.HTMLDialogElement) {
+        var enLigne = statut.value === "publie";
+        q = enLigne ? "Enregistrer les modifications ?" : (form.getAttribute("data-confirmer") || "Enregistrer ?");
+        texte = enLigne ? "Cet élément est en ligne. Vous pouvez le laisser publié ou le repasser en brouillon (il ne sera plus visible sur le site)."
+          : "Publier : visible sur le site (à la date de publication choisie). Brouillon : enregistré, visible seulement dans l'administration.";
+      }
       if (!window.HTMLDialogElement) { if (window.confirm(q)) soumettre(); return; }
       var b = fenetre();
+      var autre = b.querySelector("[data-autre]");
+      autre.hidden = !statut;
+      if (statut) {
+        autre.textContent = enLigne ? "Repasser en brouillon" : "Enregistrer en brouillon";
+        autre.onclick = function () { statut.value = "brouillon"; b.close(); soumettre(); };
+        libelleOui = enLigne ? "Enregistrer, reste publié" : "Publier";
+      }
       b.querySelector("[data-question]").textContent = q;
       var t = b.querySelector("[data-texte]");
       t.textContent = texte;
@@ -201,7 +217,7 @@
       var oui = b.querySelector("[data-oui]");
       oui.textContent = libelleOui;
       oui.className = danger ? "ycm-bouton-rouge" : "ycm-bouton-vert";
-      oui.onclick = function () { b.close(); soumettre(); };
+      oui.onclick = function () { if (statut) statut.value = "publie"; b.close(); soumettre(); };
       b.showModal();
       oui.focus();
     }, true);
