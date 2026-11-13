@@ -163,8 +163,10 @@ function options_categories_actualite(): array
 function actualite_preparer(array $a): array
 {
     $a['url'] = url('/actualites/' . $a['slug']);
-    $a['date_affichee'] = $a['date_evenement'] ?: substr($a['publie_le'], 0, 10);
-    $a['est_a_venir'] = !empty($a['date_evenement']) && $a['date_evenement'] >= aujourdhui();
+    // Seule la date de l'activité compte (plus de date de publication affichée) ; vide si l'actualité n'en a pas
+    $a['date_affichee'] = (string) ($a['date_evenement'] ?? '');
+    $a['periode'] = periode_dates($a['date_evenement'] ?? null, $a['date_fin'] ?? null);
+    $a['est_a_venir'] = !empty($a['date_evenement']) && (($a['date_fin'] ?? '') ?: $a['date_evenement']) >= aujourdhui();
     $categorie = categories_actualite()[$a['categorie'] ?? ''] ?? null;
     $a['categorie_libelle'] = $categorie['nom'] ?? '';
     $a['couleur'] = $categorie['couleur'] ?? 'vert';
@@ -173,7 +175,7 @@ function actualite_preparer(array $a): array
     return $a;
 }
 
-function actualites_publiees(string $suite = 'ORDER BY publie_le DESC', array $params = []): array
+function actualites_publiees(string $suite = 'ORDER BY COALESCE(date_evenement, DATE(publie_le)) DESC', array $params = []): array
 {
     return array_map('actualite_preparer', lignes('SELECT * FROM actualites WHERE ' . PUBLIE . ' ' . $suite, $params));
 }

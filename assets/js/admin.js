@@ -222,6 +222,57 @@
       oui.focus();
     }, true);
 
+    // ---- Quitter une fiche modifiée sans l'enregistrer : on demande d'abord (Retour, Annuler, menu…)
+    document.querySelectorAll("form[data-garde-modifs]").forEach(function (form) {
+      var modifie = false;
+      var marquer = function () { modifie = true; };
+      form.addEventListener("input", marquer);
+      form.addEventListener("change", marquer);
+      form.addEventListener("submit", function () { modifie = false; });
+      // Fermeture de l'onglet ou bouton « précédent » du navigateur : avertissement du navigateur
+      window.addEventListener("beforeunload", function (e) {
+        if (!modifie) return;
+        e.preventDefault();
+        e.returnValue = "";
+      });
+      var boite = null;
+      document.addEventListener("click", function (e) {
+        var lien = e.target.closest ? e.target.closest("a[href]") : null;
+        if (!modifie || !lien || lien.target === "_blank" || lien.hasAttribute("download") || e.ctrlKey || e.metaKey || e.shiftKey) return;
+        var href = lien.getAttribute("href");
+        if (!href || href.charAt(0) === "#" || /^(mailto|tel|javascript):/i.test(href)) return;
+        if (!window.HTMLDialogElement) { if (!window.confirm("Quitter sans enregistrer ? Vos modifications seront perdues.")) e.preventDefault(); else modifie = false; return; }
+        e.preventDefault();
+        if (!boite) {
+          boite = document.createElement("dialog");
+          boite.className = "ycm-confirmation";
+          boite.innerHTML = '<p class="ycm-confirmation-question">Quitter sans enregistrer ?</p>'
+            + '<p class="ycm-confirmation-texte">Vos modifications n\'ont pas été enregistrées. Vous pouvez les garder en brouillon, ou quitter et les perdre.</p>'
+            + '<div class="ycm-confirmation-boutons"><button type="button" class="ycm-bouton-gris" data-rester>Rester sur la page</button>'
+            + '<button type="button" class="ycm-bouton-contour" data-quitter>Quitter sans enregistrer</button>'
+            + '<button type="button" class="ycm-bouton-vert" data-garder></button></div>';
+          document.body.appendChild(boite);
+          boite.querySelector("[data-rester]").addEventListener("click", function () { boite.close(); });
+          boite.addEventListener("click", function (ev) { if (ev.target === boite) boite.close(); });
+        }
+        var statut = form.querySelector("select[name=statut]");
+        var brouillon = statut && statut.querySelector("option[value=brouillon]");
+        var garder = boite.querySelector("[data-garder]");
+        garder.textContent = brouillon && statut.value !== "publie" ? "Enregistrer en brouillon" : "Enregistrer";
+        garder.onclick = function () {
+          if (brouillon && statut.value !== "publie") statut.value = "brouillon";
+          boite.close();
+          modifie = false;
+          form.dataset.confirme = "1"; // pas de seconde question : le choix vient d'être fait
+          var bouton = form.querySelector("button[name=_enregistrer]");
+          if (form.requestSubmit) form.requestSubmit(bouton || undefined); else form.submit();
+        };
+        boite.querySelector("[data-quitter]").onclick = function () { modifie = false; window.location.href = lien.href; };
+        boite.showModal();
+        garder.focus();
+      }, true);
+    });
+
     // ---- Barre d'outils au-dessus des zones de texte (mise en forme simple du site)
     document.querySelectorAll("textarea[data-barre]").forEach(function (zone) {
       var outils = [["Intertitre", "## "], ["Liste", "- "], ["Citation", "> "]];

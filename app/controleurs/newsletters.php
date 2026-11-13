@@ -101,7 +101,7 @@ function newsletter_formulaire(?int $id = null): void
         'nb_destinataires' => count($destinataires),
         'communautes' => lignes("SELECT c.id, c.nom, (SELECT COUNT(*) FROM demandes_adhesion d WHERE d.communaute_id = c.id AND d.statut = 'acceptee') AS nb FROM communautes c WHERE c.active = 1 ORDER BY c.ordre, c.nom"),
         'opportunites' => lignes("SELECT id, titre, type, date_limite FROM opportunites WHERE statut = 'publie' AND (date_limite IS NULL OR date_limite >= CURDATE()) ORDER BY date_limite IS NULL, date_limite LIMIT 30"),
-        'actualites' => lignes("SELECT id, titre, categorie, date_evenement FROM actualites WHERE statut = 'publie' ORDER BY publie_le DESC LIMIT 20"),
+        'actualites' => lignes("SELECT id, titre, categorie, date_evenement FROM actualites WHERE statut = 'publie' ORDER BY COALESCE(date_evenement, DATE(publie_le)) DESC LIMIT 20"),
         'mode' => (string) config('email.mode', 'journal'),
         'email_test' => (string) (utilisateur()['email'] ?? ''),
     ]);

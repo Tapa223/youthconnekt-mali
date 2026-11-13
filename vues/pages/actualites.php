@@ -6,7 +6,7 @@ $a_cote = array_slice($une, 1);
 $titre_haut = $une ? 'À la une' : ($categorie_active ? $nom_categorie : 'Toutes les actualités');
 // $suivante : adresse de la suite de la liste (défilement continu), null s'il n'y a plus rien
 // Petite ligne colorée « Catégorie · date » (sans catégorie : la date seule)
-$surtitre = fn ($a) => ($a['categorie_libelle'] !== '' ? e($a['categorie_libelle']) . ' · ' : '') . e(date_courte($a['date_affichee']));
+$surtitre = fn ($a) => e(implode(' · ', array_filter([$a['categorie_libelle'], date_courte($a['date_affichee'])])));
 ?>
 <section class="conteneur pt-2 pb-10 sm:pt-6 sm:pb-14 lg:pt-5">
   <div class="flex items-center justify-between gap-4">

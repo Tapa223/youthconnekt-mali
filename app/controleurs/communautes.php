@@ -61,7 +61,7 @@ function detail(string $slug): void
         'statut' => $demande['statut'] ?? null,
         'compte_admin' => !est_membre($u),
         'opportunites' => opportunites_ouvertes('AND id IN (SELECT opportunite_id FROM opportunite_communaute WHERE communaute_id = ?) ORDER BY date_limite IS NULL, date_limite LIMIT 4', [$c['id']]),
-        'activites_recentes' => actualites_publiees('AND id IN (SELECT actualite_id FROM actualite_communaute WHERE communaute_id = ?) ORDER BY publie_le DESC LIMIT 4', [$c['id']]),
+        'activites_recentes' => actualites_publiees('AND id IN (SELECT actualite_id FROM actualite_communaute WHERE communaute_id = ?) ORDER BY COALESCE(date_evenement, DATE(publie_le)) DESC LIMIT 4', [$c['id']]),
         'membres' => membres_visibles($c),
     ]));
 }

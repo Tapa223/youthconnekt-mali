@@ -147,7 +147,7 @@ function actualites(): void
     // Aucune cochée : la page commence directement par toutes les actualités. Elles sont en haut de la page, puis retirées de la liste en dessous.
     $une = [];
     if ($categorie === '') {
-        $une = actualites_publiees('AND mis_en_avant = 1 ORDER BY publie_le DESC LIMIT 4');
+        $une = actualites_publiees('AND mis_en_avant = 1 ORDER BY COALESCE(date_evenement, DATE(publie_le)) DESC LIMIT 4');
     }
     $exclure = $une ? ' AND id NOT IN (' . implode(',', array_map(fn ($a) => (int) $a['id'], $une)) . ')' : '';
     $pagination = paginer((int) valeur('SELECT COUNT(*) FROM actualites WHERE ' . PUBLIE . $condition . $exclure, $params), 12);
@@ -193,7 +193,7 @@ function actualite(string $slug): void
         'image_partage' => $a['image'],
         'a' => $a,
         'photos' => lignes('SELECT * FROM photos_actualites WHERE actualite_id = ? ORDER BY ordre, id', [$a['id']]),
-        'autres' => actualites_publiees('AND id <> ? ORDER BY publie_le DESC LIMIT 3', [$a['id']]),
+        'autres' => actualites_publiees('AND id <> ? ORDER BY COALESCE(date_evenement, DATE(publie_le)) DESC LIMIT 3', [$a['id']]),
     ]));
 }
 

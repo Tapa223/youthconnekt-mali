@@ -732,7 +732,7 @@ input[type=file]::file-selector-button {
 
 /* Fenêtre de confirmation */
 .ycm-confirmation { width: min(26rem, calc(100vw - 2rem)); padding: 24px; border: 0; border-radius: 20px; box-shadow: 0 24px 60px rgb(3 40 33 / .25); }
-.ycm-confirmation:has([data-autre]:not([hidden])) { width: min(34rem, calc(100vw - 2rem)); }
+.ycm-confirmation:has([data-autre]:not([hidden])), .ycm-confirmation:has([data-garder]) { width: min(34rem, calc(100vw - 2rem)); }
 .ycm-confirmation::backdrop { background: rgb(3 40 33 / .45); }
 .ycm-confirmation-question { margin: 0; font-size: 18px; font-weight: 700; color: var(--ycm-vert); }
 .ycm-confirmation-texte { margin: 8px 0 0; font-size: 14px; color: var(--ycm-texte); }

@@ -18,7 +18,7 @@ $groupe = fn ($g) => partiel('admin/_groupe', ['g' => $g, 'valeurs' => $valeurs,
 <?php if (!$peut_modifier): ?><p class="ycm-alerte">Votre rôle permet de consulter cette fiche, pas de la modifier.</p><?php endif ?>
 
 <?php if ($ajout && !empty($r['guide'])) partiel('admin/_guide', ['guide' => $r['guide']]) ?>
-<form method="post" action="<?= e($action) ?>" enctype="multipart/form-data" novalidate data-confirmer="<?= $ajout ? 'Enregistrer ce nouvel élément ?' : 'Enregistrer les modifications ?' ?>" data-confirmer-oui="Enregistrer">
+<form method="post" action="<?= e($action) ?>" enctype="multipart/form-data" novalidate data-garde-modifs data-confirmer="<?= $ajout ? 'Enregistrer ce nouvel élément ?' : 'Enregistrer les modifications ?' ?>" data-confirmer-oui="Enregistrer">
   <?= csrf() ?>
   <div class="ycm-form-grille">
     <div class="ycm-form-principal">

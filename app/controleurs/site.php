@@ -16,7 +16,7 @@ function accueil(): void
     }
 
     // L'actualité à la une : celle mise en avant, sinon la plus récente
-    $actualites = actualites_publiees('ORDER BY mis_en_avant DESC, publie_le DESC LIMIT 4');
+    $actualites = actualites_publiees('ORDER BY mis_en_avant DESC, COALESCE(date_evenement, DATE(publie_le)) DESC LIMIT 4');
 
     $partenaires = lignes('SELECT * FROM partenaires WHERE actif = 1 ORDER BY ordre, nom');
 
