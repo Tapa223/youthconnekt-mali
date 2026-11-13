@@ -88,7 +88,7 @@ foreach (range(0, 11) as $k) {
       </h1>
       <div class="mt-2 grid w-full max-w-2xl sm:mt-5 lg:mt-[2.5vh]" data-diapo="accueil">
         <?php foreach ($diapos as $k => $d): ?>
-        <p data-diapo-image class="diapo-texte col-start-1 row-start-1 self-start rounded-2xl border border-white/20 bg-vert/80 px-4 py-3 text-[13px] leading-snug text-white/95 backdrop-blur-md sm:px-6 sm:py-3.5 sm:text-base sm:leading-relaxed sm:backdrop-blur-md lg:text-[clamp(0.95rem,2.1vh,1.15rem)]"<?= $k ? ' aria-hidden="true"' : '' ?>><?= e($d['texte']) ?></p>
+        <p data-diapo-image class="diapo-texte col-start-1 row-start-1 self-start text-[13px] leading-snug text-white/95 sm:rounded-2xl sm:border sm:border-white/20 sm:bg-vert/80 sm:px-6 sm:py-3.5 sm:text-base sm:backdrop-blur-md sm:leading-relaxed sm:backdrop-blur-md lg:text-[clamp(0.95rem,2.1vh,1.15rem)]"<?= $k ? ' aria-hidden="true"' : '' ?>><?= e($d['texte']) ?></p>
         <?php endforeach ?>
       </div>
     </div>
@@ -98,7 +98,7 @@ foreach (range(0, 11) as $k) {
       <a href="#rejoindre" class="btn btn-orange min-h-11 px-3 text-[13px] whitespace-nowrap sm:min-h-12 sm:px-4 sm:text-base">Let's Connekt</a>
     </div>
 
-    <div class="anim-soleil relative order-1 mt-1 aspect-square w-[70vw] max-w-[300px] sm:w-[62vw] sm:max-w-[360px] lg:hidden">
+    <div class="anim-soleil relative order-1 mt-1 aspect-square w-[60vw] max-w-[250px] sm:w-[62vw] sm:max-w-[360px] lg:hidden">
       <div class="absolute -inset-3 rounded-full border-2 border-dashed border-white/35" aria-hidden="true"></div>
       <?php /* Téléphone : grand cercle net ; la photo de fond nette sur tout le premier écran ; l'anneau porte des points qui tournent lentement, et des bulles photo flottent autour du cercle, comme sur ordinateur */ ?>
       <div class="anim-orbite absolute -inset-3 [animation-duration:45s]" aria-hidden="true">
