@@ -39,7 +39,7 @@ $icone_partager = '<svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stro
     <div class="lg:col-start-2 lg:row-span-2 lg:row-start-1">
       <?php /* Téléphone : les photos côte à côte, la suivante dépasse pour inviter à glisser ; un appui l'ouvre en grand */ ?>
       <?php if (count($images) > 1): ?>
-      <ul class="masquer-defilement -mx-4 flex snap-x snap-mandatory scroll-px-4 gap-2.5 overflow-x-auto px-4 lg:hidden" aria-label="Images de l'actualité">
+      <ul class="masquer-defilement -mx-4 flex snap-x snap-mandatory scroll-px-4 gap-2.5 overflow-x-auto px-4 lg:hidden" data-bande-auto aria-label="Images de l'actualité">
         <?php foreach ($images as $k => $img): ?>
         <li class="w-[82%] shrink-0 snap-start">
           <button type="button" class="block aspect-[4/3] w-full overflow-hidden rounded-2xl bg-vert" data-ouvrir-photo="<?= $k ?>" aria-label="Agrandir la photo <?= $k + 1 ?>">

@@ -320,19 +320,17 @@
     var points = bloc.querySelectorAll("[data-point]");
     if (vues.length < 2) return;
     var i = 0, minuterie = null;
-    var calme = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     function montrer(n) {
       i = (n + vues.length) % vues.length;
       vues.forEach(function (v, k) { v.classList.toggle("actif", k === i); v.setAttribute("aria-hidden", k === i ? "false" : "true"); });
       points.forEach(function (p, k) { p.classList.toggle("actif", k === i); });
     }
-    function lancer() { if (!calme) { arreter(); minuterie = setInterval(function () { montrer(i + 1); }, 5000); } }
+    // Les photos changent d'elles-mêmes toutes les 5 s, comme les autres diaporamas du site
+    function lancer() { arreter(); minuterie = setInterval(function () { montrer(i + 1); }, 5000); }
     function arreter() { if (minuterie) clearInterval(minuterie); minuterie = null; }
     bloc.querySelector("[data-precedent]").addEventListener("click", function () { montrer(i - 1); lancer(); });
     bloc.querySelector("[data-suivant]").addEventListener("click", function () { montrer(i + 1); lancer(); });
     points.forEach(function (p) { p.addEventListener("click", function () { montrer(+p.dataset.point); lancer(); }); });
-    bloc.addEventListener("mouseenter", arreter);
-    bloc.addEventListener("mouseleave", lancer);
     // Glisser du doigt sur téléphone
     var depart = null;
     bloc.addEventListener("touchstart", function (e) { depart = e.touches[0].clientX; }, { passive: true });
@@ -343,6 +341,22 @@
       depart = null;
     });
     lancer();
+  });
+
+  /* Bande de photos du téléphone : elle avance seule toutes les 5 s, et attend un peu quand on la touche */
+  document.querySelectorAll("[data-bande-auto]").forEach(function (bande) {
+    var touche = 0;
+    ["touchstart", "pointerdown", "wheel"].forEach(function (ev) {
+      bande.addEventListener(ev, function () { touche = Date.now(); }, { passive: true });
+    });
+    setInterval(function () {
+      if (document.hidden || !bande.offsetParent || Date.now() - touche < 8000) return;
+      var premier = bande.firstElementChild;
+      if (!premier) return;
+      var pas = premier.getBoundingClientRect().width + parseFloat(getComputedStyle(bande).columnGap || 0);
+      var fin = bande.scrollLeft + bande.clientWidth >= bande.scrollWidth - 4;
+      bande.scrollTo({ left: fin ? 0 : bande.scrollLeft + pas, behavior: "smooth" });
+    }, 5000);
   });
 
   /* Photothèque : une photo s'ouvre en grand, on passe à la suivante avec les flèches ou le clavier. */

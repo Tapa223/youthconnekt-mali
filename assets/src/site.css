@@ -37,6 +37,8 @@
 }
 
 @layer base {
+  /* Cadrage des photos : quand une photo est rognée en hauteur, on garde le haut (les visages), pas les pieds */
+  img.object-cover { object-position: 50% 22%; }
   html {
     scroll-behavior: smooth;
     -webkit-tap-highlight-color: transparent;
@@ -405,8 +407,12 @@ header.site-entete { view-transition-name: entete; }
 .aide[data-ouvert] .aide-invite { display: none; }
 
 /* Bandeau des pages de détail : flou sur le côté du titre seulement, la photo reste nette à droite */
+.banniere-photo { mask-image: linear-gradient(90deg, transparent, #000 30%); }
+@media (max-width: 639px) { .banniere-photo { mask-image: none; } }
 .banniere-flou { mask-image: linear-gradient(90deg, #000 30%, transparent 62%); }
-@media (max-width: 639px) { .banniere-flou { mask-image: linear-gradient(90deg, #000 35%, transparent 75%); } }
+@media (max-width: 639px) { .banniere-photo { mask-image: linear-gradient(90deg, transparent, #000 30%); }
+@media (max-width: 639px) { .banniere-photo { mask-image: none; } }
+.banniere-flou { mask-image: linear-gradient(90deg, #000 35%, transparent 75%); } }
 
 /* Premier écran : le titre et le texte changent avec la photo */
 .diapo-texte { opacity: 0; transform: translateY(8px); transition: opacity .7s ease, transform .7s ease; }

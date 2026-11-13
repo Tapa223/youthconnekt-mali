@@ -26,7 +26,7 @@ $retour_auth = $_SESSION['retour_auth'] ?? url('/');
   <?php /* Téléphone : une barre fine, flèche de retour à gauche et logo, puis directement le formulaire */ ?>
   <header class="relative isolate flex h-[60px] items-center justify-between overflow-hidden bg-vert px-4 lg:hidden">
     <?php partiel('partials/reseau_deco', ['opacite' => 'opacity-50']) ?>
-    <a href="<?= e($retour_auth) ?>" data-retour class="relative grid size-9 place-items-center rounded-full bg-white text-vert transition-colors hover:bg-orange hover:text-white" aria-label="Retour au site">
+    <a href="<?= e($retour_auth) ?>" class="relative grid size-9 place-items-center rounded-full bg-white text-vert transition-colors hover:bg-orange hover:text-white" aria-label="Retour au site">
       <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
     </a>
     <a href="<?= url('/') ?>" class="relative inline-flex rounded-lg bg-white px-2 py-1" aria-label="YouthConnekt Mali, accueil"><?php partiel('partials/logo', ['classes' => 'h-8 w-auto']) ?></a>
@@ -58,7 +58,7 @@ $retour_auth = $_SESSION['retour_auth'] ?? url('/');
 
   <main id="contenu" class="relative flex justify-center px-5 pt-4 pb-6 sm:px-8 sm:pt-8 lg:items-center lg:py-16">
     <?php /* Ordinateur : retour discret dans le coin, il ne pousse pas le formulaire vers le bas */ ?>
-    <a href="<?= e($retour_auth) ?>" data-retour class="absolute top-6 left-8 hidden min-h-10 items-center gap-1.5 rounded-full px-3 text-sm font-bold text-vert transition-colors hover:bg-vert-clair hover:text-orange lg:inline-flex">
+    <a href="<?= e($retour_auth) ?>" class="absolute top-6 left-8 hidden min-h-10 items-center gap-1.5 rounded-full px-3 text-sm font-bold text-vert transition-colors hover:bg-vert-clair hover:text-orange lg:inline-flex">
       <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Retour au site
     </a>
     <div class="anim-entree w-full <?= e($largeur ?? 'max-w-md') ?>">
