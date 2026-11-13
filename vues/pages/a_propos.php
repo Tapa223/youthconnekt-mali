@@ -264,15 +264,7 @@
     <div class="rounded-3xl border-t-4 border-orange bg-gris p-5 sm:p-7">
       <h3 class="text-lg font-bold text-vert sm:text-xl">Le Forum YouthConnekt Sahel</h3>
       <p class="mt-1 text-sm sm:text-[15px]">La plateforme des jeunes du Sahel pour la paix et la prospérité.</p>
-      <ol class="mt-5 space-y-4 border-l-2 border-ligne pl-5">
-        <?php foreach ([['2021', 'Dakar', "Première édition, « Youth Rebranding the Sahel ». Le Mali y a activement pris part."], ['2025', "N'Djamena", 'Le Mali a activement pris part à cette édition.'], ['2026', 'Niamey', 'Édition du mois d\'août.']] as [$annee, $ville, $texte]): ?>
-        <li class="relative">
-          <span class="absolute top-1.5 -left-[27px] size-3 rounded-full bg-orange ring-4 ring-gris" aria-hidden="true"></span>
-          <p class="font-bold text-vert"><?= e($ville) ?> <span class="font-normal text-texte">· <?= e($annee) ?></span></p>
-          <p class="mt-0.5 text-sm leading-relaxed"><?= e($texte) ?></p>
-        </li>
-        <?php endforeach ?>
-      </ol>
+      <p class="mt-4 text-sm leading-relaxed sm:text-[15px]">Organisé à tour de rôle dans un pays du Sahel, le Forum réunit les jeunes, les gouvernements et les partenaires autour de l'emploi, de l'innovation, de la paix et de l'engagement citoyen. YouthConnekt Mali y représente la jeunesse malienne.</p>
     </div>
   </div>
 </section>
