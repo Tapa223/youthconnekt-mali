@@ -59,19 +59,19 @@ $navigation = [
 
 <div id="menu-mobile" class="fixed inset-0 z-50 hidden xl:hidden" role="dialog" aria-modal="true" aria-label="Menu" data-menu-mobile>
   <div class="absolute inset-0 bg-encre/35 backdrop-blur-[3px]" data-fermer-menu></div>
-  <div class="absolute inset-y-0 right-0 flex w-[84%] max-w-sm flex-col bg-white shadow-2xl">
-    <div class="flex h-16 items-center justify-between border-b border-ligne px-4">
-      <?php partiel('partials/logo', ['classes' => 'h-10 w-auto']) ?>
-      <button type="button" class="-mr-2 grid size-12 place-items-center rounded-lg text-vert hover:bg-vert-clair" data-fermer-menu>
+  <div class="absolute inset-y-0 right-0 flex w-[70%] max-w-[17.5rem] flex-col bg-white shadow-2xl">
+    <div class="flex h-14 items-center justify-between border-b border-ligne px-3">
+      <?php partiel('partials/logo', ['classes' => 'h-8 w-auto']) ?>
+      <button type="button" class="-mr-1 grid size-10 place-items-center rounded-lg text-vert hover:bg-vert-clair" data-fermer-menu>
         <span class="sr-only">Fermer le menu</span>
-        <svg class="size-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
     </div>
-    <nav class="flex-1 overflow-y-auto px-4 py-4" aria-label="Menu principal">
-      <ul class="space-y-1">
+    <nav class="flex-1 overflow-y-auto px-2.5 py-3" aria-label="Menu principal">
+      <ul class="space-y-0.5">
         <?php foreach ($navigation as [$lien, $libelle, $prefixe]): $actif = $section === $prefixe; ?>
         <li>
-          <a href="<?= url($lien) ?>" class="flex min-h-12 items-center justify-between rounded-xl px-4 text-lg font-medium <?= $actif ? 'bg-vert-clair text-vert' : 'text-encre hover:bg-gris' ?>" <?= $actif ? 'aria-current="page"' : '' ?>>
+          <a href="<?= url($lien) ?>" class="flex min-h-11 items-center justify-between rounded-lg px-3 text-[15px] font-medium <?= $actif ? 'bg-vert-clair text-vert' : 'text-encre hover:bg-gris' ?>" <?= $actif ? 'aria-current="page"' : '' ?>>
             <?= e($libelle) ?>
             <?php if ($actif): ?><span class="size-2 rounded-full bg-orange" aria-hidden="true"></span><?php endif ?>
           </a>
@@ -79,13 +79,13 @@ $navigation = [
         <?php endforeach ?>
       </ul>
     </nav>
-    <div class="space-y-3 border-t border-ligne p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+    <div class="space-y-2 border-t border-ligne p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
       <?php if ($u): ?>
         <a href="<?= url(est_membre($u) ? '/compte/mon-espace' : '/gestion') ?>" class="btn btn-vert w-full"><?= $pastille('size-7') ?> <?= est_membre($u) ? 'Mon espace' : 'Administration' ?><?php if ($nb_notifs_entete): ?> <span class="rounded-full bg-orange px-2 text-xs leading-5"><?= $nb_notifs_entete ?></span><?php endif ?></a>
         <form method="post" action="<?= url('/compte/deconnexion') ?>" data-confirmer="Êtes-vous sûr de vouloir vous déconnecter ?" data-confirmer-oui="Se déconnecter"><?= csrf() ?><button type="submit" class="btn btn-contour w-full">Se déconnecter</button></form>
       <?php else: ?>
-        <a href="<?= url('/compte/inscription') ?>" class="btn btn-vert w-full">Rejoindre le chapitre</a>
-        <a href="<?= url('/compte/connexion') ?>" class="btn btn-contour w-full">Se connecter</a>
+        <a href="<?= url('/compte/inscription') ?>" class="btn btn-vert min-h-10 w-full text-sm">Rejoindre le chapitre</a>
+        <a href="<?= url('/compte/connexion') ?>" class="btn btn-contour min-h-10 w-full text-sm">Se connecter</a>
       <?php endif ?>
     </div>
   </div>

@@ -44,7 +44,7 @@ foreach (range(0, 11) as $k) {
 <?php /* 1. Premier écran */ ?>
 <section class="relative isolate overflow-hidden bg-vert text-white lg:h-[calc(100svh-4rem)] lg:max-h-[940px] lg:min-h-[620px]" aria-labelledby="titre-accueil" data-premier-ecran>
   <div class="absolute inset-0 -z-10" data-diapo="accueil" aria-hidden="true">
-    <?php foreach ($photos_accueil as $k => $src): ?><img data-diapo-image src="<?= e($src) ?>" alt="" class="absolute inset-0 h-full w-full object-cover max-lg:object-contain max-lg:object-top"<?= $k ? ' loading="lazy"' : '' ?>><?php endforeach ?>
+    <?php foreach ($photos_accueil as $k => $src): ?><img data-diapo-image src="<?= e($src) ?>" alt="" class="absolute inset-0 h-full w-full object-cover"<?= $k ? ' loading="lazy"' : '' ?>><?php endforeach ?>
   </div>
   <div class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(3_94_77/.55)_0%,rgb(3_94_77/.45)_40%,rgb(3_94_77/.8)_70%,rgb(3_94_77/.92)_100%)] lg:bg-[linear-gradient(180deg,rgb(3_94_77/.75)_0%,rgb(3_94_77/.45)_28%,rgb(3_94_77/.25)_60%,rgb(3_94_77/.55)_100%)]" aria-hidden="true"></div>
 
@@ -100,7 +100,7 @@ foreach (range(0, 11) as $k) {
 
     <div class="anim-soleil relative order-1 mt-1 aspect-square w-[70vw] max-w-[300px] sm:w-[62vw] sm:max-w-[360px] lg:hidden">
       <div class="absolute -inset-3 rounded-full border-2 border-dashed border-white/35" aria-hidden="true"></div>
-      <?php /* Téléphone : grand cercle net ; la photo de fond, entière et nette, en haut ; l'anneau porte des points qui tournent lentement, et des bulles photo flottent autour du cercle, comme sur ordinateur */ ?>
+      <?php /* Téléphone : grand cercle net ; la photo de fond nette sur tout le premier écran ; l'anneau porte des points qui tournent lentement, et des bulles photo flottent autour du cercle, comme sur ordinateur */ ?>
       <div class="anim-orbite absolute -inset-3 [animation-duration:45s]" aria-hidden="true">
         <span class="absolute top-[6%] left-[22%] size-3 rounded-full bg-orange"></span>
         <span class="absolute top-[48%] -right-1.5 size-2.5 rounded-full bg-white"></span>
