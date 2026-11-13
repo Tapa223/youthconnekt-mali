@@ -35,7 +35,7 @@ $envoyee = $n['statut'] !== 'brouillon';
       <div class="ycm-ligne-champ">
         <label for="n-message">Message</label>
         <textarea id="n-message" name="message" rows="9" placeholder="Bonjour à toutes et à tous,&#10;&#10;…"<?= $d ?><?= !empty($erreurs['message']) ? ' aria-invalid="true"' : '' ?>><?= e($n['message']) ?></textarea>
-        <small>Une ligne vide sépare deux paragraphes. Commencez une ligne par « ## » pour un intertitre.</small>
+        <small>Écrivez ou collez votre message : chaque retour à la ligne crée un paragraphe. Les lignes qui commencent par un tiret deviennent une liste.</small>
         <?= $err('message') ?>
       </div>
       <div class="ycm-ligne-champ">

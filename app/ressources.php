@@ -82,7 +82,7 @@ function options_axes(): array
     return $o;
 }
 
-const AIDE_MISE_EN_FORME = "Paragraphes séparés par une ligne vide. « ## » au début d'une ligne pour un intertitre, « - » pour une liste, « > » pour une citation (puis « — » et l'auteur à la ligne suivante).";
+const AIDE_MISE_EN_FORME = 'Écrivez ou collez votre texte : chaque retour à la ligne crée un paragraphe. Les lignes qui commencent par un tiret deviennent une liste, une ligne courte sans point final devient un intertitre.';
 
 function ressource(string $slug): ?array
 {
@@ -162,7 +162,7 @@ function ressources(): array
                 ]],
                 ['Contenu', 'champs' => [
                     'resume' => ['type' => 'texte', 'libelle' => 'Résumé', 'max' => 300, 'aide' => 'Une phrase, affichée dans les listes.'],
-                    'description' => ['type' => 'zone', 'libelle' => 'Description complète', 'aide' => 'Paragraphes séparés par une ligne vide.'],
+                    'description' => ['type' => 'zone', 'libelle' => 'Description complète', 'aide' => AIDE_MISE_EN_FORME],
                     'avantages' => ['type' => 'zone', 'libelle' => 'Ce que vous gagnez', 'requis' => false, 'aide' => 'Un élément par ligne.', 'lignes' => 4],
                     'criteres' => ['type' => 'zone', 'libelle' => 'Qui peut postuler', 'requis' => false, 'aide' => 'Un critère par ligne. À remplir uniquement si les critères sont connus.', 'lignes' => 4],
                     'etapes' => ['type' => 'zone', 'libelle' => 'Comment postuler', 'requis' => false, 'aide' => 'Une étape par ligne.', 'lignes' => 4],
@@ -217,8 +217,8 @@ function ressources(): array
                     'lieu' => ['type' => 'texte', 'libelle' => "Lieu de l'événement", 'requis' => false, 'max' => 120, 'largeur' => 'demi'],
                     'chapeau' => ['type' => 'zone', 'libelle' => 'Chapeau (introduction)', 'max' => 400, 'lignes' => 3],
                 ]],
-                ['Article', 'description' => AIDE_MISE_EN_FORME, 'champs' => [
-                    'contenu' => ['type' => 'zone', 'libelle' => "Corps de l'article", 'barre' => 'texte', 'lignes' => 14],
+                ['Article', 'champs' => [
+                    'contenu' => ['type' => 'zone', 'libelle' => "Corps de l'article", 'aide' => AIDE_MISE_EN_FORME, 'lignes' => 14],
                 ]],
                 ['Image', 'champs' => ['image' => ['type' => 'image', 'libelle' => 'Image principale', 'requis' => false, 'dossier' => 'actualites']]],
                 ['Ciblage', 'description' => 'Les activités liées à une communauté apparaissent sur sa page.', 'champs' => [
@@ -273,7 +273,7 @@ function ressources(): array
                     'participations_lien' => ['type' => 'lecture', 'libelle' => 'Formulaire et candidatures', 'html' => fn ($l) => empty($l['id']) ? "Enregistrez d'abord l'initiative." : ($l['participations_ouvertes'] ? badge('Ouvertes', 'vert') : badge('Fermées', 'gris')) . ' ' . (int) ($l['nb_participations'] ?? 0) . ' reçue' . pluriel((int) ($l['nb_participations'] ?? 0)) . '<br><a class="ycm-bouton-contour ycm-petit" style="margin-top:8px" href="' . url('/gestion/initiatives/' . $l['id'] . '/participations') . '">Gérer les participations</a>'],
                 ]],
                 ['Contenu', 'champs' => [
-                    'contenu' => ['type' => 'zone', 'libelle' => 'Présentation détaillée', 'aide' => 'Paragraphes séparés par une ligne vide.', 'lignes' => 8],
+                    'contenu' => ['type' => 'zone', 'libelle' => 'Présentation détaillée', 'aide' => AIDE_MISE_EN_FORME, 'lignes' => 8],
                     'objectifs' => ['type' => 'zone', 'libelle' => 'Objectifs', 'requis' => false, 'aide' => 'Un objectif par ligne.', 'lignes' => 4],
                     'programme' => ['type' => 'zone', 'libelle' => 'Programme', 'requis' => false, 'aide' => 'Une étape par ligne, sous la forme : Jour 1 | Titre | Description', 'lignes' => 4],
                     'chiffres' => ['type' => 'zone', 'libelle' => 'En chiffres', 'requis' => false, 'aide' => 'Un chiffre vérifié par ligne, sous la forme : 60 | jeunes accompagnés', 'lignes' => 3],
@@ -607,7 +607,7 @@ function ressources(): array
                 [null, 'description' => "Tant que « Publié » n'est pas coché, l'accueil montre le texte proposé par la maquette, avec la mention « Proposition de texte, à valider par le cabinet du ministre ».", 'champs' => [
                     'nom' => ['type' => 'texte', 'libelle' => 'Nom du ministre', 'requis' => false, 'max' => 150],
                     'titre_officiel' => ['type' => 'texte', 'libelle' => 'Titre officiel', 'requis' => false, 'max' => 255],
-                    'message' => ['type' => 'zone', 'libelle' => 'Message complet', 'requis' => false, 'aide' => "Affiché en entier sur l'accueil. Paragraphes séparés par une ligne vide.", 'lignes' => 10],
+                    'message' => ['type' => 'zone', 'libelle' => 'Message complet', 'requis' => false, 'aide' => "Affiché en entier sur l'accueil. " . AIDE_MISE_EN_FORME, 'lignes' => 10],
                     'extrait' => ['type' => 'zone', 'libelle' => 'Extrait', 'requis' => false, 'max' => 600, 'aide' => 'Utilisé seulement si le message complet est vide.', 'lignes' => 3],
                 ]],
                 ['Photo officielle', 'cote' => true, 'champs' => [

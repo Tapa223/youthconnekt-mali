@@ -126,6 +126,7 @@
   .prose-ycm ul { @apply space-y-2 pl-1; }
   .prose-ycm ul li { @apply relative pl-5; }
   .prose-ycm ul li::before { content: ""; @apply absolute top-[0.6em] left-0 size-2 rounded-full bg-orange; }
+  .prose-ycm ol { @apply list-decimal space-y-2 pl-6 marker:font-bold marker:text-orange; }
   .prose-ycm blockquote { @apply my-7 rounded-2xl border-l-4 border-orange bg-gris px-6 py-5; }
   .prose-ycm blockquote p { @apply text-lg leading-snug font-medium text-vert sm:text-xl; }
   .prose-ycm blockquote footer { @apply mt-2 text-sm text-texte; }

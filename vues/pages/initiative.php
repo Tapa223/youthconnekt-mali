@@ -95,7 +95,7 @@ $chiffres_i = lignes_colonnes($i['chiffres'], 2);
   <div class="conteneur grid gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-14">
     <div class="order-2 lg:order-1">
       <h2 class="text-2xl font-bold sm:text-3xl">L'initiative</h2>
-      <div class="mt-4 space-y-4 text-base leading-relaxed text-encre"><?= paragraphes($i['contenu']) ?></div>
+      <div class="prose-ycm mt-4"><?= paragraphes($i['contenu']) ?></div>
       <?php if ($objectifs): ?>
       <h3 class="mt-9 text-xl font-bold">Objectifs</h3>
       <ul class="mt-4 grid grid-cols-2 gap-2.5 sm:gap-3">

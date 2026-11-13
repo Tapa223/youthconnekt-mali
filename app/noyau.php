@@ -604,96 +604,108 @@ function lignes_colonnes(?string $texte, int $n): array
     return $resultat;
 }
 
-/** Paragraphes séparés par une ligne vide, sans HTML autorisé. */
-function paragraphes(?string $texte): string
+/**
+ * Texte saisi dans l'administration, découpé en blocs sans qu'on ait à taper de code :
+ *  - chaque retour à la ligne commence un nouveau paragraphe (un texte collé depuis Word ou WhatsApp garde les siens) ;
+ *  - les lignes qui commencent par un tiret, une puce ou un numéro (1. 2) …) forment une liste ;
+ *  - une ligne courte, sans point final, suivie d'un paragraphe, devient un intertitre ;
+ *  - une ligne entre guillemets « … » devient une citation, et « — Nom » sur la ligne suivante son auteur.
+ * Les anciennes marques (« ## », « > », « [photos] ») restent comprises pour les textes déjà saisis.
+ * Retourne une liste de blocs : ['p', texte] | ['h2', texte] | ['ul'|'ol', [éléments]] | ['citation', texte, auteur] | ['photos'].
+ */
+function blocs_texte(?string $texte): array
 {
-    $texte = str_replace("\r\n", "\n", (string) $texte);
-    $html = '';
-    foreach (preg_split("/\n\s*\n/", $texte) as $bloc) {
-        $bloc = trim($bloc);
-        if ($bloc !== '') {
-            $html .= '<p>' . e(str_replace("\n", ' ', $bloc)) . '</p>';
+    $lignes = array_map('trim', explode("\n", str_replace(["\r\n", "\r"], "\n", (string) $texte)));
+    $n = count($lignes);
+    $suivante = function (int $i) use ($lignes, $n): string {
+        for ($j = $i + 1; $j < $n; $j++) {
+            if ($lignes[$j] !== '') {
+                return $lignes[$j];
+            }
         }
+        return '';
+    };
+    $puce = '/^(?:[-•*–·▪●]\s+|(\d{1,2})[.)]\s+)/u';
+    $blocs = [];
+    for ($i = 0; $i < $n; $i++) {
+        $l = $lignes[$i];
+        if ($l === '') {
+            continue;
+        }
+        if (mb_strtolower($l) === '[photos]') {
+            $blocs[] = ['photos'];
+            continue;
+        }
+        if (str_starts_with($l, '## ')) {
+            $blocs[] = ['h2', trim(substr($l, 3))];
+            continue;
+        }
+        if (preg_match($puce, $l, $m)) {
+            $type = isset($m[1]) && $m[1] !== '' ? 'ol' : 'ul';
+            $element = trim(preg_replace($puce, '', $l));
+            $dernier = count($blocs) - 1;
+            if ($dernier >= 0 && $blocs[$dernier][0] === $type) {
+                $blocs[$dernier][1][] = $element;
+            } else {
+                $blocs[] = [$type, [$element]];
+            }
+            continue;
+        }
+        // Auteur d'une citation : « — Nom » juste après
+        if (preg_match('/^[—―]\s*(.+)$/u', $l, $m) && $blocs && end($blocs)[0] === 'citation' && end($blocs)[2] === '') {
+            $blocs[count($blocs) - 1][2] = trim($m[1]);
+            continue;
+        }
+        if (str_starts_with($l, '>')) {
+            $blocs[] = ['citation', trim(ltrim($l, '> ')), ''];
+            continue;
+        }
+        if (mb_strlen($l) > 30 && preg_match('/^[«"“].+[»"”]$/su', $l)) {
+            $blocs[] = ['citation', trim(preg_replace('/^[«"“]\s*|\s*[»"”]$/u', '', $l)), ''];
+            continue;
+        }
+        // Intertitre : ligne courte, sans ponctuation finale, suivie d'un vrai paragraphe
+        $apres = $suivante($i);
+        if (mb_strlen($l) <= 70 && count(preg_split('/\s+/u', $l)) <= 10 && !preg_match('/[.!?;:,…»"”)\]]$/u', $l)
+            && $apres !== '' && mb_strlen($apres) > 70 && !preg_match($puce, $apres) && preg_match('/^\p{Lu}|^\d/u', $l)) {
+            $blocs[] = ['h2', $l];
+            continue;
+        }
+        $blocs[] = ['p', $l];
+    }
+    return $blocs;
+}
+
+/** Mise en page sûre d'un texte de l'administration (voir blocs_texte). $galerie : HTML placé à « [photos] » ou à la fin. */
+function corps_article(?string $texte, string $galerie = ''): string
+{
+    $html = '';
+    $galerie_placee = false;
+    foreach (blocs_texte($texte) as $b) {
+        switch ($b[0]) {
+            case 'p': $html .= '<p>' . e($b[1]) . '</p>'; break;
+            case 'h2': $html .= '<h2>' . e($b[1]) . '</h2>'; break;
+            case 'ul':
+            case 'ol': $html .= '<' . $b[0] . '>' . implode('', array_map(fn ($x) => '<li>' . e($x) . '</li>', $b[1])) . '</' . $b[0] . '>'; break;
+            case 'citation': $html .= '<blockquote><p>' . e($b[1]) . '</p>' . ($b[2] !== '' ? '<footer>' . e($b[2]) . '</footer>' : '') . '</blockquote>'; break;
+            case 'photos':
+                if ($galerie !== '' && !$galerie_placee) {
+                    $html .= $galerie;
+                    $galerie_placee = true;
+                }
+                break;
+        }
+    }
+    if ($galerie !== '' && !$galerie_placee) {
+        $html .= $galerie;
     }
     return $html;
 }
 
-/**
- * Mise en forme simple et sûre d'un article :
- * « ## » intertitre, « - » liste, « > » citation suivie de « — auteur »,
- * « [photos] » emplacement de la galerie. Tout le reste est échappé.
- */
-function corps_article(?string $texte, string $galerie = ''): string
+/** Texte de l'administration mis en paragraphes, listes, intertitres (même règles que les articles). */
+function paragraphes(?string $texte): string
 {
-    $lignes = explode("\n", str_replace("\r\n", "\n", (string) $texte));
-    $html = [];
-    $paragraphe = [];
-    $liste = [];
-    $citation = null;
-    $galerie_placee = false;
-
-    $vider_paragraphe = function () use (&$paragraphe, &$html) {
-        if ($paragraphe) {
-            $html[] = '<p>' . e(implode(' ', $paragraphe)) . '</p>';
-            $paragraphe = [];
-        }
-    };
-    $vider_liste = function () use (&$liste, &$html) {
-        if ($liste) {
-            $html[] = '<ul>' . implode('', array_map(fn ($x) => '<li>' . e($x) . '</li>', $liste)) . '</ul>';
-            $liste = [];
-        }
-    };
-    $vider_citation = function (string $auteur = '') use (&$citation, &$html) {
-        if ($citation !== null) {
-            $pied = $auteur !== '' ? '<footer>' . e($auteur) . '</footer>' : '';
-            $html[] = '<blockquote><p>' . e(implode(' ', $citation)) . '</p>' . $pied . '</blockquote>';
-            $citation = null;
-        }
-    };
-
-    foreach ($lignes as $brute) {
-        $ligne = trim($brute);
-        if ($citation !== null && strpos($ligne, '>') !== 0) {
-            if (strpos($ligne, '—') === 0 || strpos($ligne, '--') === 0) {
-                $vider_citation(trim(ltrim($ligne, "—-")));
-                continue;
-            }
-            $vider_citation();
-        }
-        if ($ligne === '') {
-            $vider_paragraphe();
-            $vider_liste();
-        } elseif (strpos($ligne, '## ') === 0) {
-            $vider_paragraphe();
-            $vider_liste();
-            $html[] = '<h2>' . e(trim(substr($ligne, 3))) . '</h2>';
-        } elseif (strpos($ligne, '- ') === 0 || strpos($ligne, '• ') === 0) {
-            $vider_paragraphe();
-            $liste[] = trim(preg_replace('/^(- |• )/u', '', $ligne));
-        } elseif (strpos($ligne, '>') === 0) {
-            $vider_paragraphe();
-            $vider_liste();
-            $citation = array_merge($citation ?? [], [trim(ltrim($ligne, '>'))]);
-        } elseif (mb_strtolower($ligne) === '[photos]') {
-            $vider_paragraphe();
-            $vider_liste();
-            if ($galerie !== '') {
-                $html[] = $galerie;
-                $galerie_placee = true;
-            }
-        } else {
-            $vider_liste();
-            $paragraphe[] = $ligne;
-        }
-    }
-    $vider_citation();
-    $vider_paragraphe();
-    $vider_liste();
-    if ($galerie !== '' && !$galerie_placee) {
-        $html[] = $galerie;
-    }
-    return implode('', $html);
+    return corps_article($texte);
 }
 
 function initiales(string $texte): string

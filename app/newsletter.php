@@ -84,11 +84,23 @@ function contenus_newsletter(array $n): array
     return [$opp, $act];
 }
 
-/** Paragraphes du message : lignes vides = nouveau paragraphe, « ## » = intertitre. */
+/**
+ * Blocs du message, avec les mêmes règles que les textes du site (blocs_texte) :
+ * chaque ligne est un paragraphe, « ## titre » un intertitre, une liste garde ses tirets.
+ */
 function paragraphes_newsletter(string $message): array
 {
-    $blocs = preg_split("/\n\s*\n/", str_replace("\r\n", "\n", trim($message))) ?: [];
-    return array_values(array_filter(array_map('trim', $blocs), fn ($b) => $b !== ''));
+    $resultat = [];
+    foreach (blocs_texte($message) as $b) {
+        $resultat[] = match ($b[0]) {
+            'h2' => '## ' . $b[1],
+            'ul', 'ol' => implode("\n", array_map(fn ($x) => '- ' . $x, $b[1])),
+            'citation' => '« ' . $b[1] . ' »' . ($b[2] !== '' ? "\n— " . $b[2] : ''),
+            'p' => $b[1],
+            default => '',
+        };
+    }
+    return array_values(array_filter($resultat, fn ($x) => $x !== ''));
 }
 
 /**
