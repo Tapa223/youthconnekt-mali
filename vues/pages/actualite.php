@@ -3,7 +3,7 @@
  * Détail d'une actualité ou d'un événement :
  *  - à gauche, le titre, le chapeau puis le texte ;
  *  - les images : carrousel à flèches sur ordinateur, bande à glisser sur téléphone ;
- *  - en bas, la photothèque : deux photos et « +N » ; en grand, chaque photo se télécharge et se partage.
+ *  - en bas, la photothèque : texte à gauche, mosaïque à droite (une grande, quatre petites, « +N ») ; en grand, chaque photo se télécharge et se partage.
  */
 $images = [];
 if ($a['image']) {
@@ -82,17 +82,30 @@ $icone_partager = '<svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stro
 
 <?php if (count($images) > 1): ?>
 <section id="phototheque" class="scroll-mt-20 border-t border-ligne py-10 sm:py-14" aria-labelledby="titre-phototheque" data-phototheque>
-  <div class="conteneur">
-    <h2 id="titre-phototheque" class="text-xl font-bold sm:text-2xl">Photothèque <span class="text-base font-normal text-texte">· <?= count($images) ?> photos</span></h2>
-    <?php $visibles = count($images) > 3 ? 2 : count($images); $reste = count($images) - $visibles; ?>
-    <ul class="mt-4 grid max-w-4xl grid-cols-3 gap-2.5 sm:mt-6 sm:gap-4">
-      <?php foreach ($images as $k => $img): ?>
-      <li class="group relative<?= $k >= $visibles + ($reste ? 1 : 0) ? ' hidden' : '' ?>">
-        <button type="button" class="relative block aspect-square w-full overflow-hidden rounded-2xl bg-vert" data-agrandir="<?= $k ?>" aria-label="<?= $reste && $k === $visibles ? 'Voir toute la photothèque, ' . count($images) . ' photos' : 'Agrandir la photo ' . ($k + 1) ?>">
+  <?php
+  // Mosaïque : une grande photo à gauche, jusqu'à 4 petites à droite ; la dernière case porte « +N » s'il en reste
+  $total = count($images);
+  $montrees = $total > 5 ? 5 : $total;
+  $reste = $total - $montrees + ($total > 5 ? 1 : 0);
+  $petites = $montrees - 1;
+  $place = fn (int $k) => $k === 0 ? 'col-span-2 row-span-2'
+      : ($petites === 1 ? 'col-span-2 row-span-2' : ($petites === 2 || ($petites === 3 && $k === 3) ? 'col-span-2' : ''));
+  ?>
+  <div class="conteneur grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,2.1fr)] lg:gap-14">
+    <div>
+      <p class="surtitre"><?= $total ?> photos</p>
+      <h2 id="titre-phototheque" class="mt-1 text-2xl font-bold sm:text-3xl">Photothèque</h2>
+      <p class="mt-3 max-w-sm text-[15px] leading-relaxed sm:text-base">Découvrez en intégralité les moments forts de <?= stripos($a['categorie_libelle'], 'nement') !== false ? 'cet événement' : 'cette actualité' ?> : chaque photo s'ouvre en grand, se télécharge et se partage.</p>
+      <button type="button" class="btn btn-contour mt-5 min-h-11 max-lg:hidden" data-ouvrir-photo="0">Voir toutes les photos</button>
+    </div>
+    <ul class="grid aspect-[2/1] grid-cols-4 grid-rows-2 gap-2 sm:gap-3">
+      <?php foreach ($images as $k => $img): $plus = $reste && $k === $montrees - 1; ?>
+      <li class="group relative min-h-0 <?= $k >= $montrees ? 'hidden' : $place($k) ?>">
+        <button type="button" class="relative block h-full w-full overflow-hidden rounded-xl bg-vert sm:rounded-2xl" data-agrandir="<?= $k ?>" aria-label="<?= $plus ? 'Voir toute la photothèque, ' . $total . ' photos' : 'Agrandir la photo ' . ($k + 1) ?>">
           <img src="<?= e($img['src']) ?>" alt="<?= e($img['legende']) ?>" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
-          <?php if ($reste && $k === $visibles): ?>
+          <?php if ($plus): ?>
           <span class="absolute inset-0 grid place-items-center bg-vert/75 text-white transition-colors group-hover:bg-orange/85" aria-hidden="true">
-            <span class="text-center"><span class="block text-2xl font-bold sm:text-4xl">+<?= $reste ?></span><span class="mt-0.5 block text-xs font-bold sm:text-sm">Tout voir</span></span>
+            <span class="text-center"><span class="block text-xl font-bold sm:text-3xl">+<?= $reste ?></span><span class="mt-0.5 block text-[11px] font-bold sm:text-sm">Voir plus</span></span>
           </span>
           <?php endif ?>
         </button>
