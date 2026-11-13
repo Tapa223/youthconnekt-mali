@@ -59,7 +59,7 @@ $navigation = [
 
 <div id="menu-mobile" class="fixed inset-0 z-50 hidden xl:hidden" role="dialog" aria-modal="true" aria-label="Menu" data-menu-mobile>
   <div class="absolute inset-0 bg-encre/35 backdrop-blur-[3px]" data-fermer-menu></div>
-  <div class="absolute inset-y-0 right-0 flex w-[70%] max-w-[17.5rem] flex-col bg-white shadow-2xl">
+  <div class="absolute top-2 right-2 flex max-h-[calc(100svh-1rem)] w-[70%] max-w-[17.5rem] flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
     <div class="flex h-14 items-center justify-between border-b border-ligne px-3">
       <?php partiel('partials/logo', ['classes' => 'h-8 w-auto']) ?>
       <button type="button" class="-mr-1 grid size-10 place-items-center rounded-lg text-vert hover:bg-vert-clair" data-fermer-menu>
@@ -67,7 +67,7 @@ $navigation = [
         <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
     </div>
-    <nav class="flex-1 overflow-y-auto px-2.5 py-3" aria-label="Menu principal">
+    <nav class="min-h-0 overflow-y-auto px-2.5 py-2.5" aria-label="Menu principal">
       <ul class="space-y-0.5">
         <?php foreach ($navigation as [$lien, $libelle, $prefixe]): $actif = $section === $prefixe; ?>
         <li>
