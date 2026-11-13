@@ -39,7 +39,10 @@ $id_form = 'liste-' . $r['slug'];
           <td class="<?= e($col['classe'] ?? '') ?>" data-label="<?= $i_col ? e($col[0]) : '' ?>"><?php if (!empty($col['lien'])): ?><a href="<?= e($url_modifier) ?>" class="ycm-lien-ligne"><?= ($col[1])($l) ?></a><?php else: ?><?= ($col[1])($l) ?><?php endif ?></td>
           <?php endforeach ?>
           <?php if (empty($r['pas_de_lien_modifier'])): ?>
-          <td class="ycm-droite ycm-td-actions"><?= liens_ligne(array_filter(['Voir' => $voir, 'Modifier' => $url_modifier])) ?></td>
+          <?php // Libellé du lien selon la rubrique : « Traiter » une candidature, « Lire » un message… (Modifier par défaut)
+              $ouvrir = $r['libelle_ouvrir'] ?? 'Modifier';
+              $ouvrir = $ouvrir instanceof Closure ? $ouvrir($l) : $ouvrir; ?>
+          <td class="ycm-droite ycm-td-actions"><?= liens_ligne(array_filter(['Voir sur le site' => $voir, $ouvrir => $url_modifier])) ?></td>
           <?php endif ?>
         </tr>
         <?php endforeach ?>

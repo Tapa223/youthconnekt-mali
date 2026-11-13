@@ -80,25 +80,25 @@ foreach (range(0, 11) as $k) {
     </div>
   </div>
 
-  <div class="conteneur relative z-[2] flex flex-col items-center pt-7 pb-9 text-center sm:pt-10 lg:h-full lg:pt-[5vh] lg:pb-0">
+  <div class="conteneur relative z-[2] flex flex-col items-center pt-5 pb-6 text-center sm:pt-10 sm:pb-9 lg:h-full lg:pt-[5vh] lg:pb-0">
     <div class="anim-entree order-2 flex flex-col items-center lg:order-1">
       <?php /* Le titre et le texte changent avec la photo : « se connecte », « se forme », « s'engage » */ ?>
-      <h1 id="titre-accueil" class="mt-7 grid max-w-4xl text-[2.1rem] leading-[1.05] font-bold text-white [text-shadow:0_4px_28px_rgb(0_0_0/.45)] sm:text-5xl lg:mt-0 lg:text-[clamp(2.75rem,8vh,4.75rem)]" data-diapo="accueil">
+      <h1 id="titre-accueil" class="mt-4 grid max-w-4xl text-[1.75rem] leading-[1.08] font-bold text-white [text-shadow:0_4px_28px_rgb(0_0_0/.45)] sm:text-5xl lg:mt-0 lg:text-[clamp(2.75rem,8vh,4.75rem)]" data-diapo="accueil">
         <?php foreach ($diapos as $k => $d): ?><span data-diapo-image class="diapo-texte col-start-1 row-start-1 self-end"<?= $k ? ' aria-hidden="true"' : '' ?>><?= e($d['titre']) ?></span><?php endforeach ?>
       </h1>
-      <div class="mt-3 grid w-full max-w-2xl sm:mt-5 lg:mt-[2.5vh]" data-diapo="accueil">
+      <div class="mt-2 grid w-full max-w-2xl sm:mt-5 lg:mt-[2.5vh]" data-diapo="accueil">
         <?php foreach ($diapos as $k => $d): ?>
-        <p data-diapo-image class="diapo-texte col-start-1 row-start-1 self-start text-[13.5px] leading-snug text-white/95 sm:rounded-2xl sm:border sm:border-white/20 sm:bg-vert/80 sm:px-6 sm:py-3.5 sm:text-base sm:leading-relaxed sm:backdrop-blur-md lg:text-[clamp(0.95rem,2.1vh,1.15rem)]"<?= $k ? ' aria-hidden="true"' : '' ?>><?= e($d['texte']) ?></p>
+        <p data-diapo-image class="diapo-texte col-start-1 row-start-1 self-start text-[13px] leading-snug text-white/95 sm:rounded-2xl sm:border sm:border-white/20 sm:bg-vert/80 sm:px-6 sm:py-3.5 sm:text-base sm:leading-relaxed sm:backdrop-blur-md lg:text-[clamp(0.95rem,2.1vh,1.15rem)]"<?= $k ? ' aria-hidden="true"' : '' ?>><?= e($d['texte']) ?></p>
         <?php endforeach ?>
       </div>
     </div>
 
-    <div class="order-4 mt-6 grid w-full max-w-md grid-cols-2 gap-3 lg:hidden">
-      <a href="#chapitre" class="btn btn-contour-blanc px-2 text-[13px] sm:text-base">Découvrir le chapitre</a>
-      <a href="#rejoindre" class="btn btn-orange px-2 text-[13px] sm:text-base">Let's Connekt</a>
+    <div class="order-4 mt-4 grid w-full max-w-md grid-cols-2 gap-3 sm:mt-6 lg:hidden">
+      <a href="#chapitre" class="btn btn-contour-blanc min-h-11 px-2 text-[13px] sm:min-h-12 sm:text-base">Découvrir le chapitre</a>
+      <a href="#rejoindre" class="btn btn-orange min-h-11 px-2 text-[13px] sm:min-h-12 sm:text-base">Let's Connekt</a>
     </div>
 
-    <div class="anim-soleil relative order-1 mt-2 aspect-square w-[74vw] max-w-[320px] sm:max-w-[400px] lg:hidden">
+    <div class="anim-soleil relative order-1 mt-1 aspect-square w-[54vw] max-w-[230px] sm:w-[60vw] sm:max-w-[360px] lg:hidden">
       <div class="absolute -inset-3 rounded-full border-2 border-dashed border-white/35" aria-hidden="true"></div>
       <?php /* Téléphone : l'anneau porte des points qui tournent lentement, et des bulles photo flottent autour du cercle, comme sur ordinateur */ ?>
       <div class="anim-orbite absolute -inset-3 [animation-duration:45s]" aria-hidden="true">
@@ -119,7 +119,7 @@ foreach (range(0, 11) as $k) {
     <div class="anim-flotte absolute bottom-[17%] left-0 z-10 hidden lg:block xl:-left-10 2xl:-left-24"><a href="#chapitre" class="btn btn-contour-blanc btn-relie btn-relie--droite min-h-13 w-[16rem] px-6 text-[17px]">Découvrir le chapitre</a></div>
     <div class="anim-flotte-2 absolute right-0 bottom-[17%] z-10 hidden lg:block xl:-right-10 2xl:-right-24"><a href="#rejoindre" class="btn btn-orange btn-relie btn-relie--gauche min-h-13 w-[16rem] px-6 text-[17px] shadow-lg shadow-orange/30">Let's Connekt</a></div>
   </div>
-  <?php if (empty($p['image_accueil_1']) && empty($p['image_accueil_2']) && empty($p['image_accueil_3'])) partiel('partials/mention_photo', ['texte' => 'Photos provisoires · Sommet YouthConnekt Africa, hors Mali']) ?>
+  <?php if (empty($p['image_accueil_1']) && empty($p['image_accueil_2']) && empty($p['image_accueil_3'])) partiel('partials/mention_photo', ['texte' => 'Photos provisoires · Sommet YouthConnekt Africa, hors Mali', 'position' => 'right-3 bottom-3 max-lg:top-2 max-lg:bottom-auto']) ?>
 </section>
 
 <?php /* 2. Le chapitre : présentation, chiffres clés, axes */ ?>

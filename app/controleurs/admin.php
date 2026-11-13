@@ -524,6 +524,8 @@ function formulaire(string $slug, ?int $id = null): void
     } elseif (!$r['peut_ajouter'] || !$peut_modifier) {
         page_erreur(403, 'Accès réservé', 'Cette rubrique ne permet pas d\'ajouter un élément.');
     }
+    // Groupes calculés selon la fiche (ex. comptes : champs différents pour un membre ou un administrateur)
+    $r['groupes'] = groupes_de($r, $ligne);
     // Champs en lecture seule selon la fiche (ex. texte d'un témoignage envoyé par un membre)
     foreach ($r['groupes'] as &$g) {
         foreach ($g['champs'] as &$def) {

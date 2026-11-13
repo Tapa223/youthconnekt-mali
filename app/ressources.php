@@ -504,6 +504,7 @@ function ressources(): array
             'depuis' => 'FROM demandes_adhesion t JOIN utilisateurs u ON u.id = t.utilisateur_id JOIN communautes c ON c.id = t.communaute_id
                 LEFT JOIN profils_individuels pi ON pi.utilisateur_id = u.id LEFT JOIN profils_organisations po ON po.utilisateur_id = u.id',
             'ordre' => "t.statut = 'en_attente' DESC, t.demandee_le DESC",
+            'libelle_ouvrir' => fn ($l) => ($l['statut'] ?? '') === 'en_attente' ? 'Traiter' : 'Voir',
             'onglets' => [['En attente', "t.statut = 'en_attente'"], ['Acceptées', "t.statut = 'acceptee'"], ['Refusées', "t.statut = 'refusee'"]],
             'filtres' => [['communaute', 'Toutes les communautés', 'options_communautes', 't.communaute_id']],
             'recherche' => ['u.email', 'c.nom', 'pi.nom', 'pi.prenom', 'po.nom_structure'],
@@ -529,6 +530,7 @@ function ressources(): array
             'description' => 'Les messages envoyés depuis le formulaire de contact.',
             'peut_ajouter' => false, 'vue_liste' => 'admin/liste_messages', 'par_page' => 50,
             'ordre' => 't.traite, t.recu_le DESC',
+            'libelle_ouvrir' => fn ($l) => empty($l['traite']) ? 'Lire et traiter' : 'Lire',
             'onglets' => [['Non lus', 't.traite = 0'], ['Traités', 't.traite = 1']],
             'filtres' => [['profil', 'Tous les profils', PROFILS_CONTACT, 't.profil']],
             'recherche' => ['t.nom', 't.email', 't.objet', 't.message'],
@@ -892,6 +894,9 @@ function ressources(): array
         'groupes' => [[null, 'champs' => []]],
     ]);
     $liste['participations']['parent'] = ['Initiatives', url('/gestion/initiatives')];
+    // Une candidature se traite (ou se consulte une fois décidée) : elle ne se « modifie » pas
+    $liste['participations']['libelle_ouvrir'] = fn ($l) => ($l['statut'] ?? '') === 'en_attente' ? 'Voir et traiter' : 'Voir';
+    $liste['propositions']['libelle_ouvrir'] = fn ($l) => ($l['statut'] ?? '') === 'propose' ? 'Relire et valider' : 'Voir';
 
     // Repère pour l'administrateur : ce qui va dans chaque rubrique (affiché en haut de la liste et du formulaire d'ajout)
     $liste['opportunites']['guide'] = [
