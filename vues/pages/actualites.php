@@ -8,10 +8,10 @@ $titre_haut = $une ? 'À la une' : ($categorie_active ? $nom_categorie : 'Toutes
 // Petite ligne colorée « Catégorie · date » (sans catégorie : la date seule)
 $surtitre = fn ($a) => ($a['categorie_libelle'] !== '' ? e($a['categorie_libelle']) . ' · ' : '') . e(date_courte($a['date_affichee']));
 ?>
-<section class="conteneur pt-4 pb-10 sm:pt-7 sm:pb-14 lg:pt-5">
+<section class="conteneur pt-2 pb-10 sm:pt-6 sm:pb-14 lg:pt-5">
   <div class="flex items-center justify-between gap-4">
     <h1 class="sr-only">Actualités</h1>
-    <h2 class="text-xl font-bold sm:text-2xl"><?= e($titre_haut) ?></h2>
+    <h2 class="text-lg font-bold sm:text-2xl"><?= e($titre_haut) ?></h2>
     <?php if ($nombres): ?>
     <details class="choix-type relative shrink-0" data-choix-type>
       <summary class="flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-full border-2 px-4 text-sm font-bold transition-colors [&::-webkit-details-marker]:hidden <?= $categorie_active ? 'border-orange bg-orange text-white' : 'border-vert bg-white text-vert hover:bg-vert-clair' ?>">
@@ -34,15 +34,15 @@ $surtitre = fn ($a) => ($a['categorie_libelle'] !== '' ? e($a['categorie_libelle
 
   <?php if ($une): ?>
   <?php /* Téléphone et tablette : les actualités à la une côte à côte, on les fait glisser du doigt */ ?>
-  <ul class="masquer-defilement -mx-4 mt-3 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 sm:mt-5 lg:hidden" aria-label="À la une">
+  <ul class="masquer-defilement -mx-4 mt-2 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 sm:mt-5 lg:hidden" aria-label="À la une">
     <?php foreach ($une as $a): ?>
     <li class="<?= count($une) > 1 ? 'w-[80%] max-w-sm' : 'w-full' ?> shrink-0 snap-start">
-      <a href="<?= e($a['url']) ?>" class="group relative block aspect-[4/3] overflow-hidden rounded-2xl">
+      <a href="<?= e($a['url']) ?>" class="group relative block aspect-[16/10] max-h-[52vw] overflow-hidden rounded-2xl sm:aspect-[4/3] sm:max-h-none">
         <?php partiel('partials/photo', ['image' => $a['image'], 'eager' => true]) ?>
         <span class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent"></span>
         <span class="absolute inset-x-0 bottom-0 p-3.5">
           <span class="etiquette rounded-full bg-orange text-white"><?= $surtitre($a) ?></span>
-          <span class="mt-1.5 line-clamp-3 block text-[17px] leading-tight font-bold text-white"><?= e($a['titre']) ?></span>
+          <span class="mt-1.5 line-clamp-2 block text-[16px] leading-tight font-bold text-white sm:line-clamp-3 sm:text-[17px]"><?= e($a['titre']) ?></span>
         </span>
       </a>
     </li>
@@ -93,8 +93,8 @@ $surtitre = fn ($a) => ($a['categorie_libelle'] !== '' ? e($a['categorie_libelle
   <?php endif ?>
 
   <?php if ($liste): ?>
-  <?php if ($une): ?><h2 class="mt-6 text-xl font-bold sm:mt-10 lg:mt-6 sm:text-2xl">Toutes les actualités</h2><?php endif ?>
-  <ul class="mt-4 grid grid-cols-2 gap-2.5 sm:mt-6 sm:gap-5 lg:mt-4 lg:grid-cols-3" data-liste-continue>
+  <?php if ($une): ?><h2 class="mt-4 text-lg font-bold sm:mt-10 sm:text-2xl lg:mt-6">Toutes les actualités</h2><?php endif ?>
+  <ul class="mt-2.5 grid grid-cols-2 gap-2.5 sm:mt-6 sm:gap-5 lg:mt-4 lg:grid-cols-3" data-liste-continue>
     <?php foreach ($liste as $a): ?><li><?php partiel('cartes/actualite', ['a' => $a, 'mode' => 'liste']) ?></li><?php endforeach ?>
   </ul>
   <?php if ($suivante): /* La suite se charge toute seule en faisant défiler ; le bouton reste en secours */ ?>
