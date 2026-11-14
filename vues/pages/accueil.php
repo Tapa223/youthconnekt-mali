@@ -43,8 +43,9 @@ foreach (range(0, 11) as $k) {
 
 <?php /* 1. Premier écran */ ?>
 <section class="relative isolate overflow-hidden bg-vert text-white lg:h-[calc(100svh-4rem)] lg:max-h-[940px] lg:min-h-[620px]" aria-labelledby="titre-accueil" data-premier-ecran>
-  <div class="absolute inset-0 -z-10" data-diapo="accueil" aria-hidden="true">
-    <?php foreach ($photos_accueil as $k => $src): ?><img data-diapo-image src="<?= e($src) ?>" alt="" class="absolute inset-0 h-full w-full object-cover"<?= $k ? ' loading="lazy"' : '' ?>><?php endforeach ?>
+  <?php /* Photo de fond légèrement adoucie : le cercle, net, reste le point central */ ?>
+  <div class="absolute -inset-4 -z-10" data-diapo="accueil" aria-hidden="true">
+    <?php foreach ($photos_accueil as $k => $src): ?><img data-diapo-image src="<?= e($src) ?>" alt="" class="absolute inset-0 h-full w-full object-cover blur-[2px]"<?= $k ? ' loading="lazy"' : '' ?>><?php endforeach ?>
   </div>
   <div class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(3_94_77/.55)_0%,rgb(3_94_77/.45)_40%,rgb(3_94_77/.8)_70%,rgb(3_94_77/.92)_100%)] lg:bg-[linear-gradient(180deg,rgb(3_94_77/.75)_0%,rgb(3_94_77/.45)_28%,rgb(3_94_77/.25)_60%,rgb(3_94_77/.55)_100%)]" aria-hidden="true"></div>
 
