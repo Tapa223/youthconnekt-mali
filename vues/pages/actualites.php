@@ -1,35 +1,17 @@
 <?php
-/** Actualités : en haut, « À la une » (les actualités cochées dans l'administration, quatre au plus), puis toutes les autres en défilement continu. Un menu « Catégorie » apparaît dès qu'une actualité est rangée dans une catégorie (gérées dans l'administration). */
+/** Actualités : en haut, « À la une » (les actualités cochées dans l'administration, quatre au plus), puis toutes les autres en défilement continu. (le menu « Catégorie » a été retiré ; l'adresse ?categorie= reste comprise) Un menu « Catégorie » apparaissait dès qu'une actualité est rangée dans une catégorie (gérées dans l'administration). */
 $nom_categorie = $categorie_active ? ($categories[$categorie_active]['nom'] ?? '') : '';
 $principale = $une[0] ?? null;
 $a_cote = array_slice($une, 1);
 $titre_haut = $une ? 'À la une' : ($categorie_active ? $nom_categorie : 'Toutes les actualités');
 // $suivante : adresse de la suite de la liste (défilement continu), null s'il n'y a plus rien
 // Petite ligne colorée « Catégorie · date » (sans catégorie : la date seule)
-$surtitre = fn ($a) => ($a['categorie_libelle'] !== '' ? e($a['categorie_libelle']) . ' · ' : '') . e(date_courte($a['date_affichee']));
+$surtitre = fn ($a) => e(implode(' · ', array_filter([$a['categorie_libelle'], date_courte($a['date_affichee'])])));
 ?>
 <section class="conteneur pt-2 pb-10 sm:pt-6 sm:pb-14 lg:pt-5">
   <div class="flex items-center justify-between gap-4">
     <h1 class="sr-only">Actualités</h1>
     <h2 class="text-lg font-bold sm:text-2xl"><?= e($titre_haut) ?></h2>
-    <?php if ($nombres): ?>
-    <details class="choix-type relative shrink-0" data-choix-type>
-      <summary class="flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-full border-2 px-4 text-sm font-bold transition-colors [&::-webkit-details-marker]:hidden <?= $categorie_active ? 'border-orange bg-orange text-white' : 'border-vert bg-white text-vert hover:bg-vert-clair' ?>">
-        <svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
-        <span class="max-w-[9rem] truncate sm:max-w-none"><?= $categorie_active ? e($nom_categorie) : 'Catégorie' ?></span>
-        <svg class="choix-fleche size-4 shrink-0 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-      </summary>
-      <ul class="absolute right-0 z-40 mt-2 max-h-[60vh] w-64 overflow-y-auto rounded-2xl border border-ligne bg-white p-1.5 shadow-2xl shadow-vert/15">
-        <li><a href="<?= url('/actualites') ?>" class="flex min-h-11 items-center justify-between gap-3 rounded-xl px-3 text-[15px] font-bold <?= !$categorie_active ? 'bg-orange text-white' : 'text-encre hover:bg-gris' ?>">Toutes les actualités <span class="text-sm opacity-75"><?= $total ?></span></a></li>
-        <?php foreach ($categories as $slug_cat => $c): if (empty($nombres[$slug_cat])) continue; $actif = $categorie_active === $slug_cat; ?>
-        <li><a href="<?= url('/actualites', ['categorie' => $slug_cat]) ?>" class="flex min-h-11 items-center justify-between gap-3 rounded-xl px-3 text-[15px] font-bold <?= $actif ? 'bg-orange text-white' : 'text-encre hover:bg-gris' ?>">
-          <span class="flex items-center gap-2.5"><span class="size-2.5 shrink-0 rounded-full <?= $actif ? 'bg-white' : fond($c['couleur']) ?>" aria-hidden="true"></span><?= e($c['nom']) ?></span>
-          <span class="text-sm opacity-75"><?= $nombres[$slug_cat] ?></span>
-        </a></li>
-        <?php endforeach ?>
-      </ul>
-    </details>
-    <?php endif ?>
   </div>
 
   <?php if ($une): ?>

@@ -12,7 +12,7 @@ if ($a['image']) {
 foreach ($photos as $photo) {
     $images[] = ['src' => media($photo['image']), 'legende' => (string) $photo['legende']];
 }
-$meta = array_filter([date_longue($a['date_affichee']), $a['lieu']]);
+$meta = array_filter([$a['periode'], $a['lieu']]);
 $icone_telecharger = '<svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>';
 $icone_partager = '<svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/></svg>';
 ?>

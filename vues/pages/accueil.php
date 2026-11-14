@@ -368,10 +368,10 @@ foreach (range(0, 11) as $k) {
           <?php partiel('partials/photo', ['image' => $une['image']]) ?>
         </div>
         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
-        <time datetime="<?= e(date_iso($une['date_affichee'])) ?>" class="absolute top-3 left-3 grid min-w-12 rounded-xl bg-white px-2 py-1.5 sm:top-4 sm:left-4 sm:min-w-14 sm:px-2.5 sm:py-2 text-center leading-none text-vert">
+        <?php if ($une['date_affichee']): ?><time datetime="<?= e(date_iso($une['date_affichee'])) ?>" class="absolute top-3 left-3 grid min-w-12 rounded-xl bg-white px-2 py-1.5 sm:top-4 sm:left-4 sm:min-w-14 sm:px-2.5 sm:py-2 text-center leading-none text-vert">
           <span class="text-xl font-bold sm:text-2xl"><?= e(jour($une['date_affichee'])) ?></span>
           <span class="mt-1 text-[11px] font-bold uppercase"><?= e(mois_pastille($une['date_affichee'])) ?></span>
-        </time>
+        </time><?php endif ?>
         <div class="absolute inset-x-0 bottom-0 p-4 sm:p-7">
           <span class="etiquette bg-orange tracking-wide text-white uppercase">À la une<?= $une['categorie_libelle'] !== '' ? ' · ' . e($une['categorie_libelle']) : '' ?></span>
           <h3 class="mt-2 line-clamp-2 text-lg leading-tight font-bold text-white sm:mt-3 sm:text-3xl"><?= e($une['titre']) ?></h3>
@@ -388,7 +388,7 @@ foreach (range(0, 11) as $k) {
               <?php partiel('partials/photo', ['image' => $actu['image']]) ?>
             </div>
             <div class="min-w-0">
-              <p class="text-[11px] font-bold tracking-[0.12em] text-vert uppercase sm:text-xs"><?= $actu['categorie_libelle'] !== '' ? e($actu['categorie_libelle']) . ' · ' : '' ?><time datetime="<?= e(date_iso($actu['date_affichee'])) ?>"><?= e(date_courte($actu['date_affichee'])) ?></time></p>
+              <p class="text-[11px] font-bold tracking-[0.12em] text-vert uppercase sm:text-xs"><?= e(implode(' · ', array_filter([$actu['categorie_libelle'], date_courte($actu['date_affichee'])]))) ?></p>
               <h3 class="mt-1 line-clamp-2 text-[14px] leading-snug font-bold text-encre group-hover:text-orange sm:text-base"><?= e($actu['titre']) ?></h3>
             </div>
           </a>

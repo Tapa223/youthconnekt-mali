@@ -46,10 +46,10 @@ function resultats_recherche(string $q, int $par_groupe): array
     // Actualités
     [$c, $p] = condition_mots(['titre', 'chapeau', 'contenu', 'lieu'], $q);
     [$o, $po] = pertinence_mots('titre', $q);
-    $liste = actualites_publiees("AND $c ORDER BY $o, publie_le DESC LIMIT $par_groupe", array_merge($p, $po));
+    $liste = actualites_publiees("AND $c ORDER BY $o, COALESCE(date_evenement, DATE(publie_le)) DESC LIMIT $par_groupe", array_merge($p, $po));
     $groupes['actualites'] = ['Actualités et événements', url('/actualites'), array_map(fn ($x) => [
         'titre' => $x['titre'], 'texte' => $x['chapeau'], 'url' => $x['url'], 'image' => $x['image'],
-        'detail' => trim($x['categorie_libelle'] . ' · ' . date_chiffres($x['date_affichee']), ' ·'),
+        'detail' => implode(' · ', array_filter([$x['categorie_libelle'], $x['date_affichee'] ? date_chiffres($x['date_affichee']) : ''])),
     ], $liste)];
     // Communautés
     $liste = array_slice(array_values(array_filter(communautes_actives(), fn ($x) =>

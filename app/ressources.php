@@ -17,7 +17,6 @@ function groupe_publication(bool $propositions = false, ?array $mise_en_avant = 
     }
     return ['Publication', 'cote' => true, 'champs' => [
         'statut' => ['type' => 'select', 'libelle' => 'Statut', 'options' => $statuts, 'defaut' => 'brouillon'],
-        'publie_le' => ['type' => 'datetime', 'libelle' => 'Date de publication', 'requis' => false, 'aide' => 'Une date future programme la publication. Vide : maintenant.', 'defaut' => 'maintenant'],
         'mis_en_avant' => $mise_en_avant ?? ['type' => 'case', 'libelle' => "Mettre en avant sur l'accueil"],
         'slug' => ['type' => 'slug', 'libelle' => 'Adresse (URL)', 'requis' => false, 'max' => 200, 'aide' => 'Laisser vide : elle est créée à partir du titre.'],
     ]];
@@ -54,7 +53,10 @@ function preparer_publiable(string $table, string $champ_titre = 'titre'): calla
         if (!$ancien || $d['slug'] !== $ancien['slug']) {
             $d['slug'] = slug_unique($table, $d['slug'], $ancien['id'] ?? null);
         }
-        if (array_key_exists('publie_le', $d) && !$d['publie_le']) {
+        // Plus de date de publication à saisir : elle est notée toute seule à la mise en ligne
+        if (!$ancien) {
+            $d['publie_le'] = maintenant();
+        } elseif (($d['statut'] ?? '') === 'publie' && ($ancien['statut'] ?? '') !== 'publie') {
             $d['publie_le'] = maintenant();
         }
         $d['modifie_le'] = maintenant();
@@ -191,7 +193,7 @@ function ressources(): array
             'table' => 'actualites', 'titre' => 'Actualités et événements',
             'description' => 'Publiez des actualités et annoncez les événements du chapitre.',
             'libelle_ajout' => 'Publier une actualité', 'libelle_tous' => 'Tout',
-            'ordre' => 't.publie_le DESC',
+            'ordre' => 'COALESCE(t.date_evenement, DATE(t.publie_le)) DESC, t.id DESC',
             'onglets' => [
                 ['À venir', 't.date_evenement >= CURDATE()'],
                 ['Brouillons', "t.statut = 'brouillon'"],
@@ -201,20 +203,21 @@ function ressources(): array
             'colonnes' => [
                 ['Titre', fn ($l) => '<strong>' . e($l['titre']) . '</strong>', 'lien' => true],
                 ['Catégorie', fn ($l) => isset(categories_actualite()[$l['categorie']]) ? badge(categories_actualite()[$l['categorie']]['nom'], categories_actualite()[$l['categorie']]['couleur']) : '—'],
-                ['Date', fn ($l) => e(date_chiffres($l['date_evenement'] ?: $l['publie_le']))],
+                ['Date', fn ($l) => $l['date_evenement'] ? e(date_chiffres($l['date_evenement'])) : '—'],
                 ['Statut', fn ($l) => badge_statut($l, true)],
                 ['À la une', fn ($l) => $l['mis_en_avant'] ? 'Oui' : '—'],
             ],
             'url_voir' => fn ($l) => url('/actualites/' . $l['slug']),
             'actions' => actions_publication('actualites'),
             'export' => ['Titre' => 'titre', 'Catégorie' => fn ($l) => categories_actualite()[$l['categorie']]['nom'] ?? '',
-                'Date' => fn ($l) => date_chiffres($l['date_evenement'] ?: $l['publie_le']), 'Lieu' => 'lieu', 'Statut' => 'statut'],
+                'Premier jour' => fn ($l) => date_chiffres($l['date_evenement']), 'Dernier jour' => fn ($l) => date_chiffres($l['date_fin']), 'Lieu' => 'lieu', 'Statut' => 'statut'],
             'groupes' => [
                 ['Informations principales', 'champs' => [
                     'titre' => ['type' => 'texte', 'libelle' => 'Titre', 'max' => 200],
                     'categorie' => ['type' => 'select', 'libelle' => 'Catégorie', 'requis' => false, 'options' => options_categories_actualite(), 'aide' => 'Facultatif. Les catégories se gèrent dans « Catégories d\'actualités ».'],
-                    'date_evenement' => ['type' => 'date', 'libelle' => "Date de l'événement", 'requis' => false, 'largeur' => 'demi', 'aide' => "Pour un événement : la page l'indique « À venir » jusqu'à cette date."],
-                    'lieu' => ['type' => 'texte', 'libelle' => "Lieu de l'événement", 'requis' => false, 'max' => 120, 'largeur' => 'demi'],
+                    'date_evenement' => ['type' => 'date', 'libelle' => 'Premier jour', 'requis' => false, 'largeur' => 'demi', 'aide' => "Date de l'activité ou de l'événement. La page l'indique « À venir » jusqu'à cette date."],
+                    'date_fin' => ['type' => 'date', 'libelle' => 'Dernier jour', 'requis' => false, 'largeur' => 'demi', 'aide' => 'Laisser vide si elle dure un seul jour.'],
+                    'lieu' => ['type' => 'texte', 'libelle' => 'Lieu', 'requis' => false, 'max' => 120],
                     'chapeau' => ['type' => 'zone', 'libelle' => 'Chapeau (introduction)', 'max' => 400, 'lignes' => 3],
                 ]],
                 ['Article', 'champs' => [
@@ -810,7 +813,6 @@ function ressources(): array
     array_unshift($groupes, ['Membre', 'cote' => true, 'champs' => $opp['groupes'][array_key_last($opp['groupes'])]['champs']]);
     $groupes[] = ['Décision', 'cote' => true, 'description' => "Relisez la proposition, améliorez-la si besoin, puis validez-la ou non avec les boutons ci-dessous.", 'champs' => [
         'etat' => ['type' => 'lecture', 'libelle' => 'État actuel', 'html' => fn ($l) => ['propose' => badge('À valider', 'orange'), 'publie' => badge('Publiée sur le site', 'vert'), 'brouillon' => badge('Non retenue', 'gris')][$l['statut'] ?? 'propose'] ?? ''],
-        'publie_le' => ['type' => 'datetime', 'libelle' => 'Date de publication', 'requis' => false, 'aide' => 'Vide : maintenant.', 'defaut' => 'maintenant'],
         'slug' => ['type' => 'slug', 'libelle' => 'Adresse (URL)', 'requis' => false, 'max' => 200],
     ]];
     $liste['propositions'] = array_merge($opp, [

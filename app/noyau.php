@@ -473,6 +473,25 @@ function jour_mois(?string $date): string
 }
 
 /** 12/11/2026 */
+/** « 25 – 27 novembre 2026 », « 30 novembre – 3 décembre 2021 », ou une seule date ; vide sans date. */
+function periode_dates(?string $debut, ?string $fin): string
+{
+    if (!$debut) {
+        return '';
+    }
+    if (!$fin || $fin <= $debut) {
+        return date_longue($debut);
+    }
+    [$a1, $m1] = [substr($debut, 0, 4), substr($debut, 5, 2)];
+    [$a2, $m2] = [substr($fin, 0, 4), substr($fin, 5, 2)];
+    $longue = date_longue($fin);
+    if ($a1 === $a2 && $m1 === $m2) {
+        return (int) substr($debut, 8, 2) . ' – ' . $longue;
+    }
+    $premier = date_longue($debut);
+    return ($a1 === $a2 ? preg_replace('/\s+\d{4}$/', '', $premier) : $premier) . ' – ' . $longue;
+}
+
 function date_chiffres(?string $date): string
 {
     $t = horodatage($date);

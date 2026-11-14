@@ -290,6 +290,7 @@ CREATE TABLE IF NOT EXISTS actualites (
   contenu MEDIUMTEXT NULL,
   image VARCHAR(255) NOT NULL DEFAULT '',
   date_evenement DATE NULL,
+  date_fin DATE NULL,
   lieu VARCHAR(120) NOT NULL DEFAULT '',
   cree_le DATETIME NOT NULL,
   modifie_le DATETIME NOT NULL,
