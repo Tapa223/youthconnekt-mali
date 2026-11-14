@@ -24,7 +24,7 @@ $icone_partager = '<svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stro
     'retour' => url('/actualites'),
 ]) ?>
 <article class="conteneur pt-5 pb-10 sm:pt-10 sm:pb-14">
-  <div class="grid gap-x-12 gap-y-6 <?= $images ? 'lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]' : 'max-w-3xl' ?>">
+  <div class="grid gap-x-12 gap-y-6 <?= $images ? 'lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]' : 'max-w-3xl' ?>">
     <header class="relative lg:col-start-1">
       <?php if ($a['chapeau']): ?><p class="text-lg leading-relaxed text-encre sm:text-xl"><?= e($a['chapeau']) ?></p><?php endif ?>
       <?php if ($a['est_a_venir']): ?>
@@ -64,9 +64,6 @@ $icone_partager = '<svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stro
           </div>
           <?php endif ?>
         </div>
-        <?php if (count($images) > 1): ?>
-        <a href="#phototheque" class="mt-3 inline-flex items-center gap-2 text-sm font-bold text-vert hover:text-orange">Voir les <?= count($images) ?> photos <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
-        <?php endif ?>
       </div>
     </div>
     <?php endif ?>
