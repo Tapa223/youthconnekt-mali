@@ -752,7 +752,6 @@ function ressources(): array
                 ]],
                 ['Réglages', 'cote' => true, 'champs' => [
                     'acceptation_automatique' => ['type' => 'case', 'libelle' => 'Intégration automatique aux communautés', 'aide' => "Décoché : chaque demande est validée par un administrateur (règle à confirmer par l'équipe)."],
-                    'photos_provisoires' => ['type' => 'case', 'libelle' => 'Afficher « Photo provisoire »', 'aide' => 'À décocher une fois les vraies photos du chapitre en place (dossier assets/img).'],
                 ]],
             ],
         ],
