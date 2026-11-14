@@ -43,11 +43,11 @@ foreach (range(0, 11) as $k) {
 
 <?php /* 1. Premier écran */ ?>
 <section class="relative isolate overflow-hidden bg-vert text-white lg:h-[calc(100svh-4rem)] lg:max-h-[940px] lg:min-h-[620px]" aria-labelledby="titre-accueil" data-premier-ecran>
-  <?php /* Photo de fond légèrement adoucie : le cercle, net, reste le point central */ ?>
+  <?php /* Photo de fond floutée et voile vert un peu plus présent : le cercle, net, reste le point central */ ?>
   <div class="absolute -inset-4 -z-10" data-diapo="accueil" aria-hidden="true">
-    <?php foreach ($photos_accueil as $k => $src): ?><img data-diapo-image src="<?= e($src) ?>" alt="" class="absolute inset-0 h-full w-full object-cover blur-[2px]"<?= $k ? ' loading="lazy"' : '' ?>><?php endforeach ?>
+    <?php foreach ($photos_accueil as $k => $src): ?><img data-diapo-image src="<?= e($src) ?>" alt="" class="absolute inset-0 h-full w-full object-cover blur-[4px]"<?= $k ? ' loading="lazy"' : '' ?>><?php endforeach ?>
   </div>
-  <div class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(3_94_77/.55)_0%,rgb(3_94_77/.45)_40%,rgb(3_94_77/.8)_70%,rgb(3_94_77/.92)_100%)] lg:bg-[linear-gradient(180deg,rgb(3_94_77/.75)_0%,rgb(3_94_77/.45)_28%,rgb(3_94_77/.25)_60%,rgb(3_94_77/.55)_100%)]" aria-hidden="true"></div>
+  <div class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(3_94_77/.55)_0%,rgb(3_94_77/.45)_40%,rgb(3_94_77/.8)_70%,rgb(3_94_77/.92)_100%)] lg:bg-[linear-gradient(180deg,rgb(3_94_77/.82)_0%,rgb(3_94_77/.55)_28%,rgb(3_94_77/.35)_60%,rgb(3_94_77/.6)_100%)]" aria-hidden="true"></div>
 
   <?php /* Cadre de la maquette (1440 × 820) mis à l'échelle de l'écran : anneau, grand cercle et bulles s'y alignent */ ?>
   <div class="pointer-events-none absolute inset-y-0 left-1/2 hidden aspect-[1440/820] -translate-x-1/2 lg:block" aria-hidden="true">
