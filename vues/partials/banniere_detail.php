@@ -18,13 +18,14 @@ $images = array_values(array_unique(array_filter($images ?? [])));
   <?php partiel('partials/reseau_deco', ['opacite' => 'opacity-30']) ?>
 
   <div class="conteneur relative py-6 sm:py-8 lg:flex lg:min-h-[14rem] lg:items-center">
-    <div class="max-w-[38rem] min-w-0">
-      <div class="flex flex-wrap items-center gap-2">
-        <?php if (!empty($retour)) partiel('partials/retour', ['url' => $retour, 'clair' => true, 'bord' => true, 'classes' => 'shrink-0 xl:absolute xl:top-1/2 xl:-left-16 xl:-translate-y-1/2']) ?>
+    <?php /* La flèche de retour à gauche du texte, alignée avec lui (dans la marge sur grand écran) */ ?>
+    <div class="flex max-w-[38rem] min-w-0 items-start gap-3 sm:gap-4 xl:block">
+      <?php if (!empty($retour)) partiel('partials/retour', ['url' => $retour, 'clair' => true, 'bord' => true, 'toujours' => true, 'classes' => 'shrink-0 xl:absolute xl:top-1/2 xl:-left-16 xl:-translate-y-1/2']) ?>
+      <div class="min-w-0">
         <?= $etiquette ?? '' ?>
+        <h1 class="mt-2 line-clamp-3 text-[1.3rem] leading-[1.15] font-bold text-white sm:mt-2.5 sm:text-4xl sm:leading-[1.1] xl:text-[2.75rem]"><?= e($titre) ?></h1>
+        <?php if (!empty($meta)): ?><p class="mt-1.5 text-[13px] text-white/90 sm:mt-2 sm:text-[15px]"><?= e($meta) ?></p><?php endif ?>
       </div>
-      <h1 class="mt-2.5 line-clamp-3 text-[1.6rem] leading-[1.1] font-bold text-white sm:text-4xl xl:text-[2.75rem]"><?= e($titre) ?></h1>
-      <?php if (!empty($meta)): ?><p class="mt-2 text-sm text-white/90 sm:text-[15px]"><?= e($meta) ?></p><?php endif ?>
     </div>
   </div>
 </section>

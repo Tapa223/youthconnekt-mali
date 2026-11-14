@@ -6,11 +6,11 @@
     <?php if ($a['est_a_venir']): ?><span class="etiquette absolute top-2 left-2 rounded-full bg-orange text-white max-sm:px-2 max-sm:py-0.5 max-sm:text-[10px] sm:top-3 sm:left-3">À venir</span><?php endif ?>
   </div>
   <div class="flex flex-1 flex-col p-3 sm:p-5 lg:p-4">
-    <p class="text-[11px] font-bold tracking-[0.08em] uppercase sm:text-xs <?= texte_couleur($a['couleur']) ?>"><?= e($a['categorie_libelle']) ?><?= $a['categorie_libelle'] !== '' && $a['date_affichee'] ? ' · ' : '' ?><span class="text-texte"><?= e(date_courte($a['date_affichee'])) ?></span></p>
-    <h3 class="mt-1 line-clamp-3 text-[14px] leading-tight font-bold text-vert group-hover:text-orange sm:text-lg sm:leading-snug"><?= e($a['titre']) ?></h3>
+    <p class="hidden text-xs font-bold tracking-[0.08em] uppercase sm:block <?= texte_couleur($a['couleur']) ?>"><?= e($a['categorie_libelle']) ?><?= $a['categorie_libelle'] !== '' && $a['date_affichee'] ? ' · ' : '' ?><span class="text-texte"><?= e(date_courte($a['date_affichee'])) ?></span></p>
+    <h3 class="line-clamp-4 text-[13.5px] leading-snug font-bold text-vert group-hover:text-orange sm:mt-1 sm:line-clamp-3 sm:text-lg"><?= e($a['titre']) ?></h3>
     <p class="mt-2 line-clamp-2 hidden text-sm sm:block lg:mt-1.5"><?= e($a['chapeau']) ?></p>
     <?php /* Bouton en bas de carte : toujours à la même hauteur d'une carte à l'autre */ ?>
-    <span class="mt-auto block pt-3 sm:pt-4 lg:pt-3"><?php partiel('partials/bouton_carte') ?></span>
+    <span class="mt-auto block pt-2 sm:pt-4 lg:pt-3"><?php partiel('partials/bouton_carte') ?></span>
   </div>
 </a>
 <?php return; endif ?>
