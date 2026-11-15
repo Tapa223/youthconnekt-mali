@@ -314,7 +314,7 @@
 
       function alleger(fichier) {
         return new Promise(function (ok) {
-          if (!/^image\/(jpeg|png|webp)$/.test(fichier.type) || !window.createImageBitmap) return ok(fichier);
+          if (!/^image\//.test(fichier.type) || fichier.type === "image/gif" || !window.createImageBitmap) return ok(fichier);
           createImageBitmap(fichier).then(function (img) {
             var echelle = Math.min(1, 1600 / Math.max(img.width, img.height));
             if (echelle === 1 && fichier.size < 900 * 1024) return ok(fichier);
@@ -324,7 +324,7 @@
             ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, c.width, c.height);
             ctx.drawImage(img, 0, 0, c.width, c.height);
             c.toBlob(function (blob) {
-              if (!blob || blob.size >= fichier.size) return ok(fichier);
+              if (!blob || (blob.size >= fichier.size && /jpe?g|png|webp/.test(fichier.type))) return ok(fichier);
               ok(new File([blob], fichier.name.replace(/\.[^.]+$/, "") + ".jpg", { type: "image/jpeg" }));
             }, "image/jpeg", 0.85);
           }).catch(function () { ok(fichier); });
@@ -380,6 +380,22 @@
           zone.insertBefore(apercu, zone.firstChild);
         }
         apercu.src = URL.createObjectURL(fichier);
+        // Photo de téléphone trop lourde : allégée dans le navigateur (1 800 px), quel que soit son format d'origine
+        if (typeof DataTransfer === "undefined" || !window.createImageBitmap || fichier.type === "image/gif" || (fichier.size < 1500 * 1024 && /jpe?g|png|webp/.test(fichier.type))) return;
+        createImageBitmap(fichier).then(function (img) {
+          var echelle = Math.min(1, 1800 / Math.max(img.width, img.height));
+          var c = document.createElement("canvas");
+          c.width = Math.round(img.width * echelle); c.height = Math.round(img.height * echelle);
+          var ctx = c.getContext("2d");
+          ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, c.width, c.height);
+          ctx.drawImage(img, 0, 0, c.width, c.height);
+          c.toBlob(function (blob) {
+            if (!blob || champ.files[0] !== fichier) return;
+            var dt = new DataTransfer();
+            dt.items.add(new File([blob], fichier.name.replace(/\.[^.]+$/, "") + ".jpg", { type: "image/jpeg" }));
+            champ.files = dt.files;
+          }, "image/jpeg", 0.88);
+        }).catch(function () {});
       });
     });
   });

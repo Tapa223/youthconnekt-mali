@@ -37,8 +37,8 @@ if ($type === 'cache') return;
       <?php break; case 'image': ?>
         <div class="ycm-zone-image">
           <?php if ($valeur): ?><img src="<?= e(media($valeur)) ?>" alt="" class="ycm-apercu"><?php endif ?>
-          <input type="file" id="<?= $id ?>" name="<?= e($nom) ?>" accept="image/jpeg,image/png,image/webp"<?= $attr ?>>
-          <small>JPG, PNG ou WebP, 3 Mo maximum. Les très grandes images sont réduites automatiquement.</small>
+          <input type="file" id="<?= $id ?>" name="<?= e($nom) ?>" accept="image/*"<?= $attr ?>>
+          <small>Toute photo (JPG, PNG, WebP…). Les grandes photos sont allégées automatiquement.</small>
           <?php if ($valeur && !$desactive): ?><label class="ycm-case-ligne ycm-case-petite"><input type="checkbox" name="supprimer_<?= e($nom) ?>" value="1"> Retirer l'image actuelle</label><?php endif ?>
         </div>
         <?php if (!empty($def['phototheque']) && !$desactive && ($photos_choix = photos_phototheque())): ?>

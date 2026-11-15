@@ -58,10 +58,10 @@ $lignes_liens = $liens ?: [['reseau' => 'linkedin', 'url' => '']];
         <?php else: ?><span class="grid size-16 place-items-center rounded-full bg-orange text-lg font-bold text-white" aria-hidden="true" data-apercu-image><?= e($u['initiales']) ?></span><?php endif ?>
         <div class="text-sm">
           <label class="btn btn-contour min-h-10 cursor-pointer px-4 text-sm">
-            <input type="file" name="<?= e($champ_image) ?>" accept="image/jpeg,image/png,image/webp" class="sr-only" data-choix-fichier>
+            <input type="file" name="<?= e($champ_image) ?>" accept="image/*" class="sr-only" data-choix-fichier>
             <?= $image_actuelle ? ($organisation ? 'Changer le logo' : 'Changer la photo') : ($organisation ? 'Ajouter un logo' : 'Ajouter une photo') ?>
           </label>
-          <p class="aide" data-nom-fichier>JPG, PNG ou WebP, 3 Mo maximum.</p>
+          <p class="aide" data-nom-fichier>Une photo ou un logo (JPG, PNG, WebP…).</p>
           <?php if ($image_actuelle): ?><label class="mt-2 flex items-center gap-2 text-sm"><input type="checkbox" name="supprimer_image" value="1" class="size-4 accent-vert"> Retirer <?= $organisation ? 'le logo' : 'la photo' ?></label><?php endif ?>
         </div>
       </div>

@@ -210,9 +210,20 @@ function url_absolue(string $chemin = '/'): string
 /** Fichier de assets/ avec un numéro de version pour que les navigateurs prennent la dernière. */
 function asset(string $chemin): string
 {
-    $fichier = RACINE . '/assets/' . ltrim($chemin, '/');
+    $chemin = ltrim($chemin, '/');
+    // Images du site : peu importe le format déposé (jpg, jpeg, png, webp, gif, avif, en minuscules ou majuscules).
+    // Si plusieurs fichiers portent le même nom (ex. lets-connekt.jpg et lets-connekt.png), le plus récent l'emporte.
+    if (preg_match('#^img/(.+)\.(jpe?g|png|webp|gif|avif)$#i', $chemin, $m)) {
+        $candidats = glob(RACINE . '/assets/img/' . $m[1] . '.*') ?: [];
+        $candidats = array_filter($candidats, fn ($f) => preg_match('/\.(jpe?g|png|webp|gif|avif)$/i', $f));
+        if ($candidats) {
+            usort($candidats, fn ($x, $y) => filemtime($y) <=> filemtime($x));
+            $chemin = substr($candidats[0], strlen(RACINE . '/assets/'));
+        }
+    }
+    $fichier = RACINE . '/assets/' . $chemin;
     $version = is_file($fichier) ? '?v=' . filemtime($fichier) : '';
-    return base_url() . '/assets/' . ltrim($chemin, '/') . $version;
+    return base_url() . '/assets/' . $chemin . $version;
 }
 
 /** Image envoyée depuis l'administration (dossier uploads/). */
@@ -806,9 +817,13 @@ function televerser_image(?array $fichier, string $dossier, int $largeur_max = 1
         throw new RuntimeException('Image trop lourde : 3 Mo maximum. Compressez-la avant de l\'envoyer.');
     }
     $infos = @getimagesize($fichier['tmp_name']);
-    $types = [IMAGETYPE_JPEG => 'jpg', IMAGETYPE_PNG => 'png', IMAGETYPE_WEBP => 'webp'];
+    // JPG, PNG, WebP gardent leur format ; GIF et BMP sont réenregistrés en PNG ou JPG
+    $types = [IMAGETYPE_JPEG => 'jpg', IMAGETYPE_PNG => 'png', IMAGETYPE_WEBP => 'webp', IMAGETYPE_GIF => 'png', IMAGETYPE_BMP => 'jpg'];
     if (!$infos || !isset($types[$infos[2]])) {
-        throw new RuntimeException('Format non accepté. Utilisez une image JPG, PNG ou WebP.');
+        throw new RuntimeException("Ce format d'image n'est pas lu par le site. Enregistrez-la en JPG ou PNG puis réessayez.");
+    }
+    if (in_array($infos[2], [IMAGETYPE_GIF, IMAGETYPE_BMP], true) && !function_exists('imagecreatefromstring')) {
+        throw new RuntimeException('Utilisez une image JPG, PNG ou WebP.');
     }
     $extension = $types[$infos[2]];
     $dossier = trim(preg_replace('/[^a-z0-9\-\/]/', '', $dossier), '/');
