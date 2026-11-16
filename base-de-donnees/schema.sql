@@ -59,14 +59,19 @@ CREATE TABLE IF NOT EXISTS profils_organisations (
   logo VARCHAR(255) NOT NULL DEFAULT '',
   type_structure VARCHAR(20) NOT NULL,
   secteur VARCHAR(150) NOT NULL DEFAULT '',
+  taille VARCHAR(20) NULL,
   personne_contact VARCHAR(120) NOT NULL DEFAULT '',
   email_contact_public VARCHAR(190) NOT NULL DEFAULT '',
   region VARCHAR(30) NOT NULL DEFAULT 'bamako',
   ville VARCHAR(100) NOT NULL DEFAULT '',
   presentation TEXT NULL,
+  offre_jeunes TEXT NULL,
   site_web VARCHAR(255) NOT NULL DEFAULT '',
   lien_linkedin VARCHAR(255) NOT NULL DEFAULT '',
   visible TINYINT(1) NOT NULL DEFAULT 1,
+  dans_annuaire TINYINT(1) NOT NULL DEFAULT 1,
+  verifiee TINYINT(1) NOT NULL DEFAULT 0,
+  partenaire_chapitre TINYINT(1) NOT NULL DEFAULT 0,
   cree_le DATETIME NOT NULL,
   modifie_le DATETIME NOT NULL,
   PRIMARY KEY (id),
@@ -403,6 +408,20 @@ CREATE TABLE IF NOT EXISTS parametres (
   photos_provisoires TINYINT(1) NOT NULL DEFAULT 1,
   acceptation_automatique TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Propositions de soutien au chapitre (membres et organisations)
+CREATE TABLE IF NOT EXISTS soutiens (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  utilisateur_id INT UNSIGNED NOT NULL,
+  formes VARCHAR(255) NOT NULL DEFAULT '',
+  message TEXT NOT NULL,
+  statut VARCHAR(20) NOT NULL DEFAULT 'nouveau',
+  note_equipe TEXT NULL,
+  cree_le DATETIME NOT NULL,
+  modifie_le DATETIME NULL,
+  KEY idx_soutiens_statut (statut),
+  CONSTRAINT fk_soutiens_utilisateur FOREIGN KEY (utilisateur_id) REFERENCES utilisateurs (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS messages_contact (

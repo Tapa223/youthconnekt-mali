@@ -47,6 +47,33 @@ const TYPES_STRUCTURE = [
     'autre' => 'Autre structure',
 ];
 
+const TAILLES_STRUCTURE = [
+    '1-10' => '1 à 10 personnes',
+    '11-50' => '11 à 50 personnes',
+    '51-200' => '51 à 200 personnes',
+    '200+' => 'Plus de 200 personnes',
+];
+
+/** Formes de soutien qu'un membre ou une organisation peut proposer au chapitre. */
+const FORMES_SOUTIEN = [
+    'benevolat' => 'Bénévolat',
+    'mentorat' => 'Compétences ou mentorat',
+    'intervenant' => 'Intervenir lors d\'une activité',
+    'salle' => 'Salle ou lieu',
+    'materiel' => 'Matériel',
+    'financement' => 'Financement',
+    'stages' => 'Stages ou emplois pour les jeunes',
+    'communication' => 'Communication et relais',
+    'autre' => 'Autre',
+];
+
+const STATUTS_SOUTIEN = [
+    'nouveau' => 'Nouveau',
+    'en_cours' => 'En discussion',
+    'accepte' => 'Retenu',
+    'decline' => 'Non retenu',
+];
+
 const TYPES_COMPTE = [
     'individuel' => 'Membre individuel',
     'organisation' => 'Organisation ou entreprise',

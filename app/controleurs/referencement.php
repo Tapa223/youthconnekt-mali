@@ -13,7 +13,7 @@ function robots(): void
 function plan_du_site(): void
 {
     $adresses = [];
-    foreach (['/', '/a-propos', '/initiatives', '/opportunites', '/actualites', '/communaute', '/temoignages', '/contact'] as $page) {
+    foreach (['/', '/a-propos', '/initiatives', '/opportunites', '/actualites', '/communaute', '/organisations', '/temoignages', '/contact'] as $page) {
         $adresses[] = [url_absolue($page), null];
     }
     foreach (initiatives_publiees('ORDER BY i.publie_le DESC') as $i) {

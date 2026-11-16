@@ -13,7 +13,13 @@ $etapes = lignes_texte($o['etapes']);
         <?php elseif ($o['jours_restants'] !== null): ?><span class="etiquette rounded-full bg-orange-clair text-orange-fonce">J-<?= $o['jours_restants'] ?></span><?php endif ?>
       </div>
       <h1 class="mt-2 text-[1.6rem] leading-[1.12] font-bold sm:mt-3 sm:text-[2.6rem]"><?= e($o['titre']) ?></h1>
-      <?php if ($o['organisme']): ?><p class="mt-1 text-sm sm:mt-2 sm:text-[15px]">Proposée par <strong class="text-encre"><?= e($o['organisme']) ?></strong></p><?php endif ?>
+      <?php if (!empty($org)): ?>
+      <a href="<?= url('/organisations/' . $org['id']) ?>" class="group mt-2 inline-flex max-w-full items-center gap-2.5 rounded-2xl border border-ligne bg-white py-1.5 pr-3.5 pl-1.5 hover:border-vert">
+        <?php partiel('partials/logo_organisation', ['o' => $org, 'classes' => 'size-9 rounded-xl p-1 text-xs']) ?>
+        <span class="min-w-0 text-sm"><span class="block text-xs text-texte">Proposée par</span><span class="block truncate font-bold text-vert group-hover:text-orange"><?= e($org['nom_structure']) ?></span></span>
+        <?php partiel('partials/badges_organisation', ['o' => ['verifiee' => $org['verifiee']]]) ?>
+      </a>
+      <?php elseif ($o['organisme']): ?><p class="mt-1 text-sm sm:mt-2 sm:text-[15px]">Proposée par <strong class="text-encre"><?= e($o['organisme']) ?></strong></p><?php endif ?>
 
       <?php /* Sur téléphone : les informations utiles en une liste simple, juste sous le titre */ ?>
       <dl class="mt-4 grid grid-cols-2 gap-x-4 gap-y-2.5 rounded-2xl bg-gris p-3.5 text-sm lg:hidden">

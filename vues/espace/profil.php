@@ -71,12 +71,15 @@ $lignes_liens = $liens ?: [['reseau' => 'linkedin', 'url' => '']];
     <?php if ($organisation): ?>
       <?php partiel('partials/champ', $c('nom_structure') + ['libelle' => 'Nom de la structure', 'attributs' => ['maxlength' => 150]]) ?>
       <?php partiel('partials/champ', $c('type_structure') + ['libelle' => 'Type de structure', 'type' => 'select', 'options' => TYPES_STRUCTURE]) ?>
-      <?php partiel('partials/champ', $c('secteur') + ['libelle' => "Secteur d'activité", 'requis' => false, 'classes_bloc' => 'sm:col-span-2', 'attributs' => ['maxlength' => 150]]) ?>
+      <?php partiel('partials/champ', $c('secteur') + ['libelle' => "Secteur d'activité", 'requis' => false, 'attributs' => ['maxlength' => 150]]) ?>
+      <?php partiel('partials/champ', $c('taille') + ['libelle' => 'Taille', 'type' => 'select', 'requis' => false, 'options' => ['' => 'Non précisée'] + TAILLES_STRUCTURE]) ?>
       <?= $groupe('Où la trouver') ?>
       <?php partiel('partials/champ', $c('region') + ['libelle' => 'Région', 'type' => 'select', 'options' => REGIONS]) ?>
       <?php partiel('partials/champ', $c('ville') + ['libelle' => 'Ville', 'requis' => false, 'attributs' => ['maxlength' => 100]]) ?>
       <?= $groupe('Présentation') ?>
       <?php partiel('partials/champ', $c('presentation') + ['libelle' => "En quelques lignes, ce que fait l'organisation", 'type' => 'textarea', 'requis' => false, 'classes_bloc' => 'sm:col-span-2', 'attributs' => ['rows' => 4, 'maxlength' => 1500]]) ?>
+      <?php partiel('partials/champ', $c('offre_jeunes') + ['libelle' => 'Ce que nous offrons aux jeunes', 'type' => 'textarea', 'requis' => false, 'aide' => 'Stages, emplois, formations, mentorat, visites… Affiché sur votre fiche.', 'classes_bloc' => 'sm:col-span-2', 'attributs' => ['rows' => 3, 'maxlength' => 1500]]) ?>
+      <?php partiel('partials/champ', $c('site_web') + ['libelle' => 'Site web', 'type' => 'url', 'requis' => false, 'classes_bloc' => 'sm:col-span-2', 'attributs' => ['maxlength' => 255, 'placeholder' => 'https://']]) ?>
       <?= $groupe('Mes liens') ?>
       <div class="sm:col-span-2" data-liens>
         <p class="aide mt-0 mb-3">Ajoutez vos réseaux sociaux ou votre site : choisissez le nom, puis collez l'adresse.</p>
@@ -95,6 +98,7 @@ $lignes_liens = $liens ?: [['reseau' => 'linkedin', 'url' => '']];
       <?= $groupe('Contact') ?>
       <?php partiel('partials/champ', $c('email_contact_public') + ['libelle' => 'E-mail de contact public', 'type' => 'email', 'requis' => false, 'aide' => "Affiché sur la fiche. Différent de l'adresse de connexion, qui reste privée."]) ?>
       <?php partiel('partials/champ', $c('personne_contact') + ['libelle' => 'Personne de contact', 'requis' => false, 'aide' => 'Privé : jamais affiché sur le site.', 'attributs' => ['maxlength' => 120]]) ?>
+      <label class="flex items-start gap-2.5 text-sm sm:col-span-2"><input type="checkbox" name="dans_annuaire" value="1" class="mt-0.5 size-4 shrink-0 accent-vert"<?= $dans_annuaire ? ' checked' : '' ?>> <span>Apparaître dans l'annuaire public des organisations du réseau (logo, nom, secteur, région et fiche).</span></label>
     <?php else: ?>
       <?php partiel('partials/champ', $c('prenom') + ['libelle' => 'Prénom', 'attributs' => ['maxlength' => 80, 'autocomplete' => 'given-name']]) ?>
       <?php partiel('partials/champ', $c('nom') + ['libelle' => 'Nom', 'attributs' => ['maxlength' => 80, 'autocomplete' => 'family-name']]) ?>

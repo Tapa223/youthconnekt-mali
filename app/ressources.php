@@ -423,25 +423,30 @@ function ressources(): array
                 (SELECT COUNT(*) FROM demandes_adhesion d WHERE d.utilisateur_id = t.utilisateur_id AND d.statut = 'acceptee') AS nb_communautes",
             'depuis' => 'FROM profils_organisations t JOIN utilisateurs u ON u.id = t.utilisateur_id',
             'ordre' => 'u.inscrit_le DESC',
-            'onglets' => [['Entreprises', "t.type_structure = 'entreprise'"], ['Startups', "t.type_structure = 'startup'"], ['Associations', "t.type_structure = 'association'"], ['ONG', "t.type_structure = 'ong'"]],
+            'onglets' => [['Entreprises', "t.type_structure = 'entreprise'"], ['Startups', "t.type_structure = 'startup'"], ['Associations', "t.type_structure = 'association'"], ['ONG', "t.type_structure = 'ong'"],
+                ['Vérifiées', 't.verifiee = 1'], ['Partenaires du chapitre', 't.partenaire_chapitre = 1'], ['À vérifier', 't.verifiee = 0']],
             'filtres' => [['region', 'Toutes les régions', REGIONS, 't.region']],
             'recherche' => ['t.nom_structure', 'u.email', 't.secteur', 't.personne_contact', 't.ville', 't.region', 't.presentation'],
             'nom_element' => fn ($l) => $l['nom_structure'],
             'colonnes' => [
-                ['Organisation', fn ($l) => nom_et_detail($l['nom_structure'], TYPES_STRUCTURE[$l['type_structure']] ?? '', avatar(initiales_organisation($l['nom_structure']), (int) $l['id'], $l['logo'] ?: null)), 'lien' => true],
+                ['Organisation', fn ($l) => nom_et_detail($l['nom_structure'], implode(' · ', array_filter([TYPES_STRUCTURE[$l['type_structure']] ?? '', $l['secteur']])), avatar(initiales_organisation($l['nom_structure']), (int) $l['id'], $l['logo'] ?: null)), 'lien' => true],
                 ['Région', fn ($l) => e(REGIONS[$l['region']] ?? '—')],
+                ['Badges', fn ($l) => implode(' ', array_filter([!empty($l['verifiee']) ? badge('Vérifiée', 'vert') : '', !empty($l['partenaire_chapitre']) ? badge('Partenaire', 'orange') : '', empty($l['dans_annuaire']) ? badge("Hors de l'annuaire", 'gris') : ''])) ?: '—'],
                 ['Contact', fn ($l) => e($l['personne_contact'] ?: '—')],
                 ['Communautés', fn ($l) => $l['nb_communautes'] . ' communauté' . pluriel((int) $l['nb_communautes'])],
                 ['Statut', fn ($l) => $l['actif'] ? badge('Active', 'vert') : badge('Inactive', 'gris')],
             ],
-            'url_voir' => fn ($l) => ($l['visible'] && $l['actif']) ? url('/compte/membres/' . $l['utilisateur_id']) : null,
+            'url_voir' => fn ($l) => (!empty($l['dans_annuaire']) && $l['actif']) ? url('/organisations/' . $l['id']) : null,
             'export' => ['Structure' => 'nom_structure', 'Type' => fn ($l) => TYPES_STRUCTURE[$l['type_structure']] ?? '', 'Secteur' => 'secteur', 'E-mail' => 'email',
-                'Personne de contact' => 'personne_contact', 'Région' => fn ($l) => REGIONS[$l['region']] ?? '', 'Ville' => 'ville', 'Inscription' => fn ($l) => date_chiffres($l['inscrit_le'])],
+                'Personne de contact' => 'personne_contact', 'Région' => fn ($l) => REGIONS[$l['region']] ?? '', 'Ville' => 'ville', 'Taille' => fn ($l) => TAILLES_STRUCTURE[$l['taille'] ?? ''] ?? '', 'Site web' => 'site_web',
+                'Vérifiée' => fn ($l) => !empty($l['verifiee']) ? 'oui' : 'non', 'Partenaire du chapitre' => fn ($l) => !empty($l['partenaire_chapitre']) ? 'oui' : 'non', 'Inscription' => fn ($l) => date_chiffres($l['inscrit_le'])],
             'groupes' => [
                 ['Structure', 'champs' => [
                     'nom_structure' => ['type' => 'texte', 'libelle' => 'Nom de la structure', 'max' => 150],
                     'type_structure' => ['type' => 'select', 'libelle' => 'Type de structure', 'options' => TYPES_STRUCTURE, 'largeur' => 'demi'],
                     'secteur' => ['type' => 'texte', 'libelle' => "Secteur d'activité", 'requis' => false, 'max' => 150, 'largeur' => 'demi'],
+                    'taille' => ['type' => 'select', 'libelle' => 'Taille', 'requis' => false, 'options' => ['' => 'Non précisée'] + TAILLES_STRUCTURE, 'largeur' => 'demi'],
+                    'site_web' => ['type' => 'texte', 'libelle' => 'Site web', 'requis' => false, 'max' => 255, 'largeur' => 'demi'],
                     'logo' => ['type' => 'image', 'libelle' => 'Logo', 'requis' => false, 'dossier' => 'organisations', 'largeur_max' => 800],
                 ]],
                 ['Contact', 'champs' => [
@@ -452,14 +457,28 @@ function ressources(): array
                 ]],
                 ['Présentation', 'champs' => [
                     'presentation' => ['type' => 'zone', 'libelle' => 'Présentation', 'requis' => false, 'max' => 1500, 'lignes' => 4],
+                    'offre_jeunes' => ['type' => 'zone', 'libelle' => 'Ce que nous offrons aux jeunes', 'requis' => false, 'max' => 1500, 'lignes' => 3],
                     'liens' => ['type' => 'lecture', 'libelle' => 'Liens publics', 'html' => fn ($l) => implode('<br>', array_map(fn ($k) => e($k['nom']) . ' : <a class="ycm-lien" href="' . e($k['url']) . '" target="_blank" rel="noopener">' . e($k['url']) . '</a>', liens_profil((int) $l['utilisateur_id']))) ?: 'Aucun (le membre les ajoute depuis son espace)'],
                 ]],
                 ['Compte', 'cote' => true, 'champs' => [
                     'lien_compte' => ['type' => 'lecture', 'libelle' => 'Compte de connexion', 'html' => fn ($l) => '<a class="ycm-lien" href="' . url('/gestion/comptes/' . $l['utilisateur_id']) . '">' . e($l['email']) . '</a>'],
                     'visible' => ['type' => 'case', 'libelle' => 'Visible dans la communauté'],
+                    'dans_annuaire' => ['type' => 'case', 'libelle' => "Dans l'annuaire public", 'aide' => "L'organisation peut aussi le choisir depuis son profil."],
+                ]],
+                ['Reconnaissance', 'cote' => true, 'description' => "Accordées par l'équipe du chapitre, elles s'affichent sur la fiche publique.", 'champs' => [
+                    'verifiee' => ['type' => 'case', 'libelle' => 'Organisation vérifiée', 'aide' => "Après un échange avec l'organisation (appel, rencontre ou documents)."],
+                    'partenaire_chapitre' => ['type' => 'case', 'libelle' => 'Partenaire du chapitre', 'aide' => 'Elle soutient ou a soutenu une activité du chapitre.'],
+                    'soutiens' => ['type' => 'lecture', 'libelle' => 'Soutiens proposés', 'html' => function ($l) {
+                        try { $n = (int) valeur('SELECT COUNT(*) FROM soutiens WHERE utilisateur_id = ?', [$l['utilisateur_id']]); } catch (Throwable $e) { $n = 0; }
+                        return $n ? '<a class="ycm-lien" href="' . url('/gestion/soutiens', ['q' => $l['nom_structure']]) . '">' . $n . ' proposition' . pluriel($n) . '</a>' : 'Aucun pour le moment';
+                    }],
                 ]],
             ],
-            'avant' => function (array &$d, ?array $ancien) { $d['modifie_le'] = maintenant(); },
+            'avant' => function (array &$d, ?array $ancien) {
+                $d['modifie_le'] = maintenant();
+                if (array_key_exists('taille', $d) && !$d['taille']) $d['taille'] = null;
+                if (!empty($d['site_web']) && !preg_match('#^https?://#i', $d['site_web'])) $d['site_web'] = 'https://' . $d['site_web'];
+            },
         ],
 
         // ------------------------------------------------------------------
@@ -544,6 +563,41 @@ function ressources(): array
                 'a_traiter' => ['Remettre à traiter', fn ($ids) => requete('UPDATE messages_contact SET traite = 0 WHERE id IN (' . marqueurs($ids) . ')', $ids)->rowCount() . ' message(s) remis à traiter.'],
                 'supprimer' => ['Supprimer les messages sélectionnés', fn ($ids) => requete('DELETE FROM messages_contact WHERE id IN (' . marqueurs($ids) . ')', $ids)->rowCount() . ' message(s) supprimé(s).'],
             ],
+        ],
+
+        // ------------------------------------------------------------------
+        'soutiens' => [
+            'table' => 'soutiens', 'titre' => 'Soutiens au chapitre', 'rubrique' => 'messages',
+            'description' => "Les propositions d'aide envoyées par les membres et les organisations depuis leur espace (« Soutenir le chapitre »).",
+            'peut_ajouter' => false, 'par_page' => 50, 'libelle_tous' => 'Tous',
+            'champs_select' => "t.*, u.email, u.type_compte, COALESCE(CONCAT(pi.prenom, ' ', pi.nom), po.nom_structure, u.email) AS auteur, po.id AS org_id",
+            'depuis' => 'FROM soutiens t JOIN utilisateurs u ON u.id = t.utilisateur_id LEFT JOIN profils_individuels pi ON pi.utilisateur_id = u.id LEFT JOIN profils_organisations po ON po.utilisateur_id = u.id',
+            'ordre' => "t.statut = 'nouveau' DESC, t.cree_le DESC",
+            'onglets' => [['Nouveaux', "t.statut = 'nouveau'"], ['En discussion', "t.statut = 'en_cours'"], ['Retenus', "t.statut = 'accepte'"], ['Organisations', "u.type_compte = 'organisation'"], ['Membres individuels', "u.type_compte = 'individuel'"]],
+            'recherche' => ['pi.prenom', 'pi.nom', 'po.nom_structure', 'u.email', 't.message'],
+            'libelle_ouvrir' => fn ($l) => $l['statut'] === 'nouveau' ? 'Lire et traiter' : 'Ouvrir',
+            'nom_element' => fn ($l) => 'Soutien de ' . $l['auteur'],
+            'colonnes' => [
+                ['De', fn ($l) => nom_et_detail($l['auteur'], ($l['type_compte'] === 'organisation' ? 'Organisation · ' : 'Membre · ') . $l['email']), 'lien' => true],
+                ['Propose', fn ($l) => e(implode(', ', array_map(fn ($f) => FORMES_SOUTIEN[$f] ?? $f, array_filter(explode(',', $l['formes'])))))],
+                ['Reçu le', fn ($l) => e(date_chiffres($l['cree_le']))],
+                ['Statut', fn ($l) => badge(STATUTS_SOUTIEN[$l['statut']] ?? '', ['nouveau' => 'orange', 'en_cours' => 'turquoise', 'accepte' => 'vert', 'decline' => 'gris'][$l['statut']] ?? 'gris')],
+            ],
+            'export' => ['Reçu le' => fn ($l) => date_chiffres($l['cree_le']), 'De' => 'auteur', 'E-mail' => 'email', 'Type' => fn ($l) => TYPES_COMPTE[$l['type_compte']] ?? '',
+                'Propose' => fn ($l) => implode(', ', array_map(fn ($f) => FORMES_SOUTIEN[$f] ?? $f, array_filter(explode(',', $l['formes'])))), 'Message' => 'message', 'Statut' => fn ($l) => STATUTS_SOUTIEN[$l['statut']] ?? '', 'Note' => 'note_equipe'],
+            'groupes' => [
+                ['La proposition', 'champs' => [
+                    'auteur_lecture' => ['type' => 'lecture', 'libelle' => 'De', 'html' => fn ($l) => e($l['auteur']) . ' · <a class="ycm-lien" href="mailto:' . e($l['email']) . '">' . e($l['email']) . '</a>'
+                        . (!empty($l['org_id']) ? ' · <a class="ycm-lien" href="' . url('/gestion/organisations/' . $l['org_id']) . '">Fiche de l\'organisation</a>' : '')],
+                    'formes_lecture' => ['type' => 'lecture', 'libelle' => 'Propose', 'html' => fn ($l) => e(implode(', ', array_map(fn ($f) => FORMES_SOUTIEN[$f] ?? $f, array_filter(explode(',', $l['formes'])))))],
+                    'message_lecture' => ['type' => 'lecture', 'libelle' => 'Message', 'html' => fn ($l) => nl2br(e($l['message']))],
+                ]],
+                ['Suivi', 'cote' => true, 'champs' => [
+                    'statut' => ['type' => 'select', 'libelle' => 'Statut', 'options' => STATUTS_SOUTIEN],
+                    'note_equipe' => ['type' => 'zone', 'libelle' => "Note de l'équipe", 'requis' => false, 'max' => 2000, 'lignes' => 4, 'aide' => "Interne : jamais visible par l'auteur."],
+                ]],
+            ],
+            'avant' => function (array &$d, ?array $ancien) { $d['modifie_le'] = maintenant(); },
         ],
 
         // ------------------------------------------------------------------

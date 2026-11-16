@@ -199,7 +199,7 @@ function mon_profil(): void
     $champ_image = $organisation ? 'logo' : 'photo';
     $profil = $u['profil'] ?? [];
     $champs = $organisation
-        ? ['nom_structure', 'type_structure', 'secteur', 'region', 'ville', 'presentation', 'email_contact_public', 'personne_contact']
+        ? ['nom_structure', 'type_structure', 'secteur', 'taille', 'region', 'ville', 'presentation', 'offre_jeunes', 'site_web', 'email_contact_public', 'personne_contact']
         : ['prenom', 'nom', 'genre', 'date_naissance', 'categorie', 'domaine', 'region', 'ville', 'presentation', 'telephone'];
     $valeurs = [];
     foreach ($champs as $c) {
@@ -225,6 +225,7 @@ function mon_profil(): void
         foreach ($champs as $c) {
             $valeurs[$c] = post($c);
         }
+        $dans_annuaire = $organisation && post('dans_annuaire') !== '' ? 1 : 0;
         // Liens : un réseau et une adresse par ligne, 8 au plus
         $liens = [];
         $reseaux = (array) ($_POST['lien_reseau'] ?? []);
@@ -249,7 +250,7 @@ function mon_profil(): void
             $erreurs['liens'] = '8 liens au maximum.';
         }
         $limites = ['prenom' => 80, 'nom' => 80, 'domaine' => 150, 'ville' => 100, 'presentation' => 1500, 'telephone' => 30,
-            'nom_structure' => 150, 'secteur' => 150, 'personne_contact' => 120];
+            'nom_structure' => 150, 'secteur' => 150, 'personne_contact' => 120, 'offre_jeunes' => 1500];
         foreach ($limites as $c => $max) {
             if (isset($valeurs[$c]) && mb_strlen($valeurs[$c]) > $max) {
                 $erreurs[$c] = "$max caractères au maximum.";
@@ -258,6 +259,11 @@ function mon_profil(): void
         if ($organisation) {
             if ($valeurs['nom_structure'] === '') $erreurs['nom_structure'] = "Indiquez le nom de l'organisation.";
             if (!isset(TYPES_STRUCTURE[$valeurs['type_structure']])) $erreurs['type_structure'] = 'Choisissez le type de structure.';
+            if ($valeurs['taille'] !== '' && !isset(TAILLES_STRUCTURE[$valeurs['taille']])) $valeurs['taille'] = '';
+            if ($valeurs['site_web'] !== '') {
+                if (!preg_match('#^https?://#i', $valeurs['site_web'])) $valeurs['site_web'] = 'https://' . $valeurs['site_web'];
+                if (!filter_var($valeurs['site_web'], FILTER_VALIDATE_URL) || mb_strlen($valeurs['site_web']) > 255) $erreurs['site_web'] = "Cette adresse n'est pas valide.";
+            }
             if ($valeurs['email_contact_public'] !== '' && !filter_var($valeurs['email_contact_public'], FILTER_VALIDATE_EMAIL)) {
                 $erreurs['email_contact_public'] = "Cette adresse e-mail n'est pas valide.";
             }
@@ -279,6 +285,10 @@ function mon_profil(): void
         }
         if (!$erreurs) {
             $donnees = $valeurs + ['modifie_le' => maintenant()];
+            if ($organisation) {
+                $donnees['taille'] = $valeurs['taille'] ?: null;
+                $donnees['dans_annuaire'] = $dans_annuaire;
+            }
             $ancienne = $profil[$champ_image] ?? '';
             if ($nouvelle_image) {
                 $donnees[$champ_image] = $nouvelle_image;
@@ -306,6 +316,7 @@ function mon_profil(): void
         'organisation' => $organisation,
         'liens' => $liens,
         'visible' => (bool) ($profil['visible'] ?? false),
+        'dans_annuaire' => (bool) ($profil['dans_annuaire'] ?? true),
         'valeurs' => $valeurs,
         'erreurs' => $erreurs,
         'champ_image' => $champ_image,
@@ -387,4 +398,35 @@ function profil_public(int $id): void
         'contributions' => $contributions,
         'est_moi' => (int) $m['id'] === (int) $moi['id'],
     ]));
+}
+
+/**
+ * Soutenir le chapitre : un membre ou une organisation propose son aide (bénévolat, salle, financement…).
+ * La proposition arrive à l'équipe dans l'administration (« Soutiens au chapitre »).
+ */
+function soutenir_chapitre(): void
+{
+    $u = exiger_membre();
+    $formes = [];
+    $message = '';
+    $erreurs = [];
+    if (est_post()) {
+        $formes = array_values(array_intersect(array_keys(FORMES_SOUTIEN), (array) ($_POST['formes'] ?? [])));
+        $message = trim(post('message'));
+        if (!$formes) $erreurs['formes'] = 'Choisissez au moins une forme de soutien.';
+        if (mb_strlen($message) < 10) $erreurs['message'] = 'Décrivez en quelques mots ce que vous proposez.';
+        if (mb_strlen($message) > 1500) $erreurs['message'] = '1 500 caractères au maximum.';
+        if (!$erreurs) {
+            inserer('soutiens', ['utilisateur_id' => $u['id'], 'formes' => implode(',', $formes), 'message' => $message,
+                'statut' => 'nouveau', 'cree_le' => maintenant()]);
+            flash('succes', "Merci ! Votre proposition est bien arrivée : l'équipe du chapitre vous recontacte.");
+            rediriger(url('/compte/mon-espace/soutenir'));
+        }
+    }
+    try {
+        $envoyes = lignes('SELECT * FROM soutiens WHERE utilisateur_id = ? ORDER BY cree_le DESC', [$u['id']]);
+    } catch (Throwable $e) {
+        $envoyes = []; // mise à jour 27 pas encore importée
+    }
+    vue_espace('soutenir', 'soutenir', 'Soutenir le chapitre', ['formes' => $formes, 'message' => $message, 'erreurs' => $erreurs, 'envoyes' => $envoyes], $u);
 }

@@ -43,6 +43,7 @@ const MENU_ADMIN = [
     ]],
     ['Échanges', [
         ['Messages de contact', 'messages', 'enveloppe', 'messages'],
+        ['Soutiens au chapitre', 'soutiens', 'coeur', 'messages'],
         ['Newsletter', 'newsletters', 'lettre', 'newsletter'],
     ]],
     ['Site', [
@@ -66,6 +67,7 @@ function pastilles_admin(): array
     $pastilles = [];
     if (peut('messages')) {
         $pastilles['messages'] = (int) valeur('SELECT COUNT(*) FROM messages_contact WHERE traite = 0');
+        try { $pastilles['soutiens'] = (int) valeur("SELECT COUNT(*) FROM soutiens WHERE statut = 'nouveau'"); } catch (Throwable $e) { $pastilles['soutiens'] = 0; }
     }
     if (peut('opportunites')) {
         $pastilles['propositions'] = (int) valeur("SELECT COUNT(*) FROM opportunites WHERE statut = 'propose'");

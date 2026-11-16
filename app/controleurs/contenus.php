@@ -111,6 +111,9 @@ function opportunite(string $slug): void
         page_erreur(404);
     }
     $o = opportunite_preparer($o);
+    // Proposée par une organisation de l'annuaire : son logo et un lien vers sa fiche
+    require_once RACINE . '/app/controleurs/organisations.php';
+    $org = organisation_de(isset($o['propose_par']) ? (int) $o['propose_par'] : null);
     // Opportunités similaires : même type d'abord, complétées par les autres opportunités ouvertes
     $similaires = opportunites_ouvertes('AND id <> ? ORDER BY type = ? DESC, date_limite IS NULL, date_limite LIMIT 3', [$o['id'], $o['type']]);
 
@@ -119,6 +122,7 @@ function opportunite(string $slug): void
         'description' => $o['resume'],
         'image_partage' => $o['image'],
         'o' => $o,
+        'org' => $org,
         'similaires' => $similaires,
     ]));
 }

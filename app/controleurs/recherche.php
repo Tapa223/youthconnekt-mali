@@ -10,6 +10,7 @@ declare(strict_types=1);
 /** Pages du site trouvées par des mots-clés courants (« contact », « ministre », « inscription »…) */
 const PAGES_RECHERCHE = [
     ['/a-propos', 'À propos du chapitre', 'Mission, axes d\'intervention, mot du ministre, partenaires', 'propos chapitre mission vision histoire axe intervention ministre ministere partenaire pnud youthconnekt africa qui sommes'],
+    ['/organisations', 'Organisations du réseau', 'Entreprises, startups, associations et ONG membres du chapitre', 'organisation organisations entreprise entreprises startup association ong annuaire structure partenaire reseau'],
     ['/contact', 'Contact', 'Écrire à l\'équipe, adresse, téléphone, horaires', 'contact contacter ecrire message adresse telephone email mail horaire joindre question'],
     ['/compte/inscription', 'Rejoindre le chapitre', 'Créer un compte de membre individuel ou d\'organisation', 'inscription inscrire rejoindre adherer adhesion membre compte creer devenir organisation entreprise'],
     ['/compte/connexion', 'Se connecter', 'Accéder à votre espace membre', 'connexion connecter espace compte mot passe identifiant'],

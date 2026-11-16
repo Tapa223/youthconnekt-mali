@@ -92,6 +92,7 @@ $pied_compact = str_starts_with(chemin_actuel(), '/compte/mon-espace') || str_st
             <li><a href="<?= url('/a-propos') ?>" class="lien-pied">À propos</a></li>
             <li><a href="<?= url('/initiatives') ?>" class="lien-pied">Initiatives</a></li>
             <li><a href="<?= url('/actualites') ?>" class="lien-pied">Actualités</a></li>
+            <li><a href="<?= url('/organisations') ?>" class="lien-pied">Organisations du réseau</a></li>
           </ul>
         </nav>
         <nav aria-label="Participer">
