@@ -54,7 +54,7 @@ $titre_rubrique = $liens[$rubrique][1] ?? 'Mon espace';
     </div>
 
     <?php /* Ordinateur : carte du membre et menu à gauche */ ?>
-    <aside class="hidden min-w-0 space-y-4 lg:block">
+    <aside class="masquer-defilement hidden min-w-0 space-y-4 lg:sticky lg:top-20 lg:block lg:max-h-[calc(100svh-6rem)] lg:self-start lg:overflow-y-auto lg:overscroll-contain" data-menu-espace>
       <div class="flex flex-col items-center rounded-2xl bg-white p-6 text-center">
         <?php if ($image): ?><img src="<?= e(media($image)) ?>" alt="" class="size-18 rounded-full <?= isset($profil['logo']) ? 'bg-white object-contain ring-1 ring-ligne' : 'object-cover' ?>">
         <?php else: ?><span class="grid size-18 shrink-0 place-items-center rounded-full bg-orange text-2xl font-bold text-white" aria-hidden="true"><?= e($u['initiales']) ?></span><?php endif ?>

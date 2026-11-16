@@ -913,3 +913,20 @@
     else if (e.key === "/" && !saisie && !boite.open) { e.preventDefault(); ouvrir(); }
   });
 })();
+
+/* Espace membre (ordinateur) : le menu reste collé à l'écran ; s'il défile, on garde sa position d'une page à l'autre,
+   comme le menu de l'administration. */
+(function () {
+  "use strict";
+  var menu = document.querySelector("[data-menu-espace]");
+  if (!menu) return;
+  var CLE = "ycm-menu-espace";
+  try {
+    var y = parseInt(sessionStorage.getItem(CLE) || "", 10);
+    if (y > 0) menu.scrollTop = y;
+  } catch (e) {}
+  menu.addEventListener("click", function (e) {
+    if (!e.target.closest || !e.target.closest("a")) return;
+    try { sessionStorage.setItem(CLE, String(menu.scrollTop)); } catch (err) {}
+  });
+})();
