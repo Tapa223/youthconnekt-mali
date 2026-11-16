@@ -15,7 +15,7 @@ if ($type === 'cache') return;
   <?php if ($type === 'case'): ?>
     <label class="ycm-case-ligne"><input type="checkbox" id="<?= $id ?>" name="<?= e($nom) ?>" value="1"<?= $valeur ? ' checked' : '' ?><?= $attr ?>> <?= e($def['libelle']) ?></label>
   <?php else: ?>
-    <label for="<?= $id ?>"<?= $requis ? ' class="requis"' : '' ?>><?= e($def['libelle']) ?></label>
+    <?php if ($def['libelle'] !== ''): ?><label for="<?= $id ?>"<?= $requis ? ' class="requis"' : '' ?>><?= e($def['libelle']) ?></label><?php endif ?>
     <?php switch ($type):
       case 'zone': ?>
         <textarea id="<?= $id ?>" name="<?= e($nom) ?>" rows="<?= (int) ($def['lignes'] ?? 6) ?>"<?= $attr ?><?= !empty($def['barre']) ? ' data-barre="' . e($def['barre']) . '"' : '' ?>><?= e($valeur) ?></textarea>
@@ -33,7 +33,7 @@ if ($type === 'cache') return;
       <?php break; case 'motdepasse': ?>
         <input type="password" id="<?= $id ?>" name="<?= e($nom) ?>" autocomplete="new-password"<?= $attr ?>>
       <?php break; case 'lecture': ?>
-        <div class="ycm-lecture-seule"><?= $ligne ? ($def['html'])($ligne) : '—' ?></div>
+        <div class="ycm-lecture-seule"><?= $ligne || !empty($def['toujours']) ? ($def['html'])($ligne ?? []) : '—' ?></div>
       <?php break; case 'image': ?>
         <div class="ycm-zone-image">
           <?php if ($valeur): ?><img src="<?= e(media($valeur)) ?>" alt="" class="ycm-apercu"><?php endif ?>

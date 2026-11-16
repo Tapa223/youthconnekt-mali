@@ -11,9 +11,9 @@ $chiffres_i = lignes_colonnes($i['chiffres'], 2);
     'meta' => implode(' · ', array_filter([$i['date_libelle'], $i['lieu']])),
     'retour' => url('/initiatives'),
 ]) ?>
-<section class="conteneur grid items-center gap-8 pt-5 pb-10 sm:gap-10 sm:pt-7 sm:pb-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14">
+<section class="conteneur grid items-center gap-5 pt-5 pb-8 sm:gap-10 sm:pt-7 sm:pb-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14">
   <div class="relative">
-    <p class="text-base leading-relaxed sm:text-lg"><?= e($i['resume']) ?></p>
+    <p class="text-[15px] leading-relaxed sm:text-lg"><?= e($i['resume']) ?></p>
     <?php if ($ma_participation): ?>
     <div class="mt-5 flex flex-wrap items-center gap-2">
       <span class="inline-flex min-h-11 items-center rounded-full bg-vert-clair px-5 text-sm font-bold text-vert"><?= $ma_participation['statut'] === 'inscrit' ? 'Vous êtes inscrit' : 'Votre candidature' ?> comme « <?= e($ma_participation['role_libelle']) ?> »<?= $ma_participation['statut'] !== 'inscrit' ? ' · ' . e(STATUTS_PARTICIPATION[$ma_participation['statut']] ?? '') : '' ?></span>
@@ -53,18 +53,18 @@ $chiffres_i = lignes_colonnes($i['chiffres'], 2);
   </div>
 
   <?php /* Bloc photo moins haut sur ordinateur : le texte et la photo tiennent sous le bandeau, et la suite se devine */ ?>
-  <div class="relative mx-auto w-full max-w-xl pr-4 pb-8 sm:pr-6 lg:max-w-lg lg:pb-7">
-    <div class="absolute top-6 right-0 bottom-10 left-1/3 rounded-3xl bg-orange lg:bottom-7" aria-hidden="true"></div>
-    <div class="devoile survol-zoom relative aspect-[4/3] overflow-hidden rounded-3xl shadow-xl lg:aspect-[16/10]">
+  <div class="relative mx-auto w-full max-w-xl pr-3 pb-6 sm:pr-6 sm:pb-8 lg:max-w-lg lg:pb-7">
+    <div class="absolute top-4 right-0 bottom-8 left-1/3 rounded-2xl bg-orange sm:top-6 sm:rounded-3xl lg:bottom-7" aria-hidden="true"></div>
+    <div class="devoile survol-zoom relative aspect-[16/10] overflow-hidden rounded-2xl shadow-xl sm:aspect-[4/3] sm:rounded-3xl lg:aspect-[16/10]">
       <?php partiel('partials/photo', ['transition' => 'photo-ini-' . $i['id'], 'image' => $i['image'], 'eager' => true]) ?>
     </div>
     <?php if ($photos): $p2 = $photos[0]; ?>
-    <div class="survol-penche absolute right-0 bottom-0 aspect-[4/3] w-[42%] rotate-2 overflow-hidden rounded-2xl border-4 border-white shadow-xl">
+    <div class="survol-penche absolute right-0 bottom-0 aspect-[4/3] w-[34%] rotate-2 overflow-hidden rounded-xl border-[3px] border-white shadow-xl sm:w-[42%] sm:rounded-2xl sm:border-4">
       <img src="<?= e(media($p2['image'])) ?>" alt="<?= e($p2['legende']) ?>" class="h-full w-full object-cover" loading="lazy">
     </div>
     <?php endif ?>
   </div>
-  <?php if ($a_infos) partiel('pages/infos_initiative', ['i' => $i, 'classes' => '-mt-4 grid lg:hidden']) ?>
+  <?php if ($a_infos) partiel('pages/infos_initiative', ['i' => $i, 'classes' => '-mt-2 grid lg:hidden']) ?>
 </section>
 
 <?php if ($ouvertes && !$ma_participation): /* Prendre part : les rôles proposés par l'équipe */ ?>
@@ -92,17 +92,17 @@ $chiffres_i = lignes_colonnes($i['chiffres'], 2);
 </section>
 <?php endif ?>
 
-<section class="bg-gris py-14 sm:py-16">
-  <div class="conteneur grid gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-14">
+<section class="bg-gris py-9 sm:py-16">
+  <div class="conteneur grid gap-7 sm:gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-14">
     <div class="order-2 lg:order-1">
-      <h2 class="text-2xl font-bold sm:text-3xl">L'initiative</h2>
-      <div class="prose-ycm mt-4"><?= paragraphes($i['contenu']) ?></div>
+      <h2 class="text-[1.4rem] font-bold sm:text-3xl">L'initiative</h2>
+      <div class="prose-ycm mt-3 sm:mt-4"><?= paragraphes($i['contenu']) ?></div>
       <?php if ($objectifs): ?>
-      <h3 class="mt-9 text-xl font-bold">Objectifs</h3>
-      <ul class="mt-4 grid grid-cols-2 gap-2.5 sm:gap-3">
+      <h3 class="mt-8 text-lg font-bold sm:mt-9 sm:text-xl">Objectifs</h3>
+      <ul class="mt-3 grid gap-2 sm:mt-4 sm:grid-cols-2 sm:gap-3">
         <?php foreach ($objectifs as $objectif): ?>
-        <li class="flex flex-col gap-2 rounded-xl bg-white p-3.5 text-[13px] leading-snug text-encre sm:flex-row sm:gap-3 sm:p-4 sm:text-sm">
-          <svg class="size-5 shrink-0 text-vert" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.5 12.5 3 3 6-6" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <li class="flex items-start gap-2.5 rounded-lg bg-white px-3 py-2.5 text-[14px] leading-snug text-encre sm:gap-3 sm:rounded-xl sm:px-4 sm:py-3 sm:text-sm">
+          <svg class="mt-px size-[18px] shrink-0 text-vert sm:size-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.5 12.5 3 3 6-6" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           <?= e($objectif) ?>
         </li>
         <?php endforeach ?>
@@ -112,10 +112,10 @@ $chiffres_i = lignes_colonnes($i['chiffres'], 2);
     <aside class="order-1 lg:order-2">
       <?php if ($chiffres_i): ?>
       <h2 class="sr-only text-xl font-bold lg:not-sr-only">En chiffres</h2>
-      <ul class="grid grid-cols-3 gap-2.5 lg:mt-4 lg:grid-cols-1 lg:gap-3">
+      <ul class="grid <?= in_array(count($chiffres_i), [2, 4], true) ? 'grid-cols-2' : 'grid-cols-3' ?> gap-2 sm:gap-2.5 lg:mt-4 lg:grid-cols-1 lg:gap-3">
         <?php foreach ($chiffres_i as $k => [$val, $lib]): ?>
-        <li class="flex flex-col gap-1 rounded-xl border-t-4 bg-white px-3 py-3 lg:flex-row lg:items-center lg:gap-5 lg:border-t-0 lg:border-l-4 lg:px-5 lg:py-4 <?= cycle(['border-orange', 'border-turquoise', 'border-bleu'], $k) ?>">
-          <span class="text-2xl font-bold text-vert lg:text-4xl"><?= e($val) ?></span><span class="text-xs leading-snug text-encre lg:text-sm"><?= e($lib) ?></span>
+        <li class="flex flex-col gap-0.5 rounded-lg border-t-[3px] bg-white px-3 py-2.5 sm:rounded-xl sm:border-t-4 lg:flex-row lg:items-center lg:gap-5 lg:border-t-0 lg:border-l-4 lg:px-5 lg:py-4 <?= cycle(['border-orange', 'border-turquoise', 'border-bleu'], $k) ?>">
+          <span class="text-xl font-bold text-vert sm:text-2xl lg:text-4xl"><?= e($val) ?></span><span class="text-xs leading-snug text-encre lg:text-sm"><?= e($lib) ?></span>
         </li>
         <?php endforeach ?>
       </ul>
@@ -130,52 +130,79 @@ $chiffres_i = lignes_colonnes($i['chiffres'], 2);
   </div>
 </section>
 
+<?php if ($photos):
+    // En images : une seule rangée, juste après le texte. Ordinateur : 3 photos puis « +N Voir plus » ; téléphone : 2 photos puis « +N ».
+    // Chaque photo s'ouvre en grand ; la visionneuse fait défiler toutes les photos.
+    $n = count($photos);
+    $cols = min($n, 4);
+    $cols_tel = min($n, 3);
+    $plus_pc = $n > 4 ? $n - 3 : 0;
+    $plus_tel = $n > 3 ? $n - 2 : 0;
+?>
+<section class="conteneur pt-9 sm:pt-14 <?= $programme ? '' : 'pb-9 sm:pb-14' ?>" aria-labelledby="titre-images" data-phototheque>
+  <div class="flex items-end justify-between gap-4">
+    <h2 id="titre-images" class="titre-section">En images</h2>
+    <button type="button" class="btn-tout-voir" data-ouvrir-photo="0"><?= $n ?> photo<?= pluriel($n) ?></button>
+  </div>
+  <ul class="mt-4 grid <?= ['', 'grid-cols-1', 'grid-cols-2', 'grid-cols-3'][$cols_tel] ?> <?= ['', 'sm:grid-cols-1', 'sm:grid-cols-2', 'sm:grid-cols-3', 'sm:grid-cols-4'][$cols] ?> gap-2 sm:mt-6 sm:gap-3">
+    <?php foreach ($photos as $k => $photo):
+        $visible = ($k < 3 ? '' : 'max-sm:hidden ') . ($k < 4 ? '' : 'sm:hidden'); ?>
+    <li class="group relative <?= $visible ?>">
+      <button type="button" class="relative block aspect-[4/3] w-full overflow-hidden rounded-lg bg-vert sm:rounded-xl" data-agrandir="<?= $k ?>" aria-label="Agrandir la photo <?= $k + 1 ?>">
+        <img src="<?= e(media($photo['image'])) ?>" alt="<?= e($photo['legende']) ?>" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+        <?php foreach ([[$plus_tel, 2, 'sm:hidden'], [$plus_pc, 3, 'max-sm:hidden']] as [$plus, $rang, $ecran]): if ($plus && $k === $rang): ?>
+        <span class="<?= $ecran ?> absolute inset-0 grid place-items-center bg-vert/75 text-white transition-colors group-hover:bg-orange/85" aria-hidden="true">
+          <span class="text-center"><span class="block text-xl font-bold sm:text-3xl">+<?= $plus ?></span><span class="block text-[11px] font-bold sm:text-sm">Voir plus</span></span>
+        </span>
+        <?php endif; endforeach ?>
+      </button>
+    </li>
+    <?php endforeach ?>
+  </ul>
+  <dialog class="visionneuse" aria-label="Photo agrandie">
+    <img src="" alt="">
+    <p class="visionneuse-legende"></p>
+    <button type="button" class="visionneuse-bouton top-4 right-4" data-fermer aria-label="Fermer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <button type="button" class="visionneuse-bouton top-1/2 left-4 -translate-y-1/2" data-precedent aria-label="Photo précédente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button type="button" class="visionneuse-bouton top-1/2 right-4 -translate-y-1/2" data-suivant aria-label="Photo suivante"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+  </dialog>
+</section>
+<?php endif ?>
+
 <?php if ($programme): ?>
-<section class="conteneur py-14 sm:py-16" aria-labelledby="titre-programme">
+<section class="conteneur py-9 sm:py-16" aria-labelledby="titre-programme">
   <h2 id="titre-programme" class="titre-section">Le programme</h2>
-  <ol class="mt-8 grid gap-6 md:grid-cols-3 md:gap-8">
+  <ol class="mt-5 grid gap-5 sm:mt-8 sm:gap-6 md:grid-cols-3 md:gap-8">
     <?php foreach ($programme as $k => [$etiquette, $t, $texte]): ?>
     <li class="relative grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 md:block">
       <div class="row-span-3 flex items-center gap-3 md:row-span-1">
-        <span class="grid size-11 shrink-0 place-items-center rounded-full font-bold text-white <?= cycle(['bg-orange', 'bg-turquoise', 'bg-bleu'], $k) ?>"><?= $k + 1 ?></span>
+        <span class="grid size-9 shrink-0 place-items-center rounded-full text-sm font-bold text-white sm:size-11 sm:text-base <?= cycle(['bg-orange', 'bg-turquoise', 'bg-bleu'], $k) ?>"><?= $k + 1 ?></span>
         <?php if ($k < count($programme) - 1): ?><span class="hidden h-px flex-1 border-t-2 border-dashed border-ligne md:block" aria-hidden="true"></span><?php endif ?>
       </div>
       <?php if ($etiquette): ?><p class="mt-1 text-xs font-bold tracking-[0.14em] uppercase md:mt-4"><?= e($etiquette) ?></p><?php endif ?>
-      <h3 class="mt-1 text-lg font-bold"><?= e($t) ?></h3>
-      <?php if ($texte): ?><p class="mt-2 text-sm leading-relaxed"><?= e($texte) ?></p><?php endif ?>
+      <h3 class="mt-0.5 text-base font-bold sm:mt-1 sm:text-lg"><?= e($t) ?></h3>
+      <?php if ($texte): ?><p class="mt-1 text-sm leading-relaxed sm:mt-2"><?= e($texte) ?></p><?php endif ?>
     </li>
     <?php endforeach ?>
   </ol>
 </section>
 <?php endif ?>
 
-<?php if ($photos): $n = count($photos); ?>
-<section class="conteneur pb-14 sm:pb-16 <?= !$programme ? 'pt-14' : '' ?>" aria-labelledby="titre-images">
-  <h2 id="titre-images" class="titre-section">En images</h2>
-  <ul class="mt-6 grid auto-rows-[110px] grid-cols-3 gap-2 sm:auto-rows-[180px] sm:gap-3 md:auto-rows-[240px] md:grid-cols-4">
-    <?php foreach (array_slice($photos, 0, 5) as $k => $photo):
-        $classe = $n === 1 ? 'col-span-3 row-span-2 md:col-span-4' : ($k === 0 ? 'row-span-2 md:col-span-2' : ($n === 2 ? 'col-span-2 row-span-2' : '')); ?>
-    <li class="survol-zoom overflow-hidden rounded-xl sm:rounded-2xl <?= $classe ?>">
-      <img src="<?= e(media($photo['image'])) ?>" alt="<?= e($photo['legende']) ?>" class="h-full w-full object-cover" loading="lazy">
-    </li>
-    <?php endforeach ?>
-  </ul>
-</section>
-<?php endif ?>
+
 
 <?php if ($i['axe_nom']): ?>
-<p class="conteneur py-8 text-sm text-texte sm:py-10">Cette initiative s'inscrit dans l'axe <a href="<?= url('/a-propos') ?>#axes" class="font-bold text-vert hover:text-orange"><?= e($i['axe_nom']) ?></a> du chapitre.</p>
+<p class="conteneur py-6 text-sm text-texte sm:py-10">Cette initiative s'inscrit dans l'axe <a href="<?= url('/a-propos') ?>#axes" class="font-bold text-vert hover:text-orange"><?= e($i['axe_nom']) ?></a> du chapitre.</p>
 <?php endif ?>
 
 <?php if ($autres): ?>
-<section class="bg-gris py-14 sm:py-16" aria-labelledby="titre-autres">
+<section class="bg-gris py-9 sm:py-16" aria-labelledby="titre-autres">
   <div class="conteneur">
     <div class="flex items-end justify-between gap-4">
       <h2 id="titre-autres" class="titre-section">Autres initiatives</h2>
       <a href="<?= url('/initiatives') ?>" class="btn btn-contour hidden sm:inline-flex">Toutes les initiatives</a>
       <a href="<?= url('/initiatives') ?>" class="btn-tout-voir sm:hidden">Tout voir</a>
     </div>
-    <ul class="masquer-defilement -mx-4 mt-7 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 lg:grid-cols-3">
+    <ul class="masquer-defilement -mx-4 mt-5 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 lg:grid-cols-3">
       <?php foreach ($autres as $autre): ?><li class="w-[75%] max-w-72 shrink-0 snap-start sm:w-auto sm:max-w-none"><?php partiel('cartes/initiative', ['i' => $autre, 'simple' => true]) ?></li><?php endforeach ?>
     </ul>
   </div>

@@ -120,9 +120,9 @@
 
 /* Texte éditorial (fiches, articles) */
 @layer components {
-  .prose-ycm { @apply text-base leading-relaxed text-encre; }
+  .prose-ycm { @apply text-[15px] leading-relaxed text-encre sm:text-base; }
   .prose-ycm > * + * { @apply mt-4; }
-  .prose-ycm h2 { @apply mt-9 text-2xl font-bold text-vert; }
+  .prose-ycm h2 { @apply mt-7 text-xl leading-snug font-bold text-vert sm:mt-9 sm:text-2xl; }
   .prose-ycm ul { @apply space-y-2 pl-1; }
   .prose-ycm ul li { @apply relative pl-5; }
   .prose-ycm ul li::before { content: ""; @apply absolute top-[0.6em] left-0 size-2 rounded-full bg-orange; }

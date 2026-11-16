@@ -366,6 +366,15 @@
       });
     });
 
+    // ---- Bouton qui fait apparaître le bloc caché juste après lui (ex. « Ajouter l'option candidature »)
+    document.querySelectorAll("[data-montrer-suivant]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var bloc = b.nextElementSibling;
+        if (bloc) bloc.hidden = false;
+        b.style.display = "none";
+      });
+    });
+
     // ---- Initiative : passer l'état à « Terminée » masque aussitôt la configuration des participations
     var etat = document.querySelector("#f-etat");
     if (etat && document.querySelector("[data-si-etat]")) {

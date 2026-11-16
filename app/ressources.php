@@ -241,7 +241,8 @@ function ressources(): array
             'libelle_ajout' => 'Ajouter une initiative', 'libelle_tous' => 'Toutes',
             'champs_select' => "t.*, a.nom AS axe_nom, a.couleur AS axe_couleur,
                 (SELECT COUNT(*) FROM participations p WHERE p.initiative_id = t.id) AS nb_participations,
-                (SELECT COUNT(*) FROM participations p WHERE p.initiative_id = t.id AND p.statut = 'en_attente') AS nb_participations_attente",
+                (SELECT COUNT(*) FROM participations p WHERE p.initiative_id = t.id AND p.statut = 'en_attente') AS nb_participations_attente,
+                (SELECT COUNT(*) FROM initiative_roles r WHERE r.initiative_id = t.id) AS nb_roles",
             'depuis' => 'FROM initiatives t LEFT JOIN axes a ON a.id = t.axe_id',
             'ordre' => 't.publie_le DESC',
             'onglets' => [['À venir', "t.etat = 'a_venir'"], ['En cours', "t.etat = 'en_cours'"], ['Terminées', "t.etat = 'terminee'"], ['Participations ouvertes', "t.participations_ouvertes = 1 AND t.etat <> 'terminee'"]],
@@ -251,9 +252,9 @@ function ressources(): array
                 ['Initiative', fn ($l) => nom_et_detail($l['titre'], '', miniature($l['image'])), 'lien' => true],
                 ['État', fn ($l) => e(ETATS_INITIATIVE[$l['etat']] ?? '')],
                 ['Date', fn ($l) => e($l['date_libelle'] ?: '—')],
-                // Initiative terminée : plus de configuration, seulement les participations déjà reçues
-                ['Participations', fn ($l) => $l['etat'] === 'terminee' && !(int) $l['nb_participations'] ? '<span class="ycm-discret">—</span>'
-                    : '<a class="ycm-lien" href="' . url('/gestion/initiatives/' . $l['id'] . '/participations') . '">' . ($l['participations_ouvertes'] || $l['etat'] === 'terminee' ? (int) $l['nb_participations'] . ' reçue' . pluriel((int) $l['nb_participations']) : 'Configurer') . '</a>' . ($l['nb_participations_attente'] ? ' ' . badge($l['nb_participations_attente'] . ' à traiter', 'orange') : '')],
+                // Candidatures : « — » tant qu'elles ne sont pas mises en place (beaucoup d'initiatives n'en ont pas besoin) ou une fois l'initiative terminée sans rien reçu
+                ['Candidatures', fn ($l) => !(int) $l['nb_participations'] && ($l['etat'] === 'terminee' || (!(int) $l['nb_roles'] && !$l['participations_ouvertes'])) ? '<span class="ycm-discret">—</span>'
+                    : '<a class="ycm-lien" href="' . url('/gestion/initiatives/' . $l['id'] . '/participations') . '">' . (int) $l['nb_participations'] . ' reçue' . pluriel((int) $l['nb_participations']) . '</a>' . ($l['nb_participations_attente'] ? ' ' . badge($l['nb_participations_attente'] . ' à traiter', 'orange') : '')],
                 ['Statut', fn ($l) => badge_statut($l, true)],
             ],
             'url_voir' => fn ($l) => url('/initiatives/' . $l['slug']),
@@ -274,16 +275,25 @@ function ressources(): array
                     'participants' => ['type' => 'texte', 'libelle' => 'Participants', 'requis' => false, 'max' => 80, 'largeur' => 'demi', 'aide' => 'Exemple : 60 jeunes'],
                     'format' => ['type' => 'texte', 'libelle' => 'Format', 'requis' => false, 'max' => 80, 'largeur' => 'demi', 'aide' => 'Exemple : Présentiel'],
                 ]],
-                ['Participations', 'cote' => true, 'description' => "Les jeunes peuvent se proposer comme bénévoles, intervenants ou participants. Vous créez vous-même les rôles et les questions.", 'champs' => [
-                    // Deux affichages : l'un pour une initiative en cours ou à venir, l'autre si elle est terminée
-                    // (le choix suit le champ « État » dès qu'on le change, avant même d'enregistrer)
-                    'participations_lien' => ['type' => 'lecture', 'libelle' => 'Formulaire et candidatures', 'html' => function ($l) {
+                // Candidatures : facultatives. Rien à remplir tant que l'équipe ne décide pas d'en ouvrir (participants connus, cibles précises…)
+                ['Candidatures', 'cote' => true, 'champs' => [
+                    'participations_lien' => ['type' => 'lecture', 'libelle' => '', 'toujours' => true, 'html' => function ($l) {
                         $nb = (int) ($l['nb_participations'] ?? 0);
                         $voir = url('/gestion/initiatives/' . ($l['id'] ?? 0) . '/participations');
-                        $actif = empty($l['id']) ? "Enregistrez d'abord l'initiative."
-                            : ($l['participations_ouvertes'] ? badge('Ouvertes', 'vert') : badge('Fermées', 'gris')) . ' ' . $nb . ' reçue' . pluriel($nb) . '<br><a class="ycm-bouton-contour ycm-petit" style="margin-top:8px" href="' . $voir . '">Gérer les participations</a>';
-                        $terminee = badge('Closes', 'gris') . ' Initiative terminée : les participations ne se configurent plus.'
-                            . ($nb ? '<br><a class="ycm-bouton-contour ycm-petit" style="margin-top:8px" href="' . $voir . '">Voir les ' . $nb . ' participation' . pluriel($nb) . ' reçue' . pluriel($nb) . '</a>' : '');
+                        $en_place = $nb || (int) ($l['nb_roles'] ?? 0) || !empty($l['participations_ouvertes']);
+                        if (empty($l['id'])) {
+                            $actif = 'Facultatif : après l\'enregistrement, vous pourrez permettre aux jeunes de se proposer (participants, bénévoles, intervenants).';
+                        } elseif ($en_place) {
+                            $actif = ($l['participations_ouvertes'] ? badge('Ouvertes', 'vert') : badge('Fermées', 'gris')) . ' ' . $nb . ' reçue' . pluriel($nb)
+                                . '<br><a class="ycm-bouton-contour ycm-petit" style="margin-top:8px" href="' . $voir . '">Gérer les candidatures</a>';
+                        } else {
+                            $actif = '<p style="margin:0 0 8px">Aucune candidature : les participants sont connus ou choisis par l\'équipe.</p>'
+                                . '<button type="button" class="ycm-bouton-contour ycm-petit" data-montrer-suivant>Ajouter l\'option candidature</button>'
+                                . '<div hidden style="margin-top:10px">Les jeunes pourront se proposer depuis la page de l\'initiative. Vous créez vous-même les rôles (participant, bénévole, intervenant…) et les questions, puis vous choisissez qui est retenu.'
+                                . '<br><a class="ycm-bouton-vert ycm-petit" style="margin-top:10px" href="' . $voir . '?vue=formulaire">Configurer les candidatures</a></div>';
+                        }
+                        $terminee = 'Initiative terminée : pas de candidatures.'
+                            . ($nb ? '<br><a class="ycm-bouton-contour ycm-petit" style="margin-top:8px" href="' . $voir . '">Voir les ' . $nb . ' candidature' . pluriel($nb) . ' reçue' . pluriel($nb) . '</a>' : '');
                         $fini = ($l['etat'] ?? '') === 'terminee';
                         return '<div data-si-etat="actif"' . ($fini ? ' hidden' : '') . '>' . $actif . '</div><div data-si-etat="terminee"' . ($fini ? '' : ' hidden') . '>' . $terminee . '</div>';
                     }],
