@@ -359,6 +359,36 @@
     }, 5000);
   });
 
+  /* Vidéo bilan de l'année : s'ouvre en grand et démarre ; à la fermeture, la lecture s'arrête.
+     Une vidéo YouTube ou Facebook n'est chargée qu'au moment où le visiteur la demande. */
+  (function () {
+    var boite = document.querySelector("[data-bilan-video]");
+    if (!boite || !boite.showModal) return;
+    var cadre = boite.querySelector("[data-bilan-cadre]");
+    var video = cadre.querySelector("video");
+    function ouvrir() {
+      boite.showModal();
+      if (cadre.dataset.integree && !cadre.querySelector("iframe")) {
+        var f = document.createElement("iframe");
+        f.src = cadre.dataset.integree;
+        f.title = boite.getAttribute("aria-label");
+        f.className = "absolute inset-0 h-full w-full border-0";
+        f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+        f.allowFullscreen = true;
+        cadre.appendChild(f);
+      }
+      if (video) { var p = video.play(); if (p && p.catch) p.catch(function () {}); }
+    }
+    document.querySelectorAll("[data-ouvrir-bilan]").forEach(function (b) { b.addEventListener("click", ouvrir); });
+    boite.querySelector("[data-fermer]").addEventListener("click", function () { boite.close(); });
+    boite.addEventListener("click", function (e) { if (e.target === boite) boite.close(); });
+    boite.addEventListener("close", function () {
+      if (video) video.pause();
+      var f = cadre.querySelector("iframe");
+      if (f) f.remove();
+    });
+  })();
+
   /* Photothèque : une photo s'ouvre en grand, on passe à la suivante avec les flèches ou le clavier. */
   document.querySelectorAll("[data-phototheque]").forEach(function (zone) {
     var boutons = zone.querySelectorAll("[data-agrandir]");

@@ -374,6 +374,20 @@ CREATE TABLE IF NOT EXISTS chiffres_cles (
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Vidéo bilan de chaque année : la plus récente publiée s'affiche sur l'accueil
+CREATE TABLE IF NOT EXISTS bilans_annuels (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  annee SMALLINT UNSIGNED NOT NULL,
+  titre VARCHAR(150) NOT NULL DEFAULT '',
+  texte VARCHAR(300) NOT NULL DEFAULT '',
+  video VARCHAR(255) NOT NULL DEFAULT '',
+  lien_video VARCHAR(255) NOT NULL DEFAULT '',
+  image VARCHAR(255) NOT NULL DEFAULT '',
+  publie TINYINT(1) NOT NULL DEFAULT 0,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_bilans_annee (annee)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- ---------------------------------------------------------------------
 -- Site, échanges
 -- ---------------------------------------------------------------------

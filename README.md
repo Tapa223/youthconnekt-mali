@@ -57,7 +57,7 @@ Tant que le mode reste `journal`, tout fonctionne mais les envois sont seulement
 Adresse : `/gestion`. Rôles, choisis dans la fiche d'un compte (Comptes et connexions) :
 
 - **Administrateur principal** : tout, y compris les comptes de l'équipe, les paramètres et les contenus d'exemple ;
-- **Éditeur de contenus** : opportunités, actualités, initiatives, témoignages, partenaires, chiffres clés, mot du ministre ;
+- **Éditeur de contenus** : opportunités, actualités, initiatives, témoignages, partenaires, chiffres clés, bilan de l'année, mot du ministre ;
 - **Modération des communautés** : communautés et demandes d'intégration ;
 - **Gestion des membres** : comptes, profils, messages de contact, newsletter, paramètres.
 

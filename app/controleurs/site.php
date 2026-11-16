@@ -24,6 +24,7 @@ function accueil(): void
         'titre' => 'YouthConnekt Mali | La jeunesse malienne se connecte ici',
         'p' => parametres(),
         'chiffres' => lignes('SELECT * FROM chiffres_cles WHERE publie = 1 ORDER BY ordre, id LIMIT 3'),
+        'bilan' => bilan_accueil(),
         'axes' => array_slice(axes(), 0, 3),
         'initiatives' => $initiatives,
         'mot' => mot_ministre(),

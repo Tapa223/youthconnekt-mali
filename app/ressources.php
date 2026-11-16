@@ -657,6 +657,48 @@ function ressources(): array
         ],
 
         // ------------------------------------------------------------------
+        'bilans' => [
+            'table' => 'bilans_annuels', 'titre' => "Bilan de l'année",
+            'description' => "La vidéo récapitulative de chaque année. La plus récente publiée s'affiche sur l'accueil : un bouton sur le premier écran et la lecture dans la section « Le chapitre ».",
+            'libelle_ajout' => 'Ajouter un bilan', 'ordre' => 't.annee DESC', 'par_page' => 30,
+            'nom_element' => fn ($l) => 'Bilan ' . $l['annee'],
+            'colonnes' => [
+                ['Année', fn ($l) => nom_et_detail('Bilan ' . $l['annee'], (string) $l['titre'], miniature($l['image'])), 'lien' => true],
+                ['Vidéo', fn ($l) => $l['video'] !== '' ? badge('Fichier vidéo', 'vert') : ($l['lien_video'] !== '' ? badge('Lien', 'vert') : badge('Aucune vidéo', 'orange'))],
+                ['Statut', fn ($l) => $l['publie'] ? badge('Publié', 'vert') : badge('Brouillon', 'gris')],
+            ],
+            'groupes' => [
+                [null, 'champs' => [
+                    'annee' => ['type' => 'nombre', 'libelle' => 'Année', 'largeur' => 'demi', 'defaut' => (int) date('Y')],
+                    'titre' => ['type' => 'texte', 'libelle' => 'Titre', 'requis' => false, 'max' => 150, 'largeur' => 'demi', 'aide' => "Laisser vide : « Le chapitre en " . date('Y') . " » (avec l'année du bilan)."],
+                    'texte' => ['type' => 'zone', 'libelle' => 'Phrase de présentation', 'requis' => false, 'max' => 300, 'lignes' => 2, 'aide' => 'Affichée sous la vidéo. Exemple : Formations, forums et actions citoyennes : une année de YouthConnekt Mali en images.'],
+                ]],
+                ['Vidéo', 'description' => "Un lien YouTube ou Facebook est le plus léger pour les visiteurs et n'a pas de limite de poids. S'il est rempli, c'est lui qui est lu ; sinon, le fichier envoyé.", 'champs' => [
+                    'lien_video' => ['type' => 'url', 'libelle' => 'Lien de la vidéo (YouTube, Facebook ou Vimeo)', 'requis' => false],
+                    'video' => ['type' => 'video', 'libelle' => 'Ou fichier vidéo', 'requis' => false, 'dossier' => 'bilans'],
+                ]],
+                ['Image de couverture', 'champs' => [
+                    'image' => ['type' => 'image', 'libelle' => 'Image affichée avant la lecture', 'requis' => false, 'dossier' => 'bilans', 'phototheque' => true, 'aide' => "Une photo forte de l'année. Elle remplace la grande photo de la section « Le chapitre » sur l'accueil ; laissée vide, la photo actuelle reste."],
+                ]],
+                ['Publication', 'cote' => true, 'champs' => [
+                    'publie' => ['type' => 'case', 'libelle' => 'Publié', 'aide' => "Le bilan publié de l'année la plus récente apparaît sur l'accueil."],
+                ]],
+            ],
+            'avant' => function (array &$d, ?array $ancien) {
+                $annee = (int) ($d['annee'] ?? 0);
+                if ($annee < 2015 || $annee > (int) date('Y') + 1) {
+                    throw new InvalidArgumentException('annee|Indiquez une année valide (par exemple ' . date('Y') . ').');
+                }
+                if (valeur('SELECT id FROM bilans_annuels WHERE annee = ? AND id <> ?', [$annee, (int) ($ancien['id'] ?? 0)])) {
+                    throw new InvalidArgumentException("annee|Un bilan existe déjà pour $annee : ouvrez-le pour le modifier.");
+                }
+                if (($d['lien_video'] ?? '') !== '' && !lien_video_integree($d['lien_video'])) {
+                    throw new InvalidArgumentException('lien_video|Lien non reconnu : copiez le lien de la vidéo depuis YouTube, Facebook ou Vimeo (bouton Partager).');
+                }
+            },
+        ],
+
+        // ------------------------------------------------------------------
         'ministre' => [
             'table' => 'mot_ministre', 'titre' => 'Mot du ministre', 'fiche_unique' => true,
             'description' => "Le message affiché avant la section Communauté sur l'accueil, et en entier sur la page À propos.",

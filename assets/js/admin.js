@@ -370,8 +370,30 @@
     document.querySelectorAll(".ycm-zone-image input[type=file]:not([multiple])").forEach(function (champ) {
       champ.addEventListener("change", function () {
         var fichier = champ.files && champ.files[0];
-        if (!fichier || !/^image\//.test(fichier.type)) return;
         var zone = champ.closest(".ycm-zone-image");
+        // Vidéo : refusée tout de suite si le serveur ne peut pas la recevoir (évite un long envoi pour rien)
+        if (fichier && champ.hasAttribute("data-limite")) {
+          var note = zone.querySelector(".ycm-erreur-video");
+          if (note) note.remove();
+          if (fichier.size > +champ.getAttribute("data-limite")) {
+            note = document.createElement("p");
+            note.className = "ycm-erreur ycm-erreur-video";
+            note.textContent = "Cette vidéo pèse " + Math.round(fichier.size / 1048576) + " Mo : c'est plus que ce que le serveur accepte. Compressez-la, ou indiquez plutôt son lien YouTube ou Facebook.";
+            zone.appendChild(note);
+            champ.value = "";
+            return;
+          }
+          var lecteur = zone.querySelector("video.ycm-apercu");
+          if (!lecteur) {
+            lecteur = document.createElement("video");
+            lecteur.className = "ycm-apercu";
+            lecteur.controls = true;
+            zone.insertBefore(lecteur, zone.firstChild);
+          }
+          lecteur.src = URL.createObjectURL(fichier);
+          return;
+        }
+        if (!fichier || !/^image\//.test(fichier.type)) return;
         var apercu = zone.querySelector("img.ycm-apercu");
         if (!apercu) {
           apercu = document.createElement("img");

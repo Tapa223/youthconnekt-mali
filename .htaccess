@@ -7,7 +7,7 @@ DirectoryIndex index.php
 
   # Fichiers internes jamais accessibles depuis le navigateur
   RewriteRule ^(app|vues|base-de-donnees|stockage|node_modules|assets/src)(/|$) - [F,L]
-  RewriteRule ^(config\.php|config\.exemple\.php|package\.json|package-lock\.json|README\.md|\.git.*)$ - [F,L]
+  RewriteRule ^(config\.php|config\.exemple\.php|package\.json|package-lock\.json|README\.md|\.user\.ini|\.git.*)$ - [F,L]
 
   # Les fichiers qui existent (images, styles...) sont servis directement
   RewriteCond %{REQUEST_FILENAME} -f
@@ -19,6 +19,14 @@ DirectoryIndex index.php
 
 <IfModule !mod_rewrite.c>
   ErrorDocument 404 index.php
+</IfModule>
+
+# Vidéo bilan de l'année : envois plus lourds acceptés (WAMP et serveurs Apache avec PHP en module ;
+# les hébergements en PHP-FPM lisent .user.ini)
+<IfModule mod_php.c>
+  php_value upload_max_filesize 256M
+  php_value post_max_size 260M
+  php_value max_input_time 600
 </IfModule>
 
 # Formats d'images parfois inconnus du serveur (photos WhatsApp en .jfif, AVIF)

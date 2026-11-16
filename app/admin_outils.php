@@ -11,6 +11,7 @@ const ICONES = [
     'mallette' => '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
     'journal' => '<rect x="3" y="4" width="15" height="16" rx="2"/><path d="M18 8h3v10a2 2 0 0 1-2 2"/><path d="M7 9h7M7 13h7M7 17h4"/>',
     'drapeau' => '<path d="M5 21V4"/><path d="M5 4h11l-2 4 2 4H5"/>',
+    'video' => '<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M10 9.2v5.6l4.8-2.8z"/>',
     'bulle' => '<path d="M4 5h16v11H9l-5 4z"/>',
     'batiment' => '<rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M9 7h1M14 7h1M9 11h1M14 11h1M9 15h1M14 15h1M10 21v-3h4v3"/>',
     'personne' => '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
@@ -48,6 +49,7 @@ const MENU_ADMIN = [
     ]],
     ['Site', [
         ['Chiffres clés', 'chiffres', 'graphique', 'chiffres'],
+        ["Bilan de l'année", 'bilans', 'video', 'bilans'],
         ['Mot du ministre', 'ministre', 'coeur', 'ministre'],
         ["Axes d'intervention", 'axes', 'cible', 'axes'],
         ['Paramètres', 'parametres', 'reglage', 'parametres'],

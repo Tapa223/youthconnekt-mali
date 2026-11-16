@@ -47,6 +47,33 @@ function photos_provisoires(): bool
     return (bool) parametres()['photos_provisoires'];
 }
 
+/**
+ * Bilan publié de l'année la plus récente, prêt à afficher (null s'il n'y en a pas, ou sans vidéo lisible).
+ * Le lien YouTube, Facebook ou Vimeo passe avant le fichier envoyé : plus léger pour les visiteurs.
+ */
+function bilan_accueil(): ?array
+{
+    try {
+        $bilans = lignes('SELECT * FROM bilans_annuels WHERE publie = 1 ORDER BY annee DESC LIMIT 3');
+    } catch (PDOException $e) {
+        return null; // mise-a-jour-29.sql pas encore importée : l'accueil reste comme avant
+    }
+    foreach ($bilans as $b) {
+        $integree = $b['lien_video'] !== '' ? lien_video_integree($b['lien_video']) : null;
+        $fichier = $b['video'] !== '' && is_file(RACINE . '/' . $b['video']) ? media($b['video']) : null;
+        if (!$integree && !$fichier) {
+            continue;
+        }
+        return $b + [
+            'titre_affiche' => trim($b['titre']) !== '' ? rtrim(trim($b['titre']), '. ') : 'Le chapitre en ' . $b['annee'],
+            'integree' => $integree,
+            'fichier' => $integree ? null : $fichier,
+            'couverture' => $b['image'] !== '' ? media($b['image']) : '',
+        ];
+    }
+    return null;
+}
+
 function mot_ministre(): array
 {
     return ligne('SELECT * FROM mot_ministre WHERE id = 1') ?? ['nom' => '', 'titre_officiel' => '', 'photo' => '', 'extrait' => '', 'message' => '', 'publie' => 0];

@@ -587,7 +587,9 @@ function formulaire(string $slug, ?int $id = null): void
             // Images envoyées : enregistrées seulement quand tout le reste est valide
             foreach ($images as $nom => $def) {
                 try {
-                    $chemin = televerser_image($_FILES[$nom] ?? null, $def['dossier'] ?? $slug, $def['largeur_max'] ?? 1800);
+                    $chemin = $def['type'] === 'video'
+                        ? televerser_video($_FILES[$nom] ?? null, $def['dossier'] ?? $slug)
+                        : televerser_image($_FILES[$nom] ?? null, $def['dossier'] ?? $slug, $def['largeur_max'] ?? 1800);
                     $choisie = !empty($def['phototheque']) ? post('phototheque_' . $nom) : '';
                     if ($chemin) {
                         $donnees[$nom] = $chemin;
@@ -680,7 +682,7 @@ function lire_formulaire(array $champs, array $valeurs, ?array $ligne): array
             }
             continue;
         }
-        if ($type === 'image') {
+        if ($type === 'image' || $type === 'video') {
             $images[$nom] = $def;
             continue;
         }
@@ -825,7 +827,7 @@ function supprimer(string $slug, int $id): void
     $photos = $r['galerie'] ? lignes("SELECT image FROM `{$r['galerie'][0]}` WHERE `{$r['galerie'][1]}` = ?", [$id]) : [];
     requete("DELETE FROM `{$r['table']}` WHERE id = ?", [$id]);
     foreach (champs_de(groupes_de($r, $ligne)) as $nom => $def) {
-        if ($def['type'] === 'image' && !empty($ligne[$nom])) {
+        if (in_array($def['type'], ['image', 'video'], true) && !empty($ligne[$nom])) {
             supprimer_image($ligne[$nom]);
         }
     }

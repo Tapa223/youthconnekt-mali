@@ -400,7 +400,11 @@ function verifier_csrf(): void
     $recu = (string) ($_POST['_csrf'] ?? '');
     if ($recu === '' || !hash_equals(csrf_jeton(), $recu)) {
         http_response_code(400);
-        flash('erreur', 'Le formulaire a expiré. Merci de recommencer.');
+        // Envoi plus lourd que ce que le serveur accepte (vidéo…) : PHP vide alors tout le formulaire
+        $trop_lourd = $recu === '' && empty($_POST) && (int) ($_SERVER['CONTENT_LENGTH'] ?? 0) > limite_envoi();
+        flash('erreur', $trop_lourd
+            ? 'Fichier trop lourd pour le serveur (' . taille_lisible(limite_envoi()) . ' au maximum). Rien n\'a été enregistré : pour une vidéo, indiquez plutôt son lien YouTube ou Facebook.'
+            : 'Le formulaire a expiré. Merci de recommencer.');
         $retour = $_SERVER['HTTP_REFERER'] ?? url('/');
         $hote = parse_url($retour, PHP_URL_HOST);
         if ($hote && $hote !== ($_SERVER['HTTP_HOST'] ?? '')) {
@@ -917,6 +921,81 @@ function televerser_image(?array $fichier, string $dossier, int $largeur_max = 1
     }
     @chmod($destination, 0644);
     return 'uploads/' . $dossier . '/' . $nom;
+}
+
+/** Plus gros envoi accepté par le serveur, en octets (réglages upload_max_filesize et post_max_size de PHP). */
+function limite_envoi(): int
+{
+    $octets = static function (string $v): int {
+        $v = trim($v);
+        $n = (int) $v;
+        return match (strtolower(substr($v, -1))) {
+            'g' => $n * 1024 ** 3, 'm' => $n * 1024 ** 2, 'k' => $n * 1024, default => $n,
+        };
+    };
+    $limites = array_filter([$octets((string) ini_get('upload_max_filesize')), $octets((string) ini_get('post_max_size'))]);
+    return $limites ? min($limites) : 2 * 1024 ** 2;
+}
+
+function taille_lisible(int $octets): string
+{
+    return $octets >= 1024 ** 3 ? round($octets / 1024 ** 3, 1) . ' Go' : max(1, (int) round($octets / 1024 ** 2)) . ' Mo';
+}
+
+/**
+ * Enregistre une vidéo envoyée (MP4 ou WebM) dans uploads/<dossier>/ et renvoie son chemin.
+ * Le poids maximal est celui accepté par le serveur. Renvoie null si aucun fichier n'a été choisi.
+ */
+function televerser_video(?array $fichier, string $dossier): ?string
+{
+    if (!$fichier || ($fichier['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+        return null;
+    }
+    $trop_lourde = 'Vidéo trop lourde pour le serveur (' . taille_lisible(limite_envoi()) . ' au maximum). Compressez-la, ou indiquez plutôt son lien YouTube ou Facebook.';
+    if (in_array($fichier['error'], [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true)) {
+        throw new RuntimeException($trop_lourde);
+    }
+    if ($fichier['error'] !== UPLOAD_ERR_OK || !is_uploaded_file($fichier['tmp_name'])) {
+        throw new RuntimeException("La vidéo n'a pas pu être envoyée. Réessayez.");
+    }
+    // Formats lus par tous les navigateurs ; le contenu du fichier est vérifié, pas seulement son nom
+    $formats = ['video/mp4' => 'mp4', 'video/webm' => 'webm'];
+    $type = function_exists('finfo_open') ? (string) finfo_file(finfo_open(FILEINFO_MIME_TYPE), $fichier['tmp_name']) : '';
+    $extension = strtolower(pathinfo((string) $fichier['name'], PATHINFO_EXTENSION));
+    if ($type !== '' ? !isset($formats[$type]) : !in_array($extension, ['mp4', 'webm'], true)) {
+        throw new RuntimeException('Format de vidéo non lu par tous les navigateurs. Envoyez un fichier MP4 (ou WebM).');
+    }
+    $extension = $formats[$type] ?? $extension;
+    $dossier = trim(preg_replace('/[^a-z0-9\-\/]/', '', $dossier), '/');
+    $cible = RACINE . '/uploads/' . $dossier;
+    if (!is_dir($cible) && !@mkdir($cible, 0775, true)) {
+        throw new RuntimeException("Le dossier des fichiers envoyés n'est pas accessible en écriture.");
+    }
+    $nom = date('Ymd') . '-' . bin2hex(random_bytes(6)) . '.' . $extension;
+    if (!move_uploaded_file($fichier['tmp_name'], $cible . '/' . $nom)) {
+        throw new RuntimeException("La vidéo n'a pas pu être enregistrée.");
+    }
+    @chmod($cible . '/' . $nom, 0644);
+    return 'uploads/' . $dossier . '/' . $nom;
+}
+
+/**
+ * Lien de lecture intégrée d'une vidéo YouTube, Facebook ou Vimeo (null si le lien n'est pas reconnu).
+ * Lecture lancée au clic : aucune vidéo extérieure n'est chargée avant que le visiteur la demande.
+ */
+function lien_video_integree(string $lien): ?string
+{
+    $lien = trim($lien);
+    if (preg_match('~(?:youtube\.com/(?:watch\?(?:.*&)?v=|embed/|shorts/|live/)|youtu\.be/)([A-Za-z0-9_-]{11})~', $lien, $m)) {
+        return 'https://www.youtube-nocookie.com/embed/' . $m[1] . '?autoplay=1&rel=0&playsinline=1';
+    }
+    if (preg_match('~vimeo\.com/(?:video/)?(\d+)~', $lien, $m)) {
+        return 'https://player.vimeo.com/video/' . $m[1] . '?autoplay=1';
+    }
+    if (preg_match('~^https?://(?:www\.|m\.|web\.)?(?:facebook\.com|fb\.watch)/~i', $lien)) {
+        return 'https://www.facebook.com/plugins/video.php?href=' . rawurlencode($lien) . '&show_text=false&autoplay=true';
+    }
+    return null;
 }
 
 /** Supprime une image envoyée qui n'est plus utilisée. */

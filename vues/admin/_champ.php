@@ -51,6 +51,13 @@ if ($type === 'cache') return;
           </div>
         </details>
         <?php endif ?>
+      <?php break; case 'video': ?>
+        <div class="ycm-zone-image">
+          <?php if ($valeur): ?><video src="<?= e(media($valeur)) ?>" class="ycm-apercu" controls preload="metadata"></video><?php endif ?>
+          <input type="file" id="<?= $id ?>" name="<?= e($nom) ?>" accept="video/mp4,video/webm"<?= $attr ?> data-limite="<?= limite_envoi() ?>">
+          <small>Fichier MP4, <?= e(taille_lisible(limite_envoi())) ?> au maximum sur ce serveur.</small>
+          <?php if ($valeur && !$desactive): ?><label class="ycm-case-ligne ycm-case-petite"><input type="checkbox" name="supprimer_<?= e($nom) ?>" value="1"> Retirer la vidéo actuelle</label><?php endif ?>
+        </div>
       <?php break; case 'communautes': ?>
         <ul class="ycm-cases">
           <?php foreach (options_communautes() as $cid => $libelle): ?>
