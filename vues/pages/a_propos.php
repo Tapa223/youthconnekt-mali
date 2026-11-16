@@ -229,7 +229,7 @@
         <h2 id="titre-yca" class="titre-section text-white">Un mouvement continental pour la jeunesse</h2>
         <p class="mt-4 text-[15px] leading-relaxed text-white/90 sm:text-lg"><?= e("Lancée en 2012 au Rwanda par le Gouvernement rwandais avec l'appui du PNUD, l'initiative est devenue en 2017 un mouvement continental, soutenu par le PNUD et la Commission de l'Union africaine. Son hub est à Kigali ; elle compte aujourd'hui 37 chapitres nationaux, dont YouthConnekt Mali.") ?></p>
       </div>
-      <?php partiel('partials/album_reseau', ['album' => $albums['africa']]) ?>
+      <?php partiel('partials/album_reseau', ['album' => $albums['africa'], 'sur_vert' => true]) ?>
     </div>
     <?php else: ?>
     <div class="grid gap-6 lg:grid-cols-[minmax(0,6fr)_minmax(0,6fr)] lg:items-end lg:gap-14">
@@ -273,7 +273,7 @@
       <p class="mt-3 text-[15px] leading-relaxed sm:text-base">Son ambition : faire du Sahel une terre d'opportunités et d'investissement, portée par l'innovation et l'engagement de sa jeunesse, dans les domaines économique, social, numérique et citoyen.</p>
     </div>
     <div>
-    <?php if (!empty($albums['sahel'])) partiel('partials/album_reseau', ['album' => $albums['sahel'], 'classes' => 'mb-4']) ?>
+    <?php if (!empty($albums['sahel'])) partiel('partials/album_reseau', ['album' => $albums['sahel'], 'classes' => 'mb-5']) ?>
     <div class="rounded-3xl border-t-4 border-orange bg-gris p-5 sm:p-7">
       <h3 class="text-lg font-bold text-vert sm:text-xl">Le Forum YouthConnekt Sahel</h3>
       <p class="mt-1 text-sm sm:text-[15px]">La plateforme des jeunes du Sahel pour la paix et la prospérité.</p>

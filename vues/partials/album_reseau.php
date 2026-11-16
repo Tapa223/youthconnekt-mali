@@ -1,19 +1,21 @@
 <?php
 /*
  * Une seule photo de couverture ; un clic ouvre toute la photothèque (flèches, clavier).
- * Paramètres : $album (titre, photos), $classes
+ * Rien sur la photo : la phrase et le bouton sont dessous. Paramètres : $album (titre, photos), $classes, $sur_vert (section à fond vert)
  */
 $photos = $album['photos'];
 $n = count($photos);
 $titre = trim((string) $album['titre']) !== '' ? $album['titre'] : $album['nom'];
+$vert = !empty($sur_vert);
 ?>
 <div class="<?= e($classes ?? '') ?>" data-phototheque>
-  <button type="button" class="group relative block aspect-[16/10] w-full overflow-hidden rounded-2xl bg-vert text-left shadow-xl sm:rounded-3xl" data-agrandir="0" aria-label="<?= e($titre) ?> : voir les <?= $n ?> photo<?= pluriel($n) ?>">
-    <img src="<?= e(media($photos[0]['image'])) ?>" alt="<?= e($photos[0]['legende']) ?>" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
-    <span class="absolute inset-0 bg-[linear-gradient(180deg,rgb(3_94_77/0)_45%,rgb(3_94_77/.85)_100%)]" aria-hidden="true"></span>
-    <span class="absolute inset-x-4 bottom-4 flex flex-wrap items-end justify-between gap-2 sm:inset-x-5 sm:bottom-5">
-      <span class="text-[15px] leading-snug font-bold text-white [text-shadow:0_2px_10px_rgb(0_0_0/.35)] sm:text-lg"><?= e($titre) ?></span>
-      <?php if ($n > 1): ?><span class="inline-flex min-h-9 items-center rounded-full bg-white px-4 text-[13px] font-bold text-vert transition-colors group-hover:bg-orange group-hover:text-white sm:text-sm">Voir les <?= $n ?> photos</span><?php endif ?>
+  <button type="button" class="group block w-full text-left" data-agrandir="0" aria-label="<?= e($titre) ?> : voir les <?= $n ?> photo<?= pluriel($n) ?>">
+    <span class="block aspect-[16/10] overflow-hidden rounded-2xl shadow-xl sm:rounded-3xl">
+      <img src="<?= e(media($photos[0]['image'])) ?>" alt="<?= e($photos[0]['legende']) ?>" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+    </span>
+    <span class="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+      <span class="text-[15px] leading-snug font-bold sm:text-base <?= $vert ? 'text-white' : 'text-vert' ?>"><?= e($titre) ?></span>
+      <?php if ($n > 1): ?><span class="inline-flex min-h-9 items-center rounded-full border-[1.5px] px-4 text-[13px] font-bold transition-colors sm:text-sm <?= $vert ? 'border-white text-white group-hover:bg-white group-hover:text-vert' : 'border-vert text-vert group-hover:bg-vert group-hover:text-white' ?>">Voir les <?= $n ?> photos</span><?php endif ?>
     </span>
   </button>
   <?php foreach (array_slice($photos, 1, null, true) as $k => $ph): ?>

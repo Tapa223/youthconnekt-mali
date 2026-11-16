@@ -171,15 +171,11 @@ foreach (range(0, 11) as $k) {
       <img src="<?= e($bilan['couverture']) ?>" alt="" class="absolute inset-y-0 right-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 sm:w-[70%]" loading="lazy">
       <?php else: partiel('partials/reseau_deco'); endif ?>
       <span class="absolute inset-0 bg-[linear-gradient(90deg,rgb(3_94_77)_0%,rgb(3_94_77/.92)_38%,rgb(3_94_77/.15)_100%)]" aria-hidden="true"></span>
-      <span class="relative flex items-center gap-4 px-5 sm:gap-7 sm:px-10">
-        <span class="relative grid size-14 shrink-0 place-items-center rounded-full bg-orange shadow-[0_12px_30px_rgb(241_89_42/.45)] transition-[background-color,transform] duration-300 group-hover:scale-110 group-hover:bg-white sm:size-20" aria-hidden="true">
-          <span class="absolute inset-0 rounded-full border-2 border-orange motion-safe:animate-ping [animation-duration:2.2s]"></span>
-          <svg viewBox="0 0 24 24" class="relative ml-1 size-5 fill-white transition-colors group-hover:fill-orange sm:size-7"><path d="M7 4.5v15l12.5-7.5z"/></svg>
-        </span>
+      <span class="relative flex items-center px-5 sm:px-10">
         <span class="max-w-md">
           <span class="block text-lg leading-tight font-bold sm:text-3xl"><?= e($bilan['titre_affiche']) ?></span>
           <?php if (trim($bilan['texte']) !== ''): ?><span class="mt-1 line-clamp-2 block text-[13px] leading-snug text-white/90 sm:mt-2 sm:text-base"><?= e($bilan['texte']) ?></span><?php endif ?>
-          <span class="mt-3 hidden min-h-10 items-center rounded-full bg-white px-5 text-sm font-bold text-vert transition-colors group-hover:bg-orange group-hover:text-white sm:inline-flex">Voir la vidéo</span>
+          <span class="mt-3 inline-flex min-h-9 items-center gap-2 rounded-full bg-white px-4 text-[13px] font-bold text-vert transition-colors group-hover:bg-orange group-hover:text-white sm:min-h-10 sm:px-5 sm:text-sm"><svg viewBox="0 0 24 24" class="size-3.5 fill-current" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg>Voir la vidéo</span>
         </span>
       </span>
     </button>
