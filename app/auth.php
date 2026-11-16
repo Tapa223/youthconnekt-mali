@@ -158,7 +158,7 @@ const DROITS_ROLES = [
     'editeur' => [
         'opportunites' => 'modifier', 'actualites' => 'modifier', 'initiatives' => 'modifier',
         'temoignages' => 'modifier', 'partenaires' => 'modifier', 'chiffres' => 'modifier',
-        'ministre' => 'modifier', 'axes' => 'modifier', 'bilans' => 'modifier', 'communautes' => 'voir',
+        'ministre' => 'modifier', 'axes' => 'modifier', 'bilans' => 'modifier', 'albums' => 'modifier', 'communautes' => 'voir',
     ],
     'moderation' => [
         'communautes' => 'modifier', 'demandes' => 'modifier',

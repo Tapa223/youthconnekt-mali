@@ -74,6 +74,27 @@ function bilan_accueil(): ?array
     return null;
 }
 
+/**
+ * Albums de la page À propos (participation du Mali à YouthConnekt Africa et Sahel), par slug.
+ * Un album sans photo n'est pas renvoyé : rien ne s'affiche.
+ */
+function albums_reseau(): array
+{
+    try {
+        $albums = lignes('SELECT * FROM albums_reseau');
+    } catch (PDOException $e) {
+        return []; // mise-a-jour-31.sql pas encore importée
+    }
+    $resultat = [];
+    foreach ($albums as $a) {
+        $photos = lignes('SELECT * FROM photos_reseau WHERE album_id = ? ORDER BY ordre, id', [$a['id']]);
+        if ($photos) {
+            $resultat[$a['slug']] = $a + ['photos' => $photos];
+        }
+    }
+    return $resultat;
+}
+
 function mot_ministre(): array
 {
     return ligne('SELECT * FROM mot_ministre WHERE id = 1') ?? ['nom' => '', 'titre_officiel' => '', 'photo' => '', 'extrait' => '', 'message' => '', 'publie' => 0];

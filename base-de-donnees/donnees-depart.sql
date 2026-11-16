@@ -320,3 +320,8 @@ JOIN initiative_roles r ON r.initiative_id = i.id AND r.nom = q.role
 WHERE NOT EXISTS (SELECT 1 FROM initiative_champs x WHERE x.role_id = r.id AND x.libelle = q.libelle);
 
 UPDATE initiative_champs SET options = 'Idée\nLancement\nEn activité depuis plus d''un an' WHERE libelle = 'Où en est le projet ?';
+
+-- Albums photo de la page À propos (participation du Mali à YouthConnekt Africa et Sahel)
+INSERT IGNORE INTO albums_reseau (slug, nom, titre) VALUES
+  ('africa', 'YouthConnekt Africa', 'Le Mali aux Sommets YouthConnekt Africa'),
+  ('sahel', 'YouthConnekt Sahel', 'Le Mali aux Forums YouthConnekt Sahel');

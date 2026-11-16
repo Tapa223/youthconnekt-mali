@@ -222,6 +222,16 @@
 <section id="youthconnekt-africa" class="relative isolate scroll-mt-24 overflow-hidden bg-vert py-10 text-white sm:py-14" aria-labelledby="titre-yca">
   <?php partiel('partials/reseau_deco') ?>
   <div class="conteneur relative">
+    <?php if (!empty($albums['africa'])): /* Avec photos : le texte à gauche, la photo de couverture à droite */ ?>
+    <div class="grid gap-6 lg:grid-cols-[minmax(0,6fr)_minmax(0,5fr)] lg:items-center lg:gap-14">
+      <div>
+        <p class="surtitre surtitre-trait text-white/85">YouthConnekt Africa</p>
+        <h2 id="titre-yca" class="titre-section text-white">Un mouvement continental pour la jeunesse</h2>
+        <p class="mt-4 text-[15px] leading-relaxed text-white/90 sm:text-lg"><?= e("Lancée en 2012 au Rwanda par le Gouvernement rwandais avec l'appui du PNUD, l'initiative est devenue en 2017 un mouvement continental, soutenu par le PNUD et la Commission de l'Union africaine. Son hub est à Kigali ; elle compte aujourd'hui 37 chapitres nationaux, dont YouthConnekt Mali.") ?></p>
+      </div>
+      <?php partiel('partials/album_reseau', ['album' => $albums['africa']]) ?>
+    </div>
+    <?php else: ?>
     <div class="grid gap-6 lg:grid-cols-[minmax(0,6fr)_minmax(0,6fr)] lg:items-end lg:gap-14">
       <div>
         <p class="surtitre surtitre-trait text-white/85">YouthConnekt Africa</p>
@@ -229,6 +239,7 @@
       </div>
       <p class="text-[15px] leading-relaxed text-white/90 sm:text-lg">Lancée en 2012 au Rwanda par le Gouvernement rwandais avec l'appui du PNUD, l'initiative est devenue en 2017 un mouvement continental, soutenu par le PNUD et la Commission de l'Union africaine. Son hub est à Kigali ; elle compte aujourd'hui 37 chapitres nationaux, dont YouthConnekt Mali.</p>
     </div>
+    <?php endif ?>
     <dl class="mt-8 grid grid-cols-2 gap-2.5 sm:mt-10 sm:gap-4 lg:grid-cols-4">
       <?php foreach ([['10 millions', "d'emplois à créer pour les jeunes"], ['25 millions', 'de jeunes à former'], ['100 millions', 'de jeunes Africains à connecter'], ['1 million', 'de jeunes leaders à former']] as $k => [$nombre, $libelle]): ?>
       <div class="rounded-2xl border border-white/20 bg-white/5 p-3.5 sm:p-6">
@@ -261,10 +272,13 @@
       <p class="mt-4 text-[15px] leading-relaxed sm:text-lg">Lancée en 2021 par le PNUD avec le hub YouthConnekt Africa, le Bureau du Coordonnateur spécial des Nations unies pour le développement au Sahel et Generation Unlimited, l'initiative relie les chapitres nationaux des pays du Sahel, dont le Mali.</p>
       <p class="mt-3 text-[15px] leading-relaxed sm:text-base">Son ambition : faire du Sahel une terre d'opportunités et d'investissement, portée par l'innovation et l'engagement de sa jeunesse, dans les domaines économique, social, numérique et citoyen.</p>
     </div>
+    <div>
+    <?php if (!empty($albums['sahel'])) partiel('partials/album_reseau', ['album' => $albums['sahel'], 'classes' => 'mb-4']) ?>
     <div class="rounded-3xl border-t-4 border-orange bg-gris p-5 sm:p-7">
       <h3 class="text-lg font-bold text-vert sm:text-xl">Le Forum YouthConnekt Sahel</h3>
       <p class="mt-1 text-sm sm:text-[15px]">La plateforme des jeunes du Sahel pour la paix et la prospérité.</p>
       <p class="mt-4 text-sm leading-relaxed sm:text-[15px]">Organisé à tour de rôle dans un pays du Sahel, le Forum réunit les jeunes, les gouvernements et les partenaires autour de l'emploi, de l'innovation, de la paix et de l'engagement citoyen. YouthConnekt Mali y représente la jeunesse malienne.</p>
+    </div>
     </div>
   </div>
 </section>

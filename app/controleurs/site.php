@@ -82,6 +82,7 @@ function a_propos(): void
         ],
         'partenaires' => lignes('SELECT * FROM partenaires WHERE actif = 1 ORDER BY ordre, nom'),
         'temoignages' => temoignages_accueil(),
+        'albums' => albums_reseau(),
     ]));
 }
 

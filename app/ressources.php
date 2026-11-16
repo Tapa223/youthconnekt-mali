@@ -728,6 +728,26 @@ function ressources(): array
         ],
 
         // ------------------------------------------------------------------
+        'albums' => [
+            'table' => 'albums_reseau', 'titre' => 'Photos Africa et Sahel',
+            'description' => "Les photos de la participation du Mali à YouthConnekt Africa et à YouthConnekt Sahel, sur la page À propos. La première photo (ordre le plus petit) sert de couverture ; un clic dessus ouvre toutes les photos.",
+            'peut_ajouter' => false, 'peut_supprimer' => false, 'ordre' => 't.id',
+            'champs_select' => 't.*, (SELECT COUNT(*) FROM photos_reseau p WHERE p.album_id = t.id) AS nb,
+                (SELECT p.image FROM photos_reseau p WHERE p.album_id = t.id ORDER BY p.ordre, p.id LIMIT 1) AS couverture',
+            'nom_element' => fn ($l) => $l['nom'],
+            'colonnes' => [
+                ['Album', fn ($l) => nom_et_detail($l['nom'], (string) $l['titre'], miniature($l['couverture'])), 'lien' => true],
+                ['Photos', fn ($l) => (int) $l['nb'] ? (int) $l['nb'] . ' photo' . pluriel((int) $l['nb']) : badge('Aucune photo : rien ne s\'affiche', 'orange')],
+            ],
+            'groupes' => [
+                [null, 'champs' => [
+                    'titre' => ['type' => 'texte', 'libelle' => 'Phrase sur la photo de couverture', 'requis' => false, 'max' => 120, 'aide' => 'Exemple : Le Mali aux Sommets YouthConnekt Africa'],
+                ]],
+            ],
+            'galerie' => ['photos_reseau', 'album_id', 'reseau', 'Photos (la première sert de couverture)'],
+        ],
+
+        // ------------------------------------------------------------------
         'ministre' => [
             'table' => 'mot_ministre', 'titre' => 'Mot du ministre', 'fiche_unique' => true,
             'description' => "Le message affiché avant la section Communauté sur l'accueil, et en entier sur la page À propos.",
