@@ -5,7 +5,7 @@ SET NAMES utf8mb4;
 
 -- Bootcamp YouthConnekt Mali 2022
 INSERT INTO initiatives (titre, slug, statut, publie_le, mis_en_avant, axe_id, resume, contenu, image, etat, date_libelle, date_debut, date_fin, lieu, participants, format, objectifs, programme, chiffres, citation, citation_auteur, participations_ouvertes, cree_le, modifie_le)
-SELECT 'Bootcamp YouthConnekt Mali 2022', 'bootcamp-youthconnekt-mali-2022', 'publie', NOW() - INTERVAL 8 MINUTE, 0, (SELECT id FROM axes WHERE slug = 'croissance-environnement'), 'Deux jours de formation intensive pour 26 jeunes entrepreneurs de Bamako, Mopti et Ségou : structurer son projet, maîtriser ses chiffres et apprendre des autres. Un bootcamp organisé avec le PNUD Mali et l''incubateur DoniLab.',
+SELECT 'Bootcamp YouthConnekt Mali 2022', 'bootcamp-youthconnekt-mali-2022', 'publie', NOW() - INTERVAL 4 MINUTE, 0, (SELECT id FROM axes WHERE slug = 'croissance-environnement'), 'Deux jours de formation intensive pour 26 jeunes entrepreneurs de Bamako, Mopti et Ségou : structurer son projet, maîtriser ses chiffres et apprendre des autres. Un bootcamp organisé avec le PNUD Mali et l''incubateur DoniLab.',
   'En 2022, YouthConnekt Mali a réuni 26 jeunes entrepreneurs pour un bootcamp pensé comme un accélérateur : vingt jeunes accompagnés par le programme PNUD Mali-TEF et six jeunes de la société civile venus de Mopti et de Ségou. Pendant deux jours, avec l''incubateur DoniLab, ils ont travaillé sur ce qui fait tenir une entreprise : un projet clair, des comptes maîtrisés et un réseau sur lequel s''appuyer.
 Jour 1 : donner une structure à son idée
 Après l''ouverture officielle, marquée par les discours du Dr Doudou Ben Bechir Niang, représentant du ministère de la Jeunesse et des Sports, et des représentants du PNUD et de DoniLab, les participants sont passés à la pratique. Atelier de structuration de projet, prise en main du Business Model Canvas, travaux en groupe : chacun est reparti avec une vision plus nette de son modèle. Abdoulaye Sow, chargé des programmes à DoniLab, a accompagné la journée, nourrie de retours d''expérience.
@@ -26,59 +26,18 @@ Jour 2 | Gestion d''entreprise et codéveloppement | Formation en gestion d''ent
   '', '', 0, NOW(), NOW()
 FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM initiatives WHERE slug = 'bootcamp-youthconnekt-mali-2022');
 
--- Crise du carburant : la jeunesse mobilisée aux stations-service
-INSERT INTO initiatives (titre, slug, statut, publie_le, mis_en_avant, axe_id, resume, contenu, image, etat, date_libelle, date_debut, date_fin, lieu, participants, format, objectifs, programme, chiffres, citation, citation_auteur, participations_ouvertes, cree_le, modifie_le)
-SELECT 'Crise du carburant : la jeunesse mobilisée aux stations-service', 'cnj-mobilisation-crise-carburant', 'publie', NOW() - INTERVAL 6 MINUTE, 0, (SELECT id FROM axes WHERE slug = 'gouvernance-participation'), 'À l''automne 2025, quand les files d''attente s''étiraient devant les stations-service, les bénévoles du Conseil national de la jeunesse ont aidé à garder le calme et à informer les usagers. YouthConnekt Mali a soutenu cette mobilisation et salué leur engagement.',
-  'À partir de septembre 2025, le Mali a traversé une grave pénurie de carburant, ressentie à Bamako dès le début du mois d''octobre. Devant les stations encore approvisionnées, les files s''étiraient sur des centaines de mètres, de jour comme de nuit, et la tension montait vite.
-Des bénévoles pour garder le calme
-Le Conseil national de la jeunesse du Mali (CNJ) a alors déployé des jeunes bénévoles dans les stations-service pour organiser les files et maintenir l''ordre. Chaque jour, il publiait aussi la liste des stations qui disposaient de carburant : un geste simple, qui évitait aux usagers de tourner en ville et désengorgeait les points de vente.
-Le soutien de YouthConnekt Mali
-YouthConnekt Mali s''est tenu aux côtés du CNJ : le chapitre a soutenu l''initiative, mobilisé des jeunes de son réseau et félicité les bénévoles pour leur sens des responsabilités dans un moment difficile pour le pays.
-Une mobilisation reconnue
-Reçu en audience par le Président de la Transition le 16 octobre 2025, le président du CNJ, Sory Ibrahim Cissé, a présenté cet engagement de la jeunesse. Il l''a de nouveau cité parmi les grandes mobilisations de l''année lors des vœux du CNJ au chef de l''État, le 16 février 2026.',
-  '', 'terminee', 'Automne 2025', NULL, NULL, 'Bamako', 'Jeunes bénévoles du CNJ', 'Sur le terrain',
-  'Maintenir l''ordre et la discipline dans les files d''attente des stations-service
-Informer chaque jour la population sur les stations approvisionnées
-Montrer l''engagement citoyen de la jeunesse en temps de crise',
-  '',
-  '',
-  '', '', 0, NOW(), NOW()
-FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM initiatives WHERE slug = 'cnj-mobilisation-crise-carburant');
-
--- École de la citoyenneté, 5e cohorte
-INSERT INTO initiatives (titre, slug, statut, publie_le, mis_en_avant, axe_id, resume, contenu, image, etat, date_libelle, date_debut, date_fin, lieu, participants, format, objectifs, programme, chiffres, citation, citation_auteur, participations_ouvertes, cree_le, modifie_le)
-SELECT 'École de la citoyenneté, 5e cohorte', 'ecole-de-la-citoyennete-5e-cohorte', 'publie', NOW() - INTERVAL 4 MINUTE, 0, (SELECT id FROM axes WHERE slug = 'gouvernance-participation'), 'En avril 2026, 1 000 jeunes ont rejoint au Palais des Pionniers la 5e cohorte de l''École de la citoyenneté, programme du ministère de la Jeunesse et des Sports. YouthConnekt Mali a soutenu la cohorte et y est intervenu auprès des participants.',
-  'Former des jeunes qui connaissent leurs droits, leurs devoirs et les institutions de leur pays : c''est l''ambition de l''École de la citoyenneté, programme du ministère de la Jeunesse et des Sports, chargé de l''Instruction civique et de la Construction citoyenne. Civisme, citoyenneté et patriotisme y sont abordés à travers des sessions de formation et des rencontres directes avec les décideurs.
-Une 5e cohorte de 1 000 jeunes
-Le vendredi 17 avril 2026, le ministre d''État chargé de la Réconciliation, de la Paix et de la Cohésion nationale, le Général de Corps d''Armée Ismaël Wagué, a lancé la 5e cohorte au Palais des Pionniers de Bamako, au nom du Premier ministre. Elle a réuni 1 000 jeunes du district de Bamako, de la diaspora et des pays de l''Alliance des États du Sahel, ainsi que des jeunes déplacés internes.
-Face aux membres du Gouvernement
-Tout au long de la formation, des ministres sont venus échanger directement avec les participants. Le 18 avril, les ministres chargés des Transports et des Infrastructures et de l''Urbanisme ont ainsi animé un panel interactif, notamment sur la sécurité routière.
-L''apport de YouthConnekt Mali
-YouthConnekt Mali a apporté son soutien à cette cohorte et y a pris la parole : des intervenants du chapitre sont venus à la rencontre des participants pour échanger avec eux.
-Des relais dans les communautés
-À l''issue du programme, les participants repartent avec une mission : porter les valeurs de citoyenneté, de paix et de cohésion sociale dans leurs communautés.',
-  '', 'terminee', 'Avril 2026', '2026-04-17', NULL, 'Palais des Pionniers, Bamako', '1 000 jeunes', 'Présentiel',
-  'Former les jeunes au civisme, à la citoyenneté et au patriotisme
-Rapprocher les jeunes des institutions et des membres du Gouvernement
-Faire des participants des relais de la paix et de la cohésion sociale dans leurs communautés',
-  '',
-  '1 000 | jeunes dans la 5e cohorte
-5 | cohortes depuis le lancement du programme',
-  '', '', 0, NOW(), NOW()
-FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM initiatives WHERE slug = 'ecole-de-la-citoyennete-5e-cohorte');
-
 -- DONIYA-LAB, l'innovation des jeunes au service de la santé communautaire
 INSERT INTO initiatives (titre, slug, statut, publie_le, mis_en_avant, axe_id, resume, contenu, image, etat, date_libelle, date_debut, date_fin, lieu, participants, format, objectifs, programme, chiffres, citation, citation_auteur, participations_ouvertes, cree_le, modifie_le)
-SELECT 'DONIYA-LAB, l''innovation des jeunes au service de la santé communautaire', 'doniya-lab-innovation-sante-communautaire', 'publie', NOW() - INTERVAL 2 MINUTE, 0, (SELECT id FROM axes WHERE slug = 'croissance-environnement'), 'Vingt porteurs de projets, cinq jours de bootcamp et cinq lauréats : en juin 2026, le DONIYA-LAB a fait mûrir des solutions de jeunes pour la santé et le développement des communautés, avec YouthConnekt Mali à l''organisation et à l''accompagnement.',
-  'Porté par le ministère de la Jeunesse et des Sports, chargé de l''Instruction civique et de la Construction citoyenne, et par l''UNICEF, avec l''appui de la Fondation Mastercard, le DONIYA-LAB repère les idées de jeunes qui répondent aux besoins des communautés, notamment en matière de santé, et les aide à devenir de vrais projets.
+SELECT 'DONIYA-LAB, l''innovation des jeunes au service de la santé communautaire', 'doniya-lab-innovation-sante-communautaire', 'publie', NOW() - INTERVAL 2 MINUTE, 0, (SELECT id FROM axes WHERE slug = 'croissance-environnement'), 'Vingt porteurs de projets, cinq jours de bootcamp et cinq lauréats : en juin 2026, YouthConnekt Mali a mené le DONIYA-LAB avec le ministère de la Jeunesse et des Sports et l''UNICEF, pour faire mûrir des solutions de jeunes au service de la santé communautaire.',
+  'Le DONIYA-LAB est une activité menée par YouthConnekt Mali avec le ministère de la Jeunesse et des Sports, chargé de l''Instruction civique et de la Construction citoyenne, et l''UNICEF, avec l''appui de la Fondation Mastercard. Il repère les idées de jeunes qui répondent aux besoins des communautés, notamment en matière de santé, et les aide à devenir de vrais projets.
 De 450 candidatures à 20 projets
 L''appel à projets a suscité plus de 450 candidatures dans les régions de Kayes, Nioro, Kita, Sikasso, Bougouni, Koutiala et Koulikoro, ainsi que dans le district sanitaire de Bamako. Vingt projets ont été retenus pour la phase nationale, en juin 2026, au Palais des Pionniers de Bamako.
 Cinq jours pour passer de l''idée au projet
 Le bootcamp a misé sur la pratique : diagnostic de chaque projet, travail en groupe, coaching par des experts, puis simulations de pitch face à des professionnels. Jour après jour, les idées se sont précisées jusqu''à devenir des projets structurés, crédibles et défendables. Le témoignage d''une entrepreneure ayant réussi a donné aux participants un repère concret, et beaucoup de motivation.
 Cinq lauréats récompensés
 Devant un jury multisectoriel, cinq projets se sont distingués par leur caractère innovant, leur faisabilité et leur impact : trois dans la transformation agroalimentaire (farine enrichie, conservation et vente de fruits et légumes), deux dans l''élevage (ferme avicole et coopérative apicole). À la clôture, en présence du ministre de la Jeunesse et des Sports et du représentant de l''UNICEF au Mali, tous les participants ont reçu une attestation et les lauréats ont été récompensés par des ordinateurs.
-YouthConnekt Mali aux côtés des porteurs de projets
-Le chapitre s''est engagé à chaque étape : il a relayé l''appel à projets dans son réseau pour mobiliser les candidats, appuyé l''organisation du bootcamp et assuré la couverture de l''événement. Des membres du chapitre ont aussi accompagné les porteurs de projets comme mentors ou membres du jury.
+Le rôle de YouthConnekt Mali
+De l''appel à projets à la clôture, le chapitre a été présent à chaque étape : il a relayé l''appel dans son réseau pour mobiliser les candidats, organisé le bootcamp avec ses partenaires et assuré la couverture de l''événement. Des membres du chapitre ont aussi accompagné les porteurs de projets comme mentors ou membres du jury.
 Et après
 Les recommandations prévoient un suivi technique des lauréats avec l''APEJ et le ministère de l''Entrepreneuriat national, de l''Emploi et de la Formation professionnelle, la création d''un réseau des anciens du DONIYA-LAB et, à terme, l''extension du programme à d''autres régions.',
   '', 'terminee', 'Juin 2026', NULL, NULL, 'Palais des Pionniers, Bamako', '20 jeunes porteurs de projets', 'Bootcamp en présentiel',
