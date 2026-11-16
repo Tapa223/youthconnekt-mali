@@ -151,7 +151,7 @@ foreach (range(0, 11) as $k) {
       <span class="absolute top-4 left-0 h-[88%] w-[56%] rounded-2xl bg-orange sm:top-[30px] sm:w-[54%] sm:rounded-[22px]"></span>
       <span class="absolute right-[2%] bottom-0 h-[34%] w-[34%] rounded-[22px] bg-turquoise"></span>
       <div class="devoile survol-zoom absolute top-0 left-3 h-[88%] w-[54%] overflow-hidden rounded-2xl shadow-[0_20px_40px_rgb(20_32_29/.2)] sm:left-6 sm:w-[52%] sm:rounded-[22px]">
-        <img src="<?= asset('img/accueil/chapitre-1.jpg') ?>" alt="" class="derive -mt-[10%] block h-[120%] w-full object-cover" loading="lazy">
+        <img src="<?= asset('img/accueil/chapitre-1.jpg') ?>" alt="" class="derive -mt-[10%] block h-[120%] w-full object-cover object-[60%_15%]" loading="lazy">
       </div>
       <div class="devoile-2 survol-penche absolute top-[4%] right-[4%] h-[44%] w-[38%] rotate-[4deg] overflow-hidden rounded-[20px] border-4 border-white shadow-[0_18px_36px_rgb(20_32_29/.22)] sm:border-[6px]">
         <img src="<?= asset('img/accueil/chapitre-2.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy">
