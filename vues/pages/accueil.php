@@ -166,17 +166,19 @@ foreach (range(0, 11) as $k) {
   <?php if ($bilan): ?>
   <?php /* Vidéo bilan de l'année : bande en largeur sous le texte, les chiffres et les photos ; elle s'ouvre en grand au clic */ ?>
   <div class="conteneur relative mt-8 sm:mt-12">
-    <button type="button" class="group relative flex h-[150px] w-full items-center overflow-hidden rounded-2xl bg-vert text-left text-white shadow-[0_18px_40px_rgb(20_32_29/.18)] sm:h-[200px] sm:rounded-3xl lg:h-[220px]" data-ouvrir-bilan>
-      <?php if ($bilan['couverture']): ?>
-      <img src="<?= e($bilan['couverture']) ?>" alt="" class="absolute inset-y-0 right-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 sm:w-[70%]" loading="lazy">
-      <?php else: partiel('partials/reseau_deco'); endif ?>
-      <span class="absolute inset-0 bg-[linear-gradient(90deg,rgb(3_94_77)_0%,rgb(3_94_77/.92)_38%,rgb(3_94_77/.15)_100%)]" aria-hidden="true"></span>
-      <span class="relative flex items-center px-5 sm:px-10">
-        <span class="max-w-md">
-          <span class="block text-lg leading-tight font-bold sm:text-3xl"><?= e($bilan['titre_affiche']) ?></span>
-          <?php if (trim($bilan['texte']) !== ''): ?><span class="mt-1 line-clamp-2 block text-[13px] leading-snug text-white/90 sm:mt-2 sm:text-base"><?= e($bilan['texte']) ?></span><?php endif ?>
-          <span class="mt-3 inline-flex min-h-9 items-center gap-2 rounded-full bg-white px-4 text-[13px] font-bold text-vert transition-colors group-hover:bg-orange group-hover:text-white sm:min-h-10 sm:px-5 sm:text-sm"><svg viewBox="0 0 24 24" class="size-3.5 fill-current" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg>Voir la vidéo</span>
-        </span>
+    <button type="button" class="group grid w-full overflow-hidden rounded-2xl border border-ligne bg-white text-left shadow-[0_18px_40px_rgb(20_32_29/.08)] transition-shadow hover:shadow-[0_22px_50px_rgb(20_32_29/.14)] sm:rounded-3xl md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]" data-ouvrir-bilan>
+      <span class="relative order-2 flex flex-col justify-center px-5 py-5 sm:px-9 sm:py-8 md:order-1">
+        <span class="surtitre surtitre-trait">Bilan de l'année</span>
+        <span class="mt-1.5 block text-xl leading-tight font-bold text-vert sm:text-3xl"><?= e($bilan['titre_affiche']) ?></span>
+        <?php if (trim($bilan['texte']) !== ''): ?><span class="mt-2 line-clamp-3 block text-[14px] leading-relaxed text-encre sm:text-base"><?= e($bilan['texte']) ?></span><?php endif ?>
+        <span class="mt-4 inline-flex min-h-10 items-center gap-2 self-start rounded-full bg-vert px-5 text-sm font-bold text-white transition-colors group-hover:bg-orange"><svg viewBox="0 0 24 24" class="size-3.5 fill-current" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg>Voir la vidéo</span>
+      </span>
+      <span class="relative order-1 block aspect-[16/9] overflow-hidden bg-turquoise/15 md:order-2 md:aspect-auto md:min-h-[240px]">
+        <?php if ($bilan['couverture']): ?>
+        <img src="<?= e($bilan['couverture']) ?>" alt="" class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+        <?php else: ?>
+        <img src="<?= asset('img/accueil/chapitre-2.jpg') ?>" alt="" class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+        <?php endif ?>
       </span>
     </button>
     <dialog class="visionneuse" aria-label="<?= e($bilan['titre_affiche']) ?>" data-bilan-video>
