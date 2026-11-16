@@ -28,7 +28,7 @@ if (count($etats_presents) >= 2 || $etat_actif): ?>
   <h2 id="titre-liste" class="sr-only">Liste des initiatives</h2>
   <?php if ($liste): ?>
   <ul class="grid grid-cols-2 gap-2.5 sm:gap-5 lg:grid-cols-3">
-    <?php foreach ($liste as $i): ?><li><?php partiel('cartes/initiative', ['i' => $i, 'compacte_tel' => true]) ?></li><?php endforeach ?>
+    <?php foreach ($liste as $i): ?><li><?php partiel('cartes/initiative', ['i' => $i, 'compacte_tel' => true, 'basse' => true]) ?></li><?php endforeach ?>
   </ul>
   <?php partiel('partials/pagination', ['pagination' => $pagination]) ?>
   <?php else: partiel('partials/vide', ['message' => 'Les prochaines initiatives du chapitre seront annoncées ici. Vous pourrez y prendre part.', 'lien_admin' => url('/gestion/initiatives/ajouter')]); endif ?>
