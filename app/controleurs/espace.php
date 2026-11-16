@@ -120,7 +120,7 @@ function envoyer_temoignage(): void
 {
     $u = exiger_membre();
     $texte = trim(post('texte'));
-    $retour = url('/compte/mon-espace/propositions') . '#temoignage';
+    $retour = url('/compte/mon-espace/temoignage');
     if (mb_strlen($texte) < 20 || mb_strlen($texte) > 600) {
         flash('erreur', mb_strlen($texte) < 20 ? 'Votre témoignage est trop court : quelques phrases suffisent (20 caractères au minimum).' : '600 caractères au maximum.');
         $_SESSION['brouillon_temoignage'] = $texte;
@@ -166,15 +166,20 @@ function mes_propositions(): void
 {
     $u = exiger_membre();
     $initiatives = lignes("SELECT * FROM messages_contact WHERE email = ? AND objet LIKE 'Proposition d''initiative%' ORDER BY recu_le DESC", [$u['email']]);
-    $brouillon = (string) ($_SESSION['brouillon_temoignage'] ?? '');
-    unset($_SESSION['brouillon_temoignage']);
     vue_espace('propositions', 'propositions', 'Mes propositions', [
-        'temoignage' => mon_temoignage($u),
-        'brouillon_temoignage' => $brouillon,
         'propositions' => mes_propositions_liste($u),
         'initiatives' => $initiatives,
         'types' => types_opportunite(),
     ], $u);
+}
+
+/** Mon témoignage : rubrique à part, distincte des propositions. */
+function page_temoignage(): void
+{
+    $u = exiger_membre();
+    $brouillon = (string) ($_SESSION['brouillon_temoignage'] ?? '');
+    unset($_SESSION['brouillon_temoignage']);
+    vue_espace('temoignage', 'temoignage', 'Mon témoignage', ['temoignage' => mon_temoignage($u), 'brouillon_temoignage' => $brouillon], $u);
 }
 
 function mes_communautes(): void
@@ -429,4 +434,40 @@ function soutenir_chapitre(): void
         $envoyes = []; // mise à jour 27 pas encore importée
     }
     vue_espace('soutenir', 'soutenir', 'Soutenir le chapitre', ['formes' => $formes, 'message' => $message, 'erreurs' => $erreurs, 'envoyes' => $envoyes], $u);
+}
+
+/** Ce qui manque à la fiche d'une organisation pour être complète : [pourcentage, [libellé => ok]]. */
+function etat_fiche_organisation(array $p): array
+{
+    $points = [
+        'Logo' => !empty($p['logo']),
+        'Présentation' => trim((string) ($p['presentation'] ?? '')) !== '',
+        'Ce que vous offrez aux jeunes' => trim((string) ($p['offre_jeunes'] ?? '')) !== '',
+        "Secteur d'activité" => trim((string) ($p['secteur'] ?? '')) !== '',
+        'Taille' => !empty($p['taille']),
+        'Site web' => trim((string) ($p['site_web'] ?? '')) !== '',
+        'E-mail de contact public' => trim((string) ($p['email_contact_public'] ?? '')) !== '',
+    ];
+    return [(int) round(100 * count(array_filter($points)) / count($points)), $points];
+}
+
+/** Ma fiche organisation : visibilité dans l'annuaire, badges, fiche à compléter, offres publiées. */
+function ma_fiche(): void
+{
+    $u = exiger_membre();
+    if ($u['type_compte'] !== 'organisation') {
+        rediriger(url('/compte/mon-espace'));
+    }
+    $p = $u['profil'] ?? [];
+    if (est_post()) {
+        try {
+            requete('UPDATE profils_organisations SET dans_annuaire = ?, modifie_le = ? WHERE utilisateur_id = ?', [post('dans_annuaire') !== '' ? 1 : 0, maintenant(), $u['id']]);
+            flash('succes', post('dans_annuaire') !== '' ? "Votre organisation apparaît dans l'annuaire." : "Votre organisation n'apparaît plus dans l'annuaire.");
+        } catch (Throwable $e) {
+            flash('erreur', "Cette option sera disponible après la mise à jour du site.");
+        }
+        rediriger(url('/compte/mon-espace/fiche'));
+    }
+    $publiees = (int) valeur("SELECT COUNT(*) FROM opportunites WHERE propose_par = ? AND statut = 'publie'", [$u['id']]);
+    vue_espace('fiche', 'fiche', 'Ma fiche organisation', ['p' => $p, 'etat' => etat_fiche_organisation($p), 'publiees' => $publiees], $u);
 }

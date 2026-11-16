@@ -78,6 +78,18 @@ $actions = [
   <?php endforeach ?>
 </ul>
 
+<?php if ($u['type_compte'] === 'organisation'): [$pourcent_fiche] = etat_fiche_organisation($profil ?? []); ?>
+<?php /* Organisation : sa fiche dans l'annuaire, en un coup d'œil */ ?>
+<a href="<?= url('/compte/mon-espace/fiche') ?>" class="bloc group flex items-center gap-3.5 hover:ring-2 hover:ring-vert/20">
+  <?php partiel('partials/logo_organisation', ['o' => ($profil ?? []) + ['nom_structure' => $u['nom_affiche']], 'classes' => 'size-12']) ?>
+  <span class="min-w-0 flex-1">
+    <span class="block font-bold text-vert group-hover:text-orange">Ma fiche organisation</span>
+    <span class="block text-[13px] text-texte">Complète à <?= $pourcent_fiche ?> %<?= !empty($profil['verifiee']) ? ' · Vérifiée' : '' ?><?= !empty($profil['partenaire_chapitre']) ? ' · Partenaire du chapitre' : '' ?></span>
+    <span class="mt-1.5 block h-1.5 overflow-hidden rounded-full bg-gris"><span class="block h-full rounded-full <?= $pourcent_fiche === 100 ? 'bg-vert' : 'bg-orange' ?>" style="width: <?= $pourcent_fiche ?>%"></span></span>
+  </span>
+  <svg class="size-5 shrink-0 text-vert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+</a>
+<?php endif ?>
 <section class="bloc" aria-labelledby="titre-opp">
   <div class="flex items-center justify-between gap-3">
     <h2 id="titre-opp" class="text-lg font-bold sm:text-xl">Mes opportunités</h2>

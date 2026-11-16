@@ -11,11 +11,16 @@ $liens = [
     'communautes' => ['/compte/mon-espace/communautes', 'Mes communautés'],
     'opportunites' => ['/compte/mon-espace/opportunites', 'Mes opportunités'],
     'participations' => ['/compte/mon-espace/participations', 'Mes participations'],
-    'propositions' => ['/compte/mon-espace/propositions', 'Propositions et témoignage'],
+    'propositions' => ['/compte/mon-espace/propositions', 'Mes propositions'],
+    'temoignage' => ['/compte/mon-espace/temoignage', 'Mon témoignage'],
     'soutenir' => ['/compte/mon-espace/soutenir', 'Soutenir le chapitre'],
     'profil' => ['/compte/mon-espace/profil', 'Mon profil'],
     'parametres' => ['/compte/mon-espace/parametres', 'Paramètres'],
 ];
+// Organisation : sa fiche dans l'annuaire, juste avant le profil
+if ($u['type_compte'] === 'organisation') {
+    $liens = array_slice($liens, 0, 1, true) + ['fiche' => ['/compte/mon-espace/fiche', 'Ma fiche organisation']] + array_slice($liens, 1, null, true);
+}
 $compteurs = $compteurs ?? [];
 // Pastille de menu : orange pour les notifications non lues, verte pour les communautés et les opportunités
 $pastille_menu = function (string $cle, bool $actif) use ($compteurs): string {
@@ -60,7 +65,12 @@ $titre_rubrique = $liens[$rubrique][1] ?? 'Mon espace';
         <?php else: ?><span class="grid size-18 shrink-0 place-items-center rounded-full bg-orange text-2xl font-bold text-white" aria-hidden="true"><?= e($u['initiales']) ?></span><?php endif ?>
         <p class="mt-3 w-full truncate text-lg font-bold text-encre"><?= e($u['nom_affiche']) ?></p>
         <?php if ($detail): ?><p class="text-xs"><?= e(implode(' · ', $detail)) ?></p><?php endif ?>
+        <?php if ($u['type_compte'] === 'organisation'): ?>
+        <?php partiel('partials/badges_organisation', ['o' => $profil, 'classes' => 'mt-2 justify-center']) ?>
+        <a href="<?= url('/compte/mon-espace/fiche') ?>" class="btn btn-contour mt-3 min-h-9 px-4 text-sm">Ma fiche organisation</a>
+        <?php else: ?>
         <a href="<?= url('/compte/membres/' . $u['id']) ?>" class="btn btn-contour mt-3 min-h-9 px-4 text-sm">Voir mon profil</a>
+        <?php endif ?>
       </div>
       <nav class="space-y-1 rounded-2xl bg-white p-3" aria-label="Mon espace">
         <?php foreach ($liens as $cle => [$lien, $libelle]): ?>
