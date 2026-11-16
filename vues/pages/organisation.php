@@ -9,6 +9,9 @@ $infos = array_filter([TYPES_STRUCTURE[$o['type_structure']] ?? '', $o['secteur'
       <h1 class="text-[1.4rem] leading-tight font-bold text-white sm:text-4xl"><?= e($o['nom_structure']) ?></h1>
       <?php if ($infos): ?><p class="mt-1 text-[13px] text-white/90 sm:text-[15px]"><?= e(implode(' · ', $infos)) ?></p><?php endif ?>
       <?php partiel('partials/badges_organisation', ['o' => $o, 'clair' => true, 'classes' => 'mt-2']) ?>
+      <?php $moi = utilisateur(); if ($moi && (int) $moi['id'] === (int) $o['utilisateur_id']): ?>
+      <a href="<?= url('/compte/mon-espace/fiche') ?>" class="btn btn-contour-blanc mt-3 min-h-9 px-4 text-sm">Modifier ma fiche</a>
+      <?php endif ?>
     </div>
   </div>
 </section>

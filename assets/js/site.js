@@ -642,6 +642,9 @@
       ouvrir(boite);
     });
   });
+  // Fenêtre à rouvrir après une erreur (ex. un élément de la fiche organisation)
+  var aRouvrir = document.querySelector("dialog[data-ouvrir-au-chargement]");
+  if (aRouvrir && aRouvrir.showModal) ouvrir(aRouvrir);
   // Retour de connexion avec ?proposer=1 : la fenêtre s'ouvre directement
   if (/[?&]proposer=1/.test(location.search)) {
     var boite = document.getElementById("dialogue-opportunite");

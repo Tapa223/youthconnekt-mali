@@ -274,19 +274,19 @@
   <div class="conteneur">
     <p class="surtitre surtitre-trait">Le réseau</p>
     <h2 id="titre-reseau" class="titre-section">Un chapitre qui grandit chaque jour</h2>
-    <dl class="mt-6 grid grid-cols-3 gap-2.5 sm:mt-10 sm:gap-5">
+    <div class="mt-6 grid grid-cols-3 gap-2.5 sm:mt-10 sm:gap-5">
       <?php foreach ([
-          [$reseau['membres'], 'membre', 'membres', 'border-orange'],
-          [$reseau['organisations'], 'organisation', 'organisations', 'border-turquoise'],
-          [$reseau['communautes'], 'communauté', 'communautés', 'border-bleu'],
-      ] as [$nombre, $singulier, $pluriel_mot, $bord]): ?>
-      <div class="rounded-2xl border-t-4 bg-white p-3 text-center shadow-sm sm:p-7 <?= $bord ?>">
-        <dt class="sr-only"><?= e($pluriel_mot) ?></dt>
-        <dd class="text-3xl font-bold text-vert tabular-nums sm:text-5xl" data-compteur data-duree="1400"><?= $nombre ?></dd>
-        <dd class="mt-1 text-xs text-encre sm:text-base"><?= $nombre > 1 ? $pluriel_mot : $singulier ?></dd>
-      </div>
+          [$reseau['membres'], 'membre', 'membres', 'border-orange', '/membres'],
+          [$reseau['organisations'], 'organisation', 'organisations', 'border-turquoise', '/organisations'],
+          [$reseau['communautes'], 'communauté', 'communautés', 'border-bleu', '/communaute'],
+      ] as [$nombre, $singulier, $pluriel_mot, $bord, $lien]): ?>
+      <a href="<?= url($lien) ?>" class="group block rounded-2xl border-t-4 bg-white p-3 text-center shadow-sm transition-shadow hover:shadow-lg sm:p-7 <?= $bord ?>">
+        <span class="sr-only">Voir les <?= e($pluriel_mot) ?> : </span>
+        <span class="block text-3xl font-bold text-vert tabular-nums sm:text-5xl" data-compteur data-duree="1400"><?= $nombre ?></span>
+        <span class="mt-1 block text-xs text-encre group-hover:text-orange sm:text-base"><?= $nombre > 1 ? $pluriel_mot : $singulier ?> <span class="hidden font-bold text-orange sm:inline" aria-hidden="true">→</span></span>
+      </a>
       <?php endforeach ?>
-    </dl>
+    </div>
     <p class="mt-5 text-center text-[15px] sm:text-base">Et chaque nouvelle inscription agrandit le réseau. <a href="<?= url('/compte/inscription') ?>" class="btn-lien ml-1 mt-2 sm:mt-0">Rejoindre le chapitre</a></p>
   </div>
 </section>

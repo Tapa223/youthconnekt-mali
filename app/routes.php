@@ -32,6 +32,7 @@ const ROUTES = [
     ['GET', '/actualites', 'contenus', 'actualites'],
     ['GET', '/actualites/{slug}', 'contenus', 'actualite'],
     ['GET', '/communaute', 'communautes', 'liste'],
+    ['GET', '/membres', 'organisations', 'membres'],
     ['GET', '/organisations', 'organisations', 'annuaire'],
     ['GET', '/organisations/{id}', 'organisations', 'fiche'],
     ['GET', '/communaute/{slug}', 'communautes', 'detail'],

@@ -74,3 +74,39 @@ function organisation_de(?int $utilisateur_id): ?array
         return null;
     }
 }
+
+/**
+ * Membres du réseau : les membres individuels qui ont choisi d'être visibles dans la communauté.
+ * Leur visibilité est accordée aux autres membres : la liste s'affiche aux personnes connectées ;
+ * les visiteurs voient le nombre de membres et une invitation à rejoindre le chapitre.
+ */
+function membres(): void
+{
+    $u = utilisateur();
+    $region = get('region');
+    if (!isset(REGIONS[$region])) $region = '';
+    $categorie = get('categorie');
+    if (!isset(CATEGORIES_INDIVIDUELLES[$categorie])) $categorie = '';
+    $q = mb_substr(trim(get('q')), 0, 60);
+    $base = "FROM profils_individuels p JOIN utilisateurs u ON u.id = p.utilisateur_id WHERE p.visible = 1 AND u.actif = 1 AND u.type_compte = 'individuel'";
+    $total = (int) valeur('SELECT COUNT(*) ' . $base);
+    $liste = [];
+    if ($u) {
+        $sql = 'SELECT p.utilisateur_id, p.prenom, p.nom, p.photo, p.categorie, p.domaine, p.region ' . $base;
+        $params = [];
+        if ($region) { $sql .= ' AND p.region = ?'; $params[] = $region; }
+        if ($categorie) { $sql .= ' AND p.categorie = ?'; $params[] = $categorie; }
+        if ($q !== '') { $sql .= " AND CONCAT(p.prenom, ' ', p.nom, ' ', p.domaine) LIKE ?"; $params[] = '%' . $q . '%'; }
+        $liste = lignes($sql . ' ORDER BY p.prenom, p.nom LIMIT 120', $params);
+    }
+    afficher(vue('pages/membres', [
+        'titre' => 'Membres du réseau | YouthConnekt Mali',
+        'noindex' => true,
+        'connecte' => (bool) $u,
+        'membres' => $liste,
+        'total' => $total,
+        'region' => $region,
+        'categorie' => $categorie,
+        'q' => $q,
+    ]));
+}

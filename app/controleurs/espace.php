@@ -436,22 +436,29 @@ function soutenir_chapitre(): void
     vue_espace('soutenir', 'soutenir', 'Soutenir le chapitre', ['formes' => $formes, 'message' => $message, 'erreurs' => $erreurs, 'envoyes' => $envoyes], $u);
 }
 
-/** Ce qui manque à la fiche d'une organisation pour être complète : [pourcentage, [libellé => ok]]. */
+/** Les éléments de la fiche d'une organisation, modifiables un par un depuis « Ma fiche organisation ». */
+const CHAMPS_FICHE = [
+    'logo' => ['Logo', 'image', 0, 'Une image carrée ou un logo sur fond clair.'],
+    'presentation' => ['Présentation', 'zone', 1500, "En quelques lignes, ce que fait votre organisation."],
+    'offre_jeunes' => ['Ce que vous offrez aux jeunes', 'zone', 1500, 'Stages, emplois, formations, mentorat, visites… Une ligne par offre.'],
+    'secteur' => ["Secteur d'activité", 'texte', 150, 'Exemple : numérique, agriculture, santé, éducation.'],
+    'taille' => ['Taille', 'select', 0, ''],
+    'site_web' => ['Site web', 'url', 255, 'Exemple : www.mon-organisation.ml'],
+    'email_contact_public' => ['E-mail de contact public', 'email', 190, 'Affiché sur votre fiche : les jeunes et les partenaires peuvent vous écrire.'],
+];
+
+/** Ce qui manque à la fiche d'une organisation : [pourcentage, [champ => [libellé, rempli]]]. */
 function etat_fiche_organisation(array $p): array
 {
-    $points = [
-        'Logo' => !empty($p['logo']),
-        'Présentation' => trim((string) ($p['presentation'] ?? '')) !== '',
-        'Ce que vous offrez aux jeunes' => trim((string) ($p['offre_jeunes'] ?? '')) !== '',
-        "Secteur d'activité" => trim((string) ($p['secteur'] ?? '')) !== '',
-        'Taille' => !empty($p['taille']),
-        'Site web' => trim((string) ($p['site_web'] ?? '')) !== '',
-        'E-mail de contact public' => trim((string) ($p['email_contact_public'] ?? '')) !== '',
-    ];
-    return [(int) round(100 * count(array_filter($points)) / count($points)), $points];
+    $points = [];
+    foreach (CHAMPS_FICHE as $champ => [$libelle]) {
+        $points[$champ] = [$libelle, trim((string) ($p[$champ] ?? '')) !== ''];
+    }
+    $remplis = count(array_filter($points, fn ($x) => $x[1]));
+    return [(int) round(100 * $remplis / count($points)), $points];
 }
 
-/** Ma fiche organisation : visibilité dans l'annuaire, badges, fiche à compléter, offres publiées. */
+/** Ma fiche organisation : visibilité dans l'annuaire, badges, et chaque élément de la fiche modifiable seul. */
 function ma_fiche(): void
 {
     $u = exiger_membre();
@@ -459,14 +466,58 @@ function ma_fiche(): void
         rediriger(url('/compte/mon-espace'));
     }
     $p = $u['profil'] ?? [];
+    $retour = url('/compte/mon-espace/fiche');
     if (est_post()) {
-        try {
-            requete('UPDATE profils_organisations SET dans_annuaire = ?, modifie_le = ? WHERE utilisateur_id = ?', [post('dans_annuaire') !== '' ? 1 : 0, maintenant(), $u['id']]);
-            flash('succes', post('dans_annuaire') !== '' ? "Votre organisation apparaît dans l'annuaire." : "Votre organisation n'apparaît plus dans l'annuaire.");
-        } catch (Throwable $e) {
-            flash('erreur', "Cette option sera disponible après la mise à jour du site.");
+        $champ = post('champ');
+        if ($champ === '') {
+            // Case « Apparaître dans l'annuaire »
+            try {
+                requete('UPDATE profils_organisations SET dans_annuaire = ?, modifie_le = ? WHERE utilisateur_id = ?', [post('dans_annuaire') !== '' ? 1 : 0, maintenant(), $u['id']]);
+                flash('succes', post('dans_annuaire') !== '' ? "Votre organisation apparaît dans l'annuaire." : "Votre organisation n'apparaît plus dans l'annuaire.");
+            } catch (Throwable $e) {
+                flash('erreur', 'Cette option sera disponible après la mise à jour du site.');
+            }
+            rediriger($retour);
         }
-        rediriger(url('/compte/mon-espace/fiche'));
+        if (!isset(CHAMPS_FICHE[$champ])) {
+            rediriger($retour);
+        }
+        [$libelle, $type, $max] = CHAMPS_FICHE[$champ];
+        $valeur = trim(post('valeur'));
+        $erreur = '';
+        if ($type === 'image') {
+            try {
+                if (post('supprimer') !== '') {
+                    $valeur = '';
+                } else {
+                    $valeur = (string) televerser_image($_FILES['valeur'] ?? null, 'organisations', 800);
+                    if ($valeur === '') $erreur = 'Choisissez une image.';
+                }
+            } catch (RuntimeException $e) {
+                $erreur = $e->getMessage();
+            }
+        } elseif ($type === 'select') {
+            if ($valeur !== '' && !isset(TAILLES_STRUCTURE[$valeur])) $valeur = '';
+        } elseif ($max && mb_strlen($valeur) > $max) {
+            $erreur = $max . ' caractères au maximum.';
+        } elseif ($type === 'url' && $valeur !== '') {
+            if (!preg_match('#^https?://#i', $valeur)) $valeur = 'https://' . $valeur;
+            if (!filter_var($valeur, FILTER_VALIDATE_URL)) $erreur = "Cette adresse n'est pas valide.";
+        } elseif ($type === 'email' && $valeur !== '' && !filter_var($valeur, FILTER_VALIDATE_EMAIL)) {
+            $erreur = "Cette adresse e-mail n'est pas valide.";
+        }
+        if ($erreur) {
+            flash('erreur', $libelle . ' : ' . $erreur);
+            rediriger($retour . '?champ=' . $champ);
+        }
+        $ancienne = $type === 'image' ? ($p['logo'] ?? '') : '';
+        requete('UPDATE profils_organisations SET `' . $champ . '` = ?, modifie_le = ? WHERE utilisateur_id = ?',
+            [$valeur === '' && in_array($champ, ['taille', 'presentation', 'offre_jeunes'], true) ? null : $valeur, maintenant(), $u['id']]);
+        if ($ancienne && $ancienne !== $valeur) {
+            supprimer_image($ancienne);
+        }
+        flash('succes', $valeur === '' ? $libelle . ' retiré.' : $libelle . ' enregistré.');
+        rediriger($retour);
     }
     $publiees = (int) valeur("SELECT COUNT(*) FROM opportunites WHERE propose_par = ? AND statut = 'publie'", [$u['id']]);
     vue_espace('fiche', 'fiche', 'Ma fiche organisation', ['p' => $p, 'etat' => etat_fiche_organisation($p), 'publiees' => $publiees], $u);
