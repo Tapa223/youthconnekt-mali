@@ -21,15 +21,15 @@ Les recommandations prévoient un suivi technique des lauréats avec l''APEJ et 
   modifie_le = NOW()
 WHERE slug = 'doniya-lab-innovation-sante-communautaire';
 
--- YouthConnekt Mali à l'École de la citoyenneté
+-- École de la citoyenneté : YouthConnekt Mali aux côtés de la 5e cohorte
 INSERT INTO actualites (titre, slug, statut, publie_le, mis_en_avant, categorie, chapeau, contenu, image, date_evenement, date_fin, lieu, cree_le, modifie_le)
-SELECT 'YouthConnekt Mali à l''École de la citoyenneté', 'youthconnekt-mali-ecole-de-la-citoyennete-2026', 'publie', NOW(), 0, 'actualite', 'En avril 2026, des intervenants de YouthConnekt Mali sont allés à la rencontre des 1 000 jeunes de la 5e cohorte de l''École de la citoyenneté, programme du ministère de la Jeunesse et des Sports, au Palais des Pionniers de Bamako.',
+SELECT 'École de la citoyenneté : YouthConnekt Mali aux côtés de la 5e cohorte', 'youthconnekt-mali-ecole-de-la-citoyennete-2026', 'publie', NOW(), 0, 'actualite', 'En avril 2026, YouthConnekt Mali a accompagné et soutenu la 5e cohorte de l''École de la citoyenneté, programme du ministère de la Jeunesse et des Sports qui a réuni 1 000 jeunes au Palais des Pionniers de Bamako.',
   'L''École de la citoyenneté est un programme du ministère de la Jeunesse et des Sports, chargé de l''Instruction civique et de la Construction citoyenne. Elle forme les jeunes au civisme, à la citoyenneté et au patriotisme, à travers des sessions de formation et des rencontres directes avec les décideurs.
 Une 5e cohorte de 1 000 jeunes
 Lancée le vendredi 17 avril 2026 au Palais des Pionniers par le ministre d''État chargé de la Réconciliation, de la Paix et de la Cohésion nationale, le Général de Corps d''Armée Ismaël Wagué, au nom du Premier ministre, la 5e cohorte a réuni 1 000 jeunes du district de Bamako, de la diaspora et des pays de l''Alliance des États du Sahel, ainsi que des jeunes déplacés internes.
 Au fil de la formation, des membres du Gouvernement sont venus échanger directement avec eux. Le 18 avril, les ministres chargés des Transports et des Infrastructures et de l''Urbanisme ont ainsi animé un panel interactif, notamment sur la sécurité routière.
-YouthConnekt Mali parmi les intervenants
-YouthConnekt Mali a soutenu cette cohorte et y a pris la parole : des intervenants du chapitre sont venus échanger avec les participants, appelés à devenir à leur tour des relais de la citoyenneté, de la paix et de la cohésion sociale dans leurs communautés.',
+Le soutien de YouthConnekt Mali
+YouthConnekt Mali a accompagné cette cohorte et soutient l''École de la citoyenneté, qui prépare les jeunes à devenir des relais de la citoyenneté, de la paix et de la cohésion sociale dans leurs communautés.',
   COALESCE((SELECT image FROM initiatives WHERE slug = 'ecole-de-la-citoyennete-5e-cohorte'), ''), '2026-04-17', NULL, 'Palais des Pionniers, Bamako', NOW(), NOW()
 FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM actualites WHERE slug = 'youthconnekt-mali-ecole-de-la-citoyennete-2026');
 

@@ -5,13 +5,13 @@
 SET NAMES utf8mb4;
 
 INSERT INTO actualites (titre, slug, statut, publie_le, mis_en_avant, categorie, chapeau, contenu, image, date_evenement, date_fin, lieu, cree_le, modifie_le)
-SELECT 'YouthConnekt Mali à la Semaine nationale de la jeunesse 2026', 'youthconnekt-mali-semaine-nationale-jeunesse-2026', 'publie', NOW(), 0, 'evenement', 'Du 11 au 16 août 2026, YouthConnekt Mali a pris part à la Semaine nationale de la jeunesse, de la cérémonie d''ouverture au CICB jusqu''aux activités de la semaine, aux côtés du Conseil national de la jeunesse.',
+SELECT 'YouthConnekt Mali à la Semaine nationale de la jeunesse 2026', 'youthconnekt-mali-semaine-nationale-jeunesse-2026', 'publie', NOW(), 0, 'evenement', 'Du 11 au 16 août 2026, YouthConnekt Mali a accompagné et soutenu le Conseil national de la jeunesse lors de la Semaine nationale de la jeunesse, de la cérémonie d''ouverture au CICB jusqu''aux activités de la semaine.',
   'Couplée à la Journée internationale de la jeunesse du 12 août, la Semaine nationale de la jeunesse 2026 s''est tenue du 11 au 16 août sur le thème « Jeunesse, paix et sécurité : prévenir la désinformation, lutter contre la radicalisation et promouvoir la paix ». Portée par le Conseil national de la jeunesse du Mali (CNJ) et le ministère de la Jeunesse et des Sports, chargé de l''Instruction civique et de la Construction citoyenne, elle a mis en avant des jeunes acteurs de la paix et de la cohésion sociale.
 YouthConnekt Mali à la cérémonie d''ouverture
 Le mercredi 12 août, YouthConnekt Mali était présent au Centre international de conférences de Bamako pour la cérémonie de lancement, présidée par le ministre d''État chargé de la Réconciliation nationale et de la Cohésion sociale, le Général de Corps d''Armée Ismaël Wagué, au nom du Président de la Transition.
 Le ministre Abdoul Kassim Ibrahim Fomba y a salué une jeunesse prête à rapprocher les communautés, tandis que le président du CNJ, Sory Ibrahim Cissé, a exprimé la volonté des jeunes de contribuer activement à la stabilité du pays.
 Aux côtés du CNJ toute la semaine
-Le chapitre a appuyé le CNJ dans l''organisation de la Semaine et mobilisé les jeunes de son réseau pour qu''ils prennent part à la cérémonie comme aux activités qui ont suivi.
+Le chapitre a soutenu le CNJ dans l''organisation de la Semaine et mobilisé les jeunes de son réseau pour qu''ils prennent part à la cérémonie comme aux activités qui ont suivi.
 Au programme : un atelier sur l''agenda Jeunesse, paix et sécurité, une formation au développement conduit par les communautés, une conférence sur l''engagement civique et le patriotisme, un forum Jeunesse-Diaspora et des panels régionaux sur les priorités de développement. La Semaine s''est aussi prolongée dans les régions, portée par les conseils régionaux de la jeunesse, comme à Nioro du Sahel dès le 12 août et à Bandiagara du 22 au 24 août.',
   COALESCE((SELECT image FROM initiatives WHERE slug = 'semaine-nationale-de-la-jeunesse-2026'), ''), '2026-08-11', '2026-08-16', 'CICB, Bamako', NOW(), NOW()
 FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM actualites WHERE slug = 'youthconnekt-mali-semaine-nationale-jeunesse-2026');
