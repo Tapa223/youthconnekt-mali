@@ -5,7 +5,7 @@ SET NAMES utf8mb4;
 
 -- Bootcamp YouthConnekt Mali 2022
 INSERT INTO initiatives (titre, slug, statut, publie_le, mis_en_avant, axe_id, resume, contenu, image, etat, date_libelle, date_debut, date_fin, lieu, participants, format, objectifs, programme, chiffres, citation, citation_auteur, participations_ouvertes, cree_le, modifie_le)
-SELECT 'Bootcamp YouthConnekt Mali 2022', 'bootcamp-youthconnekt-mali-2022', 'publie', NOW() - INTERVAL 10 MINUTE, 0, (SELECT id FROM axes WHERE slug = 'croissance-environnement'), 'Deux jours de formation intensive pour 26 jeunes entrepreneurs de Bamako, Mopti et Ségou : structurer son projet, maîtriser ses chiffres et apprendre des autres. Un bootcamp organisé avec le PNUD Mali et l''incubateur DoniLab.',
+SELECT 'Bootcamp YouthConnekt Mali 2022', 'bootcamp-youthconnekt-mali-2022', 'publie', NOW() - INTERVAL 8 MINUTE, 0, (SELECT id FROM axes WHERE slug = 'croissance-environnement'), 'Deux jours de formation intensive pour 26 jeunes entrepreneurs de Bamako, Mopti et Ségou : structurer son projet, maîtriser ses chiffres et apprendre des autres. Un bootcamp organisé avec le PNUD Mali et l''incubateur DoniLab.',
   'En 2022, YouthConnekt Mali a réuni 26 jeunes entrepreneurs pour un bootcamp pensé comme un accélérateur : vingt jeunes accompagnés par le programme PNUD Mali-TEF et six jeunes de la société civile venus de Mopti et de Ségou. Pendant deux jours, avec l''incubateur DoniLab, ils ont travaillé sur ce qui fait tenir une entreprise : un projet clair, des comptes maîtrisés et un réseau sur lequel s''appuyer.
 Jour 1 : donner une structure à son idée
 Après l''ouverture officielle, marquée par les discours du Dr Doudou Ben Bechir Niang, représentant du ministère de la Jeunesse et des Sports, et des représentants du PNUD et de DoniLab, les participants sont passés à la pratique. Atelier de structuration de projet, prise en main du Business Model Canvas, travaux en groupe : chacun est reparti avec une vision plus nette de son modèle. Abdoulaye Sow, chargé des programmes à DoniLab, a accompagné la journée, nourrie de retours d''expérience.
@@ -28,7 +28,7 @@ FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM initiatives WHERE slug = 'bootcamp-you
 
 -- Crise du carburant : la jeunesse mobilisée aux stations-service
 INSERT INTO initiatives (titre, slug, statut, publie_le, mis_en_avant, axe_id, resume, contenu, image, etat, date_libelle, date_debut, date_fin, lieu, participants, format, objectifs, programme, chiffres, citation, citation_auteur, participations_ouvertes, cree_le, modifie_le)
-SELECT 'Crise du carburant : la jeunesse mobilisée aux stations-service', 'cnj-mobilisation-crise-carburant', 'publie', NOW() - INTERVAL 8 MINUTE, 0, (SELECT id FROM axes WHERE slug = 'gouvernance-participation'), 'À l''automne 2025, quand les files d''attente s''étiraient devant les stations-service, les bénévoles du Conseil national de la jeunesse ont aidé à garder le calme et à informer les usagers. YouthConnekt Mali a soutenu cette mobilisation et salué leur engagement.',
+SELECT 'Crise du carburant : la jeunesse mobilisée aux stations-service', 'cnj-mobilisation-crise-carburant', 'publie', NOW() - INTERVAL 6 MINUTE, 0, (SELECT id FROM axes WHERE slug = 'gouvernance-participation'), 'À l''automne 2025, quand les files d''attente s''étiraient devant les stations-service, les bénévoles du Conseil national de la jeunesse ont aidé à garder le calme et à informer les usagers. YouthConnekt Mali a soutenu cette mobilisation et salué leur engagement.',
   'À partir de septembre 2025, le Mali a traversé une grave pénurie de carburant, ressentie à Bamako dès le début du mois d''octobre. Devant les stations encore approvisionnées, les files s''étiraient sur des centaines de mètres, de jour comme de nuit, et la tension montait vite.
 Des bénévoles pour garder le calme
 Le Conseil national de la jeunesse du Mali (CNJ) a alors déployé des jeunes bénévoles dans les stations-service pour organiser les files et maintenir l''ordre. Chaque jour, il publiait aussi la liste des stations qui disposaient de carburant : un geste simple, qui évitait aux usagers de tourner en ville et désengorgeait les points de vente.
@@ -47,7 +47,7 @@ FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM initiatives WHERE slug = 'cnj-mobilisa
 
 -- École de la citoyenneté, 5e cohorte
 INSERT INTO initiatives (titre, slug, statut, publie_le, mis_en_avant, axe_id, resume, contenu, image, etat, date_libelle, date_debut, date_fin, lieu, participants, format, objectifs, programme, chiffres, citation, citation_auteur, participations_ouvertes, cree_le, modifie_le)
-SELECT 'École de la citoyenneté, 5e cohorte', 'ecole-de-la-citoyennete-5e-cohorte', 'publie', NOW() - INTERVAL 6 MINUTE, 0, (SELECT id FROM axes WHERE slug = 'gouvernance-participation'), 'En avril 2026, 1 000 jeunes ont rejoint au Palais des Pionniers la 5e cohorte de l''École de la citoyenneté, programme du ministère de la Jeunesse et des Sports. YouthConnekt Mali a soutenu la cohorte et y est intervenu auprès des participants.',
+SELECT 'École de la citoyenneté, 5e cohorte', 'ecole-de-la-citoyennete-5e-cohorte', 'publie', NOW() - INTERVAL 4 MINUTE, 0, (SELECT id FROM axes WHERE slug = 'gouvernance-participation'), 'En avril 2026, 1 000 jeunes ont rejoint au Palais des Pionniers la 5e cohorte de l''École de la citoyenneté, programme du ministère de la Jeunesse et des Sports. YouthConnekt Mali a soutenu la cohorte et y est intervenu auprès des participants.',
   'Former des jeunes qui connaissent leurs droits, leurs devoirs et les institutions de leur pays : c''est l''ambition de l''École de la citoyenneté, programme du ministère de la Jeunesse et des Sports, chargé de l''Instruction civique et de la Construction citoyenne. Civisme, citoyenneté et patriotisme y sont abordés à travers des sessions de formation et des rencontres directes avec les décideurs.
 Une 5e cohorte de 1 000 jeunes
 Le vendredi 17 avril 2026, le ministre d''État chargé de la Réconciliation, de la Paix et de la Cohésion nationale, le Général de Corps d''Armée Ismaël Wagué, a lancé la 5e cohorte au Palais des Pionniers de Bamako, au nom du Premier ministre. Elle a réuni 1 000 jeunes du district de Bamako, de la diaspora et des pays de l''Alliance des États du Sahel, ainsi que des jeunes déplacés internes.
@@ -69,7 +69,7 @@ FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM initiatives WHERE slug = 'ecole-de-la-
 
 -- DONIYA-LAB, l'innovation des jeunes au service de la santé communautaire
 INSERT INTO initiatives (titre, slug, statut, publie_le, mis_en_avant, axe_id, resume, contenu, image, etat, date_libelle, date_debut, date_fin, lieu, participants, format, objectifs, programme, chiffres, citation, citation_auteur, participations_ouvertes, cree_le, modifie_le)
-SELECT 'DONIYA-LAB, l''innovation des jeunes au service de la santé communautaire', 'doniya-lab-innovation-sante-communautaire', 'publie', NOW() - INTERVAL 4 MINUTE, 0, (SELECT id FROM axes WHERE slug = 'croissance-environnement'), 'Vingt porteurs de projets, cinq jours de bootcamp et cinq lauréats : en juin 2026, le DONIYA-LAB a fait mûrir des solutions de jeunes pour la santé et le développement des communautés, avec YouthConnekt Mali à l''organisation et à l''accompagnement.',
+SELECT 'DONIYA-LAB, l''innovation des jeunes au service de la santé communautaire', 'doniya-lab-innovation-sante-communautaire', 'publie', NOW() - INTERVAL 2 MINUTE, 0, (SELECT id FROM axes WHERE slug = 'croissance-environnement'), 'Vingt porteurs de projets, cinq jours de bootcamp et cinq lauréats : en juin 2026, le DONIYA-LAB a fait mûrir des solutions de jeunes pour la santé et le développement des communautés, avec YouthConnekt Mali à l''organisation et à l''accompagnement.',
   'Porté par le ministère de la Jeunesse et des Sports, chargé de l''Instruction civique et de la Construction citoyenne, et par l''UNICEF, avec l''appui de la Fondation Mastercard, le DONIYA-LAB repère les idées de jeunes qui répondent aux besoins des communautés, notamment en matière de santé, et les aide à devenir de vrais projets.
 De 450 candidatures à 20 projets
 L''appel à projets a suscité plus de 450 candidatures dans les régions de Kayes, Nioro, Kita, Sikasso, Bougouni, Koutiala et Koulikoro, ainsi que dans le district sanitaire de Bamako. Vingt projets ont été retenus pour la phase nationale, en juin 2026, au Palais des Pionniers de Bamako.
@@ -97,26 +97,6 @@ Créer un espace de partage et de mise en réseau avec des mentors',
 5 | jours de bootcamp',
   '', '', 0, NOW(), NOW()
 FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM initiatives WHERE slug = 'doniya-lab-innovation-sante-communautaire');
-
--- Semaine nationale de la jeunesse 2026
-INSERT INTO initiatives (titre, slug, statut, publie_le, mis_en_avant, axe_id, resume, contenu, image, etat, date_libelle, date_debut, date_fin, lieu, participants, format, objectifs, programme, chiffres, citation, citation_auteur, participations_ouvertes, cree_le, modifie_le)
-SELECT 'Semaine nationale de la jeunesse 2026', 'semaine-nationale-de-la-jeunesse-2026', 'publie', NOW() - INTERVAL 2 MINUTE, 0, (SELECT id FROM axes WHERE slug = 'gouvernance-participation'), 'Du 11 au 16 août 2026, la Semaine nationale de la jeunesse a réuni les jeunes de Bamako et des régions autour de la paix, de la sécurité et de la lutte contre la désinformation. YouthConnekt Mali a contribué à son organisation et à la mobilisation des jeunes.',
-  'Couplée à la Journée internationale de la jeunesse du 12 août, la Semaine nationale de la jeunesse 2026 s''est tenue du 11 au 16 août, sur un thème qui parle aux jeunes Maliens d''aujourd''hui : « Jeunesse, paix et sécurité : prévenir la désinformation, lutter contre la radicalisation et promouvoir la paix ». Portée par le Conseil national de la jeunesse du Mali (CNJ) et le ministère de la Jeunesse et des Sports, chargé de l''Instruction civique et de la Construction citoyenne, elle a mis en avant des jeunes acteurs de la paix et de la cohésion sociale.
-Lancement officiel au CICB
-Le mercredi 12 août, le ministre d''État chargé de la Réconciliation nationale et de la Cohésion sociale, le Général de Corps d''Armée Ismaël Wagué, a lancé les activités au Centre international de conférences de Bamako, au nom du Président de la Transition. Le ministre Abdoul Kassim Ibrahim Fomba a salué une jeunesse prête à rapprocher les communautés, tandis que le président du CNJ, Sory Ibrahim Cissé, a exprimé la volonté des jeunes de contribuer activement à la stabilité du pays.
-Six jours d''échanges et de formation
-Atelier sur l''agenda Jeunesse, paix et sécurité, formation au développement conduit par les communautés, conférence sur l''engagement civique et le patriotisme, forum Jeunesse-Diaspora, panels régionaux sur les priorités de développement : la semaine a alterné réflexion et formation. Elle s''est aussi prolongée dans les régions, portée par les conseils régionaux de la jeunesse, comme à Nioro du Sahel dès le 12 août et à Bandiagara du 22 au 24 août.
-La part de YouthConnekt Mali
-YouthConnekt Mali a appuyé le CNJ dans l''organisation de la Semaine et mobilisé les jeunes de son réseau pour qu''ils prennent part aux activités.',
-  '', 'terminee', '11 au 16 août 2026', '2026-08-11', '2026-08-16', 'CICB, Bamako, et régions', '', 'Présentiel',
-  'Renforcer la participation des jeunes à la consolidation de la paix
-Prévenir la désinformation et la radicalisation chez les jeunes
-Promouvoir la citoyenneté et la cohésion sociale
-Renforcer les capacités des jeunes et la gouvernance associative',
-  '',
-  '',
-  '', '', 0, NOW(), NOW()
-FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM initiatives WHERE slug = 'semaine-nationale-de-la-jeunesse-2026');
 
 -- Housseyni Diallo au Forum YouthConnekt Sahel 2026
 INSERT INTO actualites (titre, slug, statut, publie_le, mis_en_avant, categorie, chapeau, contenu, image, date_evenement, date_fin, lieu, cree_le, modifie_le)
