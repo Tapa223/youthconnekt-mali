@@ -211,19 +211,26 @@ function url_absolue(string $chemin = '/'): string
 function asset(string $chemin): string
 {
     $chemin = ltrim($chemin, '/');
-    // Images du site : peu importe le format déposé (jpg, jpeg, png, webp, gif, avif, en minuscules ou majuscules).
-    // Si plusieurs fichiers portent le même nom (ex. lets-connekt.jpg et lets-connekt.png), le plus récent l'emporte.
-    if (preg_match('#^img/(.+)\.(jpe?g|png|webp|gif|avif)$#i', $chemin, $m)) {
-        $candidats = glob(RACINE . '/assets/img/' . $m[1] . '.*') ?: [];
-        $candidats = array_filter($candidats, fn ($f) => preg_match('/\.(jpe?g|png|webp|gif|avif)$/i', $f));
+    $nom_adresse = null;
+    // Images du site : peu importe le format déposé (jpg, jpeg, jfif, png, webp, gif, avif, en minuscules ou majuscules),
+    // y compris un nom doublé par Windows (« chapitre-1.jpg.jpg ») ou une copie (« chapitre-1 (1).jpg »).
+    // Si plusieurs fichiers correspondent, le dernier déposé dans le dossier l'emporte.
+    if (preg_match('#^img/(.+)\.(jpe?g|jfif|png|webp|gif|avif)$#i', $chemin, $m)) {
+        $base = basename($m[1]);
+        $dossier = RACINE . '/assets/img/' . (dirname($m[1]) === '.' ? '' : dirname($m[1]) . '/');
+        $motif = '/^' . preg_quote($base, '/') . '(\s*\(\d+\))?(\.[a-z0-9]+)*\.(jpe?g|jfif|png|webp|gif|avif)$/i';
+        $candidats = array_values(array_filter(glob($dossier . '*') ?: [], fn ($f) => is_file($f) && preg_match($motif, basename($f))));
         if ($candidats) {
-            usort($candidats, fn ($x, $y) => filemtime($y) <=> filemtime($x));
-            $chemin = substr($candidats[0], strlen(RACINE . '/assets/'));
+            // Date de dépôt : sous Windows, une copie garde sa date de modification d'origine, la date de création est celle du dépôt
+            $depot = fn ($f) => max((int) @filemtime($f), (int) @filectime($f));
+            usort($candidats, fn ($x, $y) => $depot($y) <=> $depot($x));
+            $chemin = 'img/' . (dirname($m[1]) === '.' ? '' : dirname($m[1]) . '/') . basename($candidats[0]);
+            $nom_adresse = rawurlencode(basename($candidats[0]));
         }
     }
     $fichier = RACINE . '/assets/' . $chemin;
-    $version = is_file($fichier) ? '?v=' . filemtime($fichier) : '';
-    return base_url() . '/assets/' . $chemin . $version;
+    $version = is_file($fichier) ? '?v=' . max((int) filemtime($fichier), (int) filectime($fichier)) : '';
+    return base_url() . '/assets/' . ($nom_adresse !== null ? substr($chemin, 0, -strlen(basename($chemin))) . $nom_adresse : $chemin) . $version;
 }
 
 /** Image envoyée depuis l'administration (dossier uploads/). */

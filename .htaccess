@@ -21,6 +21,10 @@ DirectoryIndex index.php
   ErrorDocument 404 index.php
 </IfModule>
 
+# Formats d'images parfois inconnus du serveur (photos WhatsApp en .jfif, AVIF)
+AddType image/jpeg .jfif
+AddType image/avif .avif
+
 # Mise en cache des images, styles et scripts
 <IfModule mod_expires.c>
   ExpiresActive On
