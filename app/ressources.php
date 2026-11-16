@@ -557,7 +557,7 @@ function ressources(): array
             'filtres' => [['profil', 'Tous les profils', PROFILS_CONTACT, 't.profil']],
             'recherche' => ['t.nom', 't.email', 't.objet', 't.message'],
             'nom_element' => fn ($l) => $l['objet'],
-            'export' => ['Reçu le' => fn ($l) => date_chiffres($l['recu_le']), 'Nom' => 'nom', 'E-mail' => 'email', 'Profil' => fn ($l) => PROFILS_CONTACT[$l['profil']] ?? '', 'Objet' => 'objet', 'Message' => 'message', 'Traité' => fn ($l) => $l['traite'] ? 'oui' : 'non'],
+            'export' => ['Reçu le' => fn ($l) => date_chiffres($l['recu_le']), 'Nom' => 'nom', 'E-mail' => 'email', 'Profil' => fn ($l) => (PROFILS_CONTACT[$l['profil']] ?? '') . (!empty($l['profil_autre']) ? ' : ' . $l['profil_autre'] : ''), 'Objet' => 'objet', 'Message' => 'message', 'Traité' => fn ($l) => $l['traite'] ? 'oui' : 'non'],
             'actions' => [
                 'traites' => ['Marquer comme traités', fn ($ids) => requete('UPDATE messages_contact SET traite = 1 WHERE id IN (' . marqueurs($ids) . ')', $ids)->rowCount() . ' message(s) marqué(s) comme traité(s).'],
                 'a_traiter' => ['Remettre à traiter', fn ($ids) => requete('UPDATE messages_contact SET traite = 0 WHERE id IN (' . marqueurs($ids) . ')', $ids)->rowCount() . ' message(s) remis à traiter.'],
@@ -769,7 +769,7 @@ function ressources(): array
             'groupes' => [
                 ['Coordonnées du chapitre', 'champs' => [
                     'email_contact' => ['type' => 'email', 'libelle' => 'E-mail de contact', 'requis' => false, 'largeur' => 'demi'],
-                    'telephone' => ['type' => 'texte', 'libelle' => 'Téléphone', 'requis' => false, 'max' => 40, 'largeur' => 'demi'],
+                    'telephone' => ['type' => 'texte', 'libelle' => 'Téléphone', 'requis' => false, 'max' => 40, 'largeur' => 'demi', 'aide' => 'Laissez vide tant que le chapitre n\'a pas de numéro : il ne s\'affiche nulle part.'],
                     'adresse' => ['type' => 'texte', 'libelle' => 'Adresse', 'requis' => false, 'max' => 255, 'largeur' => 'demi'],
                     'horaires' => ['type' => 'texte', 'libelle' => "Jours et heures d'ouverture", 'requis' => false, 'max' => 200, 'largeur' => 'demi'],
                 ]],

@@ -54,10 +54,17 @@ $traces = ICONES_CONTACT;
         <div class="hidden" aria-hidden="true"><label>Ne pas remplir <input type="text" name="site_web" tabindex="-1" autocomplete="off"></label></div>
         <?php partiel('partials/champ', ['nom' => 'nom', 'libelle' => 'Nom complet', 'valeur' => $valeurs['nom'], 'erreur' => $erreurs['nom'] ?? '', 'attributs' => ['autocomplete' => 'name', 'placeholder' => 'Votre nom', 'maxlength' => 120]]) ?>
         <?php partiel('partials/champ', ['nom' => 'email', 'libelle' => 'Adresse e-mail', 'type' => 'email', 'valeur' => $valeurs['email'], 'erreur' => $erreurs['email'] ?? '', 'attributs' => ['autocomplete' => 'email', 'placeholder' => 'vous@exemple.com', 'maxlength' => 190]]) ?>
-        <?php partiel('partials/champ', ['nom' => 'profil', 'libelle' => 'Vous êtes', 'type' => 'select', 'options' => PROFILS_CONTACT, 'valeur' => $valeurs['profil'], 'erreur' => $erreurs['profil'] ?? '']) ?>
+        <div>
+          <?php partiel('partials/champ', ['nom' => 'profil', 'libelle' => 'Vous êtes', 'type' => 'select', 'options' => PROFILS_CONTACT, 'valeur' => $valeurs['profil'], 'erreur' => $erreurs['profil'] ?? '', 'attributs' => ['data-profil-contact' => '1']]) ?>
+          <?php /* « Autre » : la personne précise qui elle est */ ?>
+          <div class="mt-2.5" data-profil-autre<?= $valeurs['profil'] === 'autre' ? '' : ' hidden' ?>>
+            <?php partiel('partials/champ', ['nom' => 'profil_autre', 'libelle' => 'Précisez', 'valeur' => $valeurs['profil_autre'], 'erreur' => $erreurs['profil_autre'] ?? '', 'attributs' => ['maxlength' => 120, 'placeholder' => 'Exemple : enseignant, parent, chercheur…']]) ?>
+          </div>
+        </div>
         <?php partiel('partials/champ', ['nom' => 'sujet', 'libelle' => 'Sujet', 'type' => 'select', 'options' => ['' => 'Choisir un sujet'] + SUJETS_CONTACT, 'valeur' => $valeurs['sujet'], 'erreur' => $erreurs['sujet'] ?? '']) ?>
         <?php partiel('partials/champ', ['nom' => 'message', 'libelle' => 'Message', 'type' => 'textarea', 'valeur' => $valeurs['message'], 'erreur' => $erreurs['message'] ?? '', 'classes_bloc' => 'sm:col-span-2', 'attributs' => ['rows' => 4, 'placeholder' => 'Écrivez votre message…', 'maxlength' => 5000]]) ?>
         <?php partiel('partials/case', ['nom' => 'consentement', 'libelle_html' => 'J\'accepte que mes données soient utilisées pour répondre à ma demande, conformément à la <a href="' . url('/confidentialite') . '" class="lien-texte">politique de confidentialité</a>.', 'coche' => $valeurs['consentement'] !== '', 'erreur' => $erreurs['consentement'] ?? '', 'classes_bloc' => 'sm:col-span-2']) ?>
+        <?php if (!empty($erreurs['_envoi'])): ?><p class="rounded-xl border border-rouge/30 bg-rouge/5 px-4 py-3 text-sm text-rouge sm:col-span-2" role="alert"><?= e($erreurs['_envoi']) ?></p><?php endif ?>
         <div class="sm:col-span-2"><button type="submit" class="btn btn-orange min-h-12 w-full px-8 text-base sm:w-auto">Envoyer le message</button></div>
       </form>
     </div>

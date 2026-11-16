@@ -10,7 +10,7 @@ INSERT IGNORE INTO parametres (id) VALUES (1);
 -- Coordonnées provisoires du chapitre, à confirmer et modifier dans Administration > Paramètres
 UPDATE parametres SET
   email_contact = IF(email_contact = '', 'contact@youthconnektmali.org', email_contact),
-  telephone = IF(telephone = '', '+223 00 00 00 00', telephone),
+  telephone = telephone,
   adresse = IF(adresse = '', 'Bamako, Mali', adresse),
   horaires = IF(horaires = '', 'Du lundi au vendredi, de 8 h à 17 h', horaires),
   titre_accueil_2 = 'La jeunesse malienne se forme',

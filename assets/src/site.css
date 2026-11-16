@@ -422,3 +422,6 @@ header.site-entete { view-transition-name: entete; }
 @media (prefers-reduced-motion: reduce) {
   .diapo-texte { transform: none; transition: opacity .4s ease; }
 }
+
+/* Champ piège anti-robots : hors de l'écran, jamais vu ni atteint au clavier */
+.champ-piege { position: absolute !important; left: -10000px !important; width: 1px; height: 1px; overflow: hidden; }

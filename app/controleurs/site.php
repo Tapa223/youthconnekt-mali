@@ -86,7 +86,7 @@ function a_propos(): void
 
 function contact(): void
 {
-    $valeurs = ['nom' => '', 'email' => '', 'profil' => 'jeune', 'sujet' => '', 'message' => '', 'consentement' => ''];
+    $valeurs = ['nom' => '', 'email' => '', 'profil' => 'jeune', 'profil_autre' => '', 'sujet' => '', 'message' => '', 'consentement' => ''];
     // Membre connecté : nom, e-mail et profil déjà remplis (modifiables)
     $u = utilisateur();
     if ($u && est_membre($u)) {
@@ -126,12 +126,21 @@ function contact(): void
         if ($valeurs['consentement'] === '') {
             $erreurs['consentement'] = 'Cochez cette case pour que nous puissions vous répondre.';
         }
+        if ($valeurs['profil'] === 'autre' && $valeurs['profil_autre'] === '') {
+            $erreurs['profil_autre'] = 'Précisez qui vous êtes.';
+        }
+        if (!$erreurs && robot_probable(3)) {
+            $erreurs['_envoi'] = "Votre envoi n'a pas pu aboutir. Patientez quelques secondes, puis réessayez.";
+        } elseif (!$erreurs && limite_atteinte('contact', 5)) {
+            $erreurs['_envoi'] = "Trop de messages depuis cette connexion. Réessayez dans une heure.";
+        }
         if (!$erreurs) {
             // Champ piège : un robot le remplit, un humain le laisse vide
             if (post('site_web') === '') {
                 inserer('messages_contact', [
                     'nom' => mb_substr($valeurs['nom'], 0, 120),
                     'profil' => $valeurs['profil'],
+                    'profil_autre' => $valeurs['profil'] === 'autre' ? mb_substr($valeurs['profil_autre'], 0, 120) : null,
                     'email' => mb_substr($valeurs['email'], 0, 190),
                     'objet' => SUJETS_CONTACT[$valeurs['sujet']],
                     'message' => mb_substr($valeurs['message'], 0, 5000),
@@ -178,7 +187,9 @@ function newsletter(): void
         $erreur = "Cette adresse e-mail n'est pas valide.";
     } elseif (post('accord') === '') {
         $erreur = 'Cochez la case pour accepter de recevoir la newsletter.';
-    } elseif (post('site_web') === '') {
+    } elseif (limite_atteinte('newsletter', 10)) {
+        $erreur = "Trop de inscriptions depuis cette connexion. Réessayez dans une heure.";
+    } elseif (post('site_web') === '' && !robot_probable(2)) {
         requete('INSERT INTO abonnes_newsletter (email, inscrit_le, actif) VALUES (?, ?, 1) ON DUPLICATE KEY UPDATE actif = 1', [$email, maintenant()]);
     }
     // Même message dans tous les cas, sans révéler si l'adresse était déjà inscrite
@@ -236,6 +247,11 @@ function message_rapide(): void
     }
     if (mb_strlen($message) < 5) {
         $erreurs['message'] = $message === '' ? 'Écrivez votre message.' : 'Votre message est trop court.';
+    }
+    if (!$erreurs && robot_probable(3)) {
+        $erreurs['message'] = "Votre envoi n'a pas pu aboutir. Patientez quelques secondes, puis réessayez.";
+    } elseif (!$erreurs && limite_atteinte('message_rapide', 8)) {
+        $erreurs['message'] = "Trop de messages depuis cette connexion. Réessayez dans une heure.";
     }
     if ($initiative && !$erreurs) {
         // On regroupe les champs du formulaire dans le message reçu par l'équipe

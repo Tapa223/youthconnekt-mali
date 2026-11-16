@@ -1,5 +1,6 @@
 <?php /* Témoignages : trois cartes superposées qui flottent. Paramètre : $temoignages */
-if (empty($temoignages)) return;
+// La section n'apparaît qu'à partir de trois témoignages publiés (trois cartes)
+if (count($temoignages ?? []) < 3) return;
 $rotations_tel = ['max-md:mr-6 max-md:-rotate-[1.5deg]', 'max-md:-mt-2.5 max-md:ml-6 max-md:rotate-[1.5deg]', 'max-md:-mt-2.5 max-md:mr-3 max-md:ml-1.5 max-md:-rotate-1'];
 $rotations = ['md:z-[1] md:translate-x-[30px] md:translate-y-10 md:-rotate-[4deg]', 'md:z-[2] md:rotate-1', 'md:z-[1] md:-translate-x-[30px] md:translate-y-14 md:rotate-[4deg]'];
 ?>

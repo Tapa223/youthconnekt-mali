@@ -254,6 +254,9 @@ function proposer_opportunite(): void
     if (mb_strlen($v['description']) < 30) {
         $erreurs['description'] = $v['description'] === '' ? "Décrivez l'opportunité." : 'Décrivez un peu plus l\'opportunité (30 caractères au minimum).';
     }
+    if (!$erreurs && limite_atteinte('proposition', 10)) {
+        $erreurs['description'] = "Trop de propositions depuis cette connexion. Réessayez dans une heure.";
+    }
     $image = null;
     if (!$erreurs) {
         try {

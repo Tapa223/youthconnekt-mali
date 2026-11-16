@@ -121,6 +121,10 @@ function envoyer_temoignage(): void
     $u = exiger_membre();
     $texte = trim(post('texte'));
     $retour = url('/compte/mon-espace/temoignage');
+    if (limite_atteinte('temoignage', 5)) {
+        flash('erreur', "Trop de envois depuis cette connexion. Réessayez dans une heure.");
+        rediriger($retour);
+    }
     if (mb_strlen($texte) < 20 || mb_strlen($texte) > 600) {
         flash('erreur', mb_strlen($texte) < 20 ? 'Votre témoignage est trop court : quelques phrases suffisent (20 caractères au minimum).' : '600 caractères au maximum.');
         $_SESSION['brouillon_temoignage'] = $texte;
@@ -421,6 +425,7 @@ function soutenir_chapitre(): void
         if (!$formes) $erreurs['formes'] = 'Choisissez au moins une forme de soutien.';
         if (mb_strlen($message) < 10) $erreurs['message'] = 'Décrivez en quelques mots ce que vous proposez.';
         if (mb_strlen($message) > 1500) $erreurs['message'] = '1 500 caractères au maximum.';
+        if (!$erreurs && limite_atteinte('soutien', 5)) $erreurs['message'] = "Trop de propositions depuis cette connexion. Réessayez dans une heure.";
         if (!$erreurs) {
             inserer('soutiens', ['utilisateur_id' => $u['id'], 'formes' => implode(',', $formes), 'message' => $message,
                 'statut' => 'nouveau', 'cree_le' => maintenant()]);

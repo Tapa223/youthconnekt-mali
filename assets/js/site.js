@@ -933,3 +933,17 @@
     try { sessionStorage.setItem(CLE, String(menu.scrollTop)); } catch (err) {}
   });
 })();
+
+/* Contact : « Vous êtes : Autre » fait apparaître le champ « Précisez » */
+(function () {
+  "use strict";
+  var choix = document.querySelector("[data-profil-contact]");
+  var bloc = document.querySelector("[data-profil-autre]");
+  if (!choix || !bloc) return;
+  function maj() {
+    bloc.hidden = choix.value !== "autre";
+    if (!bloc.hidden && document.activeElement === choix) { var c = bloc.querySelector("input"); if (c) c.focus(); }
+  }
+  choix.addEventListener("change", maj);
+  maj();
+})();

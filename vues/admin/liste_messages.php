@@ -7,7 +7,7 @@
       <a href="<?= e(avec_parametres(['ouvert' => $m['id']])) ?>" class="<?= !$m['traite'] ? 'non-lu' : '' ?><?= (int) $ouvert['id'] === (int) $m['id'] ? ' ouvert' : '' ?>">
         <strong><?= e($m['nom']) ?></strong>
         <time datetime="<?= e(date('c', strtotime($m['recu_le']))) ?>"><?= e(il_y_a($m['recu_le'])) ?></time>
-        <span class="profil"><?= e(PROFILS_CONTACT[$m['profil']] ?? '') ?></span>
+        <span class="profil"><?= e(PROFILS_CONTACT[$m['profil']] ?? '') ?><?= !empty($m['profil_autre']) ? ' : ' . e($m['profil_autre']) : '' ?></span>
         <span class="objet"><?= e(couper($m['objet'] . ' · ' . $m['message'], 90)) ?></span>
       </a>
     </li>
@@ -16,7 +16,7 @@
   <div class="ycm-lecture">
     <div class="ycm-lecture-tete">
       <h2><?= e($ouvert['objet']) ?></h2>
-      <?= $ouvert['traite'] ? badge('Traité', 'vert') : badge(PROFILS_CONTACT[$ouvert['profil']] ?? '', 'turquoise') ?>
+      <?= $ouvert['traite'] ? badge('Traité', 'vert') : badge((PROFILS_CONTACT[$ouvert['profil']] ?? '') . (!empty($ouvert['profil_autre']) ? ' : ' . $ouvert['profil_autre'] : ''), 'turquoise') ?>
     </div>
     <p class="ycm-lecture-meta"><?= e($ouvert['nom']) ?> · <a href="mailto:<?= e($ouvert['email']) ?>"><?= e($ouvert['email']) ?></a> · <?= e(date_longue($ouvert['recu_le']) . ', ' . date('H \h i', strtotime($ouvert['recu_le']))) ?></p>
     <div class="ycm-lecture-texte"><?= e($ouvert['message']) ?></div>

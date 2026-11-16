@@ -49,6 +49,12 @@ function inscription_formulaire(string $slug): void
         $valeurs['email'] = mb_strtolower($valeurs['email']);
         $mdp1 = (string) ($_POST['password1'] ?? '');
         $mdp2 = (string) ($_POST['password2'] ?? '');
+        // Anti-robots : champ piège, envoi trop rapide, ou trop d'inscriptions depuis la même connexion
+        if (robot_probable(4)) {
+            $erreurs['_envoi'] = "Votre envoi n'a pas pu aboutir. Patientez quelques secondes, puis réessayez.";
+        } elseif (limite_atteinte('inscription', 5)) {
+            $erreurs['_envoi'] = "Trop de inscriptions depuis cette connexion. Réessayez dans une heure.";
+        }
 
         if ($organisation) {
             if ($valeurs['nom_structure'] === '') $erreurs['nom_structure'] = "Indiquez le nom de l'organisation.";

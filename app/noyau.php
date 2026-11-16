@@ -342,7 +342,50 @@ function csrf_jeton(): string
 
 function csrf(): string
 {
-    return '<input type="hidden" name="_csrf" value="' . e(csrf_jeton()) . '">';
+    // Avec le jeton : l'heure d'affichage (signée) et un champ piège invisible, pour repérer les robots
+    $t = (string) time();
+    return '<input type="hidden" name="_csrf" value="' . e(csrf_jeton()) . '">'
+        . '<input type="hidden" name="_t" value="' . $t . '.' . substr(hash_hmac('sha256', $t, csrf_jeton()), 0, 16) . '">'
+        . '<span class="champ-piege" aria-hidden="true"><label>Laissez ce champ vide <input type="text" name="_url" value="" tabindex="-1" autocomplete="off"></label></span>';
+}
+
+/**
+ * Envoi probablement fait par un robot : champ piège rempli, ou formulaire envoyé trop vite après son affichage.
+ * Un humain remplit rarement un formulaire en moins de $secondes.
+ */
+function robot_probable(int $secondes = 3): bool
+{
+    if (trim((string) ($_POST['_url'] ?? '')) !== '' || trim((string) ($_POST['site_web_piege'] ?? '')) !== '') {
+        return true;
+    }
+    $t = (string) ($_POST['_t'] ?? '');
+    if ($t === '') {
+        return false; // page affichée avant cette protection
+    }
+    [$heure, $signature] = array_pad(explode('.', $t, 2), 2, '');
+    if (!hash_equals(substr(hash_hmac('sha256', $heure, csrf_jeton()), 0, 16), $signature)) {
+        return true;
+    }
+    return time() - (int) $heure < $secondes;
+}
+
+/**
+ * Nombre d'envois limité par adresse IP (anti-robots) : true si la limite est atteinte ; sinon l'envoi est compté.
+ * Exemple : limite_atteinte('inscription', 5) = 5 inscriptions par heure depuis une même connexion.
+ */
+function limite_atteinte(string $action, int $max, int $minutes = 60): bool
+{
+    $cle = hash('sha256', 'limite|' . $action . '|' . adresse_ip());
+    try {
+        $n = (int) valeur('SELECT COUNT(*) FROM tentatives_connexion WHERE cle = ? AND moment > ?', [$cle, date('Y-m-d H:i:s', time() - $minutes * 60)]);
+        if ($n >= $max) {
+            return true;
+        }
+        inserer('tentatives_connexion', ['cle' => $cle, 'moment' => maintenant()]);
+    } catch (Throwable $e) {
+        // table absente : on ne bloque personne
+    }
+    return false;
 }
 
 function verifier_csrf(): void

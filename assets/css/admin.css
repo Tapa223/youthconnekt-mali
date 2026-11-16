@@ -1073,3 +1073,6 @@ input[type=file]::file-selector-button {
 .ycm-phototheque-grille label:hover img { transform: scale(1.05); }
 .ycm-phototheque-grille label:has(input:checked) { box-shadow: 0 0 0 3px var(--ycm-orange); }
 .ycm-phototheque-grille label:has(input:focus-visible) { outline: 2px solid var(--ycm-vert); outline-offset: 2px; }
+
+/* Champ piège anti-robots (ajouté par csrf()) */
+.champ-piege { position: absolute !important; left: -10000px !important; width: 1px; height: 1px; overflow: hidden; }
