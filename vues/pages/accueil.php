@@ -92,13 +92,6 @@ foreach (range(0, 11) as $k) {
         <p data-diapo-image class="diapo-texte col-start-1 row-start-1 self-start text-[13px] leading-snug text-white/95 sm:rounded-2xl sm:border sm:border-white/20 sm:bg-vert/80 sm:px-6 sm:py-3.5 sm:text-base sm:backdrop-blur-md sm:leading-relaxed sm:backdrop-blur-md lg:text-[clamp(0.95rem,2.1vh,1.15rem)]"<?= $k ? ' aria-hidden="true"' : '' ?>><?= e($d['texte']) ?></p>
         <?php endforeach ?>
       </div>
-      <?php if ($bilan): ?>
-      <?php /* Vidéo bilan de l'année : accessible dès l'arrivée sur le site */ ?>
-      <button type="button" class="mt-3 inline-flex min-h-11 items-center gap-2.5 rounded-full border border-white/35 bg-vert/70 py-1.5 pr-5 pl-1.5 text-[13px] font-bold text-white backdrop-blur-md transition-colors hover:border-white hover:bg-white hover:text-vert sm:mt-5 sm:text-[15px] lg:mt-[2vh]" data-ouvrir-bilan>
-        <span class="grid size-8 shrink-0 place-items-center rounded-full bg-orange sm:size-9" aria-hidden="true"><svg viewBox="0 0 24 24" class="ml-0.5 size-3.5 fill-white sm:size-4"><path d="M7 4.5v15l12.5-7.5z"/></svg></span>
-        <?= e($bilan['titre_affiche']) ?> · Voir la vidéo
-      </button>
-      <?php endif ?>
     </div>
 
     <div class="order-4 mt-4 grid w-full max-w-md grid-cols-2 gap-2.5 sm:mt-6 sm:gap-3 lg:hidden">
@@ -154,21 +147,11 @@ foreach (range(0, 11) as $k) {
       <?php endif ?>
     </div>
 
-    <div class="relative order-3 mx-auto h-[220px] w-full max-w-sm sm:h-[min(520px,calc(100vh-200px))] sm:max-w-xl sm:min-h-[420px] lg:max-w-none"<?= $bilan ? '' : ' aria-hidden="true"' ?>>
+    <div class="relative order-3 mx-auto h-[220px] w-full max-w-sm sm:h-[min(520px,calc(100vh-200px))] sm:max-w-xl sm:min-h-[420px] lg:max-w-none" aria-hidden="true">
       <span class="absolute top-4 left-0 h-[88%] w-[56%] rounded-2xl bg-orange sm:top-[30px] sm:w-[54%] sm:rounded-[22px]" aria-hidden="true"></span>
       <span class="absolute right-[2%] bottom-0 h-[34%] w-[34%] rounded-[22px] bg-turquoise" aria-hidden="true"></span>
       <div class="devoile survol-zoom absolute top-0 left-3 h-[88%] w-[54%] overflow-hidden rounded-2xl shadow-[0_20px_40px_rgb(20_32_29/.2)] sm:left-6 sm:w-[52%] sm:rounded-[22px]">
-        <img src="<?= !empty($bilan['couverture']) ? e($bilan['couverture']) : asset('img/accueil/chapitre-1.jpg') ?>" alt="" class="derive -mt-[10%] block h-[120%] w-full object-cover <?= !empty($bilan['couverture']) ? 'object-center' : 'object-[60%_15%]' ?>" loading="lazy">
-        <?php if ($bilan): ?>
-        <?php /* La grande photo devient le lecteur du bilan de l'année : toute la photo est cliquable */ ?>
-        <button type="button" class="group absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[linear-gradient(180deg,rgb(3_94_77/0)_35%,rgb(3_94_77/.75)_100%)] text-white" data-ouvrir-bilan>
-          <span class="relative grid size-16 place-items-center rounded-full bg-orange shadow-[0_12px_30px_rgb(241_89_42/.45)] transition-[background-color,transform] duration-300 group-hover:scale-110 group-hover:bg-white sm:size-20" aria-hidden="true">
-            <span class="absolute inset-0 rounded-full border-2 border-orange motion-safe:animate-ping [animation-duration:2.2s]"></span>
-            <svg viewBox="0 0 24 24" class="relative ml-1 size-6 fill-white transition-colors group-hover:fill-orange sm:size-7"><path d="M7 4.5v15l12.5-7.5z"/></svg>
-          </span>
-          <span class="absolute inset-x-3 bottom-4 text-center text-sm leading-snug font-bold [text-shadow:0_2px_12px_rgb(0_0_0/.4)] sm:bottom-6 sm:text-lg"><?= e($bilan['titre_affiche']) ?><span class="block text-xs font-normal text-white/90 sm:text-sm">Voir la vidéo</span></span>
-        </button>
-        <?php endif ?>
+        <img src="<?= asset('img/accueil/chapitre-1.jpg') ?>" alt="" class="derive -mt-[10%] block h-[120%] w-full object-cover object-[60%_15%]" loading="lazy">
       </div>
       <div class="devoile-2 survol-penche absolute top-[4%] right-[4%] h-[44%] w-[38%] rotate-[4deg] overflow-hidden rounded-[20px] border-4 border-white shadow-[0_18px_36px_rgb(20_32_29/.22)] sm:border-[6px]" aria-hidden="true">
         <img src="<?= asset('img/accueil/chapitre-2.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy">
@@ -176,9 +159,30 @@ foreach (range(0, 11) as $k) {
       <div class="devoile-2 survol-penche absolute right-[6%] bottom-[4%] h-[45%] w-[40%] -rotate-3 overflow-hidden rounded-[20px] border-4 border-white shadow-[0_18px_36px_rgb(20_32_29/.22)] sm:border-[6px]" aria-hidden="true">
         <img src="<?= asset('img/accueil/chapitre-3.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy">
       </div>
-      <?php if (!$bilan) partiel('partials/mention_photo', ['texte' => 'Photos provisoires · hors Mali', 'position' => 'left-9 bottom-[16%]']) ?>
+      <?php partiel('partials/mention_photo', ['texte' => 'Photos provisoires · hors Mali', 'position' => 'left-9 bottom-[16%]']) ?>
     </div>
-    <?php if ($bilan): ?>
+  </div>
+
+  <?php if ($bilan): ?>
+  <?php /* Vidéo bilan de l'année : bande en largeur sous le texte, les chiffres et les photos ; elle s'ouvre en grand au clic */ ?>
+  <div class="conteneur relative mt-8 sm:mt-12">
+    <button type="button" class="group relative flex h-[150px] w-full items-center overflow-hidden rounded-2xl bg-vert text-left text-white shadow-[0_18px_40px_rgb(20_32_29/.18)] sm:h-[200px] sm:rounded-3xl lg:h-[220px]" data-ouvrir-bilan>
+      <?php if ($bilan['couverture']): ?>
+      <img src="<?= e($bilan['couverture']) ?>" alt="" class="absolute inset-y-0 right-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 sm:w-[70%]" loading="lazy">
+      <?php else: partiel('partials/reseau_deco'); endif ?>
+      <span class="absolute inset-0 bg-[linear-gradient(90deg,rgb(3_94_77)_0%,rgb(3_94_77/.92)_38%,rgb(3_94_77/.15)_100%)]" aria-hidden="true"></span>
+      <span class="relative flex items-center gap-4 px-5 sm:gap-7 sm:px-10">
+        <span class="relative grid size-14 shrink-0 place-items-center rounded-full bg-orange shadow-[0_12px_30px_rgb(241_89_42/.45)] transition-[background-color,transform] duration-300 group-hover:scale-110 group-hover:bg-white sm:size-20" aria-hidden="true">
+          <span class="absolute inset-0 rounded-full border-2 border-orange motion-safe:animate-ping [animation-duration:2.2s]"></span>
+          <svg viewBox="0 0 24 24" class="relative ml-1 size-5 fill-white transition-colors group-hover:fill-orange sm:size-7"><path d="M7 4.5v15l12.5-7.5z"/></svg>
+        </span>
+        <span class="max-w-md">
+          <span class="block text-lg leading-tight font-bold sm:text-3xl"><?= e($bilan['titre_affiche']) ?></span>
+          <?php if (trim($bilan['texte']) !== ''): ?><span class="mt-1 line-clamp-2 block text-[13px] leading-snug text-white/90 sm:mt-2 sm:text-base"><?= e($bilan['texte']) ?></span><?php endif ?>
+          <span class="mt-3 hidden min-h-10 items-center rounded-full bg-white px-5 text-sm font-bold text-vert transition-colors group-hover:bg-orange group-hover:text-white sm:inline-flex">Voir la vidéo</span>
+        </span>
+      </span>
+    </button>
     <dialog class="visionneuse" aria-label="<?= e($bilan['titre_affiche']) ?>" data-bilan-video>
       <div class="w-[min(92vw,1100px)]">
         <div class="relative aspect-video w-full overflow-hidden rounded-2xl bg-black shadow-2xl" data-bilan-cadre
@@ -192,8 +196,8 @@ foreach (range(0, 11) as $k) {
       </div>
       <button type="button" class="visionneuse-bouton top-4 right-4" data-fermer aria-label="Fermer la vidéo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
     </dialog>
-    <?php endif ?>
   </div>
+  <?php endif ?>
 
   <?php if ($axes): ?>
   <div class="conteneur relative mt-12 sm:mt-20 lg:mt-28">
