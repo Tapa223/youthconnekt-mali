@@ -22,11 +22,17 @@ function participations_configurer(int $id): void
         page_erreur(404);
     }
     $peut_modifier = peut('initiatives', 'modifier');
+    $terminee = $i['etat'] === 'terminee';
     $erreurs = [];
 
     if (est_post()) {
         if (!$peut_modifier) {
             page_erreur(403);
+        }
+        // Initiative terminée : les rôles et l'ouverture ne se modifient plus
+        if ($terminee) {
+            flash('erreur', "Cette initiative est terminée : ses participations ne se configurent plus.");
+            rediriger(url('/gestion/initiatives/' . $id . '/participations'));
         }
         $fin = post('participations_fin');
         if ($fin !== '' && !DateTimeImmutable::createFromFormat('!Y-m-d', $fin)) {
@@ -99,7 +105,7 @@ function participations_configurer(int $id): void
 
     $roles = roles_initiative($id);
     $total = (int) valeur('SELECT COUNT(*) FROM participations WHERE initiative_id = ?', [$id]);
-    $onglet = get('vue') === 'formulaire' || $erreurs || (!$total && !$i['participations_ouvertes']) ? 'formulaire' : 'liste';
+    $onglet = !$terminee && (get('vue') === 'formulaire' || $erreurs || (!$total && !$i['participations_ouvertes'])) ? 'formulaire' : 'liste';
 
     // Liste : filtres (rôle, décision, région, âge, présence, réponse à une question) et tri
     $f = [

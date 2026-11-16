@@ -11,7 +11,7 @@ $chiffres_i = lignes_colonnes($i['chiffres'], 2);
     'meta' => implode(' · ', array_filter([$i['date_libelle'], $i['lieu']])),
     'retour' => url('/initiatives'),
 ]) ?>
-<section class="conteneur grid items-center gap-8 pt-5 pb-10 sm:gap-10 sm:pt-10 sm:pb-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14">
+<section class="conteneur grid items-center gap-8 pt-5 pb-10 sm:gap-10 sm:pt-7 sm:pb-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14">
   <div class="relative">
     <p class="text-base leading-relaxed sm:text-lg"><?= e($i['resume']) ?></p>
     <?php if ($ma_participation): ?>
@@ -52,9 +52,10 @@ $chiffres_i = lignes_colonnes($i['chiffres'], 2);
     <?php if ($a_infos) partiel('pages/infos_initiative', ['i' => $i, 'classes' => 'mt-6 hidden lg:grid']) ?>
   </div>
 
-  <div class="relative mx-auto w-full max-w-xl pr-4 pb-8 sm:pr-6 sm:pb-10">
-    <div class="absolute top-6 right-0 bottom-10 left-1/3 rounded-3xl bg-orange" aria-hidden="true"></div>
-    <div class="devoile survol-zoom relative aspect-[4/3] overflow-hidden rounded-3xl shadow-xl">
+  <?php /* Bloc photo moins haut sur ordinateur : le texte et la photo tiennent sous le bandeau, et la suite se devine */ ?>
+  <div class="relative mx-auto w-full max-w-xl pr-4 pb-8 sm:pr-6 lg:max-w-lg lg:pb-7">
+    <div class="absolute top-6 right-0 bottom-10 left-1/3 rounded-3xl bg-orange lg:bottom-7" aria-hidden="true"></div>
+    <div class="devoile survol-zoom relative aspect-[4/3] overflow-hidden rounded-3xl shadow-xl lg:aspect-[16/10]">
       <?php partiel('partials/photo', ['transition' => 'photo-ini-' . $i['id'], 'image' => $i['image'], 'eager' => true]) ?>
     </div>
     <?php if ($photos): $p2 = $photos[0]; ?>

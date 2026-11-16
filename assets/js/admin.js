@@ -366,6 +366,16 @@
       });
     });
 
+    // ---- Initiative : passer l'état à « Terminée » masque aussitôt la configuration des participations
+    var etat = document.querySelector("#f-etat");
+    if (etat && document.querySelector("[data-si-etat]")) {
+      var suivre = function () {
+        var fini = etat.value === "terminee";
+        document.querySelectorAll("[data-si-etat]").forEach(function (b) { b.hidden = (b.getAttribute("data-si-etat") === "terminee") !== fini; });
+      };
+      etat.addEventListener("change", suivre);
+    }
+
     // ---- Aperçu immédiat d'une image choisie
     document.querySelectorAll(".ycm-zone-image input[type=file]:not([multiple])").forEach(function (champ) {
       champ.addEventListener("change", function () {

@@ -4,6 +4,7 @@ $ici = url('/gestion/initiatives/' . $i['id'] . '/participations');
 $err = fn ($c) => !empty($erreurs[$c]) ? '<p class="ycm-erreur">' . e($erreurs[$c]) . '</p>' : '';
 $d = $peut_modifier ? '' : ' disabled';
 $ouvertes = participations_ouvertes($i, $roles);
+$terminee = $i['etat'] === 'terminee';
 // Adresse de la liste avec les filtres actuels, en changeant certains
 $base = ['statut' => $f['statut'], 'role' => $f['role'] ?: '', 'region' => $f['region'], 'age' => $f['age'], 'presence' => $f['presence'],
     'tri' => $f['tri'] === 'recentes' ? '' : $f['tri'], 'affichage' => $f['affichage'] === 'cartes' ? '' : $f['affichage']];
@@ -22,14 +23,14 @@ $badges = ['inscrit' => badge('Inscrit', 'vert'), 'en_attente' => badge('En atte
   <div>
     <h1>Participations</h1>
     <p class="ycm-sous-titre"><?= e($i['titre']) ?> ·
-      <?= $i['participations_ouvertes'] ? ($ouvertes ? badge('Ouvertes sur le site', 'vert') : badge('Fermées (date passée, initiative terminée ou places pleines)', 'gris')) : badge('Fermées', 'gris') ?></p>
+      <?= $terminee ? badge('Closes : initiative terminée', 'gris') : ($i['participations_ouvertes'] ? ($ouvertes ? badge('Ouvertes sur le site', 'vert') : badge('Fermées (date passée ou places pleines)', 'gris')) : badge('Fermées', 'gris')) ?></p>
   </div>
   <a href="<?= url('/initiatives/' . $i['slug']) ?>" class="ycm-bouton-contour" target="_blank" rel="noopener">Voir la page de l'initiative</a>
 </div>
 
 <nav class="ycm-onglets" aria-label="Participations">
   <a href="<?= e($ici) ?>"<?= $onglet === 'liste' ? ' class="actif" aria-current="page"' : '' ?>>Inscrits et candidatures <span>(<?= $total ?>)</span></a>
-  <a href="<?= e($ici) ?>?vue=formulaire"<?= $onglet === 'formulaire' ? ' class="actif" aria-current="page"' : '' ?>>Rôles et questions</a>
+  <?php if (!$terminee): ?><a href="<?= e($ici) ?>?vue=formulaire"<?= $onglet === 'formulaire' ? ' class="actif" aria-current="page"' : '' ?>>Rôles et questions</a><?php endif ?>
 </nav>
 
 <?php if ($onglet === 'liste'): ?>
@@ -109,7 +110,9 @@ $badges = ['inscrit' => badge('Inscrit', 'vert'), 'en_attente' => badge('En atte
 </div>
 
 <?php if (!$liste): ?>
-<div class="ycm-boite ycm-boite--pad"><p class="ycm-vide"><?= $total ? 'Personne ne correspond à ces filtres.' : ($i['participations_ouvertes'] ? "Personne pour l'instant. Les rôles sont visibles sur la page de l'initiative." : "Personne : les participations ne sont pas encore ouvertes. Préparez-les dans l'onglet « Rôles et questions ».") ?></p></div>
+<div class="ycm-boite ycm-boite--pad"><p class="ycm-vide"><?= e($total ? 'Personne ne correspond à ces filtres.'
+  : ($terminee ? "Aucune participation n'a été reçue pour cette initiative, aujourd'hui terminée."
+  : ($i['participations_ouvertes'] ? "Personne pour l'instant. Les rôles sont visibles sur la page de l'initiative." : "Personne : les participations ne sont pas encore ouvertes. Préparez-les dans l'onglet « Rôles et questions »."))) ?></p></div>
 
 <?php elseif ($f['affichage'] === 'tableau'): ?>
 <div class="ycm-pa-defile">

@@ -17,7 +17,7 @@ $images = array_values(array_unique(array_filter($images ?? [])));
   <?php endif ?>
   <?php partiel('partials/reseau_deco', ['opacite' => 'opacity-30']) ?>
 
-  <div class="conteneur relative py-6 sm:py-8 lg:flex lg:min-h-[14rem] lg:items-center">
+  <div class="conteneur relative py-6 sm:py-7 lg:flex lg:min-h-[11rem] lg:items-center">
     <?php /* La flèche de retour à gauche du texte, alignée avec lui (dans la marge sur grand écran) */ ?>
     <div class="flex max-w-[38rem] min-w-0 items-start gap-3 sm:gap-4 xl:block">
       <?php if (!empty($retour)) partiel('partials/retour', ['url' => $retour, 'clair' => true, 'bord' => true, 'toujours' => true, 'classes' => 'shrink-0 xl:absolute xl:top-1/2 xl:-left-16 xl:-translate-y-1/2']) ?>
