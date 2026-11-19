@@ -51,6 +51,7 @@ function initiative(string $slug): void
         'titre' => $i['titre'] . ' | YouthConnekt Mali',
         'description' => $i['resume'],
         'image_partage' => $i['image'],
+        'donnees_structurees' => schema_initiative($i),
         'i' => $i,
         'photos' => lignes('SELECT * FROM photos_initiatives WHERE initiative_id = ? ORDER BY ordre, id', [$i['id']]),
         'autres' => initiatives_publiees('AND i.id <> ? ORDER BY i.publie_le DESC LIMIT 3', [$i['id']]),
@@ -119,8 +120,10 @@ function opportunite(string $slug): void
 
     afficher(vue('pages/opportunite', [
         'titre' => $o['titre'] . ' | Opportunités | YouthConnekt Mali',
-        'description' => $o['resume'],
+        // Résumé court : complété pour Google par l'organisme et la date limite
+        'description' => trim($o['resume'] . (mb_strlen((string) $o['resume']) < 100 ? ' ' . trim(($o['organisme'] ? 'Proposée par ' . $o['organisme'] . '. ' : '') . ($o['date_limite'] ? 'Date limite : ' . date_longue($o['date_limite']) . '. ' : '') . 'Opportunité relayée par YouthConnekt Mali.') : '')),
         'image_partage' => $o['image'],
+        'donnees_structurees' => [schema_fil_ariane([['Opportunités', '/opportunites'], [$o['titre'], '/opportunites/' . $o['slug']]])],
         'o' => $o,
         'org' => $org,
         'similaires' => $similaires,
@@ -173,7 +176,7 @@ function actualites(): void
 
     afficher(vue('pages/actualites', [
         'titre' => 'Actualités | YouthConnekt Mali',
-        'description' => 'Les actualités et les événements de YouthConnekt Mali.',
+        'description' => "Actualités et événements de YouthConnekt Mali : forums, sommets, formations et engagements de la jeunesse malienne, au Mali et dans le Sahel.",
         'categories' => $categories,
         'categorie_active' => $categorie,
         'nombres' => $nombres,
@@ -195,6 +198,7 @@ function actualite(string $slug): void
         'titre' => $a['titre'] . ' | YouthConnekt Mali',
         'description' => $a['chapeau'],
         'image_partage' => $a['image'],
+        'donnees_structurees' => schema_actualite($a),
         'a' => $a,
         'photos' => lignes('SELECT * FROM photos_actualites WHERE actualite_id = ? ORDER BY ordre, id', [$a['id']]),
         'autres' => actualites_publiees('AND id <> ? ORDER BY COALESCE(date_evenement, DATE(publie_le)) DESC LIMIT 3', [$a['id']]),

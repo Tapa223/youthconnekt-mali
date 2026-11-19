@@ -44,9 +44,28 @@ function config(string $cle, $defaut = null)
     return $valeur;
 }
 
+/**
+ * Mode développement (erreurs détaillées à l'écran) : seulement sur l'ordinateur de travail.
+ * Même si config.php dit true par oubli, le site en ligne n'affiche jamais le détail des erreurs.
+ */
 function en_developpement(): bool
 {
-    return (bool) config('developpement', false);
+    if (!config('developpement', false)) {
+        return false;
+    }
+    if (PHP_SAPI === 'cli') {
+        return true;
+    }
+    $hote = strtolower(preg_replace('/:\d+$/', '', (string) ($_SERVER['HTTP_HOST'] ?? '')));
+    return in_array($hote, ['localhost', '127.0.0.1', '[::1]', '::1'], true) || str_ends_with($hote, '.local') || str_ends_with($hote, '.test');
+}
+
+/** La page est-elle demandée en HTTPS ? (y compris derrière un proxy ou un pare-feu de l'hébergeur) */
+function est_https(): bool
+{
+    return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || strtolower((string) ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '')) === 'https'
+        || (string) ($_SERVER['SERVER_PORT'] ?? '') === '443';
 }
 
 // ---------------------------------------------------------------------------
@@ -195,8 +214,7 @@ function url_absolue(string $chemin = '/'): string
 {
     $site = rtrim((string) config('url_site', ''), '/');
     if ($site === '') {
-        $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
-        $site = ($https ? 'https://' : 'http://') . ($_SERVER['HTTP_HOST'] ?? 'localhost') . base_url();
+        $site = (est_https() ? 'https://' : 'http://') . ($_SERVER['HTTP_HOST'] ?? 'localhost') . base_url();
         return $site . '/' . ltrim($chemin, '/');
     }
     // Le chemin reçu peut déjà contenir le dossier du site
@@ -312,7 +330,7 @@ function demarrer_session(): void
     if (session_status() === PHP_SESSION_ACTIVE) {
         return;
     }
-    $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+    $https = est_https();
     session_name('ycm_session');
     session_set_cookie_params([
         'lifetime' => 0,
@@ -908,8 +926,11 @@ function televerser_image(?array $fichier, string $dossier, int $largeur_max = 1
                 imagealphablending($source, false);
                 imagesavealpha($source, true);
             }
+            if ($extension === 'jpg') {
+                imageinterlace($source, true); // JPEG progressif : l'image apparaît vite puis se précise (connexions lentes)
+            }
             $reenregistree = match ($extension) {
-                'jpg' => imagejpeg($source, $destination, 84),
+                'jpg' => imagejpeg($source, $destination, 82),
                 'png' => imagepng($source, $destination, 7),
                 'webp' => function_exists('imagewebp') ? imagewebp($source, $destination, 84) : false,
             };

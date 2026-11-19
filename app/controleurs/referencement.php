@@ -6,7 +6,7 @@ declare(strict_types=1);
 function robots(): void
 {
     header('Content-Type: text/plain; charset=utf-8');
-    echo "User-agent: *\nDisallow: /gestion\nDisallow: /compte\nDisallow: /recherche\n\nSitemap: " . url_absolue('/sitemap.xml') . "\n";
+     echo "User-agent: *\nDisallow: /gestion\nDisallow: /compte\nDisallow: /recherche\nDisallow: /installation\nDisallow: /newsletter/\nDisallow: /*/participer\nDisallow: /*/agenda\n\nSitemap: " . url_absolue('/sitemap.xml') . "\n";
     exit;
 }
 
@@ -24,9 +24,6 @@ function plan_du_site(): void
     }
     foreach (actualites_publiees() as $a) {
         $adresses[] = [url_absolue('/actualites/' . $a['slug']), $a['modifie_le'] ?? $a['publie_le']];
-    }
-    foreach (communautes_actives() as $c) {
-        $adresses[] = [url_absolue('/communaute/' . $c['slug']), null];
     }
     header('Content-Type: application/xml; charset=utf-8');
     echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";

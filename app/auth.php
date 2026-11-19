@@ -235,19 +235,26 @@ function cle_tentative(string $email): string
     return hash('sha256', mb_strtolower($email) . '|' . adresse_ip());
 }
 
+/**
+ * Protection contre les essais de mots de passe en série, sur 15 minutes :
+ * 5 échecs pour un même compte depuis une même connexion, 20 échecs depuis une même connexion (tous comptes confondus),
+ * 15 échecs sur un même compte (toutes connexions confondues).
+ */
 function trop_de_tentatives(string $email): bool
 {
     requete('DELETE FROM tentatives_connexion WHERE moment < ?', [date('Y-m-d H:i:s', time() - 3600)]);
-    $n = (int) valeur(
-        'SELECT COUNT(*) FROM tentatives_connexion WHERE cle = ? AND moment > ?',
-        [cle_tentative($email), date('Y-m-d H:i:s', time() - 15 * 60)]
-    );
-    return $n >= 5;
+    $depuis = date('Y-m-d H:i:s', time() - 15 * 60);
+    $compter = fn (string $cle) => (int) valeur('SELECT COUNT(*) FROM tentatives_connexion WHERE cle = ? AND moment > ?', [$cle, $depuis]);
+    return $compter(cle_tentative($email)) >= 5
+        || $compter(hash('sha256', 'ip|' . adresse_ip())) >= 20
+        || $compter(hash('sha256', 'compte|' . mb_strtolower($email))) >= 15;
 }
 
 function noter_tentative(string $email): void
 {
-    inserer('tentatives_connexion', ['cle' => cle_tentative($email), 'moment' => maintenant()]);
+    foreach ([cle_tentative($email), hash('sha256', 'ip|' . adresse_ip()), hash('sha256', 'compte|' . mb_strtolower($email))] as $cle) {
+        inserer('tentatives_connexion', ['cle' => $cle, 'moment' => maintenant()]);
+    }
 }
 
 function effacer_tentatives(string $email): void

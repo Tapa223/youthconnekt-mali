@@ -14,9 +14,8 @@ $ariane = $ariane ?? [];
   <meta name="robots" content="noindex, nofollow">
   <title><?= e($titre ?? 'Administration YouthConnekt Mali') ?></title>
   <link rel="icon" type="image/png" href="<?= asset('img/favicon.png') ?>">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap">
+  <link rel="preload" href="<?= base_url() ?>/assets/fonts/ubuntu-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="<?= asset('css/polices.css') ?>">
   <link rel="stylesheet" href="<?= asset('css/admin.css') ?>">
   <script src="<?= asset('js/admin.js') ?>" defer></script>
 </head>

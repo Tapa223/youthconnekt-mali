@@ -98,6 +98,10 @@ const ROUTES = [
 
 function router(string $chemin, string $methode): void
 {
+    // HEAD : même réponse qu'une visite (outils de référencement, surveillance), sans le contenu
+    if ($methode === 'HEAD') {
+        $methode = 'GET';
+    }
     $chemin_autorise = false;
     foreach (ROUTES as [$methodes, $modele, $fichier, $fonction]) {
         $regex = '#^' . strtr(preg_quote($modele, '#'), [

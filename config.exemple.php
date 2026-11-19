@@ -10,10 +10,16 @@
 return [
     // Adresse du site, sans barre finale.
     // WAMP : http://localhost/youthconnekt-mali   ·   En ligne : https://www.votre-domaine.ml
+    // En ligne, mettre l'adresse en https : toute visite en http sera alors renvoyée vers https.
     'url_site' => 'http://localhost/youthconnekt-mali',
 
     // true sur ton PC (les erreurs s'affichent), false en ligne.
+    // Sécurité : même laissé à true par oubli, le détail des erreurs ne s'affiche que sur localhost.
     'developpement' => true,
+
+    // Référencement Google : code de vérification de Google Search Console (méthode « Balise HTML »),
+    // c'est-à-dire seulement la valeur de content="...". Laisser vide tant qu'il n'est pas demandé.
+    'google_verification' => '',
 
     // Base de données MySQL (WAMP : utilisateur root, mot de passe vide)
     'bdd' => [

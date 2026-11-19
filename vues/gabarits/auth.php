@@ -17,9 +17,8 @@ $retour_auth = $_SESSION['retour_auth'] ?? url('/');
   <meta name="theme-color" content="#035E4D">
   <meta name="robots" content="noindex">
   <link rel="icon" type="image/png" href="<?= asset('img/favicon.png') ?>">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap">
+  <link rel="preload" href="<?= base_url() ?>/assets/fonts/ubuntu-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="<?= asset('css/polices.css') ?>">
   <link rel="stylesheet" href="<?= asset('css/site.css') ?>">
 </head>
 <body class="min-h-svh bg-white lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
