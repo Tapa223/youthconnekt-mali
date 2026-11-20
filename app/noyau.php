@@ -823,11 +823,95 @@ function initiales(string $texte): string
     return mb_strtoupper(mb_substr($mots[0], 0, 1) . mb_substr($mots[1], 0, 1));
 }
 
-/** Numéro de téléphone plausible : chiffres, espaces, +, tirets, points ou parenthèses, de 8 à 15 chiffres. */
-function telephone_valide(string $numero): bool
+/** Indicatifs proposés dans les champs téléphone : le Mali d'abord, puis la sous-région, puis la diaspora. */
+const INDICATIFS = [
+    '+223' => 'Mali +223',
+    '+226' => 'Burkina Faso +226', '+227' => 'Niger +227', '+221' => 'Sénégal +221', '+225' => "Côte d'Ivoire +225",
+    '+224' => 'Guinée +224', '+222' => 'Mauritanie +222', '+213' => 'Algérie +213', '+229' => 'Bénin +229',
+    '+228' => 'Togo +228', '+233' => 'Ghana +233', '+234' => 'Nigeria +234', '+235' => 'Tchad +235',
+    '+237' => 'Cameroun +237', '+241' => 'Gabon +241', '+242' => 'Congo +242', '+243' => 'RD Congo +243',
+    '+250' => 'Rwanda +250', '+212' => 'Maroc +212', '+216' => 'Tunisie +216', '+20' => 'Égypte +20',
+    '+33' => 'France +33', '+32' => 'Belgique +32', '+41' => 'Suisse +41', '+34' => 'Espagne +34',
+    '+39' => 'Italie +39', '+49' => 'Allemagne +49', '+44' => 'Royaume-Uni +44', '+1' => 'États-Unis / Canada +1',
+    '+90' => 'Turquie +90', '+971' => 'Émirats arabes unis +971', '+966' => 'Arabie saoudite +966', '+86' => 'Chine +86',
+];
+
+/** Sépare un numéro enregistré (« +223 70 12 34 56 ») en indicatif et numéro national, pour l'afficher dans le champ. */
+function telephone_decoupe(string $valeur): array
 {
+    $valeur = trim($valeur);
+    if (str_starts_with($valeur, '+')) {
+        $chiffres = preg_replace('/\D/', '', $valeur);
+        foreach ([4, 3, 2] as $n) {
+            if (isset(INDICATIFS['+' . substr($chiffres, 0, $n - 1)]) && strlen($chiffres) > $n) {
+                $ind = '+' . substr($chiffres, 0, $n - 1);
+                $national = substr($chiffres, $n - 1);
+                return [$ind, $ind === '+1' || ($ind === '+223' && strlen($national) !== 8) ? substr($valeur, strlen($ind) + 1) : telephone_grouper($national)];
+            }
+        }
+        return ['', $valeur]; // indicatif hors liste : le numéro reste complet dans le champ
+    }
+    return ['+223', $valeur];
+}
+
+function telephone_grouper(string $chiffres): string
+{
+    $debut = strlen($chiffres) % 2 ? substr($chiffres, 0, 1) . ' ' : '';
+    return $debut . trim(chunk_split(substr($chiffres, strlen($chiffres) % 2), 2, ' '));
+}
+
+/**
+ * Numéro saisi dans un champ téléphone (liste d'indicatifs + numéro), remis au format « +223 70 12 34 56 ».
+ * Un numéro tapé directement en international (+33…, 0033…) l'emporte sur l'indicatif choisi.
+ * Si la saisie contient autre chose que des chiffres et des séparateurs, elle est rendue telle quelle (et sera refusée).
+ */
+function telephone_saisi(string $nom): string
+{
+    $numero = post($nom);
+    if ($numero === '') {
+        return '';
+    }
+    if (!preg_match('/^[0-9+().\s\/-]+$/', $numero)) {
+        return $numero;
+    }
     $chiffres = preg_replace('/\D/', '', $numero);
-    return (bool) preg_match('/^[0-9+().\s-]+$/', $numero) && strlen($chiffres) >= 8 && strlen($chiffres) <= 15;
+    if (str_starts_with($numero, '+') || str_starts_with($chiffres, '00')) {
+        $international = '+' . preg_replace('/^00/', '', $chiffres);
+        [$ind, $national] = telephone_decoupe($international);
+        return $ind === '' ? $international : $ind . ' ' . $national;
+    }
+    $indicatif = post($nom . '_indicatif');
+    if (!isset(INDICATIFS[$indicatif])) {
+        $indicatif = '+223';
+    }
+    if ($indicatif !== '+39' && str_starts_with($chiffres, '0')) {
+        $chiffres = substr($chiffres, 1); // 06 12 34 56 78 → +33 6 12 34 56 78
+    }
+    if ($indicatif === '+1' && strlen($chiffres) === 10) {
+        return '+1 ' . substr($chiffres, 0, 3) . ' ' . substr($chiffres, 3, 3) . ' ' . substr($chiffres, 6);
+    }
+    if ($indicatif === '+223' && strlen($chiffres) !== 8) {
+        return '+223 ' . $chiffres; // numéro incomplet : on le rend tel quel pour que la personne le corrige
+    }
+    return $indicatif . ' ' . telephone_grouper($chiffres);
+}
+
+/** Message d'erreur pour un numéro remis en forme par telephone_saisi(), ou chaîne vide s'il est correct. */
+function erreur_telephone(string $valeur, bool $requis, string $absent = 'Indiquez votre numéro de téléphone.'): string
+{
+    if ($valeur === '') {
+        return $requis ? $absent : '';
+    }
+    [$indicatif, $national] = telephone_decoupe($valeur);
+    $chiffres = preg_replace('/\D/', '', $national);
+    if (!str_starts_with($valeur, '+') || !preg_match('/^[0-9+\s]+$/', $valeur)) {
+        return 'Ce numéro ne semble pas valide : utilisez seulement des chiffres.';
+    }
+    if ($indicatif === '+223' && strlen($chiffres) !== 8) {
+        return 'Un numéro malien compte 8 chiffres (exemple : 70 12 34 56).';
+    }
+    $total = strlen(preg_replace('/\D/', '', $valeur));
+    return $total < 8 || $total > 15 ? 'Ce numéro ne semble pas complet. Vérifiez-le, ainsi que l\'indicatif du pays.' : '';
 }
 
 function couper(string $texte, int $longueur): string

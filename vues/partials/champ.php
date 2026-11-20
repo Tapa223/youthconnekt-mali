@@ -26,6 +26,13 @@ $classe_champ = !empty($mdp) ? 'champ pr-24' : 'champ';
     </select>
   <?php elseif ($type === 'textarea'): ?>
     <textarea <?= $commun ?> class="champ"><?= e($valeur ?? '') ?></textarea>
+  <?php elseif ($type === 'tel'): [$indicatif, $national] = telephone_decoupe((string) ($valeur ?? '')); ?>
+    <div class="flex gap-2">
+      <select name="<?= e($nom) ?>_indicatif" class="champ w-[8.75rem] shrink-0 !pl-3 !pr-8" aria-label="Indicatif du pays" autocomplete="tel-country-code">
+        <?php foreach (INDICATIFS as $code => $pays): ?><option value="<?= e($code) ?>"<?= $code === ($indicatif ?: '+223') ? ' selected' : '' ?>><?= e($pays) ?></option><?php endforeach ?>
+      </select>
+      <input type="tel" <?= $commun ?> class="champ min-w-0 flex-1" value="<?= e($national) ?>">
+    </div>
   <?php elseif (!empty($mdp)): ?>
     <div class="relative">
       <input type="password" <?= $commun ?> class="<?= $classe_champ ?>">

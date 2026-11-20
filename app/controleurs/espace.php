@@ -234,6 +234,9 @@ function mon_profil(): void
         foreach ($champs as $c) {
             $valeurs[$c] = post($c);
         }
+        $champ_tel = $organisation ? 'telephone_organisation' : 'telephone';
+        $valeurs[$champ_tel] = telephone_saisi($champ_tel);
+        if ($m = erreur_telephone($valeurs[$champ_tel], true, $organisation ? "Indiquez le numéro de téléphone de l'organisation." : 'Indiquez votre numéro de téléphone.')) $erreurs[$champ_tel] = $m;
         $dans_annuaire = $organisation && post('dans_annuaire') !== '' ? 1 : 0;
         // Liens : un réseau et une adresse par ligne, 8 au plus
         $liens = [];
@@ -267,7 +270,6 @@ function mon_profil(): void
         }
         if ($organisation) {
             if ($valeurs['nom_structure'] === '') $erreurs['nom_structure'] = "Indiquez le nom de l'organisation.";
-            if ($valeurs['telephone_organisation'] !== '' && !telephone_valide($valeurs['telephone_organisation'])) $erreurs['telephone_organisation'] = 'Ce numéro ne semble pas valide (exemple : +223 70 00 00 00).';
             $valeurs['email_organisation'] = mb_strtolower($valeurs['email_organisation']);
             if ($valeurs['email_organisation'] !== '' && (!filter_var($valeurs['email_organisation'], FILTER_VALIDATE_EMAIL) || mb_strlen($valeurs['email_organisation']) > 190)) $erreurs['email_organisation'] = "Cette adresse e-mail n'est pas valide.";
             if (!isset(TYPES_STRUCTURE[$valeurs['type_structure']])) $erreurs['type_structure'] = 'Choisissez le type de structure.';

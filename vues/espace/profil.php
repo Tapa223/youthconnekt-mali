@@ -98,7 +98,7 @@ $lignes_liens = $liens ?: [['reseau' => 'linkedin', 'url' => '']];
       <?= $groupe('Contact') ?>
       <?php partiel('partials/champ', $c('email_contact_public') + ['libelle' => 'E-mail de contact public', 'type' => 'email', 'requis' => false, 'aide' => "Affiché sur la fiche. Différent de l'adresse de connexion, qui reste privée."]) ?>
       <?php partiel('partials/champ', $c('personne_contact') + ['libelle' => 'Personne de contact', 'requis' => false, 'aide' => 'Privé : jamais affiché sur le site.', 'attributs' => ['maxlength' => 120]]) ?>
-      <?php partiel('partials/champ', $c('telephone_organisation') + ['libelle' => "Téléphone de l'organisation", 'type' => 'tel', 'requis' => false, 'aide' => "Privé : sert seulement à l'équipe du chapitre.", 'attributs' => ['maxlength' => 30, 'autocomplete' => 'tel', 'inputmode' => 'tel', 'placeholder' => '+223 …']]) ?>
+      <?php partiel('partials/champ', $c('telephone_organisation') + ['libelle' => "Téléphone de l'organisation", 'type' => 'tel', 'aide' => "Privé : sert seulement à l'équipe du chapitre.", 'attributs' => ['autocomplete' => 'tel-national', 'inputmode' => 'tel', 'placeholder' => '70 12 34 56', 'maxlength' => 25]]) ?>
       <?php partiel('partials/champ', $c('email_organisation') + ['libelle' => "E-mail de l'organisation", 'type' => 'email', 'requis' => false, 'aide' => 'Privé.', 'attributs' => ['maxlength' => 190, 'autocomplete' => 'email']]) ?>
       <label class="flex items-start gap-2.5 text-sm sm:col-span-2"><input type="checkbox" name="dans_annuaire" value="1" class="mt-0.5 size-4 shrink-0 accent-vert"<?= $dans_annuaire ? ' checked' : '' ?>> <span>Apparaître dans l'annuaire public des organisations du réseau (logo, nom, secteur, région et fiche).</span></label>
     <?php else: ?>
@@ -128,7 +128,7 @@ $lignes_liens = $liens ?: [['reseau' => 'linkedin', 'url' => '']];
         <?php if (!empty($erreurs['liens'])): ?><p class="erreur"><?= e($erreurs['liens']) ?></p><?php endif ?>
       </div>
       <?= $groupe('Contact') ?>
-      <?php partiel('partials/champ', $c('telephone') + ['libelle' => 'Téléphone', 'type' => 'tel', 'requis' => false, 'aide' => 'Privé : jamais affiché sur le site.', 'attributs' => ['maxlength' => 30, 'autocomplete' => 'tel']]) ?>
+      <?php partiel('partials/champ', $c('telephone') + ['libelle' => 'Téléphone', 'type' => 'tel', 'aide' => 'Privé : jamais affiché sur le site.', 'attributs' => ['autocomplete' => 'tel-national', 'inputmode' => 'tel', 'placeholder' => '70 12 34 56', 'maxlength' => 25]]) ?>
     <?php endif ?>
 
     <?php /* Bouton toujours à portée de main : il reste collé en bas de l'écran pendant qu'on remplit */ ?>
