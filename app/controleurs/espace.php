@@ -208,7 +208,7 @@ function mon_profil(): void
     $champ_image = $organisation ? 'logo' : 'photo';
     $profil = $u['profil'] ?? [];
     $champs = $organisation
-        ? ['nom_structure', 'type_structure', 'secteur', 'taille', 'region', 'ville', 'presentation', 'offre_jeunes', 'site_web', 'email_contact_public', 'personne_contact', 'telephone_contact', 'email_personne_contact']
+        ? ['nom_structure', 'type_structure', 'secteur', 'taille', 'region', 'ville', 'presentation', 'offre_jeunes', 'site_web', 'email_contact_public', 'personne_contact', 'telephone_organisation', 'email_organisation']
         : ['prenom', 'nom', 'genre', 'date_naissance', 'categorie', 'domaine', 'region', 'ville', 'presentation', 'telephone'];
     $valeurs = [];
     foreach ($champs as $c) {
@@ -259,7 +259,7 @@ function mon_profil(): void
             $erreurs['liens'] = '8 liens au maximum.';
         }
         $limites = ['prenom' => 80, 'nom' => 80, 'domaine' => 150, 'ville' => 100, 'presentation' => 1500, 'telephone' => 30,
-            'nom_structure' => 150, 'secteur' => 150, 'personne_contact' => 120, 'telephone_contact' => 30, 'offre_jeunes' => 1500];
+            'nom_structure' => 150, 'secteur' => 150, 'personne_contact' => 120, 'telephone_organisation' => 30, 'offre_jeunes' => 1500];
         foreach ($limites as $c => $max) {
             if (isset($valeurs[$c]) && mb_strlen($valeurs[$c]) > $max) {
                 $erreurs[$c] = "$max caractères au maximum.";
@@ -267,9 +267,9 @@ function mon_profil(): void
         }
         if ($organisation) {
             if ($valeurs['nom_structure'] === '') $erreurs['nom_structure'] = "Indiquez le nom de l'organisation.";
-            if ($valeurs['telephone_contact'] !== '' && !telephone_valide($valeurs['telephone_contact'])) $erreurs['telephone_contact'] = 'Ce numéro ne semble pas valide (exemple : +223 70 00 00 00).';
-            $valeurs['email_personne_contact'] = mb_strtolower($valeurs['email_personne_contact']);
-            if ($valeurs['email_personne_contact'] !== '' && (!filter_var($valeurs['email_personne_contact'], FILTER_VALIDATE_EMAIL) || mb_strlen($valeurs['email_personne_contact']) > 190)) $erreurs['email_personne_contact'] = "Cette adresse e-mail n'est pas valide.";
+            if ($valeurs['telephone_organisation'] !== '' && !telephone_valide($valeurs['telephone_organisation'])) $erreurs['telephone_organisation'] = 'Ce numéro ne semble pas valide (exemple : +223 70 00 00 00).';
+            $valeurs['email_organisation'] = mb_strtolower($valeurs['email_organisation']);
+            if ($valeurs['email_organisation'] !== '' && (!filter_var($valeurs['email_organisation'], FILTER_VALIDATE_EMAIL) || mb_strlen($valeurs['email_organisation']) > 190)) $erreurs['email_organisation'] = "Cette adresse e-mail n'est pas valide.";
             if (!isset(TYPES_STRUCTURE[$valeurs['type_structure']])) $erreurs['type_structure'] = 'Choisissez le type de structure.';
             if ($valeurs['taille'] !== '' && !isset(TAILLES_STRUCTURE[$valeurs['taille']])) $valeurs['taille'] = '';
             if ($valeurs['site_web'] !== '') {

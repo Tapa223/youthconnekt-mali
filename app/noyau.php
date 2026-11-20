@@ -1086,7 +1086,7 @@ function condition_mots(array $colonnes, string $q): array
     $parties = [];
     $params = [];
     foreach ($mots as $m) {
-        $motif = '%' . addcslashes($m, '%_\\') . '%';
+        $motif = '%' . addcslashes((string) $m, '%_\\') . '%';
         $parties[] = '(' . implode(' OR ', array_map(fn ($c) => "$c LIKE ?", $colonnes)) . ')';
         array_push($params, ...array_fill(0, count($colonnes), $motif));
     }
@@ -1103,7 +1103,7 @@ function pertinence_mots(string $colonne_titre, string $q): array
     $tous = implode(' AND ', array_fill(0, count($mots), "$colonne_titre LIKE ?"));
     return [
         "(CASE WHEN $colonne_titre LIKE ? THEN 0 WHEN $tous THEN 1 ELSE 2 END)",
-        array_merge(['%' . addcslashes(trim($q), '%_\\') . '%'], array_map(fn ($m) => '%' . addcslashes($m, '%_\\') . '%', $mots)),
+        array_merge(['%' . addcslashes(trim($q), '%_\\') . '%'], array_map(fn ($m) => '%' . addcslashes((string) $m, '%_\\') . '%', $mots)),
     ];
 }
 

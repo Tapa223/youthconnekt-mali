@@ -319,7 +319,7 @@ function taux_completion(?array $profil, string $type): int
         return 0;
     }
     $champs = $type === 'organisation'
-        ? ['nom_structure', 'logo', 'type_structure', 'region', 'ville', 'secteur', 'presentation', 'personne_contact', 'telephone_contact', 'email_contact_public']
+        ? ['nom_structure', 'logo', 'type_structure', 'region', 'ville', 'secteur', 'presentation', 'personne_contact', 'telephone_organisation', 'email_contact_public']
         : ['prenom', 'nom', 'photo', 'categorie', 'region', 'ville', 'domaine', 'presentation', 'telephone'];
     $remplis = 0;
     foreach ($champs as $c) {
