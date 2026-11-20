@@ -46,9 +46,16 @@ function envoyer_email(string $destinataire, string $sujet, string $texte, strin
         }
         return $ok;
     } catch (Throwable $e) {
+        $GLOBALS['derniere_erreur_email'] = $e->getMessage();
         journaliser('erreurs.log', "E-mail non envoyé à $destinataire : " . $e->getMessage());
         return false;
     }
+}
+
+/** Raison du dernier échec d'envoi (réponse de Brevo, du serveur SMTP…), pour l'afficher à l'administration. */
+function derniere_erreur_email(): string
+{
+    return (string) ($GLOBALS['derniere_erreur_email'] ?? '');
 }
 
 function encoder_entete(string $texte): string
@@ -102,7 +109,15 @@ function brevo_envoyer(array $versions, string $sujet, string $html, string $tex
         $erreur = '';
     }
     if ($code < 200 || $code >= 300) {
-        throw new RuntimeException('Brevo a refusé l\'envoi (' . ($code ?: $erreur) . ') : ' . mb_substr($reponse, 0, 300));
+        $piste = match (true) {
+            $code === 0 => " Le serveur n'arrive pas à joindre Brevo.",
+            (bool) preg_match('/IP/i', $reponse) => ' Autorisez l\'adresse IP du serveur dans Brevo : Paramètres > Sécurité > IP autorisées.',
+            $code === 401 => ' La clé API est incorrecte : vérifiez brevo_cle dans config.php.',
+            (bool) preg_match('/sender/i', $reponse) => ' L\'expéditeur n\'est pas validé dans Brevo (Expéditeurs, domaines et IP dédiées).',
+            $code === 402 || (bool) preg_match('/credit/i', $reponse) => ' Le quota d\'envoi Brevo est épuisé pour aujourd\'hui.',
+            default => '',
+        };
+        throw new RuntimeException('Brevo a refusé l\'envoi (' . ($code ?: $erreur) . ') : ' . mb_substr($reponse, 0, 300) . $piste);
     }
 }
 
@@ -131,6 +146,7 @@ function envoyer_email_html(string $destinataire, string $sujet, string $html, s
         $entetes = ['From: ' . encoder_entete($nom) . ' <' . $expediteur . '>', 'MIME-Version: 1.0', 'Content-Type: multipart/alternative; boundary="' . $limite . '"'];
         return mail($destinataire, encoder_entete($sujet), $corps, implode("\r\n", $entetes), '-f' . $expediteur);
     } catch (Throwable $e) {
+        $GLOBALS['derniere_erreur_email'] = $e->getMessage();
         journaliser('erreurs.log', "E-mail non envoyé à $destinataire : " . $e->getMessage());
         return false;
     }

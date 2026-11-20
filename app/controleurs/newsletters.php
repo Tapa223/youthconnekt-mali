@@ -142,7 +142,7 @@ function newsletter_tester(int $id): void
     $lien = lien_desabonnement($email);
     $ok = envoyer_email_html($email, '[Test] ' . $n['objet'], html_newsletter($n, htmlspecialchars($lien, ENT_QUOTES, 'UTF-8')), texte_newsletter($n, $lien));
     $mode = (string) config('email.mode', 'journal');
-    flash($ok ? 'succes' : 'erreur', !$ok ? "Le test n'a pas pu partir. Le détail est dans stockage/erreurs.log."
+    flash($ok ? 'succes' : 'erreur', !$ok ? "Le test n'a pas pu partir. " . (derniere_erreur_email() ?: 'Le détail est dans stockage/erreurs.log.')
         : ($mode === 'journal' ? "Test enregistré dans le journal (stockage/emails.log) : l'envoi réel commencera une fois Brevo branché." : "Test envoyé à $email."));
     rediriger(url('/gestion/newsletters/' . $id) . '#envoi');
 }
