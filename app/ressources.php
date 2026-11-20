@@ -455,19 +455,19 @@ function ressources(): array
             'onglets' => [['Entreprises', "t.type_structure = 'entreprise'"], ['Startups', "t.type_structure = 'startup'"], ['Associations', "t.type_structure = 'association'"], ['ONG', "t.type_structure = 'ong'"],
                 ['Vérifiées', 't.verifiee = 1'], ['Partenaires du chapitre', 't.partenaire_chapitre = 1'], ['À vérifier', 't.verifiee = 0']],
             'filtres' => [['region', 'Toutes les régions', REGIONS, 't.region']],
-            'recherche' => ['t.nom_structure', 'u.email', 't.secteur', 't.personne_contact', 't.ville', 't.region', 't.presentation'],
+            'recherche' => ['t.nom_structure', 'u.email', 't.secteur', 't.personne_contact', 't.telephone_contact', 't.email_personne_contact', 't.ville', 't.region', 't.presentation'],
             'nom_element' => fn ($l) => $l['nom_structure'],
             'colonnes' => [
                 ['Organisation', fn ($l) => nom_et_detail($l['nom_structure'], implode(' · ', array_filter([TYPES_STRUCTURE[$l['type_structure']] ?? '', $l['secteur']])), avatar(initiales_organisation($l['nom_structure']), (int) $l['id'], $l['logo'] ?: null)), 'lien' => true],
                 ['Région', fn ($l) => e(REGIONS[$l['region']] ?? '—')],
                 ['Badges', fn ($l) => implode(' ', array_filter([!empty($l['verifiee']) ? badge('Vérifiée', 'vert') : '', !empty($l['partenaire_chapitre']) ? badge('Partenaire', 'orange') : '', empty($l['dans_annuaire']) ? badge("Hors de l'annuaire", 'gris') : ''])) ?: '—'],
-                ['Contact', fn ($l) => e($l['personne_contact'] ?: '—')],
+                ['Contact', fn ($l) => $l['personne_contact'] || $l['telephone_contact'] ? nom_et_detail($l['personne_contact'] ?: '—', (string) $l['telephone_contact']) : '—'],
                 ['Communautés', fn ($l) => $l['nb_communautes'] . ' communauté' . pluriel((int) $l['nb_communautes'])],
                 ['Statut', fn ($l) => $l['actif'] ? badge('Active', 'vert') : badge('Inactive', 'gris')],
             ],
             'url_voir' => fn ($l) => (!empty($l['dans_annuaire']) && $l['actif']) ? url('/organisations/' . $l['id']) : null,
             'export' => ['Structure' => 'nom_structure', 'Type' => fn ($l) => TYPES_STRUCTURE[$l['type_structure']] ?? '', 'Secteur' => 'secteur', 'E-mail' => 'email',
-                'Personne de contact' => 'personne_contact', 'Région' => fn ($l) => REGIONS[$l['region']] ?? '', 'Ville' => 'ville', 'Taille' => fn ($l) => TAILLES_STRUCTURE[$l['taille'] ?? ''] ?? '', 'Site web' => 'site_web',
+                'Personne de contact' => 'personne_contact', 'Téléphone du contact' => 'telephone_contact', 'E-mail du contact' => 'email_personne_contact', 'Région' => fn ($l) => REGIONS[$l['region']] ?? '', 'Ville' => 'ville', 'Taille' => fn ($l) => TAILLES_STRUCTURE[$l['taille'] ?? ''] ?? '', 'Site web' => 'site_web',
                 'Vérifiée' => fn ($l) => !empty($l['verifiee']) ? 'oui' : 'non', 'Partenaire du chapitre' => fn ($l) => !empty($l['partenaire_chapitre']) ? 'oui' : 'non', 'Inscription' => fn ($l) => date_chiffres($l['inscrit_le'])],
             'groupes' => [
                 ['Structure', 'champs' => [
@@ -480,7 +480,9 @@ function ressources(): array
                 ]],
                 ['Contact', 'champs' => [
                     'personne_contact' => ['type' => 'texte', 'libelle' => 'Personne de contact', 'requis' => false, 'max' => 120, 'largeur' => 'demi', 'aide' => 'Privé : jamais affiché sur le site.'],
-                    'email_contact_public' => ['type' => 'email', 'libelle' => 'E-mail de contact public', 'requis' => false, 'largeur' => 'demi'],
+                    'telephone_contact' => ['type' => 'texte', 'libelle' => 'Téléphone de la personne de contact', 'requis' => false, 'max' => 30, 'largeur' => 'demi', 'aide' => 'Privé.'],
+                    'email_personne_contact' => ['type' => 'email', 'libelle' => 'E-mail de la personne de contact', 'requis' => false, 'largeur' => 'demi', 'aide' => 'Privé.'],
+                    'email_contact_public' => ['type' => 'email', 'libelle' => 'E-mail de contact public', 'requis' => false, 'largeur' => 'demi', 'aide' => 'Affiché sur la fiche publique.'],
                     'region' => ['type' => 'select', 'libelle' => 'Région', 'options' => REGIONS, 'largeur' => 'demi'],
                     'ville' => ['type' => 'texte', 'libelle' => 'Ville', 'requis' => false, 'max' => 100, 'largeur' => 'demi'],
                 ]],

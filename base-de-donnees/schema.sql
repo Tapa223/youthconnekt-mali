@@ -61,6 +61,8 @@ CREATE TABLE IF NOT EXISTS profils_organisations (
   secteur VARCHAR(150) NOT NULL DEFAULT '',
   taille VARCHAR(20) NULL,
   personne_contact VARCHAR(120) NOT NULL DEFAULT '',
+  telephone_contact VARCHAR(30) NOT NULL DEFAULT '',
+  email_personne_contact VARCHAR(190) NOT NULL DEFAULT '',
   email_contact_public VARCHAR(190) NOT NULL DEFAULT '',
   region VARCHAR(30) NOT NULL DEFAULT 'bamako',
   ville VARCHAR(100) NOT NULL DEFAULT '',

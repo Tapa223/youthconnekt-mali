@@ -37,7 +37,7 @@ function inscription_formulaire(string $slug): void
     }
     $organisation = $slug === 'organisation';
     $champs = $organisation
-        ? ['nom_structure', 'type_structure', 'personne_contact', 'region', 'email', 'site_web']
+        ? ['nom_structure', 'type_structure', 'personne_contact', 'telephone_contact', 'email_personne_contact', 'region', 'email', 'site_web']
         : ['prenom', 'nom', 'genre', 'date_naissance', 'categorie', 'region', 'email', 'telephone'];
     $valeurs = array_fill_keys($champs, '') + ['region' => 'bamako', 'conditions' => '', 'newsletter' => ''];
     $erreurs = [];
@@ -60,6 +60,10 @@ function inscription_formulaire(string $slug): void
             if ($valeurs['nom_structure'] === '') $erreurs['nom_structure'] = "Indiquez le nom de l'organisation.";
             if (!isset(TYPES_STRUCTURE[$valeurs['type_structure']])) $erreurs['type_structure'] = 'Choisissez le type de structure.';
             if ($valeurs['personne_contact'] === '') $erreurs['personne_contact'] = 'Indiquez la personne de contact.';
+            if ($valeurs['telephone_contact'] === '') $erreurs['telephone_contact'] = 'Indiquez le numéro de la personne de contact.';
+            elseif (!telephone_valide($valeurs['telephone_contact'])) $erreurs['telephone_contact'] = 'Ce numéro ne semble pas valide (exemple : +223 70 00 00 00).';
+            $valeurs['email_personne_contact'] = mb_strtolower($valeurs['email_personne_contact']);
+            if ($valeurs['email_personne_contact'] !== '' && (!filter_var($valeurs['email_personne_contact'], FILTER_VALIDATE_EMAIL) || mb_strlen($valeurs['email_personne_contact']) > 190)) $erreurs['email_personne_contact'] = "Cette adresse e-mail n'est pas valide.";
             if ($valeurs['site_web'] !== '') {
                 if (!preg_match('#^https?://#i', $valeurs['site_web'])) {
                     $valeurs['site_web'] = 'https://' . $valeurs['site_web'];
@@ -115,6 +119,8 @@ function inscription_formulaire(string $slug): void
                         'nom_structure' => mb_substr($valeurs['nom_structure'], 0, 150),
                         'type_structure' => $valeurs['type_structure'],
                         'personne_contact' => mb_substr($valeurs['personne_contact'], 0, 120),
+                        'telephone_contact' => mb_substr($valeurs['telephone_contact'], 0, 30),
+                        'email_personne_contact' => $valeurs['email_personne_contact'],
                         'site_web' => mb_substr($valeurs['site_web'], 0, 255),
                     ]);
                     if ($valeurs['site_web'] !== '') {

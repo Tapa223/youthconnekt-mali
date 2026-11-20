@@ -823,6 +823,13 @@ function initiales(string $texte): string
     return mb_strtoupper(mb_substr($mots[0], 0, 1) . mb_substr($mots[1], 0, 1));
 }
 
+/** Numéro de téléphone plausible : chiffres, espaces, +, tirets, points ou parenthèses, de 8 à 15 chiffres. */
+function telephone_valide(string $numero): bool
+{
+    $chiffres = preg_replace('/\D/', '', $numero);
+    return (bool) preg_match('/^[0-9+().\s-]+$/', $numero) && strlen($chiffres) >= 8 && strlen($chiffres) <= 15;
+}
+
 function couper(string $texte, int $longueur): string
 {
     return mb_strlen($texte) > $longueur ? rtrim(mb_substr($texte, 0, $longueur - 1)) . '…' : $texte;
