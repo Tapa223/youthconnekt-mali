@@ -320,16 +320,16 @@ $fond_ministre = ($chiffres_visibles xor !empty($partenaires)) ? 'bg-white' : 'b
 
 <?php if ($mot): ?>
 <section id="mot-du-ministre" class="scroll-mt-24 <?= $fond_ministre ?> py-10 sm:py-14">
-  <div class="conteneur grid gap-8 md:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] md:gap-14">
-    <div class="mx-auto w-full max-w-[240px] md:max-w-xs">
+  <div class="conteneur grid items-start gap-8 md:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] md:gap-14">
+    <div class="mx-auto w-full max-w-[240px] md:sticky md:top-28 md:max-w-[20rem]">
       <div class="aspect-[4/5] overflow-hidden rounded-2xl border-t-[6px] border-orange bg-white shadow-xl">
         <?php partiel('partials/photo', ['image' => $mot['photo'], 'alt' => $mot['nom']]) ?>
       </div>
     </div>
     <div>
       <p class="surtitre surtitre-trait">Le mot du ministre</p>
-      <div class="repliable prose-ycm mt-5" id="texte-ministre" data-repliable><?= paragraphes($mot['message']) ?></div>
-      <?php partiel('partials/voir_plus', ['cible' => 'texte-ministre']) ?>
+      <div class="repliable-partout prose-ycm mt-5" id="texte-ministre" data-repliable><?= paragraphes($mot['message']) ?></div>
+      <?php partiel('partials/voir_plus', ['cible' => 'texte-ministre', 'partout' => true]) ?>
       <p class="mt-6 border-l-[3px] border-orange pl-4"><strong class="block text-encre"><?= e($mot['nom']) ?></strong><span class="text-sm"><?= e($mot['titre_officiel']) ?></span></p>
     </div>
   </div>
