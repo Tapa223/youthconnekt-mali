@@ -9,12 +9,12 @@
 
 <section class="conteneur pt-5 pb-14 sm:pt-7 sm:pb-20">
   <form method="get" class="grid grid-cols-2 items-center gap-2 sm:flex sm:flex-wrap">
-    <select name="type" class="champ min-h-11 min-w-0 sm:w-auto" aria-label="Type de structure" onchange="this.form.submit()">
-      <option value="">Tous les types</option>
+    <select name="type" class="champ min-h-11 min-w-0 !pl-3 !pr-8 text-[15px] sm:w-auto sm:!pr-10 sm:text-base" aria-label="Type de structure" onchange="this.form.submit()">
+      <option value="">Tous types</option>
       <?php foreach (TYPES_STRUCTURE as $cle => $libelle): ?><option value="<?= $cle ?>"<?= $type === $cle ? ' selected' : '' ?>><?= e($libelle) ?></option><?php endforeach ?>
     </select>
-    <select name="region" class="champ min-h-11 min-w-0 sm:w-auto" aria-label="Région" onchange="this.form.submit()">
-      <option value="">Toutes les régions</option>
+    <select name="region" class="champ min-h-11 min-w-0 !pl-3 !pr-8 text-[15px] sm:w-auto sm:!pr-10 sm:text-base" aria-label="Région" onchange="this.form.submit()">
+      <option value="">Toutes régions</option>
       <?php foreach (REGIONS as $cle => $libelle): ?><option value="<?= $cle ?>"<?= $region === $cle ? ' selected' : '' ?>><?= e($libelle) ?></option><?php endforeach ?>
     </select>
     <noscript><button type="submit" class="btn btn-vert min-h-11 px-5">Filtrer</button></noscript>

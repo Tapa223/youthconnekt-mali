@@ -20,12 +20,12 @@
   <?php else: ?>
   <form method="get" class="grid grid-cols-2 items-center gap-2 sm:flex sm:flex-wrap">
     <input type="search" name="q" value="<?= e($q) ?>" placeholder="Nom ou domaine" class="champ col-span-2 min-h-11 sm:w-64" aria-label="Rechercher un membre">
-    <select name="categorie" class="champ min-h-11 min-w-0 sm:w-auto" aria-label="Profil" onchange="this.form.submit()">
+    <select name="categorie" class="champ min-h-11 min-w-0 !pl-3 !pr-8 text-[15px] sm:w-auto sm:!pr-10 sm:text-base" aria-label="Profil" onchange="this.form.submit()">
       <option value="">Tous les profils</option>
       <?php foreach (CATEGORIES_INDIVIDUELLES as $cle => $l): ?><option value="<?= $cle ?>"<?= $categorie === $cle ? ' selected' : '' ?>><?= e($l) ?></option><?php endforeach ?>
     </select>
-    <select name="region" class="champ min-h-11 min-w-0 sm:w-auto" aria-label="Région" onchange="this.form.submit()">
-      <option value="">Toutes les régions</option>
+    <select name="region" class="champ min-h-11 min-w-0 !pl-3 !pr-8 text-[15px] sm:w-auto sm:!pr-10 sm:text-base" aria-label="Région" onchange="this.form.submit()">
+      <option value="">Toutes régions</option>
       <?php foreach (REGIONS as $cle => $l): ?><option value="<?= $cle ?>"<?= $region === $cle ? ' selected' : '' ?>><?= e($l) ?></option><?php endforeach ?>
     </select>
     <button type="submit" class="btn btn-vert col-span-2 min-h-11 px-5 sm:col-span-1">Rechercher</button>

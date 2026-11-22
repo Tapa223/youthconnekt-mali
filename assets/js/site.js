@@ -482,6 +482,9 @@
       if (!panneau.hidden || !invite.hidden || lire("ycm-invite-vue")) return;
       invite.hidden = false;
       requestAnimationFrame(function () { invite.classList.add("visible"); });
+      noter("ycm-invite-vue"); // une seule fois, même sans le fermer
+      // Sur téléphone, il couvre le texte : il disparaît tout seul
+      if (!window.matchMedia("(min-width: 640px)").matches) setTimeout(cacherInvite, 6000);
     };
     // Accueil sur ordinateur : le message attend qu'on ait quitté le premier écran, pour ne jamais couvrir les boutons
     var ecran = document.querySelector("[data-premier-ecran]");
