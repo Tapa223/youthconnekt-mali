@@ -265,20 +265,23 @@
 
 <?php /* YouthConnekt Sahel : la déclinaison régionale, juste après le hub continental */ ?>
 <section id="youthconnekt-sahel" class="scroll-mt-24 py-10 sm:py-14" aria-labelledby="titre-ycs">
-  <div class="conteneur grid gap-8 lg:grid-cols-[minmax(0,6fr)_minmax(0,5fr)] lg:items-center lg:gap-16">
-    <div>
-      <p class="surtitre surtitre-trait">YouthConnekt Sahel</p>
-      <h2 id="titre-ycs" class="titre-section">Les jeunes du Sahel, acteurs de leur région</h2>
-      <p class="mt-4 text-[15px] leading-relaxed sm:text-lg">Lancée en 2021 par le PNUD avec le hub YouthConnekt Africa, le Bureau du Coordonnateur spécial des Nations unies pour le développement au Sahel et Generation Unlimited, l'initiative relie les chapitres nationaux des pays du Sahel, dont le Mali.</p>
-      <p class="mt-3 text-[15px] leading-relaxed sm:text-base">Son ambition : faire du Sahel une terre d'opportunités et d'investissement, portée par l'innovation et l'engagement de sa jeunesse, dans les domaines économique, social, numérique et citoyen.</p>
+  <div class="conteneur">
+    <div class="grid gap-6 lg:grid-cols-[minmax(0,6fr)_minmax(0,5fr)] lg:items-center lg:gap-16">
+      <div>
+        <p class="surtitre surtitre-trait">YouthConnekt Sahel</p>
+        <h2 id="titre-ycs" class="titre-section">Les jeunes du Sahel, acteurs de leur région</h2>
+        <p class="mt-4 text-[15px] leading-relaxed sm:text-lg">Lancée en 2021 par le PNUD avec le hub YouthConnekt Africa, le Bureau du Coordonnateur spécial des Nations unies pour le développement au Sahel et Generation Unlimited, l'initiative relie les chapitres nationaux des pays du Sahel, dont le Mali.</p>
+        <p class="mt-3 text-[15px] leading-relaxed sm:text-base">Son ambition : faire du Sahel une terre d'opportunités et d'investissement, portée par l'innovation et l'engagement de sa jeunesse, dans les domaines économique, social, numérique et citoyen.</p>
+      </div>
+      <?php if (!empty($albums['sahel'])) partiel('partials/album_reseau', ['album' => $albums['sahel']]) ?>
     </div>
-    <div>
-    <?php if (!empty($albums['sahel'])) partiel('partials/album_reseau', ['album' => $albums['sahel'], 'classes' => 'mb-5']) ?>
-    <div class="rounded-3xl border-t-4 border-orange bg-gris p-5 sm:p-7">
-      <h3 class="text-lg font-bold text-vert sm:text-xl">Le Forum YouthConnekt Sahel</h3>
-      <p class="mt-1 text-sm sm:text-[15px]">La plateforme des jeunes du Sahel pour la paix et la prospérité.</p>
-      <p class="mt-4 text-sm leading-relaxed sm:text-[15px]">Organisé à tour de rôle dans un pays du Sahel, le Forum réunit les jeunes, les gouvernements et les partenaires autour de l'emploi, de l'innovation, de la paix et de l'engagement citoyen. YouthConnekt Mali y représente la jeunesse malienne.</p>
-    </div>
+    <?php /* Le Forum : bande pleine largeur sous le texte et les photos, alignée sur la grille */ ?>
+    <div class="mt-8 grid gap-2 rounded-2xl bg-gris p-5 sm:mt-10 sm:p-7 md:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] md:items-center md:gap-10">
+      <div class="border-l-4 border-orange pl-4">
+        <h3 class="text-lg leading-tight font-bold text-vert sm:text-xl">Le Forum YouthConnekt Sahel</h3>
+        <p class="mt-1 text-sm text-texte sm:text-[15px]">La plateforme des jeunes du Sahel pour la paix et la prospérité.</p>
+      </div>
+      <p class="mt-2 pl-5 text-sm leading-relaxed sm:text-[15px] md:mt-0 md:pl-0">Organisé à tour de rôle dans un pays du Sahel, le Forum réunit les jeunes, les gouvernements et les partenaires autour de l'emploi, de l'innovation, de la paix et de l'engagement citoyen. YouthConnekt Mali y représente la jeunesse malienne.</p>
     </div>
   </div>
 </section>

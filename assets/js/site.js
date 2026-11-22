@@ -1002,3 +1002,46 @@
     maj(false);
   });
 })();
+
+/* Mosaïques de photos (À propos : YouthConnekt Africa et Sahel) : les photos défilent dans les trois tuiles,
+   un clic ouvre la photothèque sur la photo affichée. */
+(function () {
+  "use strict";
+  var calme = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.querySelectorAll("[data-album]").forEach(function (album) {
+    var liste = album.querySelectorAll("[data-agrandir]");
+    var tuiles = album.querySelectorAll("[data-tuile]");
+    var n = liste.length, rang = 0, minuterie = null, visible = true, survol = false;
+    tuiles.forEach(function (t) {
+      t.addEventListener("click", function () { var b = liste[+t.dataset.albumOuvrir]; if (b) b.click(); });
+    });
+    if (n < 2 || !album.querySelector("[data-diaporama]") || calme) return;
+    function afficher() {
+      tuiles.forEach(function (t) {
+        var k = (rang + +t.dataset.tuile) % n;
+        t.dataset.albumOuvrir = k;
+        t.querySelectorAll("img[data-rang]").forEach(function (img) {
+          var actif = +img.dataset.rang === k;
+          img.classList.toggle("opacity-100", actif);
+          img.classList.toggle("opacity-0", !actif);
+          img.alt = actif ? liste[k].querySelector("img").alt : "";
+          if (actif) img.loading = "eager";
+        });
+      });
+    }
+    function relancer() {
+      clearInterval(minuterie); minuterie = null;
+      if (visible && !survol && !document.hidden) minuterie = setInterval(function () { rang = (rang + 1) % n; afficher(); }, 4000);
+    }
+    album.addEventListener("mouseenter", function () { survol = true; relancer(); });
+    album.addEventListener("mouseleave", function () { survol = false; relancer(); });
+    album.addEventListener("focusin", function () { survol = true; relancer(); });
+    album.addEventListener("focusout", function () { survol = false; relancer(); });
+    document.addEventListener("visibilitychange", relancer);
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (e) { visible = e[0].isIntersecting; relancer(); }, { threshold: 0.25 }).observe(album);
+    } else {
+      relancer();
+    }
+  });
+})();
