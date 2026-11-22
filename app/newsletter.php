@@ -170,11 +170,8 @@ function html_newsletter(array $n, string $desabonnement): string
         . '<h1 style="margin:0 0 16px;font-size:25px;line-height:1.25;color:' . $vert . ';">' . $h($n['titre'] ?: $n['objet']) . '</h1>'
         . $corps
         . '</td></tr>'
-        . '<tr><td style="padding:22px 28px;background:' . $vert . ';color:#ffffff;font-size:13px;line-height:1.6;">'
-        . '<p style="margin:0 0 6px;font-weight:bold;">YouthConnekt Mali</p>'
-        . '<p style="margin:0 0 10px;color:#d7e6e2;">Chapitre national de YouthConnekt Africa, avec le ministère de la Jeunesse et des Sports et le PNUD.</p>'
-        . '<p style="margin:0;color:#d7e6e2;">Vous recevez cet e-mail car vous êtes abonné à la newsletter. <a href="' . $desabonnement . '" style="color:#ffffff;font-weight:bold;">Se désabonner</a></p>'
-        . '</td></tr></table></td></tr></table></body></html>';
+        . pied_email_html('Vous recevez cet e-mail car vous êtes abonné à la newsletter de YouthConnekt Mali. <a href="' . $desabonnement . '" style="color:#035E4D;font-weight:bold;">Se désabonner</a>', false)
+        . '</table></td></tr></table></body></html>';
 }
 
 /** Version texte (messageries qui n'affichent pas le HTML). */
@@ -195,7 +192,7 @@ function texte_newsletter(array $n, string $desabonnement): string
     foreach ($act as $a) {
         $t .= '- ' . $a['titre'] . "\n  " . url_absolue('/actualites/' . $a['slug']) . "\n";
     }
-    return $t . "\n--\nYouthConnekt Mali. Se désabonner : $desabonnement\n";
+    return $t . pied_email_texte() . "Se désabonner : $desabonnement\n";
 }
 
 /**
@@ -215,14 +212,21 @@ function envoyer_newsletter(array $n, array $adresses): array
         $html = html_newsletter($n, '{{ params.desabonnement }}');
         $texte = texte_newsletter($n, '{{ params.desabonnement }}');
         foreach (array_chunk($adresses, 500) as $lot) {
-            brevo_envoyer(array_map(fn ($e) => ['email' => $e, 'params' => ['desabonnement' => lien_desabonnement($e)]], $lot), $n['objet'], $html, $texte);
+            $qui = count($lot) . ' abonné' . pluriel(count($lot));
+            try {
+                brevo_envoyer(array_map(fn ($e) => ['email' => $e, 'params' => ['desabonnement' => lien_desabonnement($e)]], $lot), $n['objet'], $html, $texte);
+            } catch (Throwable $e) {
+                noter_envoi($qui, $n['objet'], 'Newsletter', false, $e->getMessage());
+                throw $e;
+            }
+            noter_envoi($qui, $n['objet'], 'Newsletter', true);
             $envoyes += count($lot);
         }
         return [$envoyes, 'brevo'];
     }
     foreach ($adresses as $e) {
         $lien = lien_desabonnement($e);
-        if (envoyer_email_html($e, $n['objet'], html_newsletter($n, htmlspecialchars($lien, ENT_QUOTES, 'UTF-8')), texte_newsletter($n, $lien))) {
+        if (envoyer_email_html($e, $n['objet'], html_newsletter($n, htmlspecialchars($lien, ENT_QUOTES, 'UTF-8')), texte_newsletter($n, $lien), '', 'Newsletter')) {
             $envoyes++;
         }
     }

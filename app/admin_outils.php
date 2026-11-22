@@ -45,6 +45,7 @@ const MENU_ADMIN = [
     ]],
     ['Échanges', [
         ['Messages de contact', 'messages', 'enveloppe', 'messages'],
+        ['E-mails envoyés', 'emails', 'enveloppe', 'messages'],
         ['Soutiens au chapitre', 'soutiens', 'coeur', 'messages'],
         ['Newsletter', 'newsletters', 'lettre', 'newsletter'],
     ]],

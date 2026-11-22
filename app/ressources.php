@@ -581,11 +581,11 @@ function ressources(): array
         // ------------------------------------------------------------------
         'messages' => [
             'table' => 'messages_contact', 'titre' => 'Messages de contact',
-            'description' => 'Les messages envoyés depuis le formulaire de contact.',
-            'peut_ajouter' => false, 'vue_liste' => 'admin/liste_messages', 'par_page' => 50,
-            'ordre' => 't.traite, t.recu_le DESC',
+            'description' => "Les messages envoyés depuis le formulaire de contact et la bulle d'aide du site. Cliquez sur un message pour le lire et y répondre.",
+            'peut_ajouter' => false, 'vue_liste' => 'admin/liste_messages', 'par_page' => 50, 'libelle_tous' => 'Tous',
+            'ordre' => 't.recu_le DESC',
             'libelle_ouvrir' => fn ($l) => empty($l['traite']) ? 'Lire et traiter' : 'Lire',
-            'onglets' => [['Non lus', 't.traite = 0'], ['Traités', 't.traite = 1']],
+            'onglets' => [['Non lus', 't.lu_le IS NULL'], ['À traiter', 't.traite = 0'], ['Traités', 't.traite = 1']],
             'filtres' => [['profil', 'Tous les profils', PROFILS_CONTACT, 't.profil']],
             'recherche' => ['t.nom', 't.email', 't.objet', 't.message'],
             'nom_element' => fn ($l) => $l['objet'],
@@ -595,6 +595,26 @@ function ressources(): array
                 'a_traiter' => ['Remettre à traiter', fn ($ids) => requete('UPDATE messages_contact SET traite = 0 WHERE id IN (' . marqueurs($ids) . ')', $ids)->rowCount() . ' message(s) remis à traiter.'],
                 'supprimer' => ['Supprimer les messages sélectionnés', fn ($ids) => requete('DELETE FROM messages_contact WHERE id IN (' . marqueurs($ids) . ')', $ids)->rowCount() . ' message(s) supprimé(s).'],
             ],
+        ],
+
+        // ------------------------------------------------------------------
+        // Journal de tout ce que le site envoie (réponses, mots de passe, copies, initiatives, newsletters). Jamais le contenu.
+        'emails' => [
+            'table' => 'emails_envoyes', 'titre' => 'E-mails envoyés', 'rubrique' => 'messages',
+            'description' => "Tout ce que le site a envoyé : réponses aux messages, mots de passe, initiatives, copies pour l'équipe et newsletters. Le contenu des réponses se lit dans Messages de contact.",
+            'peut_ajouter' => false, 'peut_supprimer' => false, 'par_page' => 50, 'libelle_tous' => 'Tous', 'pas_de_lien_modifier' => true, 'sans_fiche' => true,
+            'ordre' => 't.envoye_le DESC, t.id DESC',
+            'onglets' => [['Partis', 't.ok = 1'], ['Pas partis', 't.ok = 0']],
+            'filtres' => [['categorie', 'Tous les types', fn () => array_combine($c = array_column(lignes('SELECT DISTINCT categorie FROM emails_envoyes ORDER BY categorie'), 'categorie'), $c), 't.categorie']],
+            'recherche' => ['t.destinataire', 't.objet', 't.categorie'],
+            'nom_element' => fn ($l) => $l['objet'],
+            'colonnes' => [
+                ['À', fn ($l) => nom_et_detail($l['destinataire'], $l['categorie'])],
+                ['Objet', fn ($l) => e(couper($l['objet'], 70))],
+                ['Envoyé le', fn ($l) => e(date_chiffres($l['envoye_le']) . ' à ' . date('H:i', strtotime($l['envoye_le'])))],
+                ['État', fn ($l) => $l['ok'] ? ($l['mode'] === 'journal' ? badge('Simulé (WAMP)', 'gris') : badge('Parti', 'vert')) : '<span title="' . e($l['erreur']) . '">' . badge('Pas parti', 'rouge') . '</span>'],
+            ],
+            'export' => ['Envoyé le' => fn ($l) => date_chiffres($l['envoye_le']) . ' ' . date('H:i', strtotime($l['envoye_le'])), 'À' => 'destinataire', 'Type' => 'categorie', 'Objet' => 'objet', 'État' => fn ($l) => $l['ok'] ? 'parti' : 'pas parti', 'Erreur' => 'erreur'],
         ],
 
         // ------------------------------------------------------------------

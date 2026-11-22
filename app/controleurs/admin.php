@@ -283,6 +283,37 @@ function message_traiter(int $id): void
     rediriger(adresse_retour(url('/gestion/messages')));
 }
 
+/** Réponse à un message de contact, écrite et envoyée depuis l'administration. La personne répond ensuite à l'adresse de contact. */
+function message_repondre(int $id): void
+{
+    exiger_droit('messages', 'modifier');
+    $m = ligne('SELECT * FROM messages_contact WHERE id = ?', [$id]) ?? page_erreur(404);
+    $texte = trim((string) ($_POST['reponse'] ?? ''));
+    $retour = url('/gestion/messages', ['ouvert' => $id]) . '#repondre';
+    if ($texte === '' || mb_strlen($texte) > 20000) {
+        flash('erreur', $texte === '' ? 'Écrivez votre réponse avant de l\'envoyer.' : 'Cette réponse est trop longue.');
+        rediriger($retour);
+    }
+    $h = fn ($t) => htmlspecialchars((string) $t, ENT_QUOTES, 'UTF-8');
+    $quand = date_longue($m['recu_le']);
+    $citation_html = '<div style="margin-top:24px;padding:12px 16px;border-left:3px solid #d5dfdc;color:#5b6a67;font-size:14px;line-height:1.6;">'
+        . '<p style="margin:0 0 6px;font-weight:bold;">Votre message du ' . $h($quand) . ' :</p>' . nl2br($h($m['message'])) . '</div>';
+    $sujet = 'Re : ' . $m['objet'];
+    $texte_complet = $texte . "\n\n----\nVotre message du $quand :\n" . $m['message'];
+    $ok = envoyer_email_html($m['email'], $sujet, gabarit_email($sujet, texte_vers_html($texte) . $citation_html), $texte_complet . pied_email_texte(),
+        coordonnees_email()['email'], 'Réponse à un message');
+    try {
+        inserer('reponses_messages', ['message_id' => $id, 'admin_id' => utilisateur()['id'] ?? null, 'texte' => $texte, 'envoyee' => $ok ? 1 : 0, 'envoyee_le' => date('Y-m-d H:i:s')]);
+    } catch (Throwable $e) {
+        journaliser('erreurs.log', 'Réponse non enregistrée (mise à jour 34 à importer) : ' . $e->getMessage());
+    }
+    if ($ok) {
+        requete('UPDATE messages_contact SET traite = 1 WHERE id = ?', [$id]);
+    }
+    flash($ok ? 'succes' : 'erreur', $ok ? "Réponse envoyée à {$m['email']}. Le message est classé comme traité." : "La réponse n'est pas partie : " . derniere_erreur_email());
+    rediriger($retour);
+}
+
 function abonne_basculer(int $id): void
 {
     exiger_droit('newsletter', 'modifier');
@@ -431,8 +462,26 @@ function liste(string $slug): void
         $donnees['acceptation_auto'] = (bool) parametres()['acceptation_automatique'];
     }
     if ($slug === 'messages') {
+        // Comme une messagerie : la liste seule ; le message s'ouvre au clic, et compte alors comme lu
         $ouvert = (int) get('ouvert');
-        $donnees['ouvert'] = $ouvert ? ligne('SELECT * FROM messages_contact WHERE id = ?', [$ouvert]) : ($lignes[0] ?? null);
+        $donnees['ouvert'] = $ouvert ? ligne('SELECT * FROM messages_contact WHERE id = ?', [$ouvert]) : null;
+        $donnees['reponses'] = [];
+        if ($donnees['ouvert']) {
+            try {
+                if (empty($donnees['ouvert']['lu_le'])) {
+                    requete('UPDATE messages_contact SET lu_le = NOW() WHERE id = ?', [$ouvert]);
+                    foreach ($donnees['lignes'] as &$l) {
+                        if ((int) $l['id'] === $ouvert) $l['lu_le'] = date('Y-m-d H:i:s');
+                    }
+                    unset($l);
+                }
+                $donnees['reponses'] = lignes("SELECT r.*, COALESCE(NULLIF(TRIM(CONCAT(u.prenom_admin, ' ', u.nom_admin)), ''), u.email) AS auteur
+                    FROM reponses_messages r LEFT JOIN utilisateurs u ON u.id = r.admin_id WHERE r.message_id = ? ORDER BY r.envoyee_le", [$ouvert]);
+            } catch (Throwable $e) {
+                // mise à jour 34 pas encore importée
+            }
+        }
+        $donnees['webmail'] = rtrim(url_absolue('/'), '/') . '/webmail';
     }
     vue_admin($r['vue_liste'], $donnees);
 }

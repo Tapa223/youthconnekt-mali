@@ -152,7 +152,7 @@ function contact(): void
                 if ($copie !== '') {
                     envoyer_email($copie, 'Nouveau message : ' . SUJETS_CONTACT[$valeurs['sujet']],
                         "De : {$valeurs['nom']} <{$valeurs['email']}>\nProfil : " . PROFILS_CONTACT[$valeurs['profil']] . "\n\n" . $valeurs['message'],
-                        '', $valeurs['email']);
+                        '', $valeurs['email'], "Copie pour l'équipe");
                 }
             }
             flash('succes', "Merci, votre message a bien été envoyé. L'équipe vous répondra par e-mail.");
@@ -277,7 +277,7 @@ function message_rapide(): void
         ]);
         $copie = (string) config('email.copie_contact', '');
         if ($copie !== '') {
-            envoyer_email($copie, post('sujet') === 'initiative' ? 'Nouvelle proposition d\'initiative' : 'Nouveau message depuis la bulle du site', "De : $nom <$email>\n\n$message", '', $email);
+            envoyer_email($copie, post('sujet') === 'initiative' ? 'Nouvelle proposition d\'initiative' : 'Nouveau message depuis la bulle du site', "De : $nom <$email>\n\n$message", '', $email, "Copie pour l'équipe");
         }
     }
     $texte = post('sujet') === 'initiative'

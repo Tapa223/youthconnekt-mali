@@ -294,7 +294,7 @@ function proposer_opportunite(): void
     $copie = (string) config('email.copie_contact', '');
     if ($copie !== '') {
         envoyer_email($copie, 'Opportunité proposée : ' . $v['titre'],
-            "{$u['nom_affiche']} <{$u['email']}> propose une opportunité.\nÀ relire et publier : " . url_absolue(url('/gestion/opportunites/' . $id)), '', $u['email']);
+            "{$u['nom_affiche']} <{$u['email']}> propose une opportunité.\nÀ relire et publier : " . url_absolue(url('/gestion/opportunites/' . $id)), '', $u['email'], "Copie pour l'équipe");
     }
     $repondre([], "Merci ! Votre opportunité a bien été envoyée. Elle sera publiée après validation par l'équipe du chapitre.");
 }

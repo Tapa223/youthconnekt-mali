@@ -451,7 +451,7 @@ function prevenir_participant(int $id, string $quoi): void
         default => ['Votre candidature : ' . $p['titre'], $bonjour . "Merci pour votre candidature comme « {$p['role_libelle']} » pour « {$p['titre']} ». Elle n'a pas été retenue cette fois, mais d'autres initiatives arrivent : suivez-les sur le site."],
     };
     try {
-        envoyer_email($p['email'], $sujet, $texte . "\n\nL'équipe YouthConnekt Mali");
+        envoyer_email($p['email'], $sujet, $texte . "\n\nL'équipe YouthConnekt Mali", '', '', 'Initiatives');
     } catch (Throwable $e) {
         journaliser('erreurs.log', 'E-mail de participation non envoyé : ' . $e->getMessage());
     }

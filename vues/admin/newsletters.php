@@ -11,7 +11,6 @@
 <nav class="ycm-onglets" aria-label="Newsletter">
   <a href="<?= url('/gestion/newsletters') ?>" class="actif" aria-current="page">Envois</a>
   <a href="<?= url('/gestion/newsletter') ?>">Abonnés (<?= $nb_abonnes ?>)</a>
-  <a href="<?= url('/gestion/newsletters/verifier-envoi') ?>">Vérifier l'envoi</a>
 </nav>
 <?php if ($mode !== 'brevo'): ?>
 <p class="ycm-encadre-info" style="margin:16px 0">Brevo n'est pas encore branché : vous pouvez tout préparer et vérifier l'aperçu, mais les envois sont seulement simulés (écrits dans stockage/emails.log). Ils partiront réellement dès que la clé Brevo sera ajoutée dans config.php.</p>

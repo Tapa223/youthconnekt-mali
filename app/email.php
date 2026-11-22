@@ -7,48 +7,97 @@
 declare(strict_types=1);
 
 /**
- * Envoie un e-mail en texte simple. Renvoie true si l'envoi a réussi.
- * $lien : lien principal du message, affiché à l'écran en mode « journal » pour tester sur WAMP.
+ * Envoie un e-mail écrit en texte simple : il part mis en page (logo en haut, coordonnées du chapitre en bas),
+ * avec sa version texte pour les messageries qui n'affichent pas le HTML. Renvoie true si l'envoi a réussi.
+ * $lien : lien principal du message (bouton dans l'e-mail ; affiché à l'écran en mode « journal » sur WAMP).
+ * $categorie : nature de l'e-mail pour le journal des envois (« Réponse à un message », « Mot de passe »…).
  */
-function envoyer_email(string $destinataire, string $sujet, string $texte, string $lien = '', string $repondre_a = ''): bool
+function envoyer_email(string $destinataire, string $sujet, string $texte, string $lien = '', string $repondre_a = '', string $categorie = ''): bool
 {
-    $mode = (string) config('email.mode', 'journal');
-    $expediteur = (string) config('email.expediteur', 'noreply@localhost');
-    $nom = (string) config('email.nom_expediteur', 'YouthConnekt Mali');
-
-    if ($mode === 'journal') {
-        journaliser('emails.log', "À : $destinataire\nSujet : $sujet\n\n$texte\n" . str_repeat('-', 60));
-        if ($lien !== '' && en_developpement()) {
-            $_SESSION['lien_email_test'] = $lien;
-        }
-        return true;
+    if ($lien !== '' && en_developpement() && (string) config('email.mode', 'journal') === 'journal') {
+        $_SESSION['lien_email_test'] = $lien;
     }
+    return envoyer_email_html($destinataire, $sujet, gabarit_email($sujet, texte_vers_html($texte, $lien)), $texte . pied_email_texte(), $repondre_a, $categorie);
+}
 
+/** Coordonnées du chapitre affichées au bas des e-mails (prises dans Paramètres). */
+function coordonnees_email(): array
+{
+    $p = parametres();
+    $reseaux = array_filter(['Facebook' => $p['lien_facebook'] ?? '', 'Instagram' => $p['lien_instagram'] ?? '', 'LinkedIn' => $p['lien_linkedin'] ?? '',
+        'X' => $p['lien_x'] ?? '', 'YouTube' => $p['lien_youtube'] ?? '', 'TikTok' => $p['lien_tiktok'] ?? '']);
+    return [
+        'email' => (string) (($p['email_contact'] ?? '') ?: config('email.copie_contact', '')),
+        'site' => rtrim(url_absolue('/'), '/'),
+        'reseaux' => $reseaux,
+        'logo' => url_absolue(asset('img/logo-youthconnekt-mali.png')),
+    ];
+}
+
+/** Texte d'un e-mail simple remis en HTML : paragraphes, liens cliquables, et le lien principal en bouton. */
+function texte_vers_html(string $texte, string $lien = ''): string
+{
+    $html = '';
+    foreach (preg_split("/\n\s*\n/", trim($texte)) as $bloc) {
+        $bloc = htmlspecialchars($bloc, ENT_QUOTES, 'UTF-8');
+        $bloc = preg_replace('#https?://[^\s<]+#', '<a href="$0" style="color:#035E4D;font-weight:bold;word-break:break-all;">$0</a>', $bloc);
+        $html .= '<p style="margin:0 0 14px;">' . nl2br($bloc) . '</p>';
+    }
+    if ($lien !== '') {
+        $html .= '<p style="margin:22px 0 8px;"><a href="' . htmlspecialchars($lien, ENT_QUOTES, 'UTF-8') . '" style="display:inline-block;background:#F1592A;color:#ffffff;font-weight:bold;text-decoration:none;padding:12px 22px;border-radius:999px;">Ouvrir le lien</a></p>';
+    }
+    return $html;
+}
+
+/** Bas commun à tous les e-mails : logo, nom du chapitre, adresse de contact, site et réseaux. */
+function pied_email_html(string $mention = '', bool $avec_logo = true): string
+{
+    $c = coordonnees_email();
+    $h = fn ($t) => htmlspecialchars((string) $t, ENT_QUOTES, 'UTF-8');
+    $site_affiche = preg_replace('#^https?://#', '', $c['site']);
+    $reseaux = implode(' &nbsp;·&nbsp; ', array_map(fn ($nom, $url) => '<a href="' . $h($url) . '" style="color:#035E4D;text-decoration:none;font-weight:bold;">' . $h($nom) . '</a>', array_keys($c['reseaux']), $c['reseaux']));
+    return '<tr><td style="padding:22px 28px 24px;border-top:1px solid #e3e9e7;background:#f7f9f8;font-size:13px;line-height:1.6;color:#3c4a47;">'
+        . ($avec_logo ? '<img src="' . $h($c['logo']) . '" alt="YouthConnekt Mali" height="40" style="display:block;height:40px;width:auto;border:0;margin:0 0 10px;">' : '')
+        . '<p style="margin:0;font-weight:bold;color:#17211f;">YouthConnekt Mali</p>'
+        . '<p style="margin:2px 0 0;">Chapitre national de YouthConnekt Africa</p>'
+        . '<p style="margin:8px 0 0;">'
+        . ($c['email'] !== '' ? '<a href="mailto:' . $h($c['email']) . '" style="color:#035E4D;font-weight:bold;text-decoration:none;">' . $h($c['email']) . '</a> &nbsp;·&nbsp; ' : '')
+        . '<a href="' . $h($c['site']) . '" style="color:#035E4D;font-weight:bold;text-decoration:none;">' . $h($site_affiche) . '</a></p>'
+        . ($reseaux !== '' ? '<p style="margin:6px 0 0;">' . $reseaux . '</p>' : '')
+        . ($mention !== '' ? '<p style="margin:12px 0 0;font-size:12px;color:#5b6a67;">' . $mention . '</p>' : '')
+        . '</td></tr>';
+}
+
+/** Même pied, pour la version texte des e-mails. */
+function pied_email_texte(): string
+{
+    $c = coordonnees_email();
+    return "\n\n--\nYouthConnekt Mali\n" . ($c['email'] !== '' ? $c['email'] . "\n" : '') . $c['site'] . "\n";
+}
+
+/** Gabarit HTML commun : trait orange, contenu, puis le pied avec le logo et les coordonnées du chapitre. */
+function gabarit_email(string $titre, string $contenu_html, string $mention_pied = ''): string
+{
+    $h = fn ($t) => htmlspecialchars((string) $t, ENT_QUOTES, 'UTF-8');
+    return '<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' . $h($titre) . '</title></head>'
+        . '<body style="margin:0;padding:0;background:#f3f5f4;font-family:Arial,Helvetica,sans-serif;">'
+        . '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f3f5f4;"><tr><td align="center" style="padding:24px 12px;">'
+        . '<table role="presentation" width="600" cellspacing="0" cellpadding="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:16px;overflow:hidden;">'
+        . '<tr><td style="height:5px;line-height:5px;font-size:0;background:#F1592A;">&nbsp;</td></tr>'
+        . '<tr><td style="padding:28px 28px 12px;font-size:15px;line-height:1.65;color:#17211f;">' . $contenu_html . '</td></tr>'
+        . pied_email_html($mention_pied)
+        . '</table></td></tr></table></body></html>';
+}
+
+/** Note chaque e-mail parti (ou non) dans le journal des envois de l'administration. Jamais le contenu. */
+function noter_envoi(string $destinataire, string $sujet, string $categorie, bool $ok, string $erreur = ''): void
+{
     try {
-        if ($mode === 'brevo') {
-            brevo_envoyer([['email' => $destinataire]], $sujet, '', $texte, $repondre_a);
-            return true;
-        }
-        if ($mode === 'smtp') {
-            smtp_envoyer($destinataire, $sujet, $texte, $expediteur, $nom, $repondre_a);
-            return true;
-        }
-        $entetes = [
-            'From: ' . encoder_entete($nom) . ' <' . $expediteur . '>',
-            'Reply-To: ' . ($repondre_a ?: $expediteur),
-            'MIME-Version: 1.0',
-            'Content-Type: text/plain; charset=UTF-8',
-            'Content-Transfer-Encoding: 8bit',
-        ];
-        $ok = mail($destinataire, encoder_entete($sujet), $texte, implode("\r\n", $entetes), '-f' . $expediteur);
-        if (!$ok) {
-            journaliser('erreurs.log', "E-mail non envoyé à $destinataire (fonction mail)");
-        }
-        return $ok;
+        inserer('emails_envoyes', ['destinataire' => mb_substr($destinataire, 0, 190), 'objet' => mb_substr($sujet, 0, 255),
+            'categorie' => mb_substr($categorie !== '' ? $categorie : 'Autre', 0, 60), 'ok' => $ok ? 1 : 0,
+            'erreur' => mb_substr($erreur, 0, 300), 'mode' => (string) config('email.mode', 'journal'), 'envoye_le' => date('Y-m-d H:i:s')]);
     } catch (Throwable $e) {
-        $GLOBALS['derniere_erreur_email'] = $e->getMessage();
-        journaliser('erreurs.log', "E-mail non envoyé à $destinataire : " . $e->getMessage());
-        return false;
+        // table pas encore créée (mise à jour 34) : l'envoi n'en dépend pas
     }
 }
 
@@ -119,27 +168,10 @@ function brevo_envoyer(array $versions, string $sujet, string $html, string $tex
         };
         throw new RuntimeException('Brevo a refusé l\'envoi (' . ($code ?: $erreur) . ') : ' . mb_substr($reponse, 0, 300) . $piste);
     }
-    $donnees = json_decode($reponse, true);
-    $GLOBALS['dernier_message_brevo'] = (string) ($donnees['messageId'] ?? ($donnees['messageIds'][0] ?? ''));
-}
-
-/** Lecture dans l'API de Brevo (compte, expéditeurs, suivi d'un message) : [code HTTP, données]. */
-function brevo_lire(string $chemin): array
-{
-    $cle = (string) config('email.brevo_cle', '');
-    if ($cle === '' || !function_exists('curl_init')) {
-        return [0, []];
-    }
-    $c = curl_init('https://api.brevo.com/v3/' . ltrim($chemin, '/'));
-    curl_setopt_array($c, [CURLOPT_HTTPHEADER => ['api-key: ' . $cle, 'Accept: application/json'], CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 20]);
-    $reponse = (string) curl_exec($c);
-    $code = (int) curl_getinfo($c, CURLINFO_HTTP_CODE);
-    curl_close($c);
-    return [$code, json_decode($reponse, true) ?: ['message' => mb_substr($reponse, 0, 300)]];
 }
 
 /** E-mail mis en page (HTML + texte) : par Brevo, SMTP ou mail() selon le mode ; écrit dans le journal en mode « journal ». */
-function envoyer_email_html(string $destinataire, string $sujet, string $html, string $texte): bool
+function envoyer_email_html(string $destinataire, string $sujet, string $html, string $texte, string $repondre_a = '', string $categorie = ''): bool
 {
     $mode = (string) config('email.mode', 'journal');
     $expediteur = (string) config('email.expediteur', 'noreply@localhost');
@@ -147,24 +179,25 @@ function envoyer_email_html(string $destinataire, string $sujet, string $html, s
     try {
         if ($mode === 'journal') {
             journaliser('emails.log', "À : $destinataire\nSujet : $sujet\n(e-mail mis en page)\n\n$texte\n" . str_repeat('-', 60));
-            return true;
+        } elseif ($mode === 'brevo') {
+            brevo_envoyer([['email' => $destinataire]], $sujet, $html, $texte, $repondre_a);
+        } elseif ($mode === 'smtp') {
+            smtp_envoyer($destinataire, $sujet, $texte, $expediteur, $nom, $repondre_a, $html);
+        } else {
+            $limite = 'ycm' . bin2hex(random_bytes(8));
+            $corps = "--$limite\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n" . chunk_split(base64_encode($texte))
+                . "--$limite\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n" . chunk_split(base64_encode($html)) . "--$limite--";
+            $entetes = ['From: ' . encoder_entete($nom) . ' <' . $expediteur . '>', 'Reply-To: ' . ($repondre_a ?: $expediteur), 'MIME-Version: 1.0', 'Content-Type: multipart/alternative; boundary="' . $limite . '"'];
+            if (!mail($destinataire, encoder_entete($sujet), $corps, implode("\r\n", $entetes), '-f' . $expediteur)) {
+                throw new RuntimeException('La fonction mail() du serveur a refusé l\'envoi.');
+            }
         }
-        if ($mode === 'brevo') {
-            brevo_envoyer([['email' => $destinataire]], $sujet, $html, $texte);
-            return true;
-        }
-        if ($mode === 'smtp') {
-            smtp_envoyer($destinataire, $sujet, $texte, $expediteur, $nom, '', $html);
-            return true;
-        }
-        $limite = 'ycm' . bin2hex(random_bytes(8));
-        $corps = "--$limite\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n" . chunk_split(base64_encode($texte))
-            . "--$limite\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n" . chunk_split(base64_encode($html)) . "--$limite--";
-        $entetes = ['From: ' . encoder_entete($nom) . ' <' . $expediteur . '>', 'MIME-Version: 1.0', 'Content-Type: multipart/alternative; boundary="' . $limite . '"'];
-        return mail($destinataire, encoder_entete($sujet), $corps, implode("\r\n", $entetes), '-f' . $expediteur);
+        noter_envoi($destinataire, $sujet, $categorie, true);
+        return true;
     } catch (Throwable $e) {
         $GLOBALS['derniere_erreur_email'] = $e->getMessage();
         journaliser('erreurs.log', "E-mail non envoyé à $destinataire : " . $e->getMessage());
+        noter_envoi($destinataire, $sujet, $categorie, false, $e->getMessage());
         return false;
     }
 }

@@ -474,8 +474,31 @@ CREATE TABLE IF NOT EXISTS messages_contact (
   message TEXT NOT NULL,
   recu_le DATETIME NOT NULL,
   traite TINYINT(1) NOT NULL DEFAULT 0,
+  lu_le DATETIME NULL,
   PRIMARY KEY (id),
   KEY ix_messages_traite (traite, recu_le)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS reponses_messages (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  message_id INT UNSIGNED NOT NULL,
+  admin_id INT UNSIGNED NULL,
+  texte MEDIUMTEXT NOT NULL,
+  envoyee TINYINT(1) NOT NULL DEFAULT 0,
+  envoyee_le DATETIME NOT NULL,
+  INDEX (message_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS emails_envoyes (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  destinataire VARCHAR(190) NOT NULL,
+  objet VARCHAR(255) NOT NULL DEFAULT '',
+  categorie VARCHAR(60) NOT NULL DEFAULT '',
+  ok TINYINT(1) NOT NULL DEFAULT 1,
+  erreur VARCHAR(300) NOT NULL DEFAULT '',
+  mode VARCHAR(20) NOT NULL DEFAULT '',
+  envoye_le DATETIME NOT NULL,
+  INDEX (envoye_le)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS abonnes_newsletter (

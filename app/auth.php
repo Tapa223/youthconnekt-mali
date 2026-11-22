@@ -306,7 +306,7 @@ function envoyer_reinitialisation(array $u): void
         . "Choisissez un nouveau mot de passe en ouvrant ce lien (valable 2 heures) :\n" . $lien . "\n\n"
         . "Si vous n'êtes pas à l'origine de cette demande, ignorez ce message : votre mot de passe reste inchangé.\n\n"
         . "L'équipe YouthConnekt Mali";
-    envoyer_email($u['email'], 'Réinitialisation de votre mot de passe · YouthConnekt Mali', $texte, $lien);
+    envoyer_email($u['email'], 'Réinitialisation de votre mot de passe · YouthConnekt Mali', $texte, $lien, '', 'Mot de passe');
 }
 
 // ---------------------------------------------------------------------------
