@@ -76,6 +76,7 @@ const ROUTES = [
     ['POST', '/gestion/participations/{id}/decision', 'participations', 'participation_decision'],
     ['POST', '/gestion/initiatives/{id}/pointage', 'participations', 'participation_pointer'],
     ['GET', '/gestion/newsletters', 'newsletters', 'newsletters'],
+    ['GET|POST', '/gestion/newsletters/verifier-envoi', 'newsletters', 'newsletter_verifier_envoi'],
     ['GET', '/gestion/newsletters/compter', 'newsletters', 'newsletter_compter'],
     ['GET|POST', '/gestion/newsletters/nouvelle', 'newsletters', 'newsletter_formulaire'],
     ['GET|POST', '/gestion/newsletters/{id}', 'newsletters', 'newsletter_formulaire'],

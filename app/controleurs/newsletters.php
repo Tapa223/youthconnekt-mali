@@ -202,3 +202,55 @@ function newsletter_supprimer(int $id): void
     flash('succes', 'Brouillon supprimé.');
     rediriger(url('/gestion/newsletters'));
 }
+
+/**
+ * Vérification des e-mails : réglages, état du compte Brevo, envoi d'un test et suivi de ce test
+ * (accepté, délivré, bloqué, rejeté…) lu directement chez Brevo.
+ */
+function newsletter_verifier_envoi(): void
+{
+    exiger_droit('newsletter');
+    $mode = (string) config('email.mode', 'journal');
+    if (est_post()) {
+        verifier_csrf();
+        $email = mb_strtolower(trim(post('email_test')));
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            flash('erreur', 'Indiquez une adresse e-mail valide.');
+        } else {
+            $GLOBALS['dernier_message_brevo'] = '';
+            $heure = date('H:i');
+            $ok = envoyer_email_html($email, 'Test d\'envoi YouthConnekt Mali (' . $heure . ')',
+                '<p>Bonjour,</p><p>Ceci est un e-mail de test envoyé depuis l\'administration de YouthConnekt Mali à ' . $heure . '.</p><p>Si vous le lisez, les e-mails du site partent bien.</p>',
+                "Bonjour,\n\nCeci est un e-mail de test envoyé depuis l'administration de YouthConnekt Mali à $heure.\nSi vous le lisez, les e-mails du site partent bien.");
+            $_SESSION['test_email'] = ['adresse' => $email, 'heure' => date('Y-m-d H:i:s'), 'ok' => $ok, 'erreur' => $ok ? '' : derniere_erreur_email(), 'message_id' => (string) ($GLOBALS['dernier_message_brevo'] ?? '')];
+            flash($ok ? 'succes' : 'erreur', $ok ? ($mode === 'journal' ? "Le site est en mode « journal » : rien n'est parti, l'e-mail est seulement écrit dans stockage/emails.log." : "Brevo a accepté l'e-mail. Son parcours s'affiche ci-dessous : actualisez dans une minute.") : "L'e-mail n'est pas parti : " . derniere_erreur_email());
+        }
+        rediriger(url('/gestion/newsletters/verifier-envoi'));
+    }
+
+    $compte = $expediteurs = $evenements = null;
+    $code_compte = 0;
+    if ($mode === 'brevo') {
+        [$code_compte, $compte] = brevo_lire('account');
+        [, $exp] = brevo_lire('senders');
+        $expediteurs = $exp['senders'] ?? [];
+        $test = $_SESSION['test_email'] ?? null;
+        if ($test && $test['message_id'] !== '') {
+            [, $ev] = brevo_lire('smtp/statistics/events?limit=50&sort=desc&messageId=' . rawurlencode($test['message_id']));
+            $evenements = $ev['events'] ?? [];
+        } elseif ($test && $test['ok']) {
+            [, $ev] = brevo_lire('smtp/statistics/events?limit=20&sort=desc&email=' . rawurlencode($test['adresse']));
+            $evenements = $ev['events'] ?? [];
+        }
+    }
+    $cle = (string) config('email.brevo_cle', '');
+    vue_admin('admin/verifier_envoi', [
+        'titre_page' => "Vérifier l'envoi des e-mails",
+        'ariane' => [['Newsletter', url('/gestion/newsletters')], ["Vérifier l'envoi", null]],
+        'mode' => $mode,
+        'expediteur' => (string) config('email.expediteur', ''),
+        'cle' => $cle === '' ? '' : substr($cle, 0, 8) . '…' . substr($cle, -4),
+        'compte' => $compte, 'code_compte' => $code_compte, 'expediteurs' => $expediteurs,
+        'test' => $_SESSION['test_email'] ?? null, 'evenements' => $evenements,
+    ]);
+}

@@ -119,6 +119,23 @@ function brevo_envoyer(array $versions, string $sujet, string $html, string $tex
         };
         throw new RuntimeException('Brevo a refusé l\'envoi (' . ($code ?: $erreur) . ') : ' . mb_substr($reponse, 0, 300) . $piste);
     }
+    $donnees = json_decode($reponse, true);
+    $GLOBALS['dernier_message_brevo'] = (string) ($donnees['messageId'] ?? ($donnees['messageIds'][0] ?? ''));
+}
+
+/** Lecture dans l'API de Brevo (compte, expéditeurs, suivi d'un message) : [code HTTP, données]. */
+function brevo_lire(string $chemin): array
+{
+    $cle = (string) config('email.brevo_cle', '');
+    if ($cle === '' || !function_exists('curl_init')) {
+        return [0, []];
+    }
+    $c = curl_init('https://api.brevo.com/v3/' . ltrim($chemin, '/'));
+    curl_setopt_array($c, [CURLOPT_HTTPHEADER => ['api-key: ' . $cle, 'Accept: application/json'], CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 20]);
+    $reponse = (string) curl_exec($c);
+    $code = (int) curl_getinfo($c, CURLINFO_HTTP_CODE);
+    curl_close($c);
+    return [$code, json_decode($reponse, true) ?: ['message' => mb_substr($reponse, 0, 300)]];
 }
 
 /** E-mail mis en page (HTML + texte) : par Brevo, SMTP ou mail() selon le mode ; écrit dans le journal en mode « journal ». */
