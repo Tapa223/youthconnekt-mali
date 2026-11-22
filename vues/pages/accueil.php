@@ -258,41 +258,40 @@ foreach (range(0, 11) as $k) {
 </section>
 <?php endif ?>
 
-<?php /* 4. Mot du ministre : grande photo à gauche, texte à droite, replié avec « Voir plus » (téléphone et ordinateur) */ ?>
+<?php /* 4. Mot du ministre : photo à gauche, texte à droite, sur téléphone comme sur ordinateur.
+   Téléphone : la photo reste collée pendant qu'on fait défiler le texte. Ordinateur : texte replié avec « Voir plus ». */ ?>
 <section class="py-10 sm:py-14 lg:py-16" aria-labelledby="titre-ministre">
-  <div class="conteneur grid items-start gap-8 md:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:gap-14">
-    <div class="mx-auto hidden w-full md:sticky md:top-28 md:block md:max-w-[20rem]">
-      <div class="apparition aspect-[4/5] overflow-hidden rounded-2xl border-t-[6px] border-orange bg-white shadow-xl shadow-vert/10">
-        <?php partiel('partials/photo', ['image' => $mot['photo'], 'alt' => $nom_ministre, 'mention' => 'Photo officielle du ministre à fournir, format portrait']) ?>
-      </div>
-    </div>
-    <div>
-      <?php if (!$ministre_publie && $admin): ?><p class="mb-4 inline-block rounded-md bg-orange/10 px-3 py-1 text-xs font-bold text-orange-fonce">Non publié dans l'administration : le texte proposé par la maquette est affiché</p><?php endif ?>
-      <p class="surtitre surtitre-trait" id="titre-ministre">Le mot du ministre</p>
-      <div class="mt-4 flex items-center gap-3.5 md:hidden">
-        <div class="h-[132px] w-[104px] shrink-0 overflow-hidden rounded-xl bg-gris">
-          <?php partiel('partials/photo', ['image' => $mot['photo'], 'alt' => $nom_ministre, 'mention' => 'Photo officielle']) ?>
+  <div class="conteneur">
+    <?php if (!$ministre_publie && $admin): ?><p class="mb-4 inline-block rounded-md bg-orange/10 px-3 py-1 text-xs font-bold text-orange-fonce">Non publié dans l'administration : le texte proposé par la maquette est affiché</p><?php endif ?>
+    <p class="surtitre surtitre-trait md:hidden" id="titre-ministre-mobile">Le mot du ministre</p>
+    <div class="mt-4 grid grid-cols-[minmax(0,5fr)_minmax(0,8fr)] items-start gap-3.5 md:mt-0 md:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] md:gap-8 lg:gap-14">
+      <div class="sticky top-[4.75rem] md:top-28 md:mx-auto md:w-full md:max-w-[20rem]">
+        <div class="apparition aspect-[3/4] overflow-hidden rounded-xl border-t-4 border-orange bg-white shadow-lg shadow-vert/10 md:aspect-[4/5] md:rounded-2xl md:border-t-[6px] md:shadow-xl">
+          <?php partiel('partials/photo', ['image' => $mot['photo'], 'alt' => $nom_ministre, 'mention' => 'Photo officielle du ministre à fournir, format portrait']) ?>
         </div>
-        <p class="border-l-[3px] border-orange pl-3 leading-snug">
-          <span class="block text-[15px] font-bold text-encre"><?= e($nom_ministre) ?></span>
-          <span class="mt-1 block text-xs text-texte"><?= e($titre_ministre) ?></span>
+        <p class="mt-2.5 leading-tight md:hidden">
+          <span class="block text-[13px] font-bold text-encre"><?= e($nom_ministre) ?></span>
+          <span class="mt-1 block text-[11px] leading-snug text-texte"><?= e($titre_ministre) ?></span>
         </p>
       </div>
-      <blockquote id="texte-ministre" class="repliable-partout mt-5 space-y-2.5 text-base leading-relaxed text-vert sm:space-y-3 sm:text-lg lg:text-[1.15rem]" data-repliable>
-        <?php if ($ministre_publie && trim((string) $mot['message']) !== ''): ?><?= paragraphes($mot['message']) ?>
-        <?php elseif ($ministre_publie && trim((string) $mot['extrait']) !== ''): ?><p>« <?= e($mot['extrait']) ?> »</p>
-        <?php else: ?>
-        <p>« La jeunesse malienne est notre première richesse. Elle porte l'énergie, la créativité et l'ambition dont notre pays a besoin pour bâtir son avenir.</p>
-        <p>Avec YouthConnekt Mali, nous voulons offrir à chaque jeune, où qu'il vive, un espace pour se former, accéder aux opportunités, entreprendre et s'engager dans la vie citoyenne.</p>
-        <p>J'invite chaque jeune, chaque association et chaque entreprise à rejoindre le chapitre. Ensemble, faisons de cette plateforme un lieu d'échanges, de solidarité et de réussite pour le Mali. »</p>
-        <?php endif ?>
-      </blockquote>
-      <?php partiel('partials/voir_plus', ['cible' => 'texte-ministre', 'partout' => true]) ?>
-      <p class="mt-5 hidden border-l-[3px] border-orange pl-4 md:block">
-        <span class="block font-bold text-encre"><?= e($nom_ministre) ?></span>
-        <span class="mt-1 block text-sm text-texte"><?= e($titre_ministre) ?></span>
-      </p>
-      <?php if (!$ministre_publie): ?><p class="mt-5 text-xs text-texte">Proposition de texte, à valider par le cabinet du ministre avant publication.</p><?php endif ?>
+      <div>
+        <p class="surtitre surtitre-trait hidden md:inline-flex" id="titre-ministre">Le mot du ministre</p>
+        <blockquote id="texte-ministre" class="repliable-partout space-y-2.5 text-[15px] leading-relaxed text-vert sm:space-y-3 sm:text-lg md:mt-5 lg:text-[1.15rem]" data-repliable>
+          <?php if ($ministre_publie && trim((string) $mot['message']) !== ''): ?><?= paragraphes($mot['message']) ?>
+          <?php elseif ($ministre_publie && trim((string) $mot['extrait']) !== ''): ?><p>« <?= e($mot['extrait']) ?> »</p>
+          <?php else: ?>
+          <p>« La jeunesse malienne est notre première richesse. Elle porte l'énergie, la créativité et l'ambition dont notre pays a besoin pour bâtir son avenir.</p>
+          <p>Avec YouthConnekt Mali, nous voulons offrir à chaque jeune, où qu'il vive, un espace pour se former, accéder aux opportunités, entreprendre et s'engager dans la vie citoyenne.</p>
+          <p>J'invite chaque jeune, chaque association et chaque entreprise à rejoindre le chapitre. Ensemble, faisons de cette plateforme un lieu d'échanges, de solidarité et de réussite pour le Mali. »</p>
+          <?php endif ?>
+        </blockquote>
+        <?php partiel('partials/voir_plus', ['cible' => 'texte-ministre', 'partout' => true]) ?>
+        <p class="mt-5 hidden border-l-[3px] border-orange pl-4 md:block">
+          <span class="block font-bold text-encre"><?= e($nom_ministre) ?></span>
+          <span class="mt-1 block text-sm text-texte"><?= e($titre_ministre) ?></span>
+        </p>
+        <?php if (!$ministre_publie): ?><p class="mt-5 text-xs text-texte">Proposition de texte, à valider par le cabinet du ministre avant publication.</p><?php endif ?>
+      </div>
     </div>
   </div>
 </section>

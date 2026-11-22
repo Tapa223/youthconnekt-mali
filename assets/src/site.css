@@ -301,10 +301,12 @@ a.text-orange:not(.btn):not([class*="hover:bg-"]):hover { color: var(--color-ver
 }
 .voir-plus[aria-expanded="true"] svg { transform: rotate(180deg); }
 /* Variante repliée aussi sur ordinateur (mot du ministre) : le texte s'arrête à la hauteur de la photo */
-.js .repliable-partout:not(.deplie) { max-height: 9.5rem; overflow: hidden; -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent); mask-image: linear-gradient(to bottom, #000 60%, transparent); }
-@media (min-width: 768px) { .js .repliable-partout:not(.deplie) { max-height: 15rem; } }
+ /* Sur téléphone, pas de repli : la photo reste collée à côté du texte pendant qu'on fait défiler */
+@media (min-width: 768px) {
+  .js .repliable-partout:not(.deplie) { max-height: 15rem; overflow: hidden; -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent); mask-image: linear-gradient(to bottom, #000 60%, transparent); }
+  .js .voir-plus-partout.actif { display: inline-flex !important; }
+}
 @media (min-width: 1024px) { .js .repliable-partout:not(.deplie) { max-height: 17.5rem; } }
-.js .voir-plus-partout.actif { display: inline-flex !important; }
 
 /* Fenêtre de proposition d'initiative */
 .dialogue::backdrop { background: rgb(2 30 25 / .6); backdrop-filter: blur(3px); }
