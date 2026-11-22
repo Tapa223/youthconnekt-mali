@@ -141,11 +141,11 @@ function tableau_de_bord(): void
         if ($tot) {
             $g = array_column(lignes("SELECT genre, COUNT(*) AS n FROM profils_individuels GROUP BY genre"), 'n', 'genre');
             $ages = [];
-            foreach (TRANCHES_AGE as $cle => [$lib, $min, $max]) {
-                $ages[$cle] = [$lib, (int) valeur('SELECT COUNT(*) FROM profils_individuels WHERE TIMESTAMPDIFF(YEAR, date_naissance, CURDATE()) BETWEEN ? AND ?', [$min, $max])];
+            $n = array_column(lignes('SELECT tranche_age, COUNT(*) AS n FROM profils_individuels GROUP BY tranche_age'), 'n', 'tranche_age');
+            foreach (TRANCHES_AGE as $cle => [$lib]) {
+                $ages[$cle] = [$lib, (int) ($n[$cle] ?? 0)];
             }
-            $profil_membres = ['total' => $tot, 'femmes' => (int) ($g['femme'] ?? 0), 'hommes' => (int) ($g['homme'] ?? 0), 'ages' => $ages,
-                'age_moyen' => valeur('SELECT ROUND(AVG(TIMESTAMPDIFF(YEAR, date_naissance, CURDATE()))) FROM profils_individuels WHERE date_naissance IS NOT NULL')];
+            $profil_membres = ['total' => $tot, 'femmes' => (int) ($g['femme'] ?? 0), 'hommes' => (int) ($g['homme'] ?? 0), 'ages' => $ages, 'age_moyen' => null];
         }
     } catch (Throwable $e) {
         $profil_membres = [];
@@ -425,7 +425,7 @@ function liste(string $slug): void
         $donnees['voit_demandes'] = peut('demandes');
         $rd = ressource('demandes');
         $donnees['demandes'] = peut('demandes')
-            ? lignes("SELECT {$rd['champs_select']}, pi.categorie, pi.region AS region_i, po.type_structure, po.region AS region_o {$rd['depuis']} WHERE t.statut = 'en_attente' ORDER BY t.demandee_le DESC LIMIT 20")
+            ? lignes("SELECT {$rd['champs_select']}, pi.categorie, pi.categorie_autre, pi.region AS region_i, po.type_structure, po.region AS region_o {$rd['depuis']} WHERE t.statut = 'en_attente' ORDER BY t.demandee_le DESC LIMIT 20")
             : [];
         $donnees['total_attente'] = (int) valeur("SELECT COUNT(*) FROM demandes_adhesion WHERE statut = 'en_attente'");
         $donnees['acceptation_auto'] = (bool) parametres()['acceptation_automatique'];

@@ -105,9 +105,10 @@ $lignes_liens = $liens ?: [['reseau' => 'linkedin', 'url' => '']];
       <?php partiel('partials/champ', $c('prenom') + ['libelle' => 'Prénom', 'attributs' => ['maxlength' => 80, 'autocomplete' => 'given-name']]) ?>
       <?php partiel('partials/champ', $c('nom') + ['libelle' => 'Nom', 'attributs' => ['maxlength' => 80, 'autocomplete' => 'family-name']]) ?>
       <?php partiel('partials/champ', $c('genre') + ['libelle' => 'Genre', 'type' => 'select', 'options' => ['' => 'Choisir'] + GENRES, 'aide' => 'Privé : sert seulement aux statistiques du chapitre.']) ?>
-      <?php partiel('partials/champ', $c('date_naissance') + ['libelle' => 'Date de naissance', 'type' => 'date', 'aide' => 'Privée : jamais affichée sur le site.', 'attributs' => ['max' => date('Y-m-d', strtotime('-10 years')), 'min' => date('Y-m-d', strtotime('-100 years'))]]) ?>
+      <?php partiel('partials/champ', $c('tranche_age') + ['libelle' => "Tranche d'âge", 'type' => 'select', 'options' => ['' => 'Choisir'] + options_tranches_age(), 'aide' => 'Privée : sert seulement aux statistiques du chapitre.']) ?>
       <?= $groupe('Parcours') ?>
       <?php partiel('partials/champ', $c('categorie') + ['libelle' => 'Vous êtes', 'type' => 'select', 'options' => CATEGORIES_INDIVIDUELLES]) ?>
+      <?php partiel('partials/champ', $c('categorie_autre') + ['libelle' => 'Précisez', 'si' => ['categorie', 'autre'], 'valeur_si' => $valeurs['categorie'] ?? '', 'attributs' => ['maxlength' => 80, 'placeholder' => 'Exemple : artiste, agriculteur, journaliste']]) ?>
       <?php partiel('partials/champ', $c('domaine') + ['libelle' => "Domaine d'activité ou d'études", 'requis' => false, 'attributs' => ['maxlength' => 150, 'placeholder' => 'Exemple : marketing digital']]) ?>
       <?php partiel('partials/champ', $c('region') + ['libelle' => 'Région', 'type' => 'select', 'options' => REGIONS]) ?>
       <?php partiel('partials/champ', $c('ville') + ['libelle' => 'Ville', 'requis' => false, 'attributs' => ['maxlength' => 100]]) ?>

@@ -283,7 +283,8 @@
   </div>
 </section>
 
-<?php /* Le réseau en chiffres : calculés à partir des comptes et des communautés */ ?>
+<?php /* Le réseau en chiffres : calculés à partir des comptes et des communautés. Masqué tant que l'administration ne l'active pas (Paramètres). */ ?>
+<?php if (!empty(parametres()['chiffres_reseau'])): ?>
 <section class="bg-gris py-10 sm:py-14" aria-labelledby="titre-reseau">
   <div class="conteneur">
     <p class="surtitre surtitre-trait">Le réseau</p>
@@ -304,11 +305,18 @@
     <p class="mt-5 text-center text-[15px] sm:text-base">Et chaque nouvelle inscription agrandit le réseau. <a href="<?= url('/compte/inscription') ?>" class="btn-lien ml-1 mt-2 sm:mt-0">Rejoindre le chapitre</a></p>
   </div>
 </section>
+<?php endif ?>
 
-<?php partiel('partials/partenaires', ['partenaires' => $partenaires, 'fond' => 'bg-white']) ?>
+<?php
+// Alternance des fonds après la section Sahel (fond blanc), que les chiffres et les partenaires s'affichent ou non
+$chiffres_visibles = !empty(parametres()['chiffres_reseau']);
+$fond_partenaires = $chiffres_visibles ? 'bg-white' : 'bg-gris';
+$fond_ministre = ($chiffres_visibles xor !empty($partenaires)) ? 'bg-white' : 'bg-gris';
+?>
+<?php partiel('partials/partenaires', ['partenaires' => $partenaires, 'fond' => $fond_partenaires]) ?>
 
 <?php if ($mot): ?>
-<section id="mot-du-ministre" class="scroll-mt-24 bg-gris py-10 sm:py-14">
+<section id="mot-du-ministre" class="scroll-mt-24 <?= $fond_ministre ?> py-10 sm:py-14">
   <div class="conteneur grid gap-8 md:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] md:gap-14">
     <div class="mx-auto w-full max-w-[240px] md:max-w-xs">
       <div class="aspect-[4/5] overflow-hidden rounded-2xl border-t-[6px] border-orange bg-white shadow-xl">

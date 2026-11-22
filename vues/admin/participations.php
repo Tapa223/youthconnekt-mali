@@ -118,17 +118,17 @@ $badges = ['inscrit' => badge('Inscrit', 'vert'), 'en_attente' => badge('En atte
 <div class="ycm-pa-defile">
   <table class="ycm-pa-tableau">
     <thead><tr>
-      <th>Nom</th><th>Rôle</th><th>Décision</th><th>Âge</th><th>Région</th><th>Téléphone</th><th>Billet</th><th>Présent</th>
+      <th>Nom</th><th>Rôle</th><th>Décision</th><th>Tranche d'âge</th><th>Région</th><th>Téléphone</th><th>Billet</th><th>Présent</th>
       <?php foreach ($colonnes_questions as $c): ?><th><?= e($c['libelle']) ?><?= !$role_choisi && count($roles) > 1 ? '<small>' . e($c['role_nom']) . '</small>' : '' ?></th><?php endforeach ?>
       <th>Reçue le</th>
     </tr></thead>
     <tbody>
-      <?php foreach ($liste as $p): $rep = array_column(reponses_participation($p), 'reponse', 'id'); $a = age($p['date_naissance'] ?? null); ?>
+      <?php foreach ($liste as $p): $rep = array_column(reponses_participation($p), 'reponse', 'id'); $a = tranche_age($p); ?>
       <tr>
         <td><a href="<?= url('/gestion/participations/' . $p['id']) ?>"><?= e($p['membre_nom']) ?></a><small><?= e($p['email']) ?></small></td>
         <td><?= e($p['role_libelle']) ?></td>
         <td><?= $badges[$p['statut']] ?? '' ?></td>
-        <td><?= $a !== null ? $a : '' ?></td>
+        <td><?= e($a) ?></td>
         <td><?= e(REGIONS[$p['region_i'] ?? ''] ?? '') ?></td>
         <td><?= e((string) $p['telephone']) ?></td>
         <td><?= billet_valable($p) ? e((string) $p['code']) : '' ?></td>
@@ -143,12 +143,12 @@ $badges = ['inscrit' => badge('Inscrit', 'vert'), 'en_attente' => badge('En atte
 
 <?php else: ?>
 <div class="ycm-pa-liste">
-  <?php foreach ($liste as $p): $rep = reponses_participation($p); $a = age($p['date_naissance'] ?? null); $candidature = $p['statut'] !== 'inscrit'; ?>
+  <?php foreach ($liste as $p): $rep = reponses_participation($p); $a = tranche_age($p); $candidature = $p['statut'] !== 'inscrit'; ?>
   <article class="ycm-pa-carte">
     <div class="ycm-pa-tete">
       <div>
         <p class="ycm-pa-nom"><?= e($p['membre_nom']) ?></p>
-        <p class="ycm-discret"><?= e(implode(' · ', array_filter([$p['email'], $p['telephone'] ?? '', $a !== null ? $a . ' ans' : '', REGIONS[$p['region_i'] ?? ''] ?? '']))) ?></p>
+        <p class="ycm-discret"><?= e(implode(' · ', array_filter([$p['email'], $p['telephone'] ?? '', $a, REGIONS[$p['region_i'] ?? ''] ?? '']))) ?></p>
       </div>
       <div class="ycm-pa-etat">
         <span class="ycm-pa-role"><?= e($p['role_libelle']) ?></span>

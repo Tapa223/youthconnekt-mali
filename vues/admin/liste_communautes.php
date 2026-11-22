@@ -9,7 +9,7 @@
       <thead><tr><th>Membre</th><th>Communauté demandée</th><th>Date</th><th>Statut</th><th class="ycm-droite">Actions</th></tr></thead>
       <tbody>
       <?php foreach ($demandes as $k => $d):
-          $detail = array_filter([$d['categorie'] ? (CATEGORIES_INDIVIDUELLES[$d['categorie']] ?? '') : (TYPES_STRUCTURE[$d['type_structure'] ?? ''] ?? ''), REGIONS[$d['region_i'] ?: ($d['region_o'] ?? '')] ?? '']); ?>
+          $detail = array_filter([$d['categorie'] ? libelle_categorie($d) : (TYPES_STRUCTURE[$d['type_structure'] ?? ''] ?? ''), REGIONS[$d['region_i'] ?: ($d['region_o'] ?? '')] ?? '']); ?>
         <tr>
           <td><?= nom_et_detail($d['membre_nom'], implode(' · ', $detail), '<span class="ycm-avatar ycm-avatar--' . $av[$k % 4] . '" aria-hidden="true">' . e(initiales($d['membre_nom'])) . '</span>') ?></td>
           <td><strong style="color:var(--ycm-vert)"><?= e($d['communaute_nom']) ?></strong></td>

@@ -92,7 +92,7 @@ function membres(): void
     $total = (int) valeur('SELECT COUNT(*) ' . $base);
     $liste = [];
     if ($u) {
-        $sql = 'SELECT p.utilisateur_id, p.prenom, p.nom, p.photo, p.categorie, p.domaine, p.region ' . $base;
+        $sql = 'SELECT p.utilisateur_id, p.prenom, p.nom, p.photo, p.categorie, p.categorie_autre, p.domaine, p.region ' . $base;
         $params = [];
         if ($region) { $sql .= ' AND p.region = ?'; $params[] = $region; }
         if ($categorie) { $sql .= ' AND p.categorie = ?'; $params[] = $categorie; }

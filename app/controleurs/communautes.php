@@ -90,7 +90,7 @@ function membres_visibles(array $c): array
             'nom' => $m['nom_affiche'],
             'initiales' => $m['initiales'],
             'photo' => $organisation ? ($p['logo'] ?? '') : ($p['photo'] ?? ''),
-            'detail' => $organisation ? ($p['secteur'] ?: (TYPES_STRUCTURE[$p['type_structure']] ?? '')) : (($p['domaine'] ?? '') !== '' ? $p['domaine'] : (CATEGORIES_INDIVIDUELLES[$p['categorie']] ?? '')),
+            'detail' => $organisation ? ($p['secteur'] ?: (TYPES_STRUCTURE[$p['type_structure']] ?? '')) : (($p['domaine'] ?? '') !== '' ? $p['domaine'] : libelle_categorie($p)),
         ];
     }
     return $membres;

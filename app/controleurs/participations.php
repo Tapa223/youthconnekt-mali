@@ -127,17 +127,16 @@ function participations_configurer(int $id): void
         }
     }
     if ($f['age']) {
-        [, $min, $max] = TRANCHES_AGE[$f['age']];
-        $conditions[] = 'TIMESTAMPDIFF(YEAR, pi.date_naissance, CURDATE()) BETWEEN ? AND ?';
-        array_push($params, $min, $max);
+        $conditions[] = 'pi.tranche_age = ?';
+        $params[] = $f['age'];
     }
     if ($f['presence']) {
         $conditions[] = $f['presence'] === 'oui' ? 'p.present_le IS NOT NULL' : 'p.present_le IS NULL';
     }
-    $ordre = ['recentes' => 'p.cree_le DESC', 'anciennes' => 'p.cree_le', 'nom' => 'membre_nom', 'age' => 'pi.date_naissance DESC'][$f['tri']];
+    $ordre = ['recentes' => 'p.cree_le DESC', 'anciennes' => 'p.cree_le', 'nom' => 'membre_nom', 'age' => "FIELD(pi.tranche_age, '" . implode("', '", array_keys(TRANCHES_AGE)) . "') = 0, FIELD(pi.tranche_age, '" . implode("', '", array_keys(TRANCHES_AGE)) . "')"][$f['tri']];
     $liste = lignes(
         "SELECT p.*, COALESCE(r.nom, p.role_nom) AS role_libelle, r.mode AS role_mode, u.email,
-                COALESCE(CONCAT(pi.prenom, ' ', pi.nom), po.nom_structure, u.email) AS membre_nom, pi.genre, pi.date_naissance, pi.region AS region_i, pi.telephone
+                COALESCE(CONCAT(pi.prenom, ' ', pi.nom), po.nom_structure, u.email) AS membre_nom, pi.genre, pi.date_naissance, pi.tranche_age, pi.region AS region_i, pi.telephone
          FROM participations p JOIN utilisateurs u ON u.id = p.utilisateur_id
          LEFT JOIN profils_individuels pi ON pi.utilisateur_id = u.id LEFT JOIN profils_organisations po ON po.utilisateur_id = u.id
          LEFT JOIN initiative_roles r ON r.id = p.role_id
@@ -295,7 +294,7 @@ function participations_exporter(int $id): void
     $champs = champs_initiative($id);
     $lignes = lignes(
         "SELECT p.*, COALESCE(r.nom, p.role_nom) AS role_libelle, u.email,
-                COALESCE(CONCAT(pi.prenom, ' ', pi.nom), po.nom_structure, u.email) AS membre_nom, pi.genre, pi.date_naissance, pi.region AS region_i, pi.telephone
+                COALESCE(CONCAT(pi.prenom, ' ', pi.nom), po.nom_structure, u.email) AS membre_nom, pi.genre, pi.date_naissance, pi.tranche_age, pi.region AS region_i, pi.telephone
          FROM participations p JOIN utilisateurs u ON u.id = p.utilisateur_id
          LEFT JOIN profils_individuels pi ON pi.utilisateur_id = u.id LEFT JOIN profils_organisations po ON po.utilisateur_id = u.id
          LEFT JOIN initiative_roles r ON r.id = p.role_id WHERE p.initiative_id = ? ORDER BY role_libelle, p.cree_le",
@@ -305,12 +304,12 @@ function participations_exporter(int $id): void
     header('Content-Disposition: attachment; filename="participations-' . $i['slug'] . '.csv"');
     $sortie = fopen('php://output', 'w');
     fwrite($sortie, "\xEF\xBB\xBF");
-    fputcsv($sortie, array_merge(['Rôle', 'Nom', 'E-mail', 'Téléphone', 'Genre', 'Âge', 'Région', 'Décision', 'Billet', 'Présent', 'Reçue le'],
+    fputcsv($sortie, array_merge(['Rôle', 'Nom', 'E-mail', 'Téléphone', 'Genre', "Tranche d'âge", 'Région', 'Décision', 'Billet', 'Présent', 'Reçue le'],
         array_map(fn ($c) => $c['libelle'] . ' (' . $c['role_nom'] . ')', $champs)), ';');
     foreach ($lignes as $l) {
         $rep = array_column(reponses_participation($l), 'reponse', 'id');
         fputcsv($sortie, array_merge([
-            $l['role_libelle'], $l['membre_nom'], $l['email'], $l['telephone'], GENRES[$l['genre'] ?? ''] ?? '', age($l['date_naissance'] ?? null) ?? '',
+            $l['role_libelle'], $l['membre_nom'], $l['email'], $l['telephone'], GENRES[$l['genre'] ?? ''] ?? '', tranche_age($l),
             REGIONS[$l['region_i'] ?? ''] ?? '', STATUTS_PARTICIPATION[$l['statut']] ?? '', billet_valable($l) ? $l['code'] : '',
             $l['present_le'] ? 'oui' : '', date_chiffres($l['cree_le']),
         ], array_map(fn ($c) => $rep[$c['id']] ?? '', $champs)), ';');

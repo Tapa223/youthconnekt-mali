@@ -22,8 +22,9 @@ partiel('comptes/etapes', ['etape' => $etape]);
     <?php partiel('partials/champ', $c('prenom') + ['libelle' => 'Prénom', 'attributs' => ['autocomplete' => 'given-name', 'placeholder' => 'Aminata', 'maxlength' => 80]]) ?>
     <?php partiel('partials/champ', $c('nom') + ['libelle' => 'Nom', 'attributs' => ['autocomplete' => 'family-name', 'placeholder' => 'Keïta', 'maxlength' => 80]]) ?>
     <?php partiel('partials/champ', $c('genre') + ['libelle' => 'Genre', 'type' => 'select', 'options' => ['' => 'Choisir'] + GENRES, 'aide' => 'Privé : sert seulement aux statistiques du chapitre.']) ?>
-    <?php partiel('partials/champ', $c('date_naissance') + ['libelle' => 'Date de naissance', 'type' => 'date', 'aide' => 'Privée : jamais affichée sur le site.', 'attributs' => ['max' => date('Y-m-d', strtotime('-10 years')), 'min' => date('Y-m-d', strtotime('-100 years'))]]) ?>
+    <?php partiel('partials/champ', $c('tranche_age') + ['libelle' => "Tranche d'âge", 'type' => 'select', 'options' => ['' => 'Choisir'] + options_tranches_age(), 'aide' => 'Privée : sert seulement aux statistiques du chapitre.']) ?>
     <?php partiel('partials/champ', $c('categorie') + ['libelle' => 'Vous êtes', 'type' => 'select', 'options' => ['' => 'Choisir votre profil'] + CATEGORIES_INDIVIDUELLES]) ?>
+    <?php partiel('partials/champ', $c('categorie_autre') + ['libelle' => 'Précisez', 'si' => ['categorie', 'autre'], 'valeur_si' => $valeurs['categorie'] ?? '', 'attributs' => ['maxlength' => 80, 'placeholder' => 'Exemple : artiste, agriculteur, journaliste']]) ?>
     <?php partiel('partials/champ', $c('region') + ['libelle' => 'Région', 'type' => 'select', 'options' => REGIONS]) ?>
     <?php partiel('partials/champ', $c('email') + ['libelle' => 'Adresse e-mail', 'type' => 'email', 'attributs' => ['autocomplete' => 'email', 'placeholder' => 'vous@exemple.com', 'maxlength' => 190]]) ?>
     <?php partiel('partials/champ', $c('telephone') + ['libelle' => 'Téléphone', 'type' => 'tel', 'aide' => 'Privé : jamais affiché sur le site.', 'attributs' => ['autocomplete' => 'tel-national', 'inputmode' => 'tel', 'placeholder' => '70 12 34 56', 'maxlength' => 25]]) ?>

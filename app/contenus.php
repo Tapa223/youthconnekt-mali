@@ -24,7 +24,7 @@ function parametres(): array
             'accroche_accueil' => '', 'presentation_accueil' => '', 'adresse' => '', 'horaires' => '',
             'telephone' => '', 'email_contact' => '', 'lien_facebook' => '', 'lien_instagram' => '',
             'lien_linkedin' => '', 'lien_x' => '', 'lien_youtube' => '', 'lien_tiktok' => '',
-            'photos_provisoires' => 1, 'acceptation_automatique' => 0,
+            'photos_provisoires' => 1, 'acceptation_automatique' => 0, 'chiffres_reseau' => 0,
         ];
     }
     return $p;
@@ -256,6 +256,36 @@ function age(?string $naissance): ?int
         return null;
     }
     return (int) (new DateTimeImmutable($naissance))->diff(new DateTimeImmutable('today'))->y;
+}
+
+/** Tranches d'âge pour une liste déroulante : clé => libellé. */
+function options_tranches_age(): array
+{
+    return array_map(fn ($tr) => $tr[0], TRANCHES_AGE);
+}
+
+/** Tranche d'âge d'un membre (libellé). Pour les comptes plus anciens, déduite de la date de naissance. */
+function tranche_age(array $profil): string
+{
+    $cle = (string) ($profil['tranche_age'] ?? '');
+    if ($cle === '' && ($a = age($profil['date_naissance'] ?? null)) !== null) {
+        foreach (TRANCHES_AGE as $c => [, $min, $max]) {
+            if ($a >= $min && $a <= $max) {
+                $cle = $c;
+            }
+        }
+    }
+    return TRANCHES_AGE[$cle][0] ?? '';
+}
+
+/** Profil d'un membre individuel (« Étudiant »…), ou ce qu'il a écrit lui-même s'il a choisi « Autre ». */
+function libelle_categorie(array $profil): string
+{
+    $cle = (string) ($profil['categorie'] ?? '');
+    if ($cle === 'autre' && trim((string) ($profil['categorie_autre'] ?? '')) !== '') {
+        return trim((string) $profil['categorie_autre']);
+    }
+    return CATEGORIES_INDIVIDUELLES[$cle] ?? '';
 }
 
 /** Vérifie une date de naissance saisie : renvoie un message d'erreur, ou '' si elle convient. */

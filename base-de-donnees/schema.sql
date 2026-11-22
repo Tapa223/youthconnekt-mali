@@ -35,8 +35,10 @@ CREATE TABLE IF NOT EXISTS profils_individuels (
   nom VARCHAR(80) NOT NULL,
   genre VARCHAR(10) NOT NULL DEFAULT '',
   date_naissance DATE NULL,
+  tranche_age VARCHAR(20) NOT NULL DEFAULT '',
   photo VARCHAR(255) NOT NULL DEFAULT '',
   categorie VARCHAR(30) NOT NULL,
+  categorie_autre VARCHAR(80) NOT NULL DEFAULT '',
   domaine VARCHAR(150) NOT NULL DEFAULT '',
   telephone VARCHAR(30) NOT NULL DEFAULT '',
   region VARCHAR(30) NOT NULL DEFAULT 'bamako',
@@ -444,6 +446,7 @@ CREATE TABLE IF NOT EXISTS parametres (
   lien_tiktok VARCHAR(255) NOT NULL DEFAULT '',
   photos_provisoires TINYINT(1) NOT NULL DEFAULT 1,
   acceptation_automatique TINYINT(1) NOT NULL DEFAULT 0,
+  chiffres_reseau TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

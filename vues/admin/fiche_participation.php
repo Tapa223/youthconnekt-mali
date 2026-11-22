@@ -2,7 +2,7 @@
 /* Fiche d'une candidature : la personne, le rôle choisi, ses réponses, et la décision. */
 $c = $ligne;
 $rep = reponses_participation($c);
-$a = age($c['date_naissance'] ?? null);
+$a = tranche_age($c);
 ?>
 <div class="ycm-entete-page">
   <div>
@@ -15,7 +15,7 @@ $a = age($c['date_naissance'] ?? null);
     <dl class="ycm-pa-reponses" style="border:0;margin:0;padding:0">
       <div><dt>E-mail</dt><dd><?= e($c['email']) ?></dd></div>
       <?php if (!empty($c['telephone'])): ?><div><dt>Téléphone</dt><dd><?= e($c['telephone']) ?></dd></div><?php endif ?>
-      <?php if (!empty($c['genre']) || $a !== null): ?><div><dt>Genre et âge</dt><dd><?= e(implode(', ', array_filter([GENRES[$c['genre'] ?? ''] ?? '', $a !== null ? $a . ' ans' : '']))) ?></dd></div><?php endif ?>
+      <?php if (!empty($c['genre']) || $a !== ''): ?><div><dt>Genre et âge</dt><dd><?= e(implode(', ', array_filter([GENRES[$c['genre'] ?? ''] ?? '', $a]))) ?></dd></div><?php endif ?>
       <?php if (!empty($c['region_i'])): ?><div><dt>Région</dt><dd><?= e(REGIONS[$c['region_i']] ?? '') ?></dd></div><?php endif ?>
     </dl>
     <?php if ($rep): ?>

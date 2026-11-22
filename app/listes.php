@@ -37,6 +37,7 @@ const CATEGORIES_INDIVIDUELLES = [
     'porteur_projet' => 'Porteur de projet',
     'innovateur' => 'Innovateur',
     'leader_associatif' => "Jeune leader d'association",
+    'autre' => 'Autre',
 ];
 
 const TYPES_STRUCTURE = [
@@ -109,10 +110,12 @@ const GENRES = [
 ];
 
 /** Tranches d'âge des membres individuels : [libellé, âge minimum, âge maximum] */
+/** Tranches d'âge proposées à l'inscription (libellé, âge minimum, âge maximum) */
 const TRANCHES_AGE = [
     'moins18' => ['Moins de 18 ans', 0, 17],
     '18_24' => ['18 à 24 ans', 18, 24],
-    '25_35' => ['25 à 35 ans', 25, 35],
+    '25_29' => ['25 à 29 ans', 25, 29],
+    '30_35' => ['30 à 35 ans', 30, 35],
     'plus35' => ['Plus de 35 ans', 36, 200],
 ];
 

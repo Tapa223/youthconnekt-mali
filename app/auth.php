@@ -353,5 +353,5 @@ function libelle_profil(?array $profil, string $type): string
     }
     return $type === 'organisation'
         ? (TYPES_STRUCTURE[$profil['type_structure']] ?? '')
-        : (CATEGORIES_INDIVIDUELLES[$profil['categorie']] ?? '');
+        : libelle_categorie($profil);
 }

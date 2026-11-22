@@ -977,3 +977,25 @@
   choix.addEventListener("change", maj);
   maj();
 })();
+
+/* Champs conditionnels : un bloc [data-si="champ=valeur"] n'apparaît que si ce champ du formulaire a cette valeur
+   (exemple : « Précisez » quand on choisit « Autre »). */
+(function () {
+  "use strict";
+  document.querySelectorAll("[data-si]").forEach(function (bloc) {
+    var regle = bloc.getAttribute("data-si").split("=");
+    var form = bloc.closest("form");
+    var source = form && form.elements[regle[0]];
+    if (!source) return;
+    var maj = function (focus) {
+      var visible = source.value === regle[1];
+      bloc.hidden = !visible;
+      if (visible && focus) {
+        var champ = bloc.querySelector("input, textarea, select");
+        if (champ) champ.focus();
+      }
+    };
+    source.addEventListener("change", function () { maj(true); });
+    maj(false);
+  });
+})();

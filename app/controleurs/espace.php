@@ -209,10 +209,13 @@ function mon_profil(): void
     $profil = $u['profil'] ?? [];
     $champs = $organisation
         ? ['nom_structure', 'type_structure', 'secteur', 'taille', 'region', 'ville', 'presentation', 'offre_jeunes', 'site_web', 'email_contact_public', 'personne_contact', 'telephone_organisation', 'email_organisation']
-        : ['prenom', 'nom', 'genre', 'date_naissance', 'categorie', 'domaine', 'region', 'ville', 'presentation', 'telephone'];
+        : ['prenom', 'nom', 'genre', 'tranche_age', 'categorie', 'categorie_autre', 'domaine', 'region', 'ville', 'presentation', 'telephone'];
     $valeurs = [];
     foreach ($champs as $c) {
         $valeurs[$c] = (string) ($profil[$c] ?? '');
+    }
+    if (!$organisation && $valeurs['tranche_age'] === '' && ($t = tranche_age($profil)) !== '') {
+        $valeurs['tranche_age'] = (string) array_search($t, options_tranches_age(), true);
     }
     if (!$valeurs['region']) {
         $valeurs['region'] = 'bamako';
@@ -285,8 +288,10 @@ function mon_profil(): void
             if ($valeurs['prenom'] === '') $erreurs['prenom'] = 'Indiquez votre prénom.';
             if ($valeurs['nom'] === '') $erreurs['nom'] = 'Indiquez votre nom.';
             if (!isset(GENRES[$valeurs['genre']])) $erreurs['genre'] = 'Choisissez une réponse.';
-            if ($m = erreur_naissance($valeurs['date_naissance'])) $erreurs['date_naissance'] = $m;
+            if (!isset(TRANCHES_AGE[$valeurs['tranche_age']])) $erreurs['tranche_age'] = "Choisissez votre tranche d'âge.";
             if (!isset(CATEGORIES_INDIVIDUELLES[$valeurs['categorie']])) $erreurs['categorie'] = 'Choisissez votre profil.';
+            $valeurs['categorie_autre'] = $valeurs['categorie'] === 'autre' ? mb_substr($valeurs['categorie_autre'], 0, 80) : '';
+            if ($valeurs['categorie'] === 'autre' && $valeurs['categorie_autre'] === '') $erreurs['categorie_autre'] = 'Précisez ce que vous êtes.';
         }
         if (!isset(REGIONS[$valeurs['region']])) $erreurs['region'] = 'Choisissez votre région.';
         $nouvelle_image = null;

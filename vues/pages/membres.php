@@ -39,7 +39,7 @@
         <?php else: ?><span class="grid size-12 shrink-0 place-items-center rounded-full bg-orange font-bold text-white" aria-hidden="true"><?= e(initiales($nom)) ?></span><?php endif ?>
         <span class="min-w-0">
           <span class="block truncate font-bold text-vert group-hover:text-orange"><?= e($nom) ?></span>
-          <span class="block truncate text-[13px] text-texte"><?= e(implode(' · ', array_filter([CATEGORIES_INDIVIDUELLES[$m['categorie']] ?? '', $m['domaine'], REGIONS[$m['region']] ?? '']))) ?></span>
+          <span class="block truncate text-[13px] text-texte"><?= e(implode(' · ', array_filter([libelle_categorie($m), $m['domaine'], REGIONS[$m['region']] ?? '']))) ?></span>
         </span>
       </a>
     </li>

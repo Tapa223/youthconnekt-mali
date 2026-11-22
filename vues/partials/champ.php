@@ -18,7 +18,11 @@ foreach ($attrs as $a => $v) {
 }
 $classe_champ = !empty($mdp) ? 'champ pr-24' : 'champ';
 ?>
-<div class="<?= e($classes_bloc ?? '') ?>">
+<?php
+// $si = [champ, valeur] : le bloc n'apparaît que lorsque ce champ du formulaire a cette valeur (site.js)
+$condition = !empty($si) ? ' data-si="' . e($si[0] . '=' . $si[1]) . '"' . (($valeur_si ?? null) !== null && $valeur_si !== $si[1] ? ' hidden' : '') : '';
+?>
+<div class="<?= e($classes_bloc ?? '') ?>"<?= $condition ?>>
   <label for="<?= e($id) ?>" class="libelle"><?= e($libelle) ?><?php if (!$requis): ?> <span class="font-normal text-texte">(facultatif)</span><?php endif ?></label>
   <?php if ($type === 'select'): ?>
     <select <?= $commun ?> class="champ">
