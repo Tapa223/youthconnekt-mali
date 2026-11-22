@@ -320,21 +320,17 @@ $fond_ministre = ($chiffres_visibles xor !empty($partenaires)) ? 'bg-white' : 'b
 
 <?php if ($mot): ?>
 <section id="mot-du-ministre" class="scroll-mt-24 <?= $fond_ministre ?> py-10 sm:py-14">
-  <div class="conteneur">
-    <p class="surtitre surtitre-trait md:hidden">Le mot du ministre</p>
-    <div class="mt-4 grid grid-cols-[minmax(0,5fr)_minmax(0,8fr)] items-start gap-3.5 md:mt-0 md:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] md:gap-14">
-      <div class="sticky top-[4.75rem] md:top-28 md:mx-auto md:w-full md:max-w-[20rem]">
-        <div class="aspect-[3/4] overflow-hidden rounded-xl border-t-4 border-orange bg-white shadow-lg md:aspect-[4/5] md:rounded-2xl md:border-t-[6px] md:shadow-xl">
-          <?php partiel('partials/photo', ['image' => $mot['photo'], 'alt' => $mot['nom']]) ?>
-        </div>
-        <p class="mt-2.5 leading-tight md:hidden"><strong class="block text-[13px] text-encre"><?= e($mot['nom']) ?></strong><span class="mt-1 block text-[11px] leading-snug text-texte"><?= e($mot['titre_officiel']) ?></span></p>
+  <div class="conteneur grid items-start gap-8 md:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] md:gap-14">
+    <div class="mx-auto w-full max-w-[240px] md:sticky md:top-28 md:max-w-[20rem]">
+      <div class="aspect-[4/5] overflow-hidden rounded-2xl border-t-[6px] border-orange bg-white shadow-xl">
+        <?php partiel('partials/photo', ['image' => $mot['photo'], 'alt' => $mot['nom']]) ?>
       </div>
-      <div>
-        <p class="surtitre surtitre-trait hidden md:inline-flex">Le mot du ministre</p>
-        <div class="repliable-partout prose-ycm text-[15px] md:mt-5 md:text-base" id="texte-ministre" data-repliable><?= paragraphes($mot['message']) ?></div>
-        <?php partiel('partials/voir_plus', ['cible' => 'texte-ministre', 'partout' => true]) ?>
-        <p class="mt-6 hidden border-l-[3px] border-orange pl-4 md:block"><strong class="block text-encre"><?= e($mot['nom']) ?></strong><span class="text-sm"><?= e($mot['titre_officiel']) ?></span></p>
-      </div>
+    </div>
+    <div>
+      <p class="surtitre surtitre-trait">Le mot du ministre</p>
+      <div class="repliable-partout prose-ycm mt-5" id="texte-ministre" data-repliable><?= paragraphes($mot['message']) ?></div>
+      <?php partiel('partials/voir_plus', ['cible' => 'texte-ministre', 'partout' => true]) ?>
+      <p class="mt-6 border-l-[3px] border-orange pl-4"><strong class="block text-encre"><?= e($mot['nom']) ?></strong><span class="text-sm"><?= e($mot['titre_officiel']) ?></span></p>
     </div>
   </div>
 </section>
