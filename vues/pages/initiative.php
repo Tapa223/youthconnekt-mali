@@ -41,7 +41,7 @@ $chiffres_i = lignes_colonnes($i['chiffres'], 2);
         <span><?= $inscrits['nombre'] ?> personne<?= pluriel($inscrits['nombre']) ?> <?= $i['etat'] === 'terminee' ? 'y ont pris part' : 'déjà inscrite' . pluriel($inscrits['nombre']) ?></span>
       </p>
       <?php endif ?>
-      <?php if ($i['date_debut'] && $i['etat'] !== 'terminee'): ?>
+      <?php if ($i['date_debut'] && $i['etat'] !== 'terminee' && !empty($i['bouton_agenda'])): ?>
       <a href="<?= url('/initiatives/' . $i['slug'] . '/agenda') ?>" class="inline-flex min-h-10 items-center gap-2 rounded-full border-2 border-vert px-4 text-sm font-bold text-vert transition-colors hover:border-orange hover:bg-orange hover:text-white" download>
         <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M12 13v5M9.5 15.5h5"/></svg>
         Ajouter à mon agenda

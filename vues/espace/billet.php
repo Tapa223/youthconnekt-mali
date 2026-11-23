@@ -25,10 +25,11 @@
             data-quand="<?= e(implode(' · ', array_filter([$p['date_libelle'], $p['lieu']]))) ?>" data-logo="<?= e(asset('img/logo-youthconnekt-mali.png')) ?>"
             data-fichier="je-participe-<?= e($p['slug']) ?>.png">Partager « Je participe »</button>
     <div class="grid grid-cols-2 gap-2.5">
-      <?php if (!empty($p['date_debut']) && $p['etat'] !== 'terminee'): ?>
+      <?php $agenda = !empty($p['date_debut']) && $p['etat'] !== 'terminee' && !empty($p['bouton_agenda']); ?>
+      <?php if ($agenda): ?>
       <a href="<?= url('/initiatives/' . $p['slug'] . '/agenda') ?>" class="btn btn-contour min-h-11 px-3 text-sm" download>Ajouter à l'agenda</a>
       <?php endif ?>
-      <button type="button" class="btn btn-contour min-h-11 px-3 text-sm<?= empty($p['date_debut']) || $p['etat'] === 'terminee' ? ' col-span-2' : '' ?>" data-imprimer>Imprimer le billet</button>
+      <button type="button" class="btn btn-contour min-h-11 px-3 text-sm<?= !$agenda ? ' col-span-2' : '' ?>" data-imprimer>Imprimer le billet</button>
     </div>
     <p class="text-center text-xs text-texte" data-hors-ligne-info>Une fois ouvert, ce billet reste consultable même sans connexion sur cet appareil.</p>
   </div>

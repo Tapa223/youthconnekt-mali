@@ -198,6 +198,7 @@ CREATE TABLE IF NOT EXISTS initiatives (
   date_libelle VARCHAR(80) NOT NULL DEFAULT '',
   date_debut DATE NULL,
   date_fin DATE NULL,
+  bouton_agenda TINYINT(1) NOT NULL DEFAULT 0,
   lieu VARCHAR(120) NOT NULL DEFAULT '',
   participants VARCHAR(80) NOT NULL DEFAULT '',
   format VARCHAR(80) NOT NULL DEFAULT '',
@@ -300,6 +301,7 @@ CREATE TABLE IF NOT EXISTS actualites (
   image VARCHAR(255) NOT NULL DEFAULT '',
   date_evenement DATE NULL,
   date_fin DATE NULL,
+  bouton_agenda TINYINT(1) NOT NULL DEFAULT 0,
   lieu VARCHAR(120) NOT NULL DEFAULT '',
   cree_le DATETIME NOT NULL,
   modifie_le DATETIME NOT NULL,
@@ -475,7 +477,10 @@ CREATE TABLE IF NOT EXISTS messages_contact (
   recu_le DATETIME NOT NULL,
   traite TINYINT(1) NOT NULL DEFAULT 0,
   lu_le DATETIME NULL,
+  source VARCHAR(10) NOT NULL DEFAULT 'site',
+  message_id_email VARCHAR(255) NOT NULL DEFAULT '',
   PRIMARY KEY (id),
+  KEY ix_messages_id_email (message_id_email(100)),
   KEY ix_messages_traite (traite, recu_le)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

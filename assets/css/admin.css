@@ -395,6 +395,7 @@ button, input, select, textarea { font: inherit; }
 .ycm-liste-messages time { font-size: 12.5px; color: var(--ycm-texte); }
 .ycm-liste-messages a.non-lu { border-left-color: var(--ycm-orange); background: #fff; }
 .ycm-liste-messages a.non-lu .de, .ycm-liste-messages a.non-lu .sujet strong, .ycm-liste-messages a.non-lu time { font-weight: 700; color: var(--ycm-encre); }
+.ycm-pastille-email { font-size: 11px; font-weight: 700; color: #6b4a00; background: #fbeccb; border-radius: 999px; padding: 2px 8px; }
 .ycm-pastille-traite { font-size: 11px; font-weight: 700; color: var(--ycm-vert); background: var(--ycm-vert-clair, #e3f0ec); border-radius: 999px; padding: 2px 8px; }
 /* Liste à gauche du message ouvert : deux lignes par message */
 .ycm-boite-reception.avec-lecture .ycm-liste-messages a { grid-template-columns: minmax(0, 1fr) auto; }

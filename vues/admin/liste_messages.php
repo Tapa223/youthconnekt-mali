@@ -4,14 +4,14 @@
  * Le message s'ouvre au clic, avec la réponse à écrire juste dessous. Sur ordinateur, la liste reste à gauche.
  */
 partiel('admin/_entete_liste', get_defined_vars());
-$profil = fn ($m) => (PROFILS_CONTACT[$m['profil']] ?? '') . (!empty($m['profil_autre']) ? ' : ' . $m['profil_autre'] : '');
+$profil = fn ($m) => $m['profil'] === 'email' ? 'Reçu par e-mail' : (PROFILS_CONTACT[$m['profil']] ?? '') . (!empty($m['profil_autre']) ? ' : ' . $m['profil_autre'] : '');
 $date_courte = function (string $quand): string {
     $t = strtotime($quand);
     return date('Y-m-d', $t) === date('Y-m-d') ? date('H:i', $t) : (date('Y', $t) === date('Y') ? jour_mois($quand) : date('d/m/Y', $t));
 };
 $prenom = $ouvert ? trim(explode(' ', trim($ouvert['nom']))[0]) : '';
 ?>
-<p class="ycm-webmail">Les e-mails écrits directement à l'adresse de contact, sans passer par le site, se lisent dans la messagerie : <a href="<?= e($webmail) ?>" target="_blank" rel="noopener">ouvrir la boîte contact</a>.</p>
+<p class="ycm-webmail">Les messages du site et les e-mails écrits directement à l'adresse de contact arrivent ici. Les pièces jointes s'ouvrent dans la <a href="<?= e($webmail) ?>" target="_blank" rel="noopener">boîte contact</a>.</p>
 <?php if ($lignes): ?>
 <div class="ycm-boite-reception<?= $ouvert ? ' avec-lecture' : '' ?>">
   <ul class="ycm-liste-messages">
@@ -20,7 +20,7 @@ $prenom = $ouvert ? trim(explode(' ', trim($ouvert['nom']))[0]) : '';
       <a href="<?= e(avec_parametres(['ouvert' => $m['id']])) ?>" class="<?= $non_lu ? 'non-lu' : '' ?><?= $ouvert && (int) $ouvert['id'] === (int) $m['id'] ? ' ouvert' : '' ?>"<?= $ouvert && (int) $ouvert['id'] === (int) $m['id'] ? ' aria-current="true"' : '' ?>>
         <span class="de"><?= e($m['nom']) ?></span>
         <span class="sujet"><strong><?= e($m['objet']) ?></strong><span class="extrait"> · <?= e(couper(preg_replace('/\s+/', ' ', $m['message']), 140)) ?></span></span>
-        <span class="etat"><?php if ($m['traite']): ?><span class="ycm-pastille-traite" title="Traité">Traité</span><?php endif ?><time datetime="<?= e(date('c', strtotime($m['recu_le']))) ?>"><?= e($date_courte($m['recu_le'])) ?></time></span>
+        <span class="etat"><?php if (($m['profil'] ?? '') === 'email'): ?><span class="ycm-pastille-email" title="Reçu par e-mail">E-mail</span><?php endif ?><?php if ($m['traite']): ?><span class="ycm-pastille-traite" title="Traité">Traité</span><?php endif ?><time datetime="<?= e(date('c', strtotime($m['recu_le']))) ?>"><?= e($date_courte($m['recu_le'])) ?></time></span>
       </a>
     </li>
     <?php endforeach ?>

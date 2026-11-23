@@ -409,7 +409,7 @@ function mon_billet(int $id): void
     require_once RACINE . '/app/controleurs/espace.php';
     $u = exiger_membre();
     $p = ligne(
-        "SELECT p.*, COALESCE(r.nom, p.role_nom) AS role_libelle, i.titre, i.slug, i.date_libelle, i.lieu, i.image, i.date_debut, i.etat
+        "SELECT p.*, COALESCE(r.nom, p.role_nom) AS role_libelle, i.titre, i.slug, i.date_libelle, i.lieu, i.image, i.date_debut, i.etat, i.bouton_agenda
          FROM participations p JOIN initiatives i ON i.id = p.initiative_id LEFT JOIN initiative_roles r ON r.id = p.role_id
          WHERE p.id = ? AND p.utilisateur_id = ?",
         [$id, $u['id']]

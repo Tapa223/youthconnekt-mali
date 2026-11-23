@@ -303,7 +303,7 @@ function proposer_opportunite(): void
 function initiative_agenda(string $slug): void
 {
     $i = initiatives_publiees('AND i.slug = ? LIMIT 1', [$slug])[0] ?? null;
-    if (!$i || !$i['date_debut']) {
+    if (!$i || !$i['date_debut'] || empty($i['bouton_agenda'])) {
         page_erreur(404);
     }
     envoyer_agenda('initiative-' . $i['id'], $i['titre'], $i['date_debut'], $i['date_fin'] ?: $i['date_debut'], (string) $i['lieu'], (string) $i['resume'], url_absolue('/initiatives/' . $i['slug']), $i['slug']);
@@ -312,8 +312,8 @@ function initiative_agenda(string $slug): void
 function actualite_agenda(string $slug): void
 {
     $a = actualites_publiees('AND slug = ? LIMIT 1', [$slug])[0] ?? null;
-    if (!$a || !$a['date_evenement']) {
+    if (!$a || !$a['date_evenement'] || empty($a['bouton_agenda'])) {
         page_erreur(404);
     }
-    envoyer_agenda('actualite-' . $a['id'], $a['titre'], $a['date_evenement'], $a['date_evenement'], (string) $a['lieu'], (string) $a['chapeau'], url_absolue('/actualites/' . $a['slug']), $a['slug']);
+    envoyer_agenda('actualite-' . $a['id'], $a['titre'], $a['date_evenement'], $a['date_fin'] ?: $a['date_evenement'], (string) $a['lieu'], (string) $a['chapeau'], url_absolue('/actualites/' . $a['slug']), $a['slug']);
 }
