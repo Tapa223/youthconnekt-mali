@@ -537,3 +537,20 @@ function ma_fiche(): void
     $publiees = (int) valeur("SELECT COUNT(*) FROM opportunites WHERE propose_par = ? AND statut = 'publie'", [$u['id']]);
     vue_espace('fiche', 'fiche', 'Ma fiche organisation', ['p' => $p, 'etat' => etat_fiche_organisation($p), 'publiees' => $publiees], $u);
 }
+
+/** Réponses de la carte « Encore N questions » du tableau de bord. */
+function completer_profil(): void
+{
+    $u = exiger_membre();
+    $champs = complements_manquants($u);
+    [$valeurs, $erreurs] = complements_lire($champs);
+    if ($erreurs) {
+        $_SESSION['complements_valeurs'] = $valeurs;
+        $_SESSION['complements_erreurs'] = $erreurs;
+        flash('erreur', 'Il manque une réponse : elle est indiquée en rouge.');
+    } else {
+        complements_enregistrer($u, $valeurs);
+        flash('succes', 'Merci ! Votre profil est à jour.');
+    }
+    rediriger(url('/compte/mon-espace') . ($erreurs ? '#completer' : ''));
+}

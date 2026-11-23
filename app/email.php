@@ -17,7 +17,8 @@ function envoyer_email(string $destinataire, string $sujet, string $texte, strin
     if ($lien !== '' && en_developpement() && (string) config('email.mode', 'journal') === 'journal') {
         $_SESSION['lien_email_test'] = $lien;
     }
-    return envoyer_email_html($destinataire, $sujet, gabarit_email($sujet, texte_vers_html($texte, $lien)), $texte . pied_email_texte(), $repondre_a, $categorie);
+    $texte_brut = $lien !== '' && !str_contains($texte, $lien) ? $texte . "\n\n" . $lien : $texte;
+    return envoyer_email_html($destinataire, $sujet, gabarit_email($sujet, texte_vers_html($texte, $lien)), $texte_brut . pied_email_texte(), $repondre_a, $categorie);
 }
 
 /** Coordonnées du chapitre affichées au bas des e-mails (prises dans Paramètres). */

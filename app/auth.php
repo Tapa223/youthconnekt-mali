@@ -355,3 +355,63 @@ function libelle_profil(?array $profil, string $type): string
         ? (TYPES_STRUCTURE[$profil['type_structure']] ?? '')
         : libelle_categorie($profil);
 }
+
+// ---------------------------------------------------------------------------
+// Profil à compléter après une inscription courte : l'essentiel est demandé
+// plus tard, dans l'espace membre ou au moment où une action en a besoin.
+// ---------------------------------------------------------------------------
+
+/** Informations demandées après l'inscription, selon le type de compte. */
+function champs_complement(string $type): array
+{
+    return $type === 'organisation'
+        ? ['region' => 'Région', 'personne_contact' => 'Personne de contact']
+        : ['genre' => 'Genre', 'tranche_age' => "Tranche d'âge", 'categorie' => 'Vous êtes', 'region' => 'Région'];
+}
+
+/** Celles qui manquent encore au profil (un profil « Autre » sans précision compte comme manquant). */
+function complements_manquants(array $u): array
+{
+    $profil = $u['profil'] ?? [];
+    $manquants = [];
+    foreach (champs_complement($u['type_compte']) as $c => $libelle) {
+        $v = trim((string) ($profil[$c] ?? ''));
+        if ($v === '' || ($c === 'categorie' && $v === 'autre' && trim((string) ($profil['categorie_autre'] ?? '')) === '')) {
+            $manquants[$c] = $libelle;
+        }
+    }
+    return $manquants;
+}
+
+/** Lit et vérifie les compléments envoyés (seulement ceux demandés). Renvoie [valeurs à enregistrer, erreurs]. */
+function complements_lire(array $champs): array
+{
+    $v = [];
+    $erreurs = [];
+    foreach (array_keys($champs) as $c) {
+        $v[$c] = post($c);
+    }
+    if (isset($champs['genre']) && !isset(GENRES[$v['genre']])) $erreurs['genre'] = 'Choisissez une réponse.';
+    if (isset($champs['tranche_age']) && !isset(TRANCHES_AGE[$v['tranche_age']])) $erreurs['tranche_age'] = "Choisissez votre tranche d'âge.";
+    if (isset($champs['region']) && !isset(REGIONS[$v['region']])) $erreurs['region'] = 'Choisissez votre région.';
+    if (isset($champs['personne_contact'])) {
+        $v['personne_contact'] = mb_substr($v['personne_contact'], 0, 120);
+        if ($v['personne_contact'] === '') $erreurs['personne_contact'] = 'Indiquez la personne de contact.';
+    }
+    if (isset($champs['categorie'])) {
+        if (!isset(CATEGORIES_INDIVIDUELLES[$v['categorie']])) $erreurs['categorie'] = 'Choisissez votre profil.';
+        $v['categorie_autre'] = $v['categorie'] === 'autre' ? mb_substr(post('categorie_autre'), 0, 80) : '';
+        if ($v['categorie'] === 'autre' && $v['categorie_autre'] === '') $erreurs['categorie_autre'] = 'Précisez ce que vous êtes.';
+    }
+    return [$v, $erreurs];
+}
+
+/** Enregistre les compléments dans le profil du membre. */
+function complements_enregistrer(array $u, array $valeurs): void
+{
+    if (!$valeurs || empty($u['profil']['id'])) {
+        return;
+    }
+    $table = $u['type_compte'] === 'organisation' ? 'profils_organisations' : 'profils_individuels';
+    mettre_a_jour($table, $valeurs + ['modifie_le' => maintenant()], (int) $u['profil']['id']);
+}

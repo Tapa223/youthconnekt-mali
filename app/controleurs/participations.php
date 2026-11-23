@@ -344,8 +344,13 @@ function participer(string $slug): void
     $erreurs = [];
     $libres = array_values(array_filter($roles, fn ($r) => !$r['complet']));
     $valeurs = ['role' => (string) (get('role') ?: (count($libres) === 1 ? $libres[0]['id'] : ''))];
+    // Inscription courte : ce qui manque encore au profil est demandé ici, puis enregistré dans le compte
+    $complements = complements_manquants($u);
 
     if (est_post() && !$deja && $ouvertes) {
+        [$valeurs_complements, $erreurs_complements] = complements_lire($complements);
+        $valeurs += $valeurs_complements;
+        $erreurs += $erreurs_complements;
         $valeurs['role'] = post('role');
         $role = null;
         foreach ($libres as $r) {
@@ -364,6 +369,7 @@ function participer(string $slug): void
             }
         }
         if (!$erreurs) {
+            complements_enregistrer($u, $valeurs_complements);
             $inscription = $role['mode'] === 'inscription';
             $pid = inserer('participations', [
                 'initiative_id' => $i['id'], 'role_id' => $role['id'], 'role_nom' => $role['nom'], 'utilisateur_id' => $u['id'],
@@ -384,7 +390,7 @@ function participer(string $slug): void
         'titre' => 'Prendre part : ' . $i['titre'] . ' | YouthConnekt Mali',
         'description' => $i['resume'],
         'i' => $i, 'u' => $u, 'roles' => $roles, 'ouvertes' => $ouvertes,
-        'deja' => $deja, 'erreurs' => $erreurs, 'valeurs' => $valeurs,
+        'deja' => $deja, 'erreurs' => $erreurs, 'valeurs' => $valeurs, 'complements' => $complements,
     ]));
 }
 

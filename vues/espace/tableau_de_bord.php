@@ -58,6 +58,26 @@ $actions = [
   </div>
 </section>
 
+<?php $a_completer = complements_manquants($u); if ($a_completer && empty($_COOKIE['ycm_completer_plus_tard'])): $vc = $_SESSION['complements_valeurs'] ?? []; $ec = $_SESSION['complements_erreurs'] ?? []; unset($_SESSION['complements_valeurs'], $_SESSION['complements_erreurs']); ?>
+<?php /* Profil à compléter : l'inscription est courte, l'essentiel se demande ici, en quelques choix */ ?>
+<section id="completer" class="scroll-mt-24 rounded-2xl border-2 border-orange/30 bg-white p-4 sm:p-6" aria-labelledby="titre-completer" data-carte-completer>
+  <div class="flex items-start gap-3">
+    <span class="grid size-10 shrink-0 place-items-center rounded-full bg-orange-clair text-orange-fonce" aria-hidden="true"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c.8-4 4-6 8-6s7.2 2 8 6"/></svg></span>
+    <div class="min-w-0">
+      <h2 id="titre-completer" class="text-lg leading-tight font-bold text-vert sm:text-xl">Encore <?= count($a_completer) ?> question<?= pluriel(count($a_completer)) ?> pour bien vous connaître</h2>
+      <p class="mt-1 text-sm leading-snug text-texte sm:text-[15px]">Ces réponses servent à vous proposer les opportunités et les communautés qui vous correspondent. Elles restent privées.</p>
+    </div>
+  </div>
+  <form method="post" action="<?= url('/compte/mon-espace/completer') ?>" class="mt-4" novalidate>
+    <?= csrf() ?>
+    <?php partiel('partials/complements', ['champs' => $a_completer, 'valeurs' => $vc, 'erreurs' => $ec]) ?>
+    <div class="mt-4 flex flex-wrap items-center gap-2.5">
+      <button type="submit" class="btn btn-orange min-h-11 flex-1 sm:flex-none sm:px-8">Enregistrer</button>
+      <button type="button" class="btn btn-contour min-h-11 flex-1 sm:flex-none" data-plus-tard>Plus tard</button>
+    </div>
+  </form>
+</section>
+<?php endif ?>
 <ul class="grid grid-cols-3 gap-2 sm:gap-4" aria-label="En chiffres">
   <?php foreach ($chiffres as [$nombre, $libelle, $lien, $bord]): ?>
   <li><a href="<?= e($lien) ?>" class="flex h-full flex-col rounded-2xl border-t-4 bg-white p-3 transition-shadow hover:shadow-md sm:p-4 <?= $bord ?>">

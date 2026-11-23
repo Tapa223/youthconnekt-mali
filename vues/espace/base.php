@@ -80,6 +80,15 @@ $titre_rubrique = $liens[$rubrique][1] ?? 'Mon espace';
         <form method="post" action="<?= url('/compte/deconnexion') ?>" data-confirmer="Êtes-vous sûr de vouloir vous déconnecter ?" data-confirmer-oui="Se déconnecter"><?= csrf() ?><button type="submit" class="lien-espace text-rouge">Se déconnecter</button></form>
       </nav>
     </aside>
-    <div class="min-w-0 space-y-4 sm:space-y-5"><?= $espace ?></div>
+    <div class="min-w-0 space-y-4 sm:space-y-5">
+      <?php $a_completer = complements_manquants($u); if ($a_completer && !in_array($rubrique, ['tableau', 'profil'], true)): ?>
+      <a href="<?= url('/compte/mon-espace') ?>#completer" class="flex items-center gap-3 rounded-2xl border border-orange/30 bg-white px-4 py-3 text-[14px] transition-colors hover:border-orange sm:text-[15px]">
+        <span class="grid size-8 shrink-0 place-items-center rounded-full bg-orange text-sm font-bold text-white" aria-hidden="true"><?= count($a_completer) ?></span>
+        <span class="min-w-0 flex-1"><strong class="text-vert">Complétez votre profil</strong> <span class="text-texte">· <?= count($a_completer) ?> question<?= pluriel(count($a_completer)) ?> rapide<?= pluriel(count($a_completer)) ?> pour des opportunités qui vous correspondent</span></span>
+        <svg class="size-5 shrink-0 text-vert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+      </a>
+      <?php endif ?>
+      <?= $espace ?>
+    </div>
   </div>
 </div>

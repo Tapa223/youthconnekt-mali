@@ -60,6 +60,7 @@ const ROUTES = [
     ['GET', '/compte/mon-espace/notifications', 'espace', 'notifications'],
     ['GET|POST', '/compte/mon-espace/soutenir', 'espace', 'soutenir_chapitre'],
     ['GET|POST', '/compte/mon-espace/profil', 'espace', 'mon_profil'],
+    ['POST', '/compte/mon-espace/completer', 'espace', 'completer_profil'],
     ['GET|POST', '/compte/mon-espace/parametres', 'espace', 'parametres_compte'],
     ['GET', '/compte/membres/{id}', 'espace', 'profil_public'],
 

@@ -1045,3 +1045,15 @@
     }
   });
 })();
+
+/* « Plus tard » sur la carte « Encore N questions » de l'espace membre : elle revient dans trois jours. */
+(function () {
+  "use strict";
+  document.querySelectorAll("[data-plus-tard]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      document.cookie = "ycm_completer_plus_tard=1; max-age=" + 3 * 86400 + "; path=/; SameSite=Lax";
+      var carte = b.closest("[data-carte-completer]");
+      if (carte) carte.remove();
+    });
+  });
+})();

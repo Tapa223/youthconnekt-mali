@@ -103,6 +103,14 @@ $t = $textes[$choisi['mode'] ?? 'candidature'];
     </div>
     <?php endforeach ?>
 
+    <?php if ($complements): ?>
+    <fieldset class="rounded-2xl border border-ligne bg-white p-4 sm:p-5">
+      <legend class="px-1 text-sm font-bold tracking-wide text-vert uppercase">Quelques informations sur vous</legend>
+      <p class="mb-3 text-sm text-texte">Demandées une seule fois : elles sont gardées dans votre profil et restent privées.</p>
+      <?php partiel('partials/complements', ['champs' => $complements, 'valeurs' => $valeurs, 'erreurs' => $erreurs]) ?>
+    </fieldset>
+    <?php endif ?>
+
     <div class="rounded-2xl bg-gris p-4 text-sm">
       <p class="font-bold text-vert">Vos informations, reprises de votre compte</p>
       <p class="mt-1"><?= e($u['nom_affiche']) ?> · <?= e($u['email']) ?><?= !empty($profil['telephone']) ? ' · ' . e($profil['telephone']) : '' ?></p>

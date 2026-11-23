@@ -37,9 +37,9 @@ function inscription_formulaire(string $slug): void
     }
     $organisation = $slug === 'organisation';
     $champs = $organisation
-        ? ['nom_structure', 'type_structure', 'personne_contact', 'telephone_organisation', 'email_organisation', 'region', 'email', 'site_web']
-        : ['prenom', 'nom', 'genre', 'tranche_age', 'categorie', 'categorie_autre', 'region', 'email', 'telephone'];
-    $valeurs = array_fill_keys($champs, '') + ['region' => 'bamako', 'conditions' => '', 'newsletter' => ''];
+        ? ['nom_structure', 'type_structure', 'email', 'telephone_organisation']
+        : ['prenom', 'nom', 'email', 'telephone'];
+    $valeurs = array_fill_keys($champs, '') + ['conditions' => '', 'newsletter' => ''];
     $erreurs = [];
 
     if (est_post()) {
@@ -51,7 +51,6 @@ function inscription_formulaire(string $slug): void
         $valeurs[$champ_tel] = telephone_saisi($champ_tel);
         if ($m = erreur_telephone($valeurs[$champ_tel], true, $organisation ? "Indiquez le numéro de téléphone de l'organisation." : 'Indiquez votre numéro de téléphone.')) $erreurs[$champ_tel] = $m;
         $mdp1 = (string) ($_POST['password1'] ?? '');
-        $mdp2 = (string) ($_POST['password2'] ?? '');
         // Anti-robots : champ piège, envoi trop rapide, ou trop d'inscriptions depuis la même connexion
         if (robot_probable(4)) {
             $erreurs['_envoi'] = "Votre envoi n'a pas pu aboutir. Patientez quelques secondes, puis réessayez.";
@@ -62,25 +61,10 @@ function inscription_formulaire(string $slug): void
         if ($organisation) {
             if ($valeurs['nom_structure'] === '') $erreurs['nom_structure'] = "Indiquez le nom de l'organisation.";
             if (!isset(TYPES_STRUCTURE[$valeurs['type_structure']])) $erreurs['type_structure'] = 'Choisissez le type de structure.';
-            if ($valeurs['personne_contact'] === '') $erreurs['personne_contact'] = 'Indiquez la personne de contact.';
-            $valeurs['email_organisation'] = mb_strtolower($valeurs['email_organisation']);
-            if ($valeurs['email_organisation'] !== '' && (!filter_var($valeurs['email_organisation'], FILTER_VALIDATE_EMAIL) || mb_strlen($valeurs['email_organisation']) > 190)) $erreurs['email_organisation'] = "Cette adresse e-mail n'est pas valide.";
-            if ($valeurs['site_web'] !== '') {
-                if (!preg_match('#^https?://#i', $valeurs['site_web'])) {
-                    $valeurs['site_web'] = 'https://' . $valeurs['site_web'];
-                }
-                if (!filter_var($valeurs['site_web'], FILTER_VALIDATE_URL)) $erreurs['site_web'] = "Cette adresse web n'est pas valide.";
-            }
         } else {
             if ($valeurs['prenom'] === '') $erreurs['prenom'] = 'Indiquez votre prénom.';
             if ($valeurs['nom'] === '') $erreurs['nom'] = 'Indiquez votre nom.';
-            if (!isset(GENRES[$valeurs['genre']])) $erreurs['genre'] = 'Choisissez une réponse.';
-            if (!isset(TRANCHES_AGE[$valeurs['tranche_age']])) $erreurs['tranche_age'] = "Choisissez votre tranche d'âge.";
-            if (!isset(CATEGORIES_INDIVIDUELLES[$valeurs['categorie']])) $erreurs['categorie'] = 'Choisissez votre profil.';
-            $valeurs['categorie_autre'] = $valeurs['categorie'] === 'autre' ? mb_substr($valeurs['categorie_autre'], 0, 80) : '';
-            if ($valeurs['categorie'] === 'autre' && $valeurs['categorie_autre'] === '') $erreurs['categorie_autre'] = 'Précisez ce que vous êtes.';
         }
-        if (!isset(REGIONS[$valeurs['region']])) $erreurs['region'] = 'Choisissez votre région.';
 
         if ($valeurs['email'] === '') {
             $erreurs['email'] = 'Indiquez votre adresse e-mail.';
@@ -94,11 +78,6 @@ function inscription_formulaire(string $slug): void
             $erreurs['password1'] = 'Choisissez un mot de passe.';
         } elseif (($msg = verifier_mot_de_passe($mdp1, $valeurs['email'])) !== '') {
             $erreurs['password1'] = $msg;
-        }
-        if ($mdp2 === '') {
-            $erreurs['password2'] = 'Confirmez votre mot de passe.';
-        } elseif ($mdp1 !== $mdp2) {
-            $erreurs['password2'] = 'Les deux mots de passe ne correspondent pas.';
         }
         if ($valeurs['conditions'] === '') {
             $erreurs['conditions'] = 'Vous devez accepter la politique de confidentialité pour créer un compte.';
@@ -115,28 +94,20 @@ function inscription_formulaire(string $slug): void
                     'actif' => 1,
                     'inscrit_le' => maintenant(),
                 ]);
-                // Le profil reste masqué tant que le membre n'a pas choisi de le rendre visible (Mon profil)
-                $commun = ['utilisateur_id' => $id, 'region' => $valeurs['region'], 'visible' => 0, 'cree_le' => maintenant(), 'modifie_le' => maintenant()];
+                // Le profil reste masqué tant que le membre n'a pas choisi de le rendre visible (Mon profil).
+                // Région, profil, âge… se complètent ensuite (espace membre, ou au moment où une action en a besoin).
+                $commun = ['utilisateur_id' => $id, 'region' => '', 'visible' => 0, 'cree_le' => maintenant(), 'modifie_le' => maintenant()];
                 if ($organisation) {
                     inserer('profils_organisations', $commun + [
                         'nom_structure' => mb_substr($valeurs['nom_structure'], 0, 150),
                         'type_structure' => $valeurs['type_structure'],
-                        'personne_contact' => mb_substr($valeurs['personne_contact'], 0, 120),
                         'telephone_organisation' => mb_substr($valeurs['telephone_organisation'], 0, 30),
-                        'email_organisation' => $valeurs['email_organisation'],
-                        'site_web' => mb_substr($valeurs['site_web'], 0, 255),
                     ]);
-                    if ($valeurs['site_web'] !== '') {
-                        inserer('liens_profil', ['utilisateur_id' => $id, 'reseau' => 'site', 'url' => mb_substr($valeurs['site_web'], 0, 255), 'ordre' => 1]);
-                    }
                 } else {
                     inserer('profils_individuels', $commun + [
                         'prenom' => mb_substr($valeurs['prenom'], 0, 80),
                         'nom' => mb_substr($valeurs['nom'], 0, 80),
-                        'categorie' => $valeurs['categorie'],
-                        'genre' => $valeurs['genre'],
-                        'tranche_age' => $valeurs['tranche_age'],
-                        'categorie_autre' => $valeurs['categorie_autre'],
+                        'categorie' => '',
                         'telephone' => mb_substr($valeurs['telephone'], 0, 30),
                     ]);
                 }

@@ -74,7 +74,7 @@ $lignes_liens = $liens ?: [['reseau' => 'linkedin', 'url' => '']];
       <?php partiel('partials/champ', $c('secteur') + ['libelle' => "Secteur d'activité", 'requis' => false, 'attributs' => ['maxlength' => 150]]) ?>
       <?php partiel('partials/champ', $c('taille') + ['libelle' => 'Taille', 'type' => 'select', 'requis' => false, 'options' => ['' => 'Non précisée'] + TAILLES_STRUCTURE]) ?>
       <?= $groupe('Où la trouver') ?>
-      <?php partiel('partials/champ', $c('region') + ['libelle' => 'Région', 'type' => 'select', 'options' => REGIONS]) ?>
+      <?php partiel('partials/champ', $c('region') + ['libelle' => 'Région', 'type' => 'select', 'options' => ['' => 'Choisir'] + REGIONS]) ?>
       <?php partiel('partials/champ', $c('ville') + ['libelle' => 'Ville', 'requis' => false, 'attributs' => ['maxlength' => 100]]) ?>
       <?= $groupe('Présentation') ?>
       <?php partiel('partials/champ', $c('presentation') + ['libelle' => "En quelques lignes, ce que fait l'organisation", 'type' => 'textarea', 'requis' => false, 'classes_bloc' => 'sm:col-span-2', 'attributs' => ['rows' => 4, 'maxlength' => 1500]]) ?>
@@ -107,10 +107,10 @@ $lignes_liens = $liens ?: [['reseau' => 'linkedin', 'url' => '']];
       <?php partiel('partials/champ', $c('genre') + ['libelle' => 'Genre', 'type' => 'select', 'options' => ['' => 'Choisir'] + GENRES, 'aide' => 'Privé : sert seulement aux statistiques du chapitre.']) ?>
       <?php partiel('partials/champ', $c('tranche_age') + ['libelle' => "Tranche d'âge", 'type' => 'select', 'options' => ['' => 'Choisir'] + options_tranches_age(), 'aide' => 'Privée : sert seulement aux statistiques du chapitre.']) ?>
       <?= $groupe('Parcours') ?>
-      <?php partiel('partials/champ', $c('categorie') + ['libelle' => 'Vous êtes', 'type' => 'select', 'options' => CATEGORIES_INDIVIDUELLES]) ?>
+      <?php partiel('partials/champ', $c('categorie') + ['libelle' => 'Vous êtes', 'type' => 'select', 'options' => ['' => 'Choisir'] + CATEGORIES_INDIVIDUELLES]) ?>
       <?php partiel('partials/champ', $c('categorie_autre') + ['libelle' => 'Précisez', 'si' => ['categorie', 'autre'], 'valeur_si' => $valeurs['categorie'] ?? '', 'attributs' => ['maxlength' => 80, 'placeholder' => 'Exemple : artiste, agriculteur, journaliste']]) ?>
       <?php partiel('partials/champ', $c('domaine') + ['libelle' => "Domaine d'activité ou d'études", 'requis' => false, 'attributs' => ['maxlength' => 150, 'placeholder' => 'Exemple : marketing digital']]) ?>
-      <?php partiel('partials/champ', $c('region') + ['libelle' => 'Région', 'type' => 'select', 'options' => REGIONS]) ?>
+      <?php partiel('partials/champ', $c('region') + ['libelle' => 'Région', 'type' => 'select', 'options' => ['' => 'Choisir'] + REGIONS]) ?>
       <?php partiel('partials/champ', $c('ville') + ['libelle' => 'Ville', 'requis' => false, 'attributs' => ['maxlength' => 100]]) ?>
       <?php partiel('partials/champ', $c('presentation') + ['libelle' => 'Présentation', 'type' => 'textarea', 'requis' => false, 'aide' => 'Ce que vous faites, ce qui vous anime, ce que vous cherchez.', 'classes_bloc' => 'sm:col-span-2', 'attributs' => ['rows' => 4, 'maxlength' => 1500]]) ?>
       <?= $groupe('Mes liens') ?>
