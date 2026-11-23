@@ -24,7 +24,7 @@ function parametres(): array
             'accroche_accueil' => '', 'presentation_accueil' => '', 'adresse' => '', 'horaires' => '',
             'telephone' => '', 'email_contact' => '', 'lien_facebook' => '', 'lien_instagram' => '',
             'lien_linkedin' => '', 'lien_x' => '', 'lien_youtube' => '', 'lien_tiktok' => '',
-            'photos_provisoires' => 1, 'acceptation_automatique' => 0, 'chiffres_reseau' => 0,
+            'photos_provisoires' => 1, 'acceptation_automatique' => 0, 'chiffres_reseau' => 0, 'membres_communautes' => 0,
         ];
     }
     return $p;

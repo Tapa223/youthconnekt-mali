@@ -21,7 +21,7 @@ $presentation = trim((string) $p['presentation']);
       <div class="px-5 pb-6 sm:px-9 sm:pb-9">
         <div class="relative -mt-8 flex flex-col gap-4 sm:-mt-14 sm:flex-row sm:items-end sm:justify-between">
           <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-4">
-            <?php if ($image): ?><img src="<?= e(media($image)) ?>" alt="" class="size-16 shrink-0 rounded-full border-4 border-white sm:size-28 <?= $organisation ? 'bg-white object-contain' : 'object-cover' ?>">
+            <?php if ($image): ?><img data-l="400" src="<?= e(media($image)) ?>" alt="" class="size-16 shrink-0 rounded-full border-4 border-white sm:size-28 <?= $organisation ? 'bg-white object-contain' : 'object-cover' ?>">
             <?php else: ?><span class="grid size-16 shrink-0 place-items-center rounded-full border-4 border-white bg-orange text-xl font-bold text-white sm:size-28 sm:text-3xl" aria-hidden="true"><?= e($m['initiales']) ?></span><?php endif ?>
             <div class="min-w-0 pb-1">
               <h1 class="text-2xl leading-tight font-bold sm:text-3xl"><?= e($m['nom_affiche']) ?></h1>

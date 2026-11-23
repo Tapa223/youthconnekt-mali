@@ -34,7 +34,7 @@ $chiffres_i = lignes_colonnes($i['chiffres'], 2);
       <p class="flex items-center gap-2.5 text-sm font-bold text-vert">
         <span class="flex -space-x-2.5" aria-hidden="true">
           <?php foreach ($inscrits['visages'] as $k => $v): ?>
-          <?php if ($v['photo']): ?><img src="<?= e(media($v['photo'])) ?>" alt="" class="size-8 rounded-full border-2 border-white object-cover" loading="lazy">
+          <?php if ($v['photo']): ?><img data-l="400" src="<?= e(media($v['photo'])) ?>" alt="" class="size-8 rounded-full border-2 border-white object-cover" loading="lazy">
           <?php else: ?><span class="grid size-8 place-items-center rounded-full border-2 border-white text-[10px] font-bold text-white <?= cycle(['bg-vert', 'bg-orange', 'bg-turquoise', 'bg-bleu'], $k) ?>"><?= e($v['initiales']) ?></span><?php endif ?>
           <?php endforeach ?>
         </span>

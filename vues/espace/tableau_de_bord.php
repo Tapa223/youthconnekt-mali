@@ -45,7 +45,7 @@ $actions = [
   <div class="relative">
     <div class="flex items-center gap-3 sm:gap-4">
       <?php /* Sur ordinateur, la photo est déjà dans le bloc de gauche : on ne la répète pas ici */
-      $photo_m = $profil['photo'] ?? $profil['logo'] ?? ''; if ($photo_m): ?><img src="<?= e(media($photo_m)) ?>" alt="" class="size-12 shrink-0 rounded-full border-2 border-white object-cover sm:size-16 lg:hidden">
+      $photo_m = $profil['photo'] ?? $profil['logo'] ?? ''; if ($photo_m): ?><img data-l="400" src="<?= e(media($photo_m)) ?>" alt="" class="size-12 shrink-0 rounded-full border-2 border-white object-cover sm:size-16 lg:hidden">
       <?php else: ?><a href="<?= url('/compte/mon-espace/profil', ['modifier' => 1]) ?>#modifier-profil" class="grid size-12 shrink-0 place-items-center rounded-full border-2 border-white/80 bg-orange lg:hidden text-base font-bold text-white sm:size-16 sm:text-xl" title="Ajouter une photo"><?= e($u['initiales']) ?></a><?php endif ?>
       <h1 class="text-[1.5rem] leading-tight font-bold text-white sm:text-4xl"><?= $salut ?><?= $u['prenom_affiche'] ? ', ' . e($u['prenom_affiche']) : '' ?></h1>
     </div>

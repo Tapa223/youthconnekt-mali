@@ -7,14 +7,14 @@
       <p class="mt-4 max-w-lg text-[15px] leading-relaxed text-white/90 sm:mt-5 sm:text-lg">YouthConnekt Mali est le chapitre national de YouthConnekt Africa. Il relie les jeunes du pays aux opportunités, aux décideurs et entre eux.</p>
     </div>
     <div class="flex -space-x-3 lg:hidden" aria-hidden="true">
-      <?php foreach (['cercle-centre', 'cercle-1', 'cercle-2', 'cercle-3'] as $k => $photo): ?><span class="size-16 overflow-hidden rounded-full border-[3px] bg-white shadow-lg sm:size-20 <?= cycle(['border-orange', 'border-turquoise', 'border-white', 'border-turquoise'], $k) ?>"><img src="<?= asset('img/a-propos/' . $photo . '.jpg') ?>" alt="" class="h-full w-full object-cover"></span><?php endforeach ?>
+      <?php foreach (['cercle-centre', 'cercle-1', 'cercle-2', 'cercle-3'] as $k => $photo): ?><span class="size-16 overflow-hidden rounded-full border-[3px] bg-white shadow-lg sm:size-20 <?= cycle(['border-orange', 'border-turquoise', 'border-white', 'border-turquoise'], $k) ?>"><img data-l="400" src="<?= asset('img/a-propos/' . $photo . '.jpg') ?>" alt="" class="h-full w-full object-cover"></span><?php endforeach ?>
     </div>
     <div class="relative mx-auto hidden aspect-[5/4] w-full max-w-[17rem] lg:block" aria-hidden="true">
       <svg class="absolute inset-0 h-full w-full" viewBox="0 0 500 400"><g stroke="rgb(255 255 255 / .35)" stroke-width="1.3" fill="none"><path d="M90 90 L250 190 L400 80"/><path d="M250 190 L410 310"/><path d="M90 90 L400 80"/></g></svg>
-      <div class="anim-soleil absolute top-[20%] left-[26%] aspect-square w-[48%] overflow-hidden rounded-full border-4 border-orange shadow-2xl"><img src="<?= asset('img/a-propos/cercle-centre.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
-      <div class="anim-flotte absolute top-[4%] left-[6%] aspect-square w-[22%] overflow-hidden rounded-full border-4 border-turquoise shadow-xl"><img src="<?= asset('img/a-propos/cercle-1.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
-      <div class="anim-flotte-2 absolute top-[2%] right-[4%] aspect-square w-[22%] overflow-hidden rounded-full border-4 border-white shadow-xl"><img src="<?= asset('img/a-propos/cercle-2.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
-      <div class="anim-flotte absolute right-[2%] bottom-[4%] aspect-square w-[23%] overflow-hidden rounded-full border-4 border-turquoise shadow-xl"><img src="<?= asset('img/a-propos/cercle-3.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
+      <div class="anim-soleil absolute top-[20%] left-[26%] aspect-square w-[48%] overflow-hidden rounded-full border-4 border-orange shadow-2xl"><img data-l="800" src="<?= asset('img/a-propos/cercle-centre.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
+      <div class="anim-flotte absolute top-[4%] left-[6%] aspect-square w-[22%] overflow-hidden rounded-full border-4 border-turquoise shadow-xl"><img data-l="400" src="<?= asset('img/a-propos/cercle-1.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
+      <div class="anim-flotte-2 absolute top-[2%] right-[4%] aspect-square w-[22%] overflow-hidden rounded-full border-4 border-white shadow-xl"><img data-l="400" src="<?= asset('img/a-propos/cercle-2.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
+      <div class="anim-flotte absolute right-[2%] bottom-[4%] aspect-square w-[23%] overflow-hidden rounded-full border-4 border-turquoise shadow-xl"><img data-l="400" src="<?= asset('img/a-propos/cercle-3.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
       <span class="absolute bottom-[22%] left-[8%] size-4 rounded-full bg-orange"></span>
       <span class="absolute top-[6%] left-[46%] size-3 rounded-full bg-orange"></span>
     </div>

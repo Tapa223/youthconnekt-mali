@@ -3,7 +3,7 @@ $u = utilisateur();
 $photo_membre = $u ? ($u['profil']['photo'] ?? $u['profil']['logo'] ?? '') : '';
 $nb_notifs_entete = $u ? nb_notifications_non_lues($u) : 0;
 $pastille = fn (string $taille) => $photo_membre
-    ? '<img src="' . e(media($photo_membre)) . '" alt="" class="' . $taille . ' shrink-0 rounded-full bg-white object-cover">'
+    ? '<img data-l="400" src="' . e(media($photo_membre)) . '" alt="" class="' . $taille . ' shrink-0 rounded-full bg-white object-cover">'
     : '<span class="grid ' . $taille . ' shrink-0 place-items-center rounded-full bg-orange text-xs" aria-hidden="true">' . e($u['initiales']) . '</span>';
 $section = explode('/', trim(chemin_actuel(), '/'))[0];
 $navigation = [

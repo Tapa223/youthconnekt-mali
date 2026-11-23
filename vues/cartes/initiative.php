@@ -4,7 +4,7 @@ $ct = !empty($compacte_tel);
 $bas = !empty($basse); ?>
 <a href="<?= e($i['url']) ?>" class="carte group flex h-full flex-col transition-shadow hover:shadow-lg">
   <div class="relative <?= $bas ? 'aspect-[16/9] sm:aspect-[2/1] lg:aspect-[5/2]' : 'aspect-[16/9]' ?> border-b-4 <?= $ct ? 'max-sm:aspect-[4/3] max-sm:border-b-[3px]' : '' ?> border-orange">
-    <?php partiel('partials/photo', ['transition' => 'photo-ini-' . $i['id'], 'image' => $i['image']]) ?>
+    <?php partiel('partials/photo', ['transition' => 'photo-ini-' . $i['id'], 'image' => $i['image'], 'largeur' => 720]) ?>
   </div>
   <div class="flex flex-1 flex-col <?= $bas ? 'px-5 py-4' : 'p-5' ?> <?= $ct ? 'max-sm:p-3' : '' ?>">
     <?php if ($i['date_libelle'] || $i['lieu']): ?><p class="text-xs text-texte <?= $ct ? 'max-sm:text-[11px] max-sm:leading-tight' : '' ?>"><?= e($i['date_libelle']) ?><?= $i['date_libelle'] && $i['lieu'] ? ' · ' : '' ?><?= e($i['lieu']) ?></p><?php endif ?>

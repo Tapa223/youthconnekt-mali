@@ -35,7 +35,7 @@
     <?php foreach ($membres as $m): $nom = trim($m['prenom'] . ' ' . $m['nom']); ?>
     <li>
       <a href="<?= url('/compte/membres/' . $m['utilisateur_id']) ?>" class="carte group flex items-center gap-3 p-3.5 transition-shadow hover:shadow-lg">
-        <?php if ($m['photo']): ?><img src="<?= e(media($m['photo'])) ?>" alt="" class="size-12 shrink-0 rounded-full object-cover" loading="lazy">
+        <?php if ($m['photo']): ?><img data-l="400" src="<?= e(media($m['photo'])) ?>" alt="" class="size-12 shrink-0 rounded-full object-cover" loading="lazy">
         <?php else: ?><span class="grid size-12 shrink-0 place-items-center rounded-full bg-orange font-bold text-white" aria-hidden="true"><?= e(initiales($nom)) ?></span><?php endif ?>
         <span class="min-w-0">
           <span class="block truncate font-bold text-vert group-hover:text-orange"><?= e($nom) ?></span>

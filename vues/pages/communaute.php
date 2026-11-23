@@ -17,10 +17,12 @@ $nb = (int) $c['nb_membres'];
     <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
       <div>
         <h1 class="text-[2rem] leading-tight font-bold text-white sm:text-5xl"><?= e($c['nom']) ?></h1>
+        <?php if (!empty(parametres()['membres_communautes'])): ?>
         <p class="mt-2 inline-flex items-center gap-2 text-white/95 sm:text-lg">
           <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5M16 4.8a3.5 3.5 0 0 1 0 6.4M18.5 14.8c1.7.8 2.7 2.6 3 5.2"/></svg>
           <strong><?= $nb ?></strong> membre<?= pluriel($nb) ?>
         </p>
+        <?php endif ?>
       </div>
       <div class="shrink-0"><?php partiel('partials/bouton_adhesion', ['c' => $c, 'statut' => $statut, 'contexte' => 'detail', 'compte_admin' => $compte_admin]) ?></div>
     </div>
@@ -63,7 +65,7 @@ $nb = (int) $c['nb_membres'];
           <?php foreach ($membres as $k => $m): ?>
           <li>
             <a href="<?= e($m['url']) ?>" class="group flex h-full flex-col items-center rounded-2xl border border-ligne p-3 text-center transition-shadow hover:shadow-lg sm:p-4">
-              <?php if ($m['photo']): ?><img src="<?= e(media($m['photo'])) ?>" alt="" class="size-16 rounded-full object-cover sm:size-20" loading="lazy">
+              <?php if ($m['photo']): ?><img data-l="400" src="<?= e(media($m['photo'])) ?>" alt="" class="size-16 rounded-full object-cover sm:size-20" loading="lazy">
               <?php else: ?><span class="grid size-16 place-items-center rounded-full text-lg font-bold text-white sm:size-20 sm:text-xl <?= ['bg-orange', 'bg-turquoise', 'bg-bleu', 'bg-vert'][$k % 4] ?>" aria-hidden="true"><?= e($m['initiales']) ?></span><?php endif ?>
               <span class="mt-2.5 line-clamp-2 text-[15px] leading-tight font-bold text-vert group-hover:text-orange"><?= e($m['nom']) ?></span>
               <?php if ($m['detail'] !== ''): ?><span class="mt-1 line-clamp-2 text-xs text-texte"><?= e($m['detail']) ?></span><?php endif ?>
@@ -101,7 +103,7 @@ $nb = (int) $c['nb_membres'];
         <ul class="mt-3 divide-y divide-ligne">
           <?php foreach ($activites_recentes as $a): ?>
           <li><a href="<?= e($a['url']) ?>" class="survol-ligne group -mx-2 flex items-center gap-4 rounded-xl px-2 py-3">
-            <span class="block size-14 shrink-0 overflow-hidden rounded-xl"><?php partiel('partials/photo', ['image' => $a['image']]) ?></span>
+            <span class="block size-14 shrink-0 overflow-hidden rounded-xl"><?php partiel('partials/photo', ['image' => $a['image'], 'largeur' => 240]) ?></span>
             <span><span class="block font-bold text-encre group-hover:text-orange"><?= e($a['titre']) ?></span><span class="text-xs"><?= e(date_courte($a['date_affichee'])) ?></span></span>
           </a></li>
           <?php endforeach ?>

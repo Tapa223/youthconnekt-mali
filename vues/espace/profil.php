@@ -11,7 +11,7 @@ $lignes_liens = $liens ?: [['reseau' => 'linkedin', 'url' => '']];
 <section id="apercu" class="bloc scroll-mt-20">
   <?php if (get('enregistre') !== '' && !$erreurs): ?><p class="mb-4 flex items-center gap-2 rounded-xl bg-vert-clair px-4 py-3 text-sm font-bold text-vert" role="status"><svg class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Vos modifications ont été enregistrées.</p><?php endif ?>
   <div class="flex items-start gap-4">
-    <?php if ($image_actuelle): ?><img src="<?= e(media($image_actuelle)) ?>" alt="" class="size-16 shrink-0 rounded-full sm:size-20 <?= $organisation ? 'bg-white object-contain ring-1 ring-ligne' : 'object-cover' ?>">
+    <?php if ($image_actuelle): ?><img data-l="400" src="<?= e(media($image_actuelle)) ?>" alt="" class="size-16 shrink-0 rounded-full sm:size-20 <?= $organisation ? 'bg-white object-contain ring-1 ring-ligne' : 'object-cover' ?>">
     <?php else: ?><span class="grid size-16 shrink-0 place-items-center rounded-full bg-orange text-xl font-bold text-white sm:size-20 sm:text-2xl" aria-hidden="true"><?= e($u['initiales']) ?></span><?php endif ?>
     <div class="min-w-0 flex-1">
       <h1 class="text-xl leading-tight font-bold sm:text-2xl"><?= e($u['nom_affiche']) ?></h1>
@@ -54,7 +54,7 @@ $lignes_liens = $liens ?: [['reseau' => 'linkedin', 'url' => '']];
     <div class="sm:col-span-2">
       <p class="libelle"><?= $organisation ? 'Logo' : 'Photo' ?> <span class="font-normal text-texte">(facultatif)</span></p>
       <div class="flex flex-wrap items-center gap-4">
-        <?php if ($image_actuelle): ?><img src="<?= e(media($image_actuelle)) ?>" alt="" class="size-16 rounded-full <?= $organisation ? 'bg-white object-contain ring-1 ring-ligne' : 'object-cover' ?>" data-apercu-image>
+        <?php if ($image_actuelle): ?><img data-l="400" src="<?= e(media($image_actuelle)) ?>" alt="" class="size-16 rounded-full <?= $organisation ? 'bg-white object-contain ring-1 ring-ligne' : 'object-cover' ?>" data-apercu-image>
         <?php else: ?><span class="grid size-16 place-items-center rounded-full bg-orange text-lg font-bold text-white" aria-hidden="true" data-apercu-image><?= e($u['initiales']) ?></span><?php endif ?>
         <div class="text-sm">
           <label class="btn btn-contour min-h-10 cursor-pointer px-4 text-sm">

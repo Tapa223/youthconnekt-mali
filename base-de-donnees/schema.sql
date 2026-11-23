@@ -451,6 +451,7 @@ CREATE TABLE IF NOT EXISTS parametres (
   photos_provisoires TINYINT(1) NOT NULL DEFAULT 1,
   acceptation_automatique TINYINT(1) NOT NULL DEFAULT 0,
   chiffres_reseau TINYINT(1) NOT NULL DEFAULT 0,
+  membres_communautes TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

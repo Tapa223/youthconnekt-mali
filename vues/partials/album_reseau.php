@@ -16,7 +16,7 @@ $tuile = function (int $decalage, string $classes, bool $plus = false) use ($pho
   <button type="button" class="group relative block overflow-hidden rounded-xl bg-vert-clair sm:rounded-2xl <?= $classes ?>" data-tuile="<?= $decalage ?>" data-album-ouvrir="<?= $decalage ?>"
     aria-label="<?= e($titre) ?> : ouvrir la photothèque (<?= $n ?> photo<?= pluriel($n) ?>)">
     <?php foreach ($photos as $k => $ph): $actif = $k === $decalage; ?>
-    <img src="<?= e(media($ph['image'])) ?>" alt="<?= $actif ? e($ph['legende']) : '' ?>" class="absolute inset-0 h-full w-full object-cover transition-[opacity,transform] duration-1000 ease-out group-hover:scale-105 <?= $actif ? 'opacity-100' : 'opacity-0' ?>" data-rang="<?= $k ?>" loading="lazy" decoding="async">
+    <img data-l="<?= $decalage === 0 ? 900 : 520 ?>" src="<?= e(media($ph['image'])) ?>" alt="<?= $actif ? e($ph['legende']) : '' ?>" class="absolute inset-0 h-full w-full object-cover transition-[opacity,transform] duration-1000 ease-out group-hover:scale-105 <?= $actif ? 'opacity-100' : 'opacity-0' ?>" data-rang="<?= $k ?>" loading="lazy" decoding="async">
     <?php endforeach ?>
     <?php if ($plus && $reste > 0): ?>
     <span class="absolute inset-0 grid place-items-center bg-encre/55 text-2xl font-bold text-white transition-colors group-hover:bg-encre/45 sm:text-3xl" aria-hidden="true">+<?= $reste ?></span>

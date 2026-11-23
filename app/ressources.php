@@ -920,6 +920,7 @@ function ressources(): array
                     'bulle_accueil_4' => ['type' => 'image', 'libelle' => 'Bulle 4 (au milieu à droite)', 'requis' => false, 'dossier' => 'accueil', 'largeur' => 'demi', 'phototheque' => true],
                 ]],
                 ['Réglages', 'cote' => true, 'champs' => [
+                    'membres_communautes' => ['type' => 'case', 'libelle' => 'Afficher le nombre de membres des communautés', 'aide' => 'Sur les cartes et les pages des communautés. À cocher quand les communautés seront bien remplies.'],
                     'chiffres_reseau' => ['type' => 'case', 'libelle' => 'Afficher les chiffres du réseau sur la page À propos', 'aide' => "Nombre de membres, d'organisations et de communautés. À cocher quand ces chiffres seront parlants."],
                     'acceptation_automatique' => ['type' => 'case', 'libelle' => 'Intégration automatique aux communautés', 'aide' => "Décoché : chaque demande est validée par un administrateur (règle à confirmer par l'équipe)."],
                 ]],

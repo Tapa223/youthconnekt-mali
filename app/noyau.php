@@ -478,8 +478,113 @@ function afficher(string $html): never
     if (!headers_sent()) {
         header('Content-Type: text/html; charset=utf-8');
     }
-    echo $html;
+    echo alleger_images($html);
     exit;
+}
+
+/*
+ * Photos allégées pour les connexions lentes : chaque photo du site (envoyée depuis l'administration
+ * ou déposée dans assets/img) est servie dans une version réduite et compressée (WebP), créée une seule fois
+ * puis gardée dans uploads/cache. Largeur par défaut 1200 px ; une image peut demander moins avec data-l="480".
+ * L'original n'est jamais modifié.
+ */
+function alleger_images(string $html): string
+{
+    $html = (string) preg_replace_callback('/<img\b[^>]*>/i', function (array $m): string {
+        $balise = $m[0];
+        // data-l="720" : une seule taille ; data-l="480,800,1200" : plusieurs tailles, le navigateur prend celle qu'il faut à l'écran
+        $tailles = preg_match('/\sdata-l="([\d,]+)"/', $balise, $l) ? array_map('intval', explode(',', $l[1])) : [1200];
+        $balise = preg_replace('/\sdata-l="[\d,]+"/', '', $balise);
+        return (string) preg_replace_callback('/\ssrc="([^"]+)"/', function ($s) use ($tailles, $balise) {
+            $origine = html_entity_decode($s[1], ENT_QUOTES);
+            $attr = ' src="' . htmlspecialchars(image_legere($origine, max($tailles)), ENT_QUOTES) . '"';
+            if (count($tailles) > 1 && !str_contains($balise, 'srcset=')) {
+                $liste = [];
+                foreach ($tailles as $t) {
+                    $u = image_legere($origine, $t);
+                    if ($u !== $origine) $liste[] = htmlspecialchars($u, ENT_QUOTES) . ' ' . $t . 'w';
+                }
+                if (count($liste) > 1) $attr .= ' srcset="' . implode(', ', $liste) . '"' . (str_contains($balise, 'sizes=') ? '' : ' sizes="100vw"');
+            }
+            return $attr;
+        }, $balise, 1);
+    }, $html);
+    // Image d'attente des vidéos
+    return (string) preg_replace_callback('/(<video\b[^>]*\sposter=")([^"]+)"/i', fn ($m) => $m[1] . htmlspecialchars(image_legere(html_entity_decode($m[2], ENT_QUOTES), 1200), ENT_QUOTES) . '"', $html);
+}
+
+/** Adresse de la version allégée d'une image du site (ou l'adresse d'origine si l'image est déjà petite ou introuvable). */
+function image_legere(string $adresse, int $largeur = 1200): string
+{
+    static $budget = 14; // créations par page au plus : les suivantes se feront aux visites d'après
+    $chemin = (string) parse_url($adresse, PHP_URL_PATH);
+    if ($chemin === '' || str_contains($adresse, '://') && parse_url($adresse, PHP_URL_HOST) !== ($_SERVER['HTTP_HOST'] ?? '')) {
+        return $adresse;
+    }
+    $base = base_url();
+    if ($base !== '' && str_starts_with($chemin, $base . '/')) {
+        $chemin = substr($chemin, strlen($base));
+    }
+    $chemin = ltrim(rawurldecode($chemin), '/');
+    if (!preg_match('#^(uploads|assets/img)/[^\s]+\.(jpe?g|png|webp)$#i', $chemin) || str_starts_with($chemin, 'uploads/cache/') || str_contains($chemin, '..')) {
+        return $adresse;
+    }
+    $source = RACINE . '/' . $chemin;
+    if (!is_file($source)) {
+        return $adresse;
+    }
+    $webp = function_exists('imagewebp');
+    $nom = 'uploads/cache/' . substr(md5($chemin . '|' . filemtime($source) . '|' . $largeur), 0, 20) . ($webp ? '.webp' : '.jpg');
+    if (is_file(RACINE . '/' . $nom)) {
+        return $base . '/' . $nom;
+    }
+    if (is_file(RACINE . '/' . $nom . '.non')) {
+        return $adresse; // déjà essayé : la version réduite n'était pas plus légère
+    }
+    $infos = @getimagesize($source);
+    if (!$infos || !function_exists('imagecreatefromstring')) {
+        return $adresse;
+    }
+    // Déjà petite et légère : rien à gagner
+    if ($infos[0] <= $largeur * 1.15 && filesize($source) < 60 * 1024) {
+        return $adresse;
+    }
+    if ($budget-- <= 0) {
+        return $adresse;
+    }
+    try {
+        $img = @imagecreatefromstring((string) file_get_contents($source));
+        if (!$img) {
+            return $adresse;
+        }
+        $l = imagesx($img);
+        $h = imagesy($img);
+        if ($l > $largeur) {
+            $nh = (int) round($h * $largeur / $l);
+            $petite = imagecreatetruecolor($largeur, $nh);
+            imagealphablending($petite, false);
+            imagesavealpha($petite, true);
+            imagecopyresampled($petite, $img, 0, 0, 0, 0, $largeur, $nh, $l, $h);
+            imagedestroy($img);
+            $img = $petite;
+        } else {
+            imagealphablending($img, false);
+            imagesavealpha($img, true);
+        }
+        if (!is_dir(RACINE . '/uploads/cache')) {
+            @mkdir(RACINE . '/uploads/cache', 0775, true);
+        }
+        $ok = $webp ? @imagewebp($img, RACINE . '/' . $nom, 72) : (imageinterlace($img, true) || true) && @imagejpeg($img, RACINE . '/' . $nom, 74);
+        imagedestroy($img);
+        if ($ok && filesize(RACINE . '/' . $nom) < filesize($source)) {
+            return $base . '/' . $nom;
+        }
+        @unlink(RACINE . '/' . $nom);
+        @touch(RACINE . '/' . $nom . '.non');
+    } catch (Throwable $e) {
+        // l'image d'origine reste servie
+    }
+    return $adresse;
 }
 
 function page_erreur(int $code, string $titre = '', string $texte = ''): never

@@ -1,4 +1,5 @@
 <?php
+$nombre_membres = !empty(parametres()['membres_communautes']);
 /** Page Communauté : en-tête illustré, recherche, cartes des communautés (la première rangée se voit dès l'arrivée) */
 $connecte = est_connecte();
 ?>
@@ -11,7 +12,7 @@ $connecte = est_connecte();
     </div>
     <div class="relative aspect-[5/4] w-[26%] shrink-0 sm:w-[22%] lg:w-[13rem]" aria-hidden="true">
       <svg class="absolute inset-0 h-full w-full" viewBox="0 0 500 400"><g stroke="rgb(255 255 255 / .35)" stroke-width="2" fill="none"><path d="M90 80 L250 185 L430 70"/><path d="M90 80 L80 290 L250 185 L450 160"/><path d="M250 185 L260 370 L410 290"/><path d="M430 70 L450 160 L410 290"/></g></svg>
-      <div class="absolute top-[46%] left-1/2 aspect-square w-[32%] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full border-[3px] border-orange shadow-2xl sm:border-4"><img src="<?= asset('img/communaute/cercle-centre.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
+      <div class="absolute top-[46%] left-1/2 aspect-square w-[32%] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full border-[3px] border-orange shadow-2xl sm:border-4"><img data-l="400" src="<?= asset('img/communaute/cercle-centre.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
       <?php
       /* Bulles thématiques autour du réseau : la photo du thème si elle a été déposée dans assets/img/communaute/
          (theme-tech.jpg, theme-leadership.jpg…), sinon la photo provisoire */
@@ -25,7 +26,7 @@ $connecte = est_connecte();
       foreach ($bulles as [$cle, $titre_bulle, $provisoire, $bord, $place]):
           $photo = 'img/communaute/theme-' . $cle . '.jpg';
           if (!is_file(RACINE . '/assets/' . $photo)) $photo = 'img/communaute/' . $provisoire; ?>
-      <div class="<?= $place ?> absolute aspect-square overflow-hidden rounded-full border-2 sm:border-4 <?= $bord ?>" title="<?= e($titre_bulle) ?>"><img src="<?= asset($photo) ?>" alt="" class="h-full w-full object-cover"></div>
+      <div class="<?= $place ?> absolute aspect-square overflow-hidden rounded-full border-2 sm:border-4 <?= $bord ?>" title="<?= e($titre_bulle) ?>"><img data-l="400" src="<?= asset($photo) ?>" alt="" class="h-full w-full object-cover"></div>
       <?php endforeach ?>
     </div>
   </div>
@@ -52,20 +53,23 @@ $connecte = est_connecte();
     <?php foreach ($communautes as $k => $c): ?>
     <li>
       <a href="<?= e($c['url']) ?>" class="carte group flex h-full flex-col transition-shadow hover:shadow-lg">
-        <span class="relative block aspect-[4/3] sm:aspect-[16/9] lg:aspect-[2/1]">
-          <?php if ($c['image']): ?><img src="<?= e(media($c['image'])) ?>" alt="" class="absolute inset-0 h-full w-full object-cover" loading="lazy">
-          <?php else: ?><img src="<?= asset('img/communaute/carte-' . ($k % 6 + 1) . '.jpg') ?>" alt="" class="absolute inset-0 h-full w-full object-cover" loading="lazy"><?php endif ?>
+        <span class="relative block aspect-[16/10] sm:aspect-[16/9] lg:aspect-[2/1]">
+          <?php if ($c['image']): ?><img data-l="640" src="<?= e(media($c['image'])) ?>" alt="" class="absolute inset-0 h-full w-full object-cover" loading="lazy">
+          <?php else: ?><img data-l="640" src="<?= asset('img/communaute/carte-' . ($k % 6 + 1) . '.jpg') ?>" alt="" class="absolute inset-0 h-full w-full object-cover" loading="lazy"><?php endif ?>
           <span class="absolute inset-0 bg-gradient-to-t from-vert/85 via-vert/15 to-transparent"></span>
+          <?php if ($nombre_membres): ?>
           <span class="absolute bottom-2 left-2.5 leading-none text-white sm:bottom-3 sm:left-4">
             <span class="text-lg font-bold sm:text-2xl"><?= $c['nb_membres'] ?></span> <span class="text-[11px] sm:text-sm">membre<?= pluriel($c['nb_membres']) ?></span>
           </span>
+          <?php endif ?>
           <?php if ($c['statut_membre'] === 'acceptee'): ?><span class="etiquette absolute top-2 left-2 rounded-full bg-white text-[10px] text-vert sm:top-3 sm:left-3 sm:text-xs">Membre</span>
           <?php elseif ($c['statut_membre'] === 'en_attente'): ?><span class="etiquette absolute top-2 left-2 rounded-full bg-orange text-[10px] text-white sm:top-3 sm:left-3 sm:text-xs">Demande en cours</span><?php endif ?>
         </span>
-        <span class="flex flex-1 flex-col p-3 sm:p-5">
-          <span class="text-[15px] leading-tight font-bold text-vert group-hover:text-orange sm:text-xl"><?= e($c['nom']) ?></span>
-          <span class="mt-1 line-clamp-2 text-xs leading-snug text-texte sm:text-sm"><?= e($c['public_vise']) ?></span>
-          <span class="mt-auto block pt-3 sm:pt-4"><?php partiel('partials/bouton_carte', ['texte' => 'Découvrir']) ?></span>
+        <?php /* Téléphone : nom seul, la carte entière se touche ; ordinateur : public visé et bouton */ ?>
+        <span class="flex flex-1 flex-col px-3 py-2.5 sm:p-5">
+          <span class="text-[14px] leading-tight font-bold text-vert group-hover:text-orange sm:text-xl"><?= e($c['nom']) ?></span>
+          <span class="mt-1 hidden line-clamp-2 text-sm leading-snug text-texte sm:block"><?= e($c['public_vise']) ?></span>
+          <span class="mt-auto hidden pt-4 sm:block"><?php partiel('partials/bouton_carte', ['texte' => 'Découvrir']) ?></span>
         </span>
       </a>
     </li>

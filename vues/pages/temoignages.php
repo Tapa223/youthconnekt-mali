@@ -18,7 +18,7 @@
           <span class="hidden h-6 text-5xl leading-[.6] font-bold text-orange sm:block" aria-hidden="true">«</span>
           <blockquote class="text-sm leading-relaxed text-encre sm:text-[17px]"><span class="font-bold text-orange sm:hidden">« </span><?= e($t['texte']) ?></blockquote>
           <figcaption class="mt-auto flex items-center gap-2.5 pt-1 sm:gap-3 sm:pt-2">
-            <?php if ($t['photo']): ?><img src="<?= e(media($t['photo'])) ?>" alt="" class="size-9 rounded-full object-cover sm:size-11" loading="lazy">
+            <?php if ($t['photo']): ?><img data-l="400" src="<?= e(media($t['photo'])) ?>" alt="" class="size-9 rounded-full object-cover sm:size-11" loading="lazy">
             <?php else: ?><span class="grid size-9 shrink-0 place-items-center rounded-full text-xs sm:size-11 sm:text-sm font-bold text-white <?= cycle(['bg-vert', 'bg-turquoise', 'bg-bleu'], $i) ?>" aria-hidden="true"><?= e(initiales($t['nom'])) ?></span><?php endif ?>
             <span><strong class="block text-sm text-vert sm:text-base"><?= e($t['nom']) ?></strong><?php if ($t['role']): ?><span class="block text-xs text-encre sm:text-sm"><?= e($t['role']) ?></span><?php endif ?></span>
           </figcaption>

@@ -47,7 +47,7 @@ $retour_auth = $_SESSION['retour_auth'] ?? url('/');
           <span class="absolute bottom-[8%] left-[6%] size-3.5 rounded-full bg-bleu"></span>
           <span class="absolute top-[8%] right-[6%] size-3 rounded-full bg-turquoise"></span>
         </div>
-        <div class="anim-soleil h-full w-full overflow-hidden rounded-full ring-8 ring-turquoise/30"><img src="<?= asset('img/connexion/cercle.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
+        <div class="anim-soleil h-full w-full overflow-hidden rounded-full ring-8 ring-turquoise/30"><img data-l="800" src="<?= asset('img/connexion/cercle.jpg') ?>" alt="" class="h-full w-full object-cover"></div>
       </div>
       <p class="mt-10 text-5xl font-bold">Let's Connekt</p>
       <p class="mt-3 max-w-sm text-white/90"><?= e($accroche ?? 'Jeunes, entreprises et organisations : un seul chapitre pour avancer ensemble.') ?></p>

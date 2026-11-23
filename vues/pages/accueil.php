@@ -45,7 +45,7 @@ foreach (range(0, 11) as $k) {
 <section class="relative isolate overflow-hidden bg-vert text-white lg:h-[calc(100svh-4rem)] lg:max-h-[940px] lg:min-h-[620px]" aria-labelledby="titre-accueil" data-premier-ecran>
   <?php /* Photo de fond floutée et voile vert un peu plus présent : le cercle, net, reste le point central */ ?>
   <div class="absolute -inset-4 -z-10" data-diapo="accueil" aria-hidden="true">
-    <?php foreach ($photos_accueil as $k => $src): ?><img data-diapo-image src="<?= e($src) ?>" alt="" class="absolute inset-0 h-full w-full object-cover blur-[4px]"<?= $k ? ' loading="lazy"' : '' ?>><?php endforeach ?>
+    <?php foreach ($photos_accueil as $k => $src): ?><img data-l="480" data-diapo-image src="<?= e($src) ?>" alt="" class="absolute inset-0 h-full w-full object-cover blur-[4px]"<?= $k ? ' loading="lazy"' : '' ?>><?php endforeach ?>
   </div>
   <div class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(3_94_77/.55)_0%,rgb(3_94_77/.45)_40%,rgb(3_94_77/.8)_70%,rgb(3_94_77/.92)_100%)] lg:bg-[linear-gradient(180deg,rgb(3_94_77/.82)_0%,rgb(3_94_77/.55)_28%,rgb(3_94_77/.35)_60%,rgb(3_94_77/.6)_100%)]" aria-hidden="true"></div>
 
@@ -70,13 +70,13 @@ foreach (range(0, 11) as $k) {
       <g stroke="#fff" stroke-opacity=".35" stroke-width="1.5" stroke-dasharray="4 6"><path d="M111 339 L286 455"/><path d="M220 543 L236 549"/><path d="M1327 309 L1143 440"/><path d="M1211 521 L1194 528"/></g>
       <circle cx="286" cy="455" r="4" fill="#F1592A"/><circle cx="236" cy="549" r="4" fill="#04B2B1"/><circle cx="1143" cy="440" r="4" fill="#04B2B1"/><circle cx="1194" cy="528" r="4" fill="#F1592A"/>
     </svg>
-    <span class="anim-flotte-2 absolute top-[31.3%] left-[0.7%] aspect-square w-[6.7%] rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= e($bulles[1]) ?>" alt="" class="h-full w-full object-cover"></span>
-    <span class="anim-flotte absolute top-[59.5%] left-[9.7%] aspect-square w-[5%] rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= e($bulles[3]) ?>" alt="" class="h-full w-full object-cover"></span>
-    <span class="anim-flotte-2 absolute top-[26.5%] left-[92.3%] aspect-square w-[7.2%] rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= e($bulles[2]) ?>" alt="" class="h-full w-full object-cover"></span>
-    <span class="anim-flotte absolute top-[56.9%] left-[84.6%] aspect-square w-[4.9%] rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img src="<?= e($bulles[4]) ?>" alt="" class="h-full w-full object-cover"></span>
+    <span class="anim-flotte-2 absolute top-[31.3%] left-[0.7%] aspect-square w-[6.7%] rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img data-l="400" src="<?= e($bulles[1]) ?>" alt="" class="h-full w-full object-cover"></span>
+    <span class="anim-flotte absolute top-[59.5%] left-[9.7%] aspect-square w-[5%] rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img data-l="400" src="<?= e($bulles[3]) ?>" alt="" class="h-full w-full object-cover"></span>
+    <span class="anim-flotte-2 absolute top-[26.5%] left-[92.3%] aspect-square w-[7.2%] rounded-full border-4 border-turquoise shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img data-l="400" src="<?= e($bulles[2]) ?>" alt="" class="h-full w-full object-cover"></span>
+    <span class="anim-flotte absolute top-[56.9%] left-[84.6%] aspect-square w-[4.9%] rounded-full border-4 border-orange shadow-[0_12px_28px_rgb(0_0_0/.3)] overflow-hidden"><img data-l="400" src="<?= e($bulles[4]) ?>" alt="" class="h-full w-full object-cover"></span>
     <div class="anim-soleil absolute top-[32.3%] left-[16.67%] aspect-square w-[66.67%]">
       <div class="absolute inset-0 overflow-hidden rounded-full bg-vert shadow-[0_0_0_8px_rgb(255_255_255/.14)]" data-diapo="accueil">
-        <?php foreach ($photos_accueil as $k => $src): ?><img data-diapo-image src="<?= e($src) ?>" alt="<?= $k ? '' : "Jeunes réunis lors d'un événement YouthConnekt" ?>" class="absolute inset-x-0 top-0 h-[58%] w-full object-cover"<?= $k ? ' loading="lazy"' : ' fetchpriority="high"' ?>><?php endforeach ?>
+        <?php foreach ($photos_accueil as $k => $src): ?><img data-l="560,900,1400" data-diapo-image src="<?= e($src) ?>" alt="<?= $k ? '' : "Jeunes réunis lors d'un événement YouthConnekt" ?>" class="absolute inset-x-0 top-0 h-[58%] w-full object-cover"<?= $k ? ' loading="lazy"' : ' fetchpriority="high"' ?>><?php endforeach ?>
       </div>
     </div>
   </div>
@@ -108,12 +108,12 @@ foreach (range(0, 11) as $k) {
         <span class="absolute bottom-[8%] left-[20%] size-2.5 rounded-full bg-turquoise"></span>
         <span class="absolute top-[30%] -left-1 size-2 rounded-full bg-bleu"></span>
       </div>
-      <span class="anim-flotte absolute -top-1 -left-[9%] z-[1] size-[22%] overflow-hidden rounded-full border-[3px] border-orange shadow-[0_10px_22px_rgb(0_0_0/.3)]" aria-hidden="true"><img src="<?= e($bulles[1]) ?>" alt="" class="h-full w-full object-cover"></span>
-      <span class="anim-flotte-2 absolute top-[16%] -right-[10%] z-[1] size-[17%] overflow-hidden rounded-full border-[3px] border-turquoise shadow-[0_10px_22px_rgb(0_0_0/.3)]" aria-hidden="true"><img src="<?= e($bulles[2]) ?>" alt="" class="h-full w-full object-cover"></span>
-      <span class="anim-flotte absolute -right-[4%] bottom-[2%] z-[1] size-[20%] overflow-hidden rounded-full border-[3px] border-white shadow-[0_10px_22px_rgb(0_0_0/.3)]" aria-hidden="true"><img src="<?= e($bulles[4]) ?>" alt="" class="h-full w-full object-cover"></span>
-      <span class="anim-flotte-2 absolute bottom-[20%] -left-[10%] z-[1] size-[14%] overflow-hidden rounded-full border-[3px] border-turquoise shadow-[0_10px_22px_rgb(0_0_0/.3)]" aria-hidden="true"><img src="<?= e($bulles[3]) ?>" alt="" class="h-full w-full object-cover"></span>
+      <span class="anim-flotte absolute -top-1 -left-[9%] z-[1] size-[22%] overflow-hidden rounded-full border-[3px] border-orange shadow-[0_10px_22px_rgb(0_0_0/.3)]" aria-hidden="true"><img data-l="400" src="<?= e($bulles[1]) ?>" alt="" class="h-full w-full object-cover"></span>
+      <span class="anim-flotte-2 absolute top-[16%] -right-[10%] z-[1] size-[17%] overflow-hidden rounded-full border-[3px] border-turquoise shadow-[0_10px_22px_rgb(0_0_0/.3)]" aria-hidden="true"><img data-l="400" src="<?= e($bulles[2]) ?>" alt="" class="h-full w-full object-cover"></span>
+      <span class="anim-flotte absolute -right-[4%] bottom-[2%] z-[1] size-[20%] overflow-hidden rounded-full border-[3px] border-white shadow-[0_10px_22px_rgb(0_0_0/.3)]" aria-hidden="true"><img data-l="400" src="<?= e($bulles[4]) ?>" alt="" class="h-full w-full object-cover"></span>
+      <span class="anim-flotte-2 absolute bottom-[20%] -left-[10%] z-[1] size-[14%] overflow-hidden rounded-full border-[3px] border-turquoise shadow-[0_10px_22px_rgb(0_0_0/.3)]" aria-hidden="true"><img data-l="400" src="<?= e($bulles[3]) ?>" alt="" class="h-full w-full object-cover"></span>
       <div class="absolute inset-0 overflow-hidden rounded-full bg-vert shadow-[0_0_0_6px_rgb(255_255_255/.14)]" data-diapo="accueil">
-        <?php foreach ($photos_accueil as $k => $src): ?><img data-diapo-image src="<?= e($src) ?>" alt="<?= $k ? '' : "Jeunes réunis lors d'un événement YouthConnekt" ?>" class="absolute inset-0 h-full w-full object-cover"<?= $k ? ' loading="lazy"' : ' fetchpriority="high"' ?>><?php endforeach ?>
+        <?php foreach ($photos_accueil as $k => $src): ?><img data-l="560,900,1400" data-diapo-image src="<?= e($src) ?>" alt="<?= $k ? '' : "Jeunes réunis lors d'un événement YouthConnekt" ?>" class="absolute inset-0 h-full w-full object-cover"<?= $k ? ' loading="lazy"' : ' fetchpriority="high"' ?>><?php endforeach ?>
       </div>
     </div>
 
@@ -239,7 +239,7 @@ foreach (range(0, 11) as $k) {
       <li class="<?= $premiere ? 'col-span-2 lg:col-span-1' : '' ?>">
         <a href="<?= e($initiative['url']) ?>" class="survol-leve group relative block overflow-hidden rounded-2xl lg:aspect-[3/3.15] <?= $premiere ? 'aspect-[4/3]' : 'aspect-square' ?>">
           <div class="absolute inset-0 transition-transform duration-500 group-hover:scale-105">
-            <?php partiel('partials/photo', ['image' => $initiative['image']]) ?>
+            <?php partiel('partials/photo', ['image' => $initiative['image'], 'largeur' => 720]) ?>
           </div>
           <div class="absolute inset-0 bg-gradient-to-t from-vert via-vert/55 to-transparent"></div>
           <div class="absolute inset-x-0 bottom-0 p-4 sm:p-6">
@@ -312,13 +312,13 @@ foreach (range(0, 11) as $k) {
 
       <div class="hidden h-[400px] items-center justify-center lg:flex">
         <div class="relative h-[460px] w-[560px] shrink-0 scale-[.86]">
-          <span class="anim-flotte-2 absolute top-[125px] left-[190px] z-10 size-[200px] overflow-hidden rounded-full border-[6px] border-orange bg-white shadow-[0_16px_34px_rgb(3_94_77/.22)]"><img src="<?= asset('img/communaute/cercle-centre.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy"></span>
-          <span class="anim-flotte absolute top-[70px] left-[120px] z-[9] size-[130px] overflow-hidden rounded-full border-[5px] border-turquoise bg-white shadow-[0_16px_34px_rgb(3_94_77/.22)]"><img src="<?= asset('img/communaute/cercle-1.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy"></span>
-          <span class="anim-flotte-2 absolute top-[70px] left-[330px] z-[8] size-[130px] overflow-hidden rounded-full border-[5px] border-bleu bg-white shadow-[0_16px_34px_rgb(3_94_77/.22)]"><img src="<?= asset('img/communaute/cercle-2.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy"></span>
-          <span class="anim-flotte absolute top-[250px] left-[335px] z-[7] size-[140px] overflow-hidden rounded-full border-[5px] border-turquoise bg-white shadow-[0_16px_34px_rgb(3_94_77/.22)]"><img src="<?= asset('img/communaute/cercle-3.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy"></span>
-          <span class="anim-flotte-2 absolute top-[255px] left-[120px] z-[6] size-[120px] overflow-hidden rounded-full border-[5px] border-orange bg-white shadow-[0_16px_34px_rgb(3_94_77/.22)]"><img src="<?= asset('img/communaute/cercle-4.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy"></span>
-          <span class="anim-flotte absolute top-[305px] left-[240px] z-[5] size-[100px] overflow-hidden rounded-full border-[5px] border-vert bg-white shadow-[0_16px_34px_rgb(3_94_77/.22)]"><img src="<?= asset('img/communaute/cercle-5.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy"></span>
-          <span class="anim-flotte-2 absolute top-[180px] left-[430px] z-[4] size-[100px] overflow-hidden rounded-full border-[5px] border-orange bg-white shadow-[0_16px_34px_rgb(3_94_77/.22)]"><img src="<?= asset('img/communaute/cercle-6.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy"></span>
+          <span class="anim-flotte-2 absolute top-[125px] left-[190px] z-10 size-[200px] overflow-hidden rounded-full border-[6px] border-orange bg-white shadow-[0_16px_34px_rgb(3_94_77/.22)]"><img data-l="400" src="<?= asset('img/communaute/cercle-centre.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy"></span>
+          <span class="anim-flotte absolute top-[70px] left-[120px] z-[9] size-[130px] overflow-hidden rounded-full border-[5px] border-turquoise bg-white shadow-[0_16px_34px_rgb(3_94_77/.22)]"><img data-l="400" src="<?= asset('img/communaute/cercle-1.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy"></span>
+          <span class="anim-flotte-2 absolute top-[70px] left-[330px] z-[8] size-[130px] overflow-hidden rounded-full border-[5px] border-bleu bg-white shadow-[0_16px_34px_rgb(3_94_77/.22)]"><img data-l="400" src="<?= asset('img/communaute/cercle-2.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy"></span>
+          <span class="anim-flotte absolute top-[250px] left-[335px] z-[7] size-[140px] overflow-hidden rounded-full border-[5px] border-turquoise bg-white shadow-[0_16px_34px_rgb(3_94_77/.22)]"><img data-l="400" src="<?= asset('img/communaute/cercle-3.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy"></span>
+          <span class="anim-flotte-2 absolute top-[255px] left-[120px] z-[6] size-[120px] overflow-hidden rounded-full border-[5px] border-orange bg-white shadow-[0_16px_34px_rgb(3_94_77/.22)]"><img data-l="400" src="<?= asset('img/communaute/cercle-4.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy"></span>
+          <span class="anim-flotte absolute top-[305px] left-[240px] z-[5] size-[100px] overflow-hidden rounded-full border-[5px] border-vert bg-white shadow-[0_16px_34px_rgb(3_94_77/.22)]"><img data-l="400" src="<?= asset('img/communaute/cercle-5.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy"></span>
+          <span class="anim-flotte-2 absolute top-[180px] left-[430px] z-[4] size-[100px] overflow-hidden rounded-full border-[5px] border-orange bg-white shadow-[0_16px_34px_rgb(3_94_77/.22)]"><img data-l="400" src="<?= asset('img/communaute/cercle-6.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy"></span>
           <a href="<?= url('/communaute') ?>" class="anim-flotte group absolute bottom-[34px] left-[50px] z-20 flex items-center gap-4 rounded-2xl bg-white px-4 py-3 shadow-[0_16px_34px_rgb(3_94_77/.18)] transition-colors hover:bg-orange" aria-label="Voir les <?= $nb_communautes ?> communautés">
             <span class="flex flex-col border-l-4 border-orange pl-3 leading-tight transition-colors group-hover:border-white"><strong class="text-3xl text-vert group-hover:text-white tabular-nums" data-compteur data-duree="1600"><?= $nb_communautes ?></strong><span class="text-sm text-encre group-hover:text-white">communauté<?= pluriel($nb_communautes) ?> à découvrir</span></span>
           </a>
@@ -326,7 +326,7 @@ foreach (range(0, 11) as $k) {
       </div>
 
       <div class="flex justify-center -space-x-4 lg:hidden" aria-hidden="true">
-        <?php for ($n = 1; $n <= 6; $n++): ?><span class="size-14 overflow-hidden rounded-full border-[3px] <?= cycle(['border-orange', 'border-turquoise', 'border-bleu', 'border-vert', 'border-orange', 'border-turquoise'], $n - 1) ?> bg-white shadow"><img src="<?= asset('img/communaute/cercle-' . $n . '.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy"></span><?php endfor ?>
+        <?php for ($n = 1; $n <= 6; $n++): ?><span class="size-14 overflow-hidden rounded-full border-[3px] <?= cycle(['border-orange', 'border-turquoise', 'border-bleu', 'border-vert', 'border-orange', 'border-turquoise'], $n - 1) ?> bg-white shadow"><img data-l="400" src="<?= asset('img/communaute/cercle-' . $n . '.jpg') ?>" alt="" class="h-full w-full object-cover" loading="lazy"></span><?php endfor ?>
       </div>
     </div>
 
@@ -355,7 +355,7 @@ foreach (range(0, 11) as $k) {
       <li>
         <a href="<?= e($o['url']) ?>" class="carte group flex h-full md:flex-col">
           <div class="relative w-[108px] shrink-0 overflow-hidden border-r-4 md:aspect-[16/7] md:w-auto md:border-r-0 md:border-b-4 <?= bordure($o['couleur']) ?>">
-            <?php partiel('partials/photo', ['image' => $o['image']]) ?>
+            <?php partiel('partials/photo', ['image' => $o['image'], 'largeur' => 720]) ?>
             <?php if ($o['jours_restants'] !== null && $o['jours_restants'] <= 30): ?>
             <span class="absolute top-2 right-2 hidden rounded-lg bg-orange px-2 py-1 text-center text-xs leading-tight font-bold text-white md:block">J-<?= $o['jours_restants'] ?></span>
             <?php endif ?>
@@ -420,7 +420,7 @@ foreach (range(0, 11) as $k) {
         <li>
           <a href="<?= e($actu['url']) ?>" class="survol-leve survol-zoom group flex h-full items-center gap-3 rounded-[14px] bg-white p-2 sm:gap-4 sm:rounded-2xl sm:p-4">
             <div class="size-14 shrink-0 overflow-hidden rounded-xl sm:size-24">
-              <?php partiel('partials/photo', ['image' => $actu['image']]) ?>
+              <?php partiel('partials/photo', ['image' => $actu['image'], 'largeur' => 720]) ?>
             </div>
             <div class="min-w-0">
               <p class="text-[11px] font-bold tracking-[0.12em] text-vert uppercase sm:text-xs"><?= e(implode(' · ', array_filter([$actu['categorie_libelle'], date_courte($actu['date_affichee'])]))) ?></p>

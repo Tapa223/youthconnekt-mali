@@ -18,7 +18,7 @@ $rotations = ['md:z-[1] md:translate-x-[30px] md:translate-y-10 md:-rotate-[4deg
             <span class="hidden h-7 text-6xl leading-[.6] font-bold text-orange md:block" aria-hidden="true">«</span>
             <blockquote class="line-clamp-3 text-[12.5px] leading-snug text-encre md:line-clamp-none md:text-[18px] md:leading-[1.55]"><span class="md:hidden">« </span><?= e($t['texte']) ?><span class="md:hidden"> »</span></blockquote>
             <figcaption class="mt-auto flex items-center gap-2 md:gap-3">
-              <?php if ($t['photo']): ?><img src="<?= e(media($t['photo'])) ?>" alt="" class="size-7 rounded-full object-cover md:size-11" loading="lazy">
+              <?php if ($t['photo']): ?><img data-l="400" src="<?= e(media($t['photo'])) ?>" alt="" class="size-7 rounded-full object-cover md:size-11" loading="lazy">
               <?php else: ?><span class="grid size-7 shrink-0 place-items-center rounded-full text-[11px] font-bold text-white md:size-11 md:text-sm <?= cycle(['bg-vert', 'bg-turquoise', 'bg-bleu'], $i) ?>" aria-hidden="true"><?= e(initiales($t['nom'])) ?></span><?php endif ?>
               <span class="text-xs md:text-base"><span class="font-bold text-vert md:block"><?= e($t['nom']) ?></span><?php if ($t['role']): $parties = explode(' · ', $t['role']); ?><span class="text-texte md:block md:text-sm md:text-encre"><span class="md:hidden"> · <?= e(end($parties)) ?></span><span class="hidden md:inline"><?= e($t['role']) ?></span></span><?php endif ?></span>
             </figcaption>

@@ -61,7 +61,7 @@ $surtitre = fn ($a) => e(implode(' · ', array_filter([$a['categorie_libelle'], 
       <?php foreach ($a_cote as $a): ?>
       <li>
         <a href="<?= e($a['url']) ?>" class="group flex gap-3 rounded-2xl border border-ligne bg-white p-2 transition-shadow hover:shadow-lg sm:gap-4 sm:p-2.5">
-          <span class="relative aspect-[4/3] w-24 shrink-0 overflow-hidden rounded-xl sm:w-32"><?php partiel('partials/photo', ['image' => $a['image']]) ?></span>
+          <span class="relative aspect-[4/3] w-24 shrink-0 overflow-hidden rounded-xl sm:w-32"><?php partiel('partials/photo', ['image' => $a['image'], 'largeur' => 400]) ?></span>
           <span class="flex min-w-0 flex-col justify-center py-0.5">
             <span class="text-[11px] font-bold tracking-[0.1em] uppercase <?= texte_couleur($a['couleur']) ?>"><?= $surtitre($a) ?></span>
             <span class="mt-1 line-clamp-2 text-[15px] leading-snug font-bold text-vert group-hover:text-orange"><?= e($a['titre']) ?></span>
