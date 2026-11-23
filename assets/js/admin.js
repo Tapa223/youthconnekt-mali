@@ -182,7 +182,7 @@
         q = libelle + " : " + n + " élément" + (n > 1 ? "s" : "") + " sélectionné" + (n > 1 ? "s" : "") + ". Confirmer ?";
         libelleOui = libelle;
         danger = /supprimer|retirer|désactiver|refuser|désabonner/i.test(choix.value + " " + libelle);
-        texte = /supprimer/i.test(choix.value) ? "Cette action est irréversible." : "";
+        texte = choix.value === "corbeille" ? "Ils restent 30 jours dans la corbeille : vous pourrez les restaurer." : (/supprimer/i.test(choix.value) ? "Cette action est irréversible." : "");
       }
       if (!q) return;
       e.preventDefault();

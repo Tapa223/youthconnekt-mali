@@ -583,19 +583,18 @@ function ressources(): array
         // ------------------------------------------------------------------
         'messages' => [
             'table' => 'messages_contact', 'titre' => 'Messages de contact',
-            'description' => "Les messages envoyés depuis le formulaire de contact et la bulle d'aide du site. Cliquez sur un message pour le lire et y répondre.",
-            'peut_ajouter' => false, 'vue_liste' => 'admin/liste_messages', 'par_page' => 50, 'libelle_tous' => 'Tous',
+            'description' => "Les messages du formulaire de contact, de la bulle d'aide et les e-mails écrits directement à l'adresse de contact. Cliquez sur un message pour l'ouvrir et y répondre.",
+            'peut_ajouter' => false, 'vue_liste' => 'admin/liste_messages', 'par_page' => 50, 'libelle_tous' => 'Boîte de réception', 'corbeille' => true,
             'ordre' => 't.recu_le DESC',
-            'libelle_ouvrir' => fn ($l) => empty($l['traite']) ? 'Lire et traiter' : 'Lire',
-            'onglets' => [['Non lus', 't.lu_le IS NULL'], ['À traiter', 't.traite = 0'], ['Traités', 't.traite = 1']],
+            'onglets' => [['Non lus', 't.lu_le IS NULL'], ['Répondus', 't.traite = 1']],
             'filtres' => [['profil', 'Toutes les provenances', PROFILS_CONTACT + ['email' => 'Reçus par e-mail'], 't.profil']],
             'recherche' => ['t.nom', 't.email', 't.objet', 't.message'],
             'nom_element' => fn ($l) => $l['objet'],
-            'export' => ['Reçu le' => fn ($l) => date_chiffres($l['recu_le']), 'Nom' => 'nom', 'E-mail' => 'email', 'Profil' => fn ($l) => ($l['profil'] === 'email' ? 'Reçu par e-mail' : (PROFILS_CONTACT[$l['profil']] ?? '')) . (!empty($l['profil_autre']) ? ' : ' . $l['profil_autre'] : ''), 'Objet' => 'objet', 'Message' => 'message', 'Traité' => fn ($l) => $l['traite'] ? 'oui' : 'non'],
+            'export' => ['Reçu le' => fn ($l) => date_chiffres($l['recu_le']), 'Nom' => 'nom', 'E-mail' => 'email', 'Profil' => fn ($l) => ($l['profil'] === 'email' ? 'Reçu par e-mail' : (PROFILS_CONTACT[$l['profil']] ?? '')) . (!empty($l['profil_autre']) ? ' : ' . $l['profil_autre'] : ''), 'Objet' => 'objet', 'Message' => 'message', 'Répondu' => fn ($l) => $l['traite'] ? 'oui' : 'non'],
             'actions' => [
-                'traites' => ['Marquer comme traités', fn ($ids) => requete('UPDATE messages_contact SET traite = 1 WHERE id IN (' . marqueurs($ids) . ')', $ids)->rowCount() . ' message(s) marqué(s) comme traité(s).'],
-                'a_traiter' => ['Remettre à traiter', fn ($ids) => requete('UPDATE messages_contact SET traite = 0 WHERE id IN (' . marqueurs($ids) . ')', $ids)->rowCount() . ' message(s) remis à traiter.'],
-                'supprimer' => ['Supprimer les messages sélectionnés', fn ($ids) => requete('DELETE FROM messages_contact WHERE id IN (' . marqueurs($ids) . ')', $ids)->rowCount() . ' message(s) supprimé(s).'],
+                'lus' => ['Marquer comme lus', fn ($ids) => requete('UPDATE messages_contact SET lu_le = NOW() WHERE lu_le IS NULL AND id IN (' . marqueurs($ids) . ')', $ids)->rowCount() . ' message(s) marqué(s) comme lu(s).'],
+                'corbeille' => ['Mettre à la corbeille', fn ($ids) => requete('UPDATE messages_contact SET supprime_le = NOW() WHERE supprime_le IS NULL AND id IN (' . marqueurs($ids) . ')', $ids)->rowCount() . ' message(s) mis à la corbeille (30 jours pour les restaurer).'],
+                'restaurer' => ['Restaurer (depuis la corbeille)', fn ($ids) => requete('UPDATE messages_contact SET supprime_le = NULL WHERE id IN (' . marqueurs($ids) . ')', $ids)->rowCount() . ' message(s) restauré(s).'],
             ],
         ],
 

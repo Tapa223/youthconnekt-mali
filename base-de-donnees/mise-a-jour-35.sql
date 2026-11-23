@@ -4,7 +4,7 @@
 SET NAMES utf8mb4;
 
 SET @existe = (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'messages_contact' AND COLUMN_NAME = 'source');
-SET @sql = IF(@existe = 0, "ALTER TABLE messages_contact ADD COLUMN source VARCHAR(10) NOT NULL DEFAULT 'site' AFTER lu_le, ADD COLUMN message_id_email VARCHAR(255) NOT NULL DEFAULT '' AFTER source, ADD INDEX ix_messages_id_email (message_id_email(100))", 'SELECT 1');
+SET @sql = IF(@existe = 0, "ALTER TABLE messages_contact ADD COLUMN source VARCHAR(10) NOT NULL DEFAULT 'site', ADD COLUMN message_id_email VARCHAR(255) NOT NULL DEFAULT '' AFTER source, ADD INDEX ix_messages_id_email (message_id_email(100))", 'SELECT 1');
 PREPARE etape FROM @sql; EXECUTE etape; DEALLOCATE PREPARE etape;
 
 SET @existe = (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'actualites' AND COLUMN_NAME = 'bouton_agenda');

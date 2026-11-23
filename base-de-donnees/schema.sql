@@ -479,6 +479,7 @@ CREATE TABLE IF NOT EXISTS messages_contact (
   lu_le DATETIME NULL,
   source VARCHAR(10) NOT NULL DEFAULT 'site',
   message_id_email VARCHAR(255) NOT NULL DEFAULT '',
+  supprime_le DATETIME NULL,
   PRIMARY KEY (id),
   KEY ix_messages_id_email (message_id_email(100)),
   KEY ix_messages_traite (traite, recu_le)

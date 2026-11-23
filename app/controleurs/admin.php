@@ -56,10 +56,10 @@ function tableau_de_bord(): void
         ];
     }
     if (peut('messages')) {
-        $dernier = valeur('SELECT MAX(recu_le) FROM messages_contact WHERE traite = 0');
+        $dernier = valeur('SELECT MAX(recu_le) FROM messages_contact WHERE lu_le IS NULL AND supprime_le IS NULL');
         $cartes[] = [
             'libelle' => 'Messages non lus', 'couleur' => 'turquoise', 'icone' => ICONES['enveloppe'], 'url' => url('/gestion/messages', ['onglet' => 1]),
-            'valeur' => (int) valeur('SELECT COUNT(*) FROM messages_contact WHERE traite = 0'),
+            'valeur' => (int) valeur('SELECT COUNT(*) FROM messages_contact WHERE lu_le IS NULL AND supprime_le IS NULL'),
             'detail' => $dernier ? 'Dernier le ' . date('d/m à H \h i', strtotime($dernier)) : 'Aucun en attente',
         ];
     }
@@ -274,13 +274,37 @@ function exemples(): void
 // Rubriques particulières
 // ---------------------------------------------------------------------------
 
-function message_traiter(int $id): void
+/** Remet un message en « non lu », comme dans une messagerie. */
+function message_non_lu(int $id): void
 {
     exiger_droit('messages', 'modifier');
-    $traite = post('traite') === '1' ? 1 : 0;
-    requete('UPDATE messages_contact SET traite = ? WHERE id = ?', [$traite, $id]);
-    flash('succes', $traite ? 'Message marqué comme traité.' : 'Message remis à traiter.');
-    rediriger(adresse_retour(url('/gestion/messages')));
+    requete('UPDATE messages_contact SET lu_le = NULL WHERE id = ?', [$id]);
+    flash('succes', 'Message marqué comme non lu.');
+    rediriger(url('/gestion/messages'));
+}
+
+/** Corbeille d'un message : mettre à la corbeille, restaurer, ou supprimer pour de bon (depuis la corbeille seulement). */
+function message_corbeille(int $id): void
+{
+    exiger_droit('messages', 'supprimer');
+    $m = ligne('SELECT id, supprime_le FROM messages_contact WHERE id = ?', [$id]) ?? page_erreur(404);
+    switch (post('quoi')) {
+        case 'restaurer':
+            requete('UPDATE messages_contact SET supprime_le = NULL WHERE id = ?', [$id]);
+            flash('succes', 'Message restauré dans la boîte de réception.');
+            rediriger(url('/gestion/messages', ['ouvert' => $id]));
+        case 'definitif':
+            if ($m['supprime_le'] !== null) {
+                requete('DELETE FROM reponses_messages WHERE message_id = ?', [$id]);
+                requete('DELETE FROM messages_contact WHERE id = ?', [$id]);
+                flash('succes', 'Message supprimé définitivement.');
+            }
+            rediriger(url('/gestion/messages', ['corbeille' => 1]));
+        default:
+            requete('UPDATE messages_contact SET supprime_le = NOW() WHERE id = ?', [$id]);
+            flash('succes', 'Message mis à la corbeille. Il y reste 30 jours : vous pouvez le restaurer jusque-là.');
+            rediriger(url('/gestion/messages'));
+    }
 }
 
 /** Réponse à un message de contact, écrite et envoyée depuis l'administration. La personne répond ensuite à l'adresse de contact. */
@@ -310,7 +334,7 @@ function message_repondre(int $id): void
     if ($ok) {
         requete('UPDATE messages_contact SET traite = 1 WHERE id = ?', [$id]);
     }
-    flash($ok ? 'succes' : 'erreur', $ok ? "Réponse envoyée à {$m['email']}. Le message est classé comme traité." : "La réponse n'est pas partie : " . derniere_erreur_email());
+    flash($ok ? 'succes' : 'erreur', $ok ? "Réponse envoyée à {$m['email']}." : "La réponse n'est pas partie : " . derniere_erreur_email());
     rediriger($retour);
 }
 
@@ -373,10 +397,23 @@ function liste(string $slug): void
         rediriger(url('/gestion/' . $slug . '/1'));
     }
 
+    // Corbeille : les éléments supprimés y restent 30 jours, puis disparaissent
+    $corbeille = false;
+    $condition_base = $r['condition'];
+    if (!empty($r['corbeille'])) {
+        try {
+            requete("DELETE FROM `{$r['table']}` WHERE supprime_le IS NOT NULL AND supprime_le < NOW() - INTERVAL 30 DAY");
+        } catch (Throwable $e) {
+            // colonne supprime_le pas encore créée (mise à jour 36)
+        }
+        $corbeille = get('corbeille') === '1';
+        $r['condition'] = "($condition_base) AND t.supprime_le " . ($corbeille ? 'IS NOT NULL' : 'IS NULL');
+    }
+
     // Conditions : onglet, filtres, recherche
     $conditions = [$r['condition']];
     $params = [];
-    $onglet = (int) get('onglet');
+    $onglet = $corbeille ? 0 : (int) get('onglet');
     if ($onglet > 0 && isset($r['onglets'][$onglet - 1])) {
         $conditions[] = $r['onglets'][$onglet - 1][1];
     } else {
@@ -414,14 +451,18 @@ function liste(string $slug): void
     // Onglets avec leur nombre d'éléments
     $onglets = [];
     if ($r['onglets']) {
-        $onglets[] = ['libelle' => $r['libelle_tous'], 'nombre' => (int) valeur("SELECT COUNT(*) {$r['depuis']} WHERE {$r['condition']}"), 'url' => url('/gestion/' . $slug), 'actif' => $onglet === 0];
+        $hors_corbeille = !empty($r['corbeille']) ? "($condition_base) AND t.supprime_le IS NULL" : $r['condition'];
+        $onglets[] = ['libelle' => $r['libelle_tous'], 'nombre' => (int) valeur("SELECT COUNT(*) {$r['depuis']} WHERE $hors_corbeille"), 'url' => url('/gestion/' . $slug), 'actif' => $onglet === 0 && !$corbeille];
         foreach ($r['onglets'] as $i => [$libelle, $condition]) {
             $onglets[] = [
                 'libelle' => $libelle,
-                'nombre' => (int) valeur("SELECT COUNT(*) {$r['depuis']} WHERE {$r['condition']} AND $condition"),
+                'nombre' => (int) valeur("SELECT COUNT(*) {$r['depuis']} WHERE $hors_corbeille AND $condition"),
                 'url' => url('/gestion/' . $slug, ['onglet' => $i + 1]),
                 'actif' => $onglet === $i + 1,
             ];
+        }
+        if (!empty($r['corbeille'])) {
+            $onglets[] = ['libelle' => 'Corbeille', 'nombre' => (int) valeur("SELECT COUNT(*) {$r['depuis']} WHERE ($condition_base) AND t.supprime_le IS NOT NULL"), 'url' => url('/gestion/' . $slug, ['corbeille' => 1]), 'actif' => $corbeille];
         }
     }
 
@@ -435,7 +476,7 @@ function liste(string $slug): void
         'ariane' => array_merge($r['parent'] ? [$r['parent']] : [], [[$r['titre'], null]]),
         'r' => $r,
         'lignes' => $lignes,
-        'onglets' => $onglets,
+        'onglets' => $onglets, 'corbeille' => $corbeille,
         'filtres' => $filtres,
         'q' => $q,
         'total' => $total,
@@ -482,6 +523,7 @@ function liste(string $slug): void
             }
         }
         $donnees['webmail'] = rtrim(url_absolue('/'), '/') . '/webmail';
+        $donnees['peut_supprimer'] = peut('messages', 'supprimer');
     }
     vue_admin($r['vue_liste'], $donnees);
 }

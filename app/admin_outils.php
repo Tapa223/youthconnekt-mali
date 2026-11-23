@@ -71,7 +71,7 @@ function pastilles_admin(): array
     }
     $pastilles = [];
     if (peut('messages')) {
-        $pastilles['messages'] = (int) valeur('SELECT COUNT(*) FROM messages_contact WHERE traite = 0');
+        $pastilles['messages'] = (int) valeur('SELECT COUNT(*) FROM messages_contact WHERE lu_le IS NULL AND supprime_le IS NULL');
         try { $pastilles['soutiens'] = (int) valeur("SELECT COUNT(*) FROM soutiens WHERE statut = 'nouveau'"); } catch (Throwable $e) { $pastilles['soutiens'] = 0; }
     }
     if (peut('opportunites')) {
