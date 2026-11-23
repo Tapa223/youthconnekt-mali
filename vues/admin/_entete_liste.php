@@ -1,6 +1,6 @@
 <?php
 /* En-tête d'une liste : titre, phrase, bouton d'ajout, onglets, filtres et menu « ⋯ » (sélectionner, exporter, réglages liés). */
-$selection_possible = $r['actions'] && $peut_modifier && !empty($lignes) && in_array($r['vue_liste'], ['admin/liste', 'admin/liste_temoignages'], true);
+$selection_possible = $r['actions'] && $peut_modifier && !empty($lignes) && in_array($r['vue_liste'], ['admin/liste', 'admin/liste_temoignages', 'admin/liste_messages'], true);
 $menu_plus = $selection_possible || $url_export || $r['menu_liste'];
 ?>
 <div class="ycm-entete-page">

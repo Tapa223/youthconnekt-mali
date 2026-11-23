@@ -539,3 +539,47 @@
   zone.querySelector("[data-camera-fermer]").addEventListener("click", arreter);
   window.addEventListener("pagehide", arreter);
 })();
+
+/* Boîte de réception en direct : toutes les 15 secondes, l'administration ouverte demande s'il est arrivé des messages.
+   La pastille du menu et le titre de l'onglet se mettent à jour ; la liste des messages se recharge seule
+   (sauf pendant une sélection, un menu ouvert ou la lecture d'un message). */
+(function () {
+  "use strict";
+  var lien = document.querySelector('.ycm-menu a[href$="/gestion/messages"]');
+  if (!lien || !window.fetch) return;
+  var base = lien.getAttribute("href");
+  var boite = document.querySelector("[data-boite-messages]");
+  var dernierVu = boite ? +boite.getAttribute("data-dernier") : 0;
+  var titre = document.title.replace(/^\(\d+\)\s*/, "");
+  function majPastille(n) {
+    var p = lien.querySelector(".ycm-pastille");
+    if (n > 0) {
+      if (!p) { p = document.createElement("span"); p.className = "ycm-pastille"; lien.appendChild(p); }
+      p.textContent = n; p.setAttribute("aria-label", n + " non lu" + (n > 1 ? "s" : ""));
+    } else if (p) { p.remove(); }
+    document.title = (n > 0 ? "(" + n + ") " : "") + titre;
+  }
+  function occupe() {
+    return document.querySelector(".ycm-selection-active, details[open], dialog[open]") ||
+      (document.activeElement && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName));
+  }
+  function verifier() {
+    if (document.hidden) return;
+    fetch(base + "/etat", { credentials: "same-origin", headers: { Accept: "application/json" } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (e) {
+        if (!e) return;
+        majPastille(e.non_lus);
+        if (boite && boite.getAttribute("data-ouvert") === "0" && e.dernier > dernierVu && !occupe()) {
+          sessionStorage.setItem("ycm-defilement", String(window.scrollY));
+          location.reload();
+        }
+      })
+      .catch(function () {});
+  }
+  var defil = sessionStorage.getItem("ycm-defilement");
+  if (defil !== null) { sessionStorage.removeItem("ycm-defilement"); window.scrollTo(0, +defil); }
+  setTimeout(verifier, 1500);
+  setInterval(verifier, 15000);
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) verifier(); });
+})();

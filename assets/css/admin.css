@@ -367,7 +367,20 @@ button, input, select, textarea { font: inherit; }
 .ycm-alerte { margin: 0 0 14px; padding: 14px 18px; border-left: 4px solid var(--ycm-orange); border-radius: 12px; background: var(--ycm-orange-clair); font-size: 14px; color: var(--ycm-encre); }
 
 /* Boîte de réception des messages : une ligne par message ; le message s'ouvre au clic, seul sur la page */
-.ycm-boite-reception { background: #fff; border: 1px solid var(--ycm-ligne); border-radius: 20px; overflow: hidden; }
+.ycm-boite-reception { background: #fff; border: 1px solid var(--ycm-ligne); border-radius: 20px; }
+/* Cases et barre d'actions : seulement après « … » > « Sélectionner » */
+.ycm-boite-reception:not(.ycm-selection-active) .ycm-reception-barre,
+.ycm-boite-reception:not(.ycm-selection-active) .ycm-case-message { display: none; }
+.ycm-reception-barre { border-radius: 20px 20px 0 0; }
+.ycm-contenu .ycm-liste-messages li:first-child { border-top-left-radius: 20px; border-top-right-radius: 20px; }
+.ycm-selection-active .ycm-liste-messages li:first-child { border-radius: 0; }
+.ycm-contenu .ycm-liste-messages li:last-child { border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
+/* Menu « … » de chaque message */
+.ycm-plus-ligne { position: relative; flex: none; margin-right: 10px; }
+.ycm-plus.ycm-plus-ligne > summary { width: 36px; height: 36px; border-color: transparent; background: transparent; }
+.ycm-liste-messages li:hover .ycm-plus.ycm-plus-ligne > summary, .ycm-plus.ycm-plus-ligne[open] > summary { border-color: var(--ycm-ligne); background: #fff; }
+.ycm-plus-menu .ycm-danger { color: var(--ycm-rouge); }
+.ycm-lecture-barre { justify-content: space-between; }
 .ycm-reception-barre { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; padding: 10px 16px; border-bottom: 1px solid var(--ycm-ligne); background: #fbfcfc; }
 .ycm-reception-tout { display: inline-flex; padding: 4px; cursor: pointer; }
 .ycm-reception-barre input, .ycm-liste-messages input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--ycm-vert); margin: 0; }
@@ -383,7 +396,7 @@ button, input, select, textarea { font: inherit; }
   grid-template-columns: minmax(0, 14rem) minmax(0, 1fr) auto;
   align-items: center;
   gap: 4px 18px;
-  padding: 13px 18px 13px 0;
+  padding: 13px 4px 13px 0;
   color: var(--ycm-encre) !important;
   text-decoration: none !important;
   font-size: 14.5px;

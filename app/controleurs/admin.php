@@ -274,13 +274,29 @@ function exemples(): void
 // Rubriques particulières
 // ---------------------------------------------------------------------------
 
-/** Remet un message en « non lu », comme dans une messagerie. */
-function message_non_lu(int $id): void
+/** Marque un message comme lu ou non lu, comme dans une messagerie. */
+function message_lecture(int $id): void
 {
     exiger_droit('messages', 'modifier');
-    requete('UPDATE messages_contact SET lu_le = NULL WHERE id = ?', [$id]);
-    flash('succes', 'Message marqué comme non lu.');
-    rediriger(url('/gestion/messages'));
+    $lu = post('lu') === '1';
+    requete('UPDATE messages_contact SET lu_le = ' . ($lu ? 'COALESCE(lu_le, NOW())' : 'NULL') . ' WHERE id = ?', [$id]);
+    flash('succes', $lu ? 'Message marqué comme lu.' : 'Message marqué comme non lu.');
+    rediriger(adresse_retour(url('/gestion/messages')));
+}
+
+/** État de la boîte de réception, interrogé toutes les quelques secondes par l'administration ouverte. */
+function messages_etat(): never
+{
+    exiger_droit('messages');
+    header('Content-Type: application/json; charset=utf-8');
+    header('Cache-Control: no-store');
+    try {
+        $e = ligne('SELECT COUNT(CASE WHEN lu_le IS NULL THEN 1 END) AS non_lus, COALESCE(MAX(id), 0) AS dernier FROM messages_contact WHERE supprime_le IS NULL');
+    } catch (Throwable $ex) {
+        $e = ['non_lus' => (int) valeur('SELECT COUNT(*) FROM messages_contact WHERE traite = 0'), 'dernier' => (int) valeur('SELECT COALESCE(MAX(id), 0) FROM messages_contact')];
+    }
+    echo json_encode(['non_lus' => (int) $e['non_lus'], 'dernier' => (int) $e['dernier']]);
+    exit;
 }
 
 /** Corbeille d'un message : mettre à la corbeille, restaurer, ou supprimer pour de bon (depuis la corbeille seulement). */
